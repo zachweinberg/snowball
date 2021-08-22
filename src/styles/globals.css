@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: optional;
+  src: url(/fonts/Inter.woff2) format('woff2');
+}
+
+html {
+  height: 100vh;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #eff6ff;
+}
+
+::selection,
+::-moz-selection {
+  background: rgb(179, 237, 255);
+}
+
+#nprogress .bar {
+  background: #2a62ff;
+  height: 3px;
+}
+
+.ticker-font-color {
+  color: #2962fc;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0 15px;
+}
+
+.ReactModal__Overlay {
+  opacity: 0.5;
+  transition-property: opacity, transform;
+  transition-duration: 200ms;
+  transition-timing-function: ease-out;
+  transform: translateY(7%);
+}
+
+.ReactModal__Overlay--after-open {
+  opacity: 1;
+  transform: translateY(0%);
+}
+
+.ReactModal__Overlay--before-close {
+  opacity: 0.5;
+  transform: translateY(7%);
+}
