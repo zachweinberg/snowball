@@ -62,3 +62,24 @@ paths:
             application/json:
               schema:
                 type: object
+    post:
+      summary: Create a new portfolio
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - public
+                - name
+              properties:
+                name:
+                  type: string
+                public:
+                  type: boolean
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
