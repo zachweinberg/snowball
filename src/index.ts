@@ -20,6 +20,16 @@ export interface Portfolio {
   createdAt: Date;
 }
 
+export type PortfolioWithBalances = Portfolio & {
+  totalValue: number;
+  totalPercentChange: number;
+  stocksValue: number;
+  cryptoValue: number;
+  realEstateValue: number;
+  cashValue: number;
+  customsValue: number;
+};
+
 export enum AssetType {
   Stock = "Stock",
   RealEstate = "Real Estate",
@@ -98,17 +108,7 @@ export interface CreatePortfolioResponse extends BaseResponse {
 }
 
 export interface GetPortfoliosResponse extends BaseResponse {
-  portfolios: Array<
-    Portfolio & {
-      totalValue: number;
-      totalPercentChange: number;
-      stocksValue: number;
-      cryptoValue: number;
-      realEstateValue: number;
-      cashValue: number;
-      customsValue: number;
-    }
-  >;
+  portfolios: PortfolioWithBalances[];
 }
 
 export interface MeResponse extends BaseResponse {
