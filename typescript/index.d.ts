@@ -95,6 +95,9 @@ export interface CreatePortfolioResponse extends BaseResponse {
 export interface GetPortfoliosResponse extends BaseResponse {
     portfolios: PortfolioWithBalances[];
 }
+export interface GetPortfolioResponse extends BaseResponse {
+    portfolio: Portfolio;
+}
 export interface MeResponse extends BaseResponse {
     me: User;
 }
