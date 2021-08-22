@@ -1,0 +1,16 @@
+{
+  "name": "@wealth/schema",
+  "version": "1.0.0",
+  "description": "Wealth tracker types",
+  "main": "src/index.ts",
+  "files": [
+    "typescript/*",
+    "json/*"
+  ],
+  "keywords": [],
+  "author": "Zach Weinberg",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.3.5"
+  }
+}

@@ -1,0 +1,43 @@
+name: "Bump Version and Publish"
+
+on:
+  workflow_dispatch:
+      branches:
+      - "main"
+  push:
+    branches:
+      - "main"
+
+jobs:
+  bump-version-and-build-types:
+    name: "Bump version and publish"
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
+
+    steps:
+      - name: "Checkout source code"
+        uses: "actions/checkout@v2"
+        with:
+          ref: ${{ github.ref }}
+      - name: "Setup Node.js"
+        uses: "actions/setup-node@v1"
+        with:
+          node-version: 14
+          registry-url: "https://npm.pkg.github.com"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          scope: "@zachweinberg"
+      - name: Install dependencies and build type files
+        run: npm ci && npm run build
+      - uses: stefanzweifel/git-auto-commit-action@v4.1.2
+        with:
+          commit_message: ci build type files [ci skip]
+      - name: "Automated Version Bump"
+        uses: "phips28/gh-action-bump-version@master"
+        with:
+          tag-prefix: ""
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: npm ci
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
