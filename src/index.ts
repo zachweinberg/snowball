@@ -1,6 +1,3 @@
-
-
-
 export interface User {
   id: string;
   email: string;
@@ -10,9 +7,9 @@ export interface User {
 }
 
 export enum InvestingExperienceLevel {
-  LessThanOneYear = 'Less than a year',
-  TwoToFiveYears = 'Two to five years',
-  OverFiveYears = 'Over five years',
+  LessThanOneYear = "Less than a year",
+  TwoToFiveYears = "Two to five years",
+  OverFiveYears = "Over five years",
 }
 
 export interface Portfolio {
@@ -24,11 +21,11 @@ export interface Portfolio {
 }
 
 export enum AssetType {
-  Stock = 'Stock',
-  RealEstate = 'Real Estate',
-  Crypto = 'Crypto',
-  Cash = 'Cash',
-  Custom = 'Custom',
+  Stock = "Stock",
+  RealEstate = "Real Estate",
+  Crypto = "Crypto",
+  Cash = "Cash",
+  Custom = "Custom",
 }
 export interface Position {
   id: string;
@@ -52,13 +49,13 @@ export interface CryptoPosition extends Position {
 }
 
 export enum RealEstatePropertyType {
-  SingleFamily = 'Single family home',
-  MultiFamily = 'Multi-family home',
-  Condo = 'Condo',
-  Apartment = 'Apartment',
-  Commercial = 'Commercial',
-  Storage = 'Storage facility',
-  Other = 'Other',
+  SingleFamily = "Single family home",
+  MultiFamily = "Multi-family home",
+  Condo = "Condo",
+  Apartment = "Apartment",
+  Commercial = "Commercial",
+  Storage = "Storage facility",
+  Other = "Other",
 }
 export interface RealEstatePosition extends Position {
   address?: string;
@@ -76,9 +73,8 @@ export interface CustomPosition extends Position {
   value: number;
 }
 
-
 export interface BaseResponse {
-  status: 'ok' | 'error';
+  status: "ok" | "error";
 }
 
 export interface CreateUserRequest {
@@ -107,4 +103,12 @@ export interface GetPortfoliosResponse extends BaseResponse {
 
 export interface MeResponse extends BaseResponse {
   me: User;
+}
+
+export interface VerifyEmailRequest {
+  email: string;
+}
+
+export interface VerifyEmailResponse extends BaseResponse {
+  email: string;
 }
