@@ -33,7 +33,7 @@ paths:
             application/json:
               schema:
                 type: object
-  /users/verify-email:
+  /users/verify:
     post:
       summary: Verify an email exists in database
       requestBody:

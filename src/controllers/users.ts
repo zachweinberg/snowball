@@ -31,7 +31,7 @@ usersRouter.get(
 );
 
 usersRouter.post(
-  '/verify-email',
+  '/verify',
   catchErrors(async (req, res) => {
     const { email } = req.body as VerifyEmailRequest;
 
@@ -40,9 +40,7 @@ usersRouter.post(
     ]);
 
     if (existingUsers.length === 0) {
-      return res
-        .status(404)
-        .json({ status: 'error', error: 'A user with that email does not exist.' });
+      return res.status(404).json({ status: 'error', error: 'Invalid email or password.' });
     }
 
     const response: VerifyEmailResponse = {
