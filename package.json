@@ -1,6 +1,6 @@
 {
   "name": "@zachweinberg/wealth-schema",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Wealth tracker types",
   "main": "src/index.ts",
   "files": [
