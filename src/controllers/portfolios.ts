@@ -1,4 +1,9 @@
-import { CreatePortfolioRequest, CreatePortfolioResponse, GetPortfoliosResponse, Portfolio } from '@wealth/schema';
+import {
+  CreatePortfolioRequest,
+  CreatePortfolioResponse,
+  GetPortfoliosResponse,
+  Portfolio,
+} from '@zachweinberg/wealth-schema';
 import { Router } from 'express';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { catchErrors, requireSignedIn } from '~/utils/api';
@@ -37,7 +42,9 @@ portfoliosRouter.post(
     ]);
 
     if (existingPortfolios.length >= 3) {
-      return res.status(400).json({ status: 'error', error: 'You can only have 3 portfolios.' });
+      return res
+        .status(400)
+        .json({ status: 'error', error: 'You can only have 3 portfolios.' });
     }
 
     const newPortfolioDocRef = firebaseAdmin().firestore().collection('portfolios').doc();

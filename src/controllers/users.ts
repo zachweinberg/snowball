@@ -1,4 +1,9 @@
-import { CreateUserRequest, CreateUserResponse, MeResponse, User } from '@wealth/schema';
+import {
+  CreateUserRequest,
+  CreateUserResponse,
+  MeResponse,
+  User,
+} from '@zachweinberg/wealth-schema';
 import { Router } from 'express';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { catchErrors, requireSignedIn } from '~/utils/api';

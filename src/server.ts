@@ -4,9 +4,9 @@ import * as OpenApiValidator from 'express-openapi-validator';
 import http from 'http';
 import morgan from 'morgan';
 import path from 'path';
+import portfoliosRouter from '~/controllers/portfolios';
 import usersRouter from '~/controllers/users';
 import { handleErrors, ignoreFavicon } from '~/utils/api';
-import portfoliosRouter from './controllers/portfolios';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
