@@ -44,30 +44,43 @@ usersRouter.post(
       });
     }
 
-    const newUser = await firebaseAdmin().auth().createUser({
-      email,
-      emailVerified: false,
-      password,
-      displayName: name,
-      disabled: false,
-    });
+    try {
+      const newUser = await firebaseAdmin().auth().createUser({
+        email,
+        emailVerified: false,
+        password,
+        displayName: name,
+        disabled: false,
+      });
 
-    const userDataToSet: User = {
-      id: newUser.uid,
-      email,
-      investingExperienceLevel,
-      name,
-      createdAt: new Date(),
-    };
+      const userDataToSet: User = {
+        id: newUser.uid,
+        email,
+        investingExperienceLevel,
+        name,
+        createdAt: new Date(),
+      };
 
-    await createDocument('users', userDataToSet, newUser.uid);
+      await createDocument('users', userDataToSet, newUser.uid);
 
-    const response: CreateUserResponse = {
-      status: 'ok',
-      user: userDataToSet,
-    };
+      const response: CreateUserResponse = {
+        status: 'ok',
+        user: userDataToSet,
+      };
 
-    res.status(200).json(response);
+      res.status(200).json(response);
+    } catch (err) {
+      if (err.code === 'auth/email-already-exists') {
+        return res
+          .status(400)
+          .json({ status: 'error', error: 'An account with that email already exists.' });
+      }
+      if (err.code === 'auth/invalid-password') {
+        return res.status(400).json({ status: 'error', error: 'Please use a stronger password.' });
+      }
+
+      throw err;
+    }
   })
 );
 
