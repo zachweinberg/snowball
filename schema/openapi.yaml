@@ -17,6 +17,34 @@ paths:
                 - email
                 - investingExperienceLevel
                 - password
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                investingExperienceLevel:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
+  /users/verify-email:
+    post:
+      summary: Verify an email exists in database
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - email
+              properties:
+                email:
+                  type: string
       responses:
         '200':
           description: Valid request
