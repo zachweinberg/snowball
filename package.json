@@ -1,6 +1,11 @@
 {
+<<<<<<< HEAD
   "name": "@zachweinberg/wealth-schema",
   "version": "1.0.0",
+=======
+  "name": "@wealth/schema",
+  "version": "1.0.1",
+>>>>>>> 270960f1d98376184f12895f195d01bbe1a6dde4
   "description": "Wealth tracker types",
   "main": "src/index.ts",
   "files": [
