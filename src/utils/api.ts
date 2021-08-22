@@ -62,7 +62,7 @@ const getAuthorizationToken = (req: express.Request, required = true) => {
   return parts[1];
 };
 
-const getUserFromAuthHeader = async (
+export const getUserFromAuthHeader = async (
   req: express.Request,
   required = true
 ): Promise<auth.DecodedIdToken | null> => {

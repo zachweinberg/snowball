@@ -83,3 +83,13 @@ paths:
             application/json:
               schema:
                 type: object
+  /portfolios/{portfolioID}:
+    get:
+      summary: Fetch a portfolio
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object

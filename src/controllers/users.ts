@@ -10,6 +10,7 @@ import { Router } from 'express';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { catchErrors, requireSignedIn } from '~/utils/api';
 import { createDocument, fetchDocument, findDocuments } from '~/utils/db';
+import { capitalize } from '~/utils/misc';
 
 const usersRouter = Router();
 
@@ -69,19 +70,21 @@ usersRouter.post(
     }
 
     try {
-      const newUser = await firebaseAdmin().auth().createUser({
-        email,
-        emailVerified: false,
-        password,
-        displayName: name,
-        disabled: false,
-      });
+      const newUser = await firebaseAdmin()
+        .auth()
+        .createUser({
+          email,
+          emailVerified: false,
+          password,
+          displayName: capitalize(name).trim(),
+          disabled: false,
+        });
 
       const userDataToSet: User = {
         id: newUser.uid,
         email,
         investingExperienceLevel,
-        name,
+        name: capitalize(name).trim(),
         createdAt: new Date(),
       };
 
