@@ -1,4 +1,4 @@
-import { CreateUserRequest } from '@wealth/schema';
+import { CreateUserRequest } from '@zachweinberg/wealth-schema';
 import { createContext, useEffect, useState } from 'react';
 import { API } from '~/lib/api';
 import firebase from '~/lib/firebase';

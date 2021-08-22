@@ -1,37 +1,50 @@
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { Form, Formik, FormikHelpers } from 'formik';
+import * as Yup from 'yup';
 import Button from '~/components/Button';
 import TextInput from '~/components/TextInput';
 
-interface Inputs {
+interface Values {
   portfolioName: string;
 }
 
+const validationSchema = Yup.object({
+  portfolioName: Yup.string()
+    .max(45, 'Must be 45 characters or less')
+    .required('Portfolio name is required'),
+});
+
 const CreatePortfolioForm: React.FunctionComponent = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => alert(JSON.stringify(data));
+  const onSubmit = async (userData: Values, actions: FormikHelpers<Values>) => {
+    //
+  };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <p className="mb-8 text-3xl font-bold tracking-wide text-blue3">Create Portfolio</p>
+    <Formik
+      initialValues={{
+        portfolioName: '',
+      }}
+      validationSchema={validationSchema}
+      onSubmit={onSubmit}
+    >
+      {(formik) => (
+        <Form className="bg-white p-10 shadow-sm rounded-md">
+          <p className="mb-8 text-3xl font-bold tracking-wide text-blue3">Create Portfolio</p>
 
-      <TextInput
-        type="text"
-        name="portfolioName"
-        label="Portfolio Name"
-        placeholder="Enter name..."
-        required
-        register={register}
-        error={errors.portfolioName ? 'Portfolio name is required' : undefined}
-      />
+          <div className="mb-5">
+            <TextInput
+              label="Portfolio name"
+              name="portfolioName"
+              type="text"
+              placeholder="Enter name..."
+            />
+          </div>
 
-      <Button type="submit" className="mt-5">
-        CREATE
-      </Button>
-    </form>
+          <Button type="submit" className="mt-3">
+            Create portfolio
+          </Button>
+        </Form>
+      )}
+    </Formik>
   );
 };
 

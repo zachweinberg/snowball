@@ -1,28 +1,14 @@
 import classNames from 'classnames';
-import { UseFormRegister } from 'react-hook-form';
+import { useField } from 'formik';
 
 type Props = {
   label: string;
   name: string;
-  register: UseFormRegister<any>;
-  options: any[];
-  error?: string;
-  required?: boolean;
   className?: string;
 };
 
-const Select: React.FunctionComponent<Props> = ({
-  label,
-  name,
-  className,
-  required,
-  error,
-  options,
-  register,
-}: Props) => {
-  const optionalRegisterProps = {
-    ...(register && { ...register(name, { required: required ? true : false }) }),
-  };
+const Select: React.FunctionComponent<Props> = ({ label, className, ...props }: Props) => {
+  const [field, meta] = useField(props);
 
   return (
     <div>
@@ -32,23 +18,17 @@ const Select: React.FunctionComponent<Props> = ({
         </p>
       )}
       <select
-        defaultValue={label}
+        {...field}
+        {...props}
         className={classNames(
-          'px-3 py-2 rounded-lg border border-purple1 w-full bg-gray2 placeholder-purple1 text-gray10 focus:outline-none focus:ring-purple2 focus:border-purple1',
+          'px-3 py-2 rounded  -lg border border-purple1 w-full bg-gray2 placeholder-purple1 text-gray10 focus:outline-none focus:ring-blue1 focus:border-blue1',
           className
         )}
-        {...optionalRegisterProps}
-      >
-        <option disabled value={label}>
-          {label}
-        </option>
-        {options.map((opt, i) => (
-          <option key={i} value={opt}>
-            {opt}
-          </option>
-        ))}
-      </select>
-      {error && <p className="mt-1 text-sm text-red3">{error}</p>}
+      ></select>
+
+      {meta.touched && meta.error ? (
+        <div className="mt-1 text-sm text-red3">{meta.error}</div>
+      ) : null}
     </div>
   );
 };
