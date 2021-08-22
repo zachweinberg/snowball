@@ -1,8 +1,10 @@
 import classNames from 'classnames';
 import { Form, Formik, FormikHelpers } from 'formik';
+import { useState } from 'react';
 import * as Yup from 'yup';
 import Button from '~/components/Button';
 import TextInput from '~/components/TextInput';
+import { API } from '~/lib/api';
 
 interface Values {
   portfolioName: string;
@@ -15,12 +17,30 @@ const validationSchema = Yup.object({
 });
 
 interface Props {
+  afterCreate: () => void;
   firstTime?: boolean;
 }
 
-const CreatePortfolioForm: React.FunctionComponent<Props> = ({ firstTime }: Props) => {
-  const onSubmit = async (userData: Values, actions: FormikHelpers<Values>) => {
-    //
+const CreatePortfolioForm: React.FunctionComponent<Props> = ({
+  afterCreate,
+  firstTime,
+}: Props) => {
+  const [error, setError] = useState<string>('');
+
+  const onSubmit = async (data: Values, actions: FormikHelpers<Values>) => {
+    actions.setSubmitting(true);
+
+    try {
+      await API.createPortfolio(data.portfolioName, false);
+      afterCreate();
+    } catch (err) {
+      if (err.response?.data?.error) {
+        setError(err.response.data.error);
+      } else {
+        setError('Could not create portfolio.');
+      }
+      actions.setSubmitting(false);
+    }
   };
 
   return (
@@ -44,8 +64,8 @@ const CreatePortfolioForm: React.FunctionComponent<Props> = ({ firstTime }: Prop
 
           {firstTime && (
             <p className="mb-5 text-sm text-purple2">
-              Each portfolio you create can hold your various assets like stocks, crypto, real
-              estate, cash and more.
+              Each portfolio you create can hold various assets like stocks, crypto, real
+              estate, cash and more. You can create multiple portfolios.
             </p>
           )}
 
@@ -57,6 +77,8 @@ const CreatePortfolioForm: React.FunctionComponent<Props> = ({ firstTime }: Prop
               placeholder="Enter name..."
             />
           </div>
+
+          {error && <p className="mb-1 text-sm text-red3">{error}</p>}
 
           <Button type="submit" className="mt-3">
             Create portfolio

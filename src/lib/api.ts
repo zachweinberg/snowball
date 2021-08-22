@@ -1,12 +1,37 @@
 import {
+  CreatePortfolioRequest,
+  CreatePortfolioResponse,
   CreateUserRequest,
   CreateUserResponse,
+  GetPortfolioResponse,
   GetPortfoliosResponse,
   VerifyEmailRequest,
   VerifyEmailResponse,
 } from '@zachweinberg/wealth-schema';
 import axios from 'axios';
 import firebase from '~/lib/firebase';
+
+// const normalizeTimestamps = <T extends object>(value: T) =>
+//   Object.keys(value).reduce((final, key) => {
+//     const finalValue =
+//       typeof admin.firestore.Timestamp === 'object' &&
+//       value[key] instanceof admin.firestore.Timestamp
+//         ? value[key].toDate()
+//         : value[key] !== null && typeof value[key] === 'object' && !Array.isArray(value[key])
+//         ? normalizeTimestamps(value[key])
+//         : value[key];
+//     return {
+//       ...final,
+//       [key]: finalValue,
+//     };
+//   }, {} as T);
+
+const axiosInstance = axios.create();
+
+axiosInstance.interceptors.response.use((response) => {
+  // response.data = normalizeTimestamps(response.data);
+  return response;
+});
 
 const request = async <T, K>(
   path: string,
@@ -17,15 +42,15 @@ const request = async <T, K>(
   try {
     let headers = {};
 
-    if (requireAuth) {
-      const token = await firebase.auth().currentUser?.getIdToken();
+    const token = await firebase.auth().currentUser?.getIdToken();
 
-      if (!token) {
+    if (!token) {
+      if (requireAuth) {
         console.error(`Error in: API request - token is ${token}`);
         console.error(`This error occured while trying to request [${method}] ${path}`);
         throw new Error('Unable to authenticate user for API request');
       }
-
+    } else {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
@@ -33,7 +58,7 @@ const request = async <T, K>(
 
     const url = `${process.env.NEXT_PUBLIC_API_BASE_PATH}${path}`;
 
-    const response = await axios.request<K>({
+    const response = await axiosInstance.request<K>({
       url,
       method,
       headers,
@@ -67,5 +92,20 @@ export const API = {
   },
   getPortfolios: () => {
     return request<undefined, GetPortfoliosResponse>('/api/portfolios', 'get');
+  },
+  getPortfolio: (portfolioID: string) => {
+    return request<undefined, GetPortfolioResponse>(
+      `/api/portfolios/${portfolioID}`,
+      'get',
+      undefined,
+      false
+    );
+  },
+  createPortfolio: (name: string, isPublic: boolean = false) => {
+    return request<CreatePortfolioRequest, CreatePortfolioResponse>(
+      '/api/portfolios',
+      'post',
+      { name, public: isPublic }
+    );
   },
 };

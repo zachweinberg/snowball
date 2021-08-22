@@ -7,7 +7,7 @@ interface Props {
 
 const Tabs: React.FunctionComponent<Props> = ({ options, active }: Props) => {
   return (
-    <div className="flex mb-4 space-x-6 font-medium sm:flex-row sm:flex-wrap">
+    <div className="flex space-x-6 font-medium sm:flex-row sm:flex-wrap">
       {options.map((option) => (
         <div
           key={option.label}

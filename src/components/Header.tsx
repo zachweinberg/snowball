@@ -1,7 +1,9 @@
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
 import { CloudIcon } from '@heroicons/react/solid';
+import classNames from 'classnames';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { Fragment } from 'react';
 import { useAuth } from '~/hooks/useAuth';
 
@@ -18,6 +20,7 @@ const profileLinks = [
 
 const Header: React.FunctionComponent = () => {
   const auth = useAuth();
+  const router = useRouter();
 
   return (
     <div>
@@ -41,7 +44,14 @@ const Header: React.FunctionComponent = () => {
                     <div className="flex items-baseline mr-10 space-x-4">
                       {links.map((link, i) => (
                         <Link href={link.href} key={i}>
-                          <a className="px-3 py-2 text-lg font-semibold rounded-md hover:text-blue1 text-blue3">
+                          <a
+                            className={classNames(
+                              'px-3 py-2 text-lg font-semibold rounded-md',
+                              router.pathname === link.href
+                                ? 'text-blue1'
+                                : 'hover:text-blue1 text-blue3'
+                            )}
+                          >
                             {link.label}
                           </a>
                         </Link>
@@ -111,7 +121,14 @@ const Header: React.FunctionComponent = () => {
               <div className="px-2 pt-2 pb-3 space-y-1">
                 {links.map((link, i) => (
                   <Link key={i} href={link.href}>
-                    <a className="block px-3 py-2 text-base font-medium rounded-md text-blue3 hover:text-blue1">
+                    <a
+                      className={classNames(
+                        'block px-3 py-2 text-base font-semibold rounded-md',
+                        router.pathname === link.href
+                          ? 'text-blue1'
+                          : 'hover:text-blue1 text-blue3'
+                      )}
+                    >
                       {link.label}
                     </a>
                   </Link>
@@ -121,7 +138,7 @@ const Header: React.FunctionComponent = () => {
                 <div className="px-2 mt-3 space-y-1">
                   {profileLinks.map((link, i) => (
                     <Link key={i} href={link.href}>
-                      <a className="block px-3 py-2 text-base font-medium rounded-md text-blue3 hover:text-blue1">
+                      <a className="block px-3 py-2 text-base font-semibold rounded-md text-blue3 hover:text-blue1">
                         {link.label}
                       </a>
                     </Link>
