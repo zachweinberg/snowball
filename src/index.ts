@@ -1,7 +1,6 @@
 
 
 
-// MODELS
 export interface User {
   id: string;
   email: string;
@@ -77,8 +76,6 @@ export interface CustomPosition extends Position {
   value: number;
 }
 
-
-// API REQUESTS
 
 export interface BaseResponse {
   status: 'ok' | 'error';
