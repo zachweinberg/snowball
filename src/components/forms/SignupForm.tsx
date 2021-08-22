@@ -43,6 +43,7 @@ const SignupForm: React.FunctionComponent = () => {
   const onSubmit = async (userData: Values, actions: FormikHelpers<Values>) => {
     if (userData.password !== userData.confirmPassword) {
       actions.setFieldError('confirmPassword', 'Passwords must match');
+      actions.setSubmitting(false);
       return;
     }
 
@@ -56,9 +57,8 @@ const SignupForm: React.FunctionComponent = () => {
       } else {
         setError('Could not create account.');
       }
+      actions.setSubmitting(false);
     }
-
-    actions.setSubmitting(false);
   };
 
   return (
@@ -66,7 +66,7 @@ const SignupForm: React.FunctionComponent = () => {
       initialValues={{
         name: '',
         email: '',
-        investingExperienceLevel: InvestingExperienceLevel.OverFiveYears,
+        investingExperienceLevel: InvestingExperienceLevel.LessThanOneYear,
         confirmPassword: '',
         password: '',
       }}

@@ -24,7 +24,7 @@ const Header: React.FunctionComponent = () => {
       <Disclosure as="nav" className="">
         {({ open }) => (
           <div className="bg-white border-b border-gray7">
-            <div className="max-w-5xl px-4 mx-auto">
+            <div className="max-w-6xl px-4 mx-auto">
               <div className="flex items-center justify-between h-16">
                 <div className="flex items-center justify-between flex-1">
                   <div className="flex-shrink-0">

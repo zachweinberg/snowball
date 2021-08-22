@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { Form, Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import Button from '~/components/Button';
@@ -13,7 +14,11 @@ const validationSchema = Yup.object({
     .required('Portfolio name is required'),
 });
 
-const CreatePortfolioForm: React.FunctionComponent = () => {
+interface Props {
+  firstTime?: boolean;
+}
+
+const CreatePortfolioForm: React.FunctionComponent<Props> = ({ firstTime }: Props) => {
   const onSubmit = async (userData: Values, actions: FormikHelpers<Values>) => {
     //
   };
@@ -27,8 +32,22 @@ const CreatePortfolioForm: React.FunctionComponent = () => {
       onSubmit={onSubmit}
     >
       {(formik) => (
-        <Form className="bg-white p-10 shadow-sm rounded-md">
-          <p className="mb-8 text-3xl font-bold tracking-wide text-blue3">Create Portfolio</p>
+        <Form className={classNames('p-10 bg-white', { 'shadow-sm rounded-md': firstTime })}>
+          <p
+            className={classNames('font-bold tracking-wide text-blue3', {
+              'mb-5 text-2xl': firstTime,
+              'mb-8 text-3xl': !firstTime,
+            })}
+          >
+            {firstTime ? 'Create your first portfolio' : 'Create Portfolio'}
+          </p>
+
+          {firstTime && (
+            <p className="mb-5 text-sm text-purple2">
+              Each portfolio you create can hold your various assets like stocks, crypto, real
+              estate, cash and more.
+            </p>
+          )}
 
           <div className="mb-5">
             <TextInput

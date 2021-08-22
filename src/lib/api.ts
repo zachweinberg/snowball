@@ -1,4 +1,10 @@
-import { CreateUserRequest, CreateUserResponse } from '@zachweinberg/wealth-schema';
+import {
+  CreateUserRequest,
+  CreateUserResponse,
+  GetPortfoliosResponse,
+  VerifyEmailRequest,
+  VerifyEmailResponse,
+} from '@zachweinberg/wealth-schema';
 import axios from 'axios';
 import firebase from '~/lib/firebase';
 
@@ -43,12 +49,23 @@ const request = async <T, K>(
 };
 
 export const API = {
-  createUser: async (userData: CreateUserRequest) => {
+  createUser: (userData: CreateUserRequest) => {
     return request<CreateUserRequest, CreateUserResponse>(
       '/api/users',
       'post',
       userData,
       false
     );
+  },
+  verifyEmailExists: (email: string) => {
+    return request<VerifyEmailRequest, VerifyEmailResponse>(
+      '/api/users/verify',
+      'post',
+      { email },
+      false
+    );
+  },
+  getPortfolios: () => {
+    return request<undefined, GetPortfoliosResponse>('/api/portfolios', 'get');
   },
 };

@@ -8,6 +8,7 @@ interface AuthContext {
   loading: boolean;
   signup: (userData: CreateUserRequest) => Promise<void>;
   logout: () => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
 }
 
 export const authContext = createContext<AuthContext>({
@@ -15,6 +16,7 @@ export const authContext = createContext<AuthContext>({
   loading: true,
   signup: async () => {},
   logout: async () => {},
+  login: async () => {},
 });
 
 export const AuthProvider = ({ children }) => {
@@ -53,10 +55,19 @@ const useFirebaseAuth = (): AuthContext => {
     }
   };
 
+  const login = async (email: string, password: string) => {
+    try {
+      await API.verifyEmailExists(email);
+      await firebase.auth().signInWithEmailAndPassword(email, password);
+    } catch (e) {
+      throw e;
+    }
+  };
+
   const logout = async () => {
     await firebase.auth().signOut();
     setUser(null);
   };
 
-  return { user, loading, signup, logout };
+  return { user, loading, signup, logout, login };
 };

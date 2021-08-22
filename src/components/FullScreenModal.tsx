@@ -1,4 +1,5 @@
 import { XIcon } from '@heroicons/react/outline';
+import { useEffect } from 'react';
 import ReactModal from 'react-modal';
 
 interface Props {
@@ -7,7 +8,15 @@ interface Props {
   children: React.ReactNode;
 }
 
-const FullScreenModal: React.FunctionComponent<Props> = ({ isOpen, onClose, children }: Props) => {
+const FullScreenModal: React.FunctionComponent<Props> = ({
+  isOpen,
+  onClose,
+  children,
+}: Props) => {
+  useEffect(() => {
+    ReactModal.setAppElement('#root');
+  }, []);
+
   return (
     <ReactModal
       isOpen={isOpen}
@@ -36,7 +45,10 @@ const FullScreenModal: React.FunctionComponent<Props> = ({ isOpen, onClose, chil
       preventScroll={false}
     >
       <div className="flex justify-end">
-        <div className="flex items-center flex-col cursor-pointer hover:opacity-60" onClick={onClose}>
+        <div
+          className="flex flex-col items-center cursor-pointer hover:opacity-60"
+          onClick={onClose}
+        >
           <XIcon className="text-gray10 h-7 w-7" />
           <p className="text-sm">Close</p>
         </div>
