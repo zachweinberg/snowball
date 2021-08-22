@@ -26,8 +26,6 @@ jobs:
           registry-url: "https://npm.pkg.github.com"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           scope: "@zachweinberg"
-      - name: Install dependencies and build type files
-        run: npm ci && npm run build
       - uses: stefanzweifel/git-auto-commit-action@v4.1.2
         with:
           commit_message: ci build type files [ci skip]
