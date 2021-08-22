@@ -32,7 +32,7 @@ jobs:
         with:
           commit_message: ci build type files [ci skip]
       - name: "Automated Version Bump"
-        uses: "phips28/gh-action-bump-version@main"
+        uses: "phips28/gh-action-bump-version@master"
         with:
           target-branch: 'main'
           tag-prefix: ""
