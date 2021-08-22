@@ -1,6 +1,6 @@
+import { CreateUserRequest, CreateUserResponse } from '@zachweinberg/wealth-schema';
 import axios from 'axios';
 import firebase from '~/lib/firebase';
-import { CreateUserRequest, CreateUserResponse } from '../../../schema/src';
 
 const request = async <T, K>(
   path: string,

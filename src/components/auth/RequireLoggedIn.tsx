@@ -12,7 +12,7 @@ const RequiredLoggedIn = ({ children }) => {
     }
   }, [auth.user]);
 
-  if (!auth.user) {
+  if (!auth.user || auth.loading) {
     return null;
   } else {
     return children;

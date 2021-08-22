@@ -22,14 +22,18 @@ const validationSchema = Yup.object({
     .email('Invalid email address')
     .required('Email is required'),
   password: Yup.string()
-    .min(5, 'Password must be over 5 characters')
+    .min(6, 'Password must at least 6 characters')
     .required('Password is required'),
-  confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
-  investingExperienceLevel: Yup.string().oneOf([
-    InvestingExperienceLevel.LessThanOneYear,
-    InvestingExperienceLevel.OverFiveYears,
-    InvestingExperienceLevel.TwoToFiveYears,
-  ]),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password'), null], 'Passwords must match')
+    .required('Passwords must match'),
+  investingExperienceLevel: Yup.string()
+    .oneOf([
+      InvestingExperienceLevel.LessThanOneYear,
+      InvestingExperienceLevel.OverFiveYears,
+      InvestingExperienceLevel.TwoToFiveYears,
+    ])
+    .required('Required'),
 });
 
 const SignupForm: React.FunctionComponent = () => {
@@ -37,13 +41,24 @@ const SignupForm: React.FunctionComponent = () => {
   const [error, setError] = useState<string>('');
 
   const onSubmit = async (userData: Values, actions: FormikHelpers<Values>) => {
+    if (userData.password !== userData.confirmPassword) {
+      actions.setFieldError('confirmPassword', 'Passwords must match');
+      return;
+    }
+
+    actions.setSubmitting(true);
+
     try {
       await auth.signup(userData);
     } catch (err) {
       if (err.response?.data?.error) {
         setError(err.response.data.error);
+      } else {
+        setError('Could not create account.');
       }
     }
+
+    actions.setSubmitting(false);
   };
 
   return (
@@ -59,7 +74,7 @@ const SignupForm: React.FunctionComponent = () => {
       onSubmit={onSubmit}
     >
       {(formik) => (
-        <Form className="bg-white p-10 shadow-sm rounded-md">
+        <Form className="bg-white rounded-md shadow-md p-9">
           <p className="mb-8 text-3xl font-semibold tracking-wide text-blue3">
             Create an account
           </p>
@@ -103,7 +118,9 @@ const SignupForm: React.FunctionComponent = () => {
             />
           </div>
 
-          <Button type="submit" className="mt-3">
+          {error && <p className="mb-1 text-sm text-red3">{error}</p>}
+
+          <Button type="submit" className="mt-3" disabled={formik.isSubmitting}>
             Create account
           </Button>
         </Form>

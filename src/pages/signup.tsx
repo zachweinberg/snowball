@@ -4,15 +4,15 @@ import React from 'react';
 import RequiredLoggedOut from '~/components/auth/RequireLoggedOut';
 import SignUpForm from '~/components/forms/SignupForm';
 
-const LoginPage: NextPage = () => {
+const SignupPage: NextPage = () => {
   return (
     <RequiredLoggedOut>
       <div className="max-w-md mx-auto mt-16">
         <SignUpForm />
-        <p className="text-sm text-center mt-3">
+        <p className="mt-3 text-sm text-center">
           Already have an account?{' '}
           <Link href="/login">
-            <a className="ml-1 text-blue1 cursor-pointer hover:text-blue2 font-semibold underline">
+            <a className="ml-1 font-semibold underline cursor-pointer text-blue1 hover:text-blue2">
               Login
             </a>
           </Link>
@@ -22,4 +22,4 @@ const LoginPage: NextPage = () => {
   );
 };
 
-export default LoginPage;
+export default SignupPage;

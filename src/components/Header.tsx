@@ -3,6 +3,7 @@ import { ChevronDownIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
 import { CloudIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
 import { Fragment } from 'react';
+import { useAuth } from '~/hooks/useAuth';
 
 const links: Array<{ label: string; href: string }> = [
   { label: 'Portfolios', href: '/portfolios' },
@@ -16,6 +17,8 @@ const profileLinks = [
 ];
 
 const Header: React.FunctionComponent = () => {
+  const auth = useAuth();
+
   return (
     <div>
       <Disclosure as="nav" className="">
@@ -27,7 +30,10 @@ const Header: React.FunctionComponent = () => {
                   <div className="flex-shrink-0">
                     <Link href="/">
                       <a>
-                        <CloudIcon className="cursor-pointer h-7 w-7 text-blue1 hover:opacity-80" aria-hidden="true" />
+                        <CloudIcon
+                          className="cursor-pointer h-7 w-7 text-blue1 hover:opacity-80"
+                          aria-hidden="true"
+                        />
                       </a>
                     </Link>
                   </div>
@@ -70,12 +76,14 @@ const Header: React.FunctionComponent = () => {
                             <Menu.Item key={i}>
                               {({ active }) => (
                                 <Link href={link.href}>
-                                  <a className="block px-4 py-2 text-sm text-blue3 hover:text-blue1">{link.label}</a>
+                                  <a className="block px-4 py-2 text-sm text-blue3 hover:text-blue1">
+                                    {link.label}
+                                  </a>
                                 </Link>
                               )}
                             </Menu.Item>
                           ))}
-                          <Menu.Item>
+                          <Menu.Item onClick={() => auth.logout()}>
                             <div className="block px-4 py-2 text-sm cursor-pointer text-blue3 hover:text-blue1">
                               Log Out
                             </div>
@@ -118,7 +126,10 @@ const Header: React.FunctionComponent = () => {
                       </a>
                     </Link>
                   ))}
-                  <div className="block px-3 py-2 text-base font-medium rounded-md cursor-pointer text-blue3 hover:text-blue1">
+                  <div
+                    className="block px-3 py-2 text-base font-medium rounded-md cursor-pointer text-blue3 hover:text-blue1"
+                    onClick={() => auth.logout()}
+                  >
                     Log Out
                   </div>
                 </div>
