@@ -2,15 +2,22 @@
   "name": "@zachweinberg/wealth-schema",
   "version": "1.0.3",
   "description": "Wealth tracker types",
-  "main": "src/index.ts",
   "files": [
     "typescript/*",
     "json/*"
   ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@zachweinberg"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zachweinberg/wealth-schema.git"
+  },
   "keywords": [],
   "author": "Zach Weinberg",
   "license": "ISC",
   "devDependencies": {
+    "rimraf": "^3.0.2",
     "typescript": "^4.3.5"
   }
 }
