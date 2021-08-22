@@ -17,7 +17,7 @@ app.use(cors());
 app.use(ignoreFavicon);
 app.use(morgan('tiny'));
 
-const apiSpec = path.join(__dirname, 'schema', 'openapi.yaml');
+const apiSpec = path.join(__dirname, '..', 'schema', 'openapi.yaml');
 
 const Server = {
   start: async () => {

@@ -2,7 +2,11 @@ import express from 'express';
 import { auth } from 'firebase-admin';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
 
-export const ignoreFavicon = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+export const ignoreFavicon = (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
   if (req.originalUrl.includes('favicon.ico')) {
     return res.status(204).end();
   }
@@ -10,7 +14,8 @@ export const ignoreFavicon = (req: express.Request, res: express.Response, next:
 };
 
 export const catchErrors =
-  (fn: express.RequestHandler) => async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  (fn: express.RequestHandler) =>
+  async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     try {
       await fn(req, res, next);
     } catch (err) {
@@ -18,13 +23,18 @@ export const catchErrors =
     }
   };
 
-export const handleErrors = (error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+export const handleErrors = (
+  error,
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
   console.error(error);
 
   const errorObject = {
     status: error.status ?? 500,
     code: error.code ?? 'Error',
-    error: error.message ?? 'Something went wrong',
+    error: 'Something went wrong',
   };
 
   return res.status(errorObject.status).json(errorObject);
@@ -52,7 +62,10 @@ const getAuthorizationToken = (req: express.Request, required = true) => {
   return parts[1];
 };
 
-const getUserFromAuthHeader = async (req: express.Request, required = true): Promise<auth.DecodedIdToken | null> => {
+const getUserFromAuthHeader = async (
+  req: express.Request,
+  required = true
+): Promise<auth.DecodedIdToken | null> => {
   const token = getAuthorizationToken(req, required);
 
   if (!token) {
@@ -70,7 +83,11 @@ const getUserFromAuthHeader = async (req: express.Request, required = true): Pro
   }
 };
 
-export const requireSignedIn = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+export const requireSignedIn = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
   try {
     const authUser = await getUserFromAuthHeader(req, true);
     req.authContext = authUser as auth.DecodedIdToken;

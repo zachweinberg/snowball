@@ -21,13 +21,9 @@ module.exports = {
     extensions: ['.tsx', '.ts', '.js'],
     plugins: [new TsconfigPathsPlugin()],
   },
-  // output: {
-  //   filename: '[name].js',
-  //   chunkFilename: '[name].bundle.js',
-  //   path: path.resolve(__dirname, 'dist'),
-  // },
   output: {
     filename: '[name].js',
+    chunkFilename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
   },
   target: 'node',
