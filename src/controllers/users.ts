@@ -3,6 +3,8 @@ import {
   CreateUserResponse,
   MeResponse,
   User,
+  VerifyEmailRequest,
+  VerifyEmailResponse,
 } from '@zachweinberg/wealth-schema';
 import { Router } from 'express';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
@@ -22,6 +24,30 @@ usersRouter.get(
     const response: MeResponse = {
       status: 'ok',
       me: user,
+    };
+
+    res.status(200).json(response);
+  })
+);
+
+usersRouter.post(
+  '/verify-email',
+  catchErrors(async (req, res) => {
+    const { email } = req.body as VerifyEmailRequest;
+
+    const existingUsers = await findDocuments<User>('users', [
+      { property: 'email', condition: '==', value: email },
+    ]);
+
+    if (existingUsers.length === 0) {
+      return res
+        .status(404)
+        .json({ status: 'error', error: 'A user with that email does not exist.' });
+    }
+
+    const response: VerifyEmailResponse = {
+      status: 'ok',
+      email,
     };
 
     res.status(200).json(response);
