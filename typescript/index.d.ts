@@ -84,7 +84,15 @@ export interface CreatePortfolioResponse extends BaseResponse {
     portfolio: Portfolio;
 }
 export interface GetPortfoliosResponse extends BaseResponse {
-    portfolios: Portfolio[];
+    portfolios: Array<Portfolio & {
+        totalValue: number;
+        totalPercentChange: number;
+        stocksValue: number;
+        cryptoValue: number;
+        realEstateValue: number;
+        cashValue: number;
+        customsValue: number;
+    }>;
 }
 export interface MeResponse extends BaseResponse {
     me: User;
