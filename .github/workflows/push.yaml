@@ -3,10 +3,10 @@ name: "Bump Version"
 on:
   workflow_dispatch:
     branches:
-      - "master"
+      - "main"
   push:
     branches:
-      - "master"
+      - "main"
 
 jobs:
   bump-version-and-build-types:
@@ -32,8 +32,9 @@ jobs:
         with:
           commit_message: ci build type files [ci skip]
       - name: "Automated Version Bump"
-        uses: "phips28/gh-action-bump-version@master"
+        uses: "phips28/gh-action-bump-version@main"
         with:
+          target-branch: 'main'
           tag-prefix: ""
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
