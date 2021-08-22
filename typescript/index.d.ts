@@ -65,7 +65,7 @@ export interface CustomPosition extends Position {
     value: number;
 }
 export interface BaseResponse {
-    status: 'ok' | 'error';
+    status: "ok" | "error";
 }
 export interface CreateUserRequest {
     name: string;
@@ -88,4 +88,10 @@ export interface GetPortfoliosResponse extends BaseResponse {
 }
 export interface MeResponse extends BaseResponse {
     me: User;
+}
+export interface VerifyEmailRequest {
+    email: string;
+}
+export interface VerifyEmailResponse extends BaseResponse {
+    email: string;
 }
