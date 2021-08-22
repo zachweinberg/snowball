@@ -53,7 +53,7 @@ paths:
               schema:
                 type: object
   /portfolios:
-    post:
+    get:
       summary: Fetch all users portfolios
       responses:
         '200':
