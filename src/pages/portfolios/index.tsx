@@ -1,8 +1,8 @@
 import { PlusIcon } from '@heroicons/react/solid';
+import { Portfolio } from '@zachweinberg/wealth-schema';
 import type { NextPage } from 'next';
 import Link from 'next/link';
-import React, { useState } from 'react';
-import useSWR, { mutate } from 'swr';
+import React, { useEffect, useState } from 'react';
 import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
 import Button from '~/components/Button';
 import CreatePortfolioForm from '~/components/forms/CreatePortfolioForm';
@@ -15,18 +15,34 @@ import { API } from '~/lib/api';
 
 const PortfolioListPage: NextPage = () => {
   const [creatingPortfolio, setCreatingPortfolio] = useState(false);
+  const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  const { data: portfoliosData, error } = useSWR('portfolios', API.getPortfolios, {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: true,
-  });
-  console.log(portfoliosData);
+  const loadPortfolios = async () => {
+    setLoading(true);
+    try {
+      const portfoliosData = await API.getPortfolios();
+      if (portfoliosData.portfolios) {
+        setPortfolios(portfoliosData.portfolios);
+      }
+    } catch (err) {
+      setError('Somethign went wrong');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadPortfolios();
+  }, []);
+
   const renderContent = () => {
     if (error) {
-      return null;
+      return <p>{error}</p>;
     }
 
-    if (!portfoliosData) {
+    if (loading) {
       return (
         <div className="flex items-center justify-center mt-32">
           <Spinner size={40} />
@@ -34,18 +50,15 @@ const PortfolioListPage: NextPage = () => {
       );
     }
 
-    if (portfoliosData && portfoliosData.portfolios.length === 0) {
+    if (portfolios && portfolios.length === 0) {
       return (
         <div className="max-w-md mx-auto">
-          <CreatePortfolioForm
-            firstTime
-            afterCreate={() => mutate('portfolios', undefined, true)}
-          />
+          <CreatePortfolioForm firstTime afterCreate={() => loadPortfolios()} />
         </div>
       );
     }
 
-    if (portfoliosData && portfoliosData.portfolios.length > 0) {
+    if (portfolios && portfolios.length > 0) {
       return (
         <>
           <FullScreenModal
@@ -55,7 +68,7 @@ const PortfolioListPage: NextPage = () => {
             <div className="max-w-sm mx-auto">
               <CreatePortfolioForm
                 afterCreate={() => {
-                  mutate('portfolios', undefined, true);
+                  loadPortfolios();
                   setCreatingPortfolio(false);
                 }}
               />
@@ -83,7 +96,7 @@ const PortfolioListPage: NextPage = () => {
               <Button
                 onClick={() => setCreatingPortfolio(true)}
                 type="button"
-                disabled={portfoliosData.portfolios.length >= 2}
+                disabled={portfolios.length >= 2}
               >
                 <PlusIcon className="w-5 h-4 mr-2 -ml-1" aria-hidden="true" />
                 Add Portfolio
@@ -91,7 +104,7 @@ const PortfolioListPage: NextPage = () => {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-6">
-            {portfoliosData.portfolios.map((portfolio) => (
+            {portfolios.map((portfolio) => (
               <Link href={`/portfolios/${portfolio.id}`} key={portfolio.id}>
                 <a>
                   <PortfolioSummaryCard
@@ -105,6 +118,7 @@ const PortfolioListPage: NextPage = () => {
         </>
       );
     }
+    return null;
   };
 
   return (

@@ -1,7 +1,15 @@
 import classNames from 'classnames';
 import StockRow from './StockRow';
 
-const headers = ['Ticker', 'Quantity', 'Last', 'Market Value', 'Day Change', 'Cost Basis', 'Gain/Loss'];
+const headers = [
+  'Ticker',
+  'Quantity',
+  'Last',
+  'Market Value',
+  'Day Change',
+  'Cost Basis',
+  'Gain/Loss',
+];
 
 const stocks = [
   {
@@ -30,22 +38,27 @@ const TableBase: React.FunctionComponent = () => {
   return (
     <div className="min-w-full">
       <table className="min-w-full">
-        <tr className="text-xs bg-white shadow-sm">
-          {headers.map((header, i) => (
-            <th
-              key={i}
-              className={classNames(`px-6 py-4 font-medium tracking-wider text-left uppercase text-purple2`, {
-                'rounded-bl-md rounded-tl-md': i === 0,
-                'rounded-br-md rounded-tr-md': i === headers.length - 1,
-              })}
-            >
-              {header}
-            </th>
+        <tbody>
+          <tr className="text-xs bg-white shadow-sm">
+            {headers.map((header, i) => (
+              <th
+                key={i}
+                className={classNames(
+                  `px-6 py-4 font-medium tracking-wider text-left uppercase text-purple2`,
+                  {
+                    'rounded-bl-md rounded-tl-md': i === 0,
+                    'rounded-br-md rounded-tr-md': i === headers.length - 1,
+                  }
+                )}
+              >
+                {header}
+              </th>
+            ))}
+          </tr>
+          {stocks.map((stock, i) => (
+            <StockRow stock={stock} key={i} />
           ))}
-        </tr>
-        {stocks.map((stock, i) => (
-          <StockRow stock={stock} key={i} />
-        ))}
+        </tbody>
       </table>
     </div>
   );

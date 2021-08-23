@@ -1,114 +1,155 @@
 import { ChevronUpIcon, PlusIcon } from '@heroicons/react/solid';
-import type { GetServerSideProps, NextPage } from 'next';
+import { Portfolio } from '@zachweinberg/wealth-schema';
+import type { NextPage } from 'next';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '~/components/Button';
+import FullScreenModal from '~/components/FullScreenModal';
 import Layout from '~/components/Layout';
 import MainChart from '~/components/MainChart';
+import Spinner from '~/components/Spinner';
 import TableBase from '~/components/tables/TableBase';
 import Tabs from '~/components/Tabs';
 import { API } from '~/lib/api';
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  try {
-    const response = await API.getPortfolio(ctx.query.portfolioID as string);
-    return { props: { portfolio: response.portfolio } };
-  } catch (err) {
-    if (err.response.status === 404) {
-      return {
-        notFound: true,
-      };
-    }
-    throw err;
-  }
-};
-
 const PortfolioViewPage: NextPage = (props) => {
-  const [modalOpen, setModalOpen] = useState(false);
   const router = useRouter();
+  const [addingAsset, setAddingAsset] = useState(false);
+  const [portfolio, setPortfolio] = useState<Portfolio | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  console.log(props);
-  // const { data: portfolioData, error } = useSWR(
-  //   'portfolios',
-  //   () => API.getPortfolio(router.query.portfoioID as string),
-  //   {
-  //     revalidateOnFocus: false,
-  //     revalidateOnReconnect: true,
-  //   }
-  // );
+  const loadPortfolio = async () => {
+    setLoading(true);
+    try {
+      const portfolioData = await API.getPortfolio(router.query.portfolioID as string);
+      setPortfolio(portfolioData.portfolio);
+    } catch (err) {
+      if (err.response.status === 404) {
+        setError("We couldn't find that portfolio.");
+      } else {
+        setError('Something went wrong.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  return (
-    <Layout title="Portfolio">
-      {/* <FullScreenModal isOpen={modalOpen} onClose={() => setModalOpen(false)} /> */}
+  useEffect(() => {
+    loadPortfolio();
+  }, []);
 
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="mb-3 text-xl font-bold leading-7 text-blue3 sm:text-2xl sm:truncate">
-            Zach's Portfolio
-          </h2>
-          <div className="mb-9">
-            <Tabs
-              active={'All'}
-              options={[
-                { label: 'All', onClick: () => null },
-                { label: 'Stocks', onClick: () => null },
-                { label: 'Crypto', onClick: () => null },
-                { label: 'Real Estate', onClick: () => null },
-                { label: 'Cash', onClick: () => null },
-                { label: 'Custom', onClick: () => null },
-              ]}
-            />
-          </div>
+  const renderContent = () => {
+    if (error) {
+      return (
+        <div className="max-w-md p-8 mx-auto bg-white rounded-md shadow-md">
+          <p className="mb-6 text-xl font-medium text-center text-purple2">{error}</p>
+
+          <Link href="/portfolios">
+            <a>
+              <Button type="button">Go Back</Button>
+            </a>
+          </Link>
         </div>
-        <div>
-          <Button type="button">
-            <PlusIcon className="w-5 h-4 mr-2 -ml-1" aria-hidden="true" />
-            Add Stock
-          </Button>
-        </div>
-      </div>
+      );
+    }
 
-      <div className="inline-block p-4 bg-white rounded-md shadow-sm">
-        <p className="text-sm text-purple2">Total Value:</p>
-        <div className="flex items-center mb-1">
-          <div className="mr-5 text-4xl font-light text-purple2">$514,272.41</div>
-          <div className="flex items-center ml-5 text-green2">
-            <div className="mr-2 text-xl font-semibold">+12,424.42</div>
-            <ChevronUpIcon className="w-5 h-5" aria-hidden="true" />
-          </div>
-          <div className="flex items-center ml-5 text-green2">
-            <div className="mr-2 text-xl font-semibold">+21.01%</div>
-            <ChevronUpIcon className="w-5 h-5" aria-hidden="true" />
-          </div>
+    if (loading) {
+      return (
+        <div className="flex items-center justify-center mt-32">
+          <Spinner size={40} />
         </div>
-      </div>
+      );
+    }
 
-      <div className="mb-5">
-        <div className="flex justify-end w-full mb-2">
-          <div className="flex items-center p-2 text-sm font-semibold rounded-md">
-            <div className="px-3 py-1 rounded-md cursor-pointer text-blue3 hover:bg-blue1 hover:text-white">
-              1D
+    if (portfolio) {
+      return (
+        <>
+          <FullScreenModal isOpen={addingAsset} onClose={() => setAddingAsset(false)}>
+            <div className="max-w-sm mx-auto">
+              {/* <CreatePortfolioForm
+                afterCreate={() => {
+                  loadPortfolios();
+                  setAddingAsset(false);
+                }}
+              /> */}
             </div>
-            <div className="px-3 py-1 rounded-md cursor-pointer text-blue3 hover:bg-blue1 hover:text-white">
-              7D
+          </FullScreenModal>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="mb-3 text-xl font-bold leading-7 text-blue3 sm:text-2xl sm:truncate">
+                {portfolio.name}
+              </h2>
+              <div className="mb-9">
+                <Tabs
+                  active={'All'}
+                  options={[
+                    { label: 'All', onClick: () => null },
+                    { label: 'Stocks', onClick: () => null },
+                    { label: 'Crypto', onClick: () => null },
+                    { label: 'Real Estate', onClick: () => null },
+                    { label: 'Cash', onClick: () => null },
+                    { label: 'Custom', onClick: () => null },
+                  ]}
+                />
+              </div>
             </div>
-            <div className="px-3 py-1 rounded-md cursor-pointer text-blue3 hover:bg-blue1 hover:text-white">
-              30D
-            </div>
-            <div className="px-3 py-1 rounded-md cursor-pointer text-blue3 hover:bg-blue1 hover:text-white">
-              90D
-            </div>
-            <div className="px-3 py-1 rounded-md cursor-pointer text-blue3 hover:bg-blue1 hover:text-white">
-              ALL
+            <div>
+              <Button type="button" onClick={() => setAddingAsset(true)}>
+                <PlusIcon className="w-5 h-4 mr-2 -ml-1" aria-hidden="true" />
+                Add Stock
+              </Button>
             </div>
           </div>
-        </div>
-        <MainChart />
-      </div>
 
-      <TableBase />
-    </Layout>
-  );
+          <div className="inline-block p-4 bg-white rounded-md shadow-sm">
+            <p className="text-sm text-purple2">Total Value:</p>
+            <div className="flex items-center mb-1">
+              <div className="mr-5 text-4xl font-light text-purple2">$514,272.41</div>
+              <div className="flex items-center ml-5 text-green2">
+                <div className="mr-2 text-xl font-semibold">+12,424.42</div>
+                <ChevronUpIcon className="w-5 h-5" aria-hidden="true" />
+              </div>
+              <div className="flex items-center ml-5 text-green2">
+                <div className="mr-2 text-xl font-semibold">+21.01%</div>
+                <ChevronUpIcon className="w-5 h-5" aria-hidden="true" />
+              </div>
+            </div>
+          </div>
+
+          <div className="mb-5">
+            <div className="flex justify-end w-full mb-2">
+              <div className="flex items-center p-2 text-sm font-semibold rounded-md">
+                <div className="px-3 py-1 rounded-md cursor-pointer text-blue3 hover:bg-blue1 hover:text-white">
+                  1D
+                </div>
+                <div className="px-3 py-1 rounded-md cursor-pointer text-blue3 hover:bg-blue1 hover:text-white">
+                  7D
+                </div>
+                <div className="px-3 py-1 rounded-md cursor-pointer text-blue3 hover:bg-blue1 hover:text-white">
+                  30D
+                </div>
+                <div className="px-3 py-1 rounded-md cursor-pointer text-blue3 hover:bg-blue1 hover:text-white">
+                  90D
+                </div>
+                <div className="px-3 py-1 rounded-md cursor-pointer text-blue3 hover:bg-blue1 hover:text-white">
+                  ALL
+                </div>
+              </div>
+            </div>
+            <MainChart />
+          </div>
+
+          <TableBase />
+        </>
+      );
+    }
+    return null;
+  };
+
+  return <Layout title="Portfolio">{renderContent()}</Layout>;
 };
 
 export default PortfolioViewPage;

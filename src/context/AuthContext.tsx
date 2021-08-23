@@ -1,4 +1,5 @@
 import { CreateUserRequest, User } from '@zachweinberg/wealth-schema';
+import { useRouter } from 'next/router';
 import { createContext, useEffect, useState } from 'react';
 import { API } from '~/lib/api';
 import firebase from '~/lib/firebase';
@@ -27,6 +28,7 @@ export const AuthProvider = ({ children }) => {
 const useFirebaseAuth = (): AuthContext => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<Partial<User> | null>(null);
+  const router = useRouter();
 
   const handleUser = (user: firebase.User | null) => {
     if (user) {
@@ -67,6 +69,7 @@ const useFirebaseAuth = (): AuthContext => {
   const logout = async () => {
     await firebase.auth().signOut();
     setUser(null);
+    router.push('/login');
   };
 
   return { user, loading, signup, logout, login };
