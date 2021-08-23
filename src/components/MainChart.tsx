@@ -32,7 +32,10 @@ const data: ChartData = {
   ],
   datasets: [
     {
-      data: [50, 49, 50, 51, 52, 53, 54, 54, 53, 54, 54, 54, 53, 53, 52, 53, 54, 55, 55, 60, 57, 53, 51, 50, 49],
+      data: [
+        50, 49, 50, 51, 52, 53, 54, 54, 53, 54, 54, 54, 53, 53, 52, 53, 54, 55, 55, 60, 57, 53,
+        51, 50, 49,
+      ],
       backgroundColor: '#1FD0A3',
       borderColor: '#1FD0A3',
       tension: 0.3,
@@ -72,9 +75,9 @@ const MainChart = () => {
         return;
       }
 
-      const balance = el.x;
+      // const balance = el.x;
 
-      balanceTextRef.current.innerText = balance;
+      // balanceTextRef.current.innerText = balance;
     },
     scales: {
       xAxes: {
