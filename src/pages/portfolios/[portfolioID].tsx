@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import Button from '~/components/Button';
+import AddAssetForm from '~/components/forms/AddAssetForm';
 import FullScreenModal from '~/components/FullScreenModal';
 import Layout from '~/components/Layout';
 import MainChart from '~/components/MainChart';
@@ -68,20 +69,23 @@ const PortfolioViewPage: NextPage = (props) => {
         <>
           <FullScreenModal isOpen={addingAsset} onClose={() => setAddingAsset(false)}>
             <div className="max-w-sm mx-auto">
-              {/* <CreatePortfolioForm
-                afterCreate={() => {
-                  loadPortfolios();
-                  setAddingAsset(false);
-                }}
-              /> */}
+              <AddAssetForm portfolioName={portfolio.name} />
             </div>
           </FullScreenModal>
 
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="mb-3 text-xl font-bold leading-7 text-blue3 sm:text-2xl sm:truncate">
-                {portfolio.name}
-              </h2>
+              <div className="flex items-center">
+                <h2 className="mb-3 text-xl font-bold leading-7 text-blue3 sm:text-2xl sm:truncate">
+                  {portfolio.name}
+                </h2>
+                {portfolio.public && (
+                  <div className="px-3 py-1 ml-3 text-xs font-medium rounded-full bg-gray6 text-purple2">
+                    Public
+                  </div>
+                )}
+              </div>
+
               <div className="mb-9">
                 <Tabs
                   active={'All'}
@@ -99,22 +103,21 @@ const PortfolioViewPage: NextPage = (props) => {
             <div>
               <Button type="button" onClick={() => setAddingAsset(true)}>
                 <PlusIcon className="w-5 h-4 mr-2 -ml-1" aria-hidden="true" />
-                Add Stock
+                Add asset
               </Button>
             </div>
           </div>
 
-          <div className="inline-block p-4 bg-white rounded-md shadow-sm">
+          <div className="inline-block">
             <p className="text-sm text-purple2">Total Value:</p>
             <div className="flex items-center mb-1">
               <div className="mr-5 text-4xl font-light text-purple2">$514,272.41</div>
               <div className="flex items-center ml-5 text-green2">
                 <div className="mr-2 text-xl font-semibold">+12,424.42</div>
-                <ChevronUpIcon className="w-5 h-5" aria-hidden="true" />
               </div>
               <div className="flex items-center ml-5 text-green2">
-                <div className="mr-2 text-xl font-semibold">+21.01%</div>
                 <ChevronUpIcon className="w-5 h-5" aria-hidden="true" />
+                <div className="mr-2 text-xl font-semibold">21.01%</div>
               </div>
             </div>
           </div>

@@ -99,7 +99,7 @@ const PortfolioListPage: NextPage = () => {
                 disabled={portfolios.length >= 2}
               >
                 <PlusIcon className="w-5 h-4 mr-2 -ml-1" aria-hidden="true" />
-                Add Portfolio
+                Create portfolio
               </Button>
             </div>
           </div>

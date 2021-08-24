@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { useField } from 'formik';
 
 type Props = {
-  type: 'text' | 'password' | 'email';
+  type: 'text' | 'password' | 'email' | 'number';
   label: string;
   name: string;
   placeholder: string;
@@ -17,7 +17,7 @@ const TextInput: React.FunctionComponent<Props> = ({ label, className, ...props 
       {label && (
         <label
           htmlFor={props.name}
-          className="block mb-2 text-sm font-bold tracking-widest uppercase text-purple1"
+          className="block mb-2 text-sm font-bold tracking-widest uppercase text-purple2"
         >
           {label}
         </label>
