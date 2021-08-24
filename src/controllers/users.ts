@@ -88,7 +88,7 @@ usersRouter.post(
         createdAt: new Date(),
       };
 
-      await createDocument('users', userDataToSet, newUser.uid);
+      await createDocument<User>('users', userDataToSet, newUser.uid);
 
       const response: CreateUserResponse = {
         status: 'ok',

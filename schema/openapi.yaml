@@ -12,6 +12,7 @@ paths:
         content:
           application/json:
             schema:
+              additionalProperties: false
               required:
                 - name
                 - email
@@ -40,6 +41,7 @@ paths:
         content:
           application/json:
             schema:
+              additionalProperties: false
               required:
                 - email
               properties:
@@ -68,6 +70,7 @@ paths:
         content:
           application/json:
             schema:
+              additionalProperties: false
               required:
                 - public
                 - name
@@ -86,6 +89,40 @@ paths:
   /portfolios/{portfolioID}:
     get:
       summary: Fetch a portfolio
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
+  /positions/stock:
+    post:
+      summary: Add a stock to a portfolio
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              required:
+                - portfolioID
+                - symbol
+                - companyName
+                - quantity
+                - costBasis
+              properties:
+                portfolioID:
+                  type: string
+                symbol:
+                  type: string
+                companyName:
+                  type: string
+                quantity:
+                  type: number
+                costBasis:
+                  type: number
+                note:
+                  type: string
       responses:
         '200':
           description: Valid request

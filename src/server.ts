@@ -7,6 +7,7 @@ import path from 'path';
 import portfoliosRouter from '~/controllers/portfolios';
 import usersRouter from '~/controllers/users';
 import { handleErrors, ignoreFavicon } from '~/utils/api';
+import positionsRouter from './controllers/positions';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -32,6 +33,7 @@ const Server = {
 
       app.use('/api/users', usersRouter);
       app.use('/api/portfolios', portfoliosRouter);
+      app.use('/api/positions', positionsRouter);
       app.use(handleErrors);
 
       server = app.listen(PORT, () => {

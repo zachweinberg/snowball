@@ -93,23 +93,18 @@ portfoliosRouter.post(
 portfoliosRouter.get(
   '/:portfolioID',
   catchErrors(async (req, res) => {
-    let userDoesNotOwnPortfolio = true;
+    let userOwnsPortfolio = false;
 
     const portfolio = await fetchDocument<Portfolio>('portfolios', req.params.portfolioID);
 
     const authUser = await getUserFromAuthHeader(req, false);
 
-    if (authUser) {
-      const usersPortfolios = await findDocuments<Portfolio>('portfolios', [
-        { property: 'userID', condition: '==', value: authUser.uid },
-      ]);
-
-      if (usersPortfolios.some((portfolio) => portfolio.id === req.params.portfolioID)) {
-        userDoesNotOwnPortfolio = false;
-      }
+    if (authUser && portfolio.userID === authUser.uid) {
+      userOwnsPortfolio = true;
     }
 
-    if (!portfolio.public && userDoesNotOwnPortfolio) {
+    if (!portfolio.public && !userOwnsPortfolio) {
+      // Private
       return res.status(404).json({ status: 'error', error: 'Portfolio does not exist.' });
     }
 

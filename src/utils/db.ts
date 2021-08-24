@@ -25,14 +25,19 @@ const fetchDocumentSnapshot = async (collection: string, documentID: string) => 
   return doc;
 };
 
-const snapshotToType = <T extends object>(snapshot: FirebaseFirestore.DocumentSnapshot): WithID<T> => {
+const snapshotToType = <T extends object>(
+  snapshot: FirebaseFirestore.DocumentSnapshot
+): WithID<T> => {
   return {
     ...(snapshot.data() as T),
     id: snapshot.id,
   };
 };
 
-export const fetchDocument = async <T extends object>(collection: string, documentID: string): Promise<WithID<T>> => {
+export const fetchDocument = async <T extends object>(
+  collection: string,
+  documentID: string
+): Promise<WithID<T>> => {
   const doc = await fetchDocumentSnapshot(collection, documentID);
   return snapshotToType<T>(doc);
 };
@@ -70,9 +75,9 @@ export const findDocuments = async <T extends object>(
   return results.docs.map((doc) => snapshotToType<T>(doc));
 };
 
-export const createDocument = async (
+export const createDocument = async <T>(
   collection: string,
-  data: FirebaseFirestore.DocumentData,
+  data: Partial<T>,
   docID?: string
 ): Promise<string> => {
   if (docID) {
@@ -84,8 +89,16 @@ export const createDocument = async (
   }
 };
 
-export const updateDocument = async (collection: string, documentID: string, data: FirebaseFirestore.DocumentData) => {
-  return firebaseAdmin().firestore().collection(collection).doc(documentID).set(data, { merge: true });
+export const updateDocument = async (
+  collection: string,
+  documentID: string,
+  data: FirebaseFirestore.DocumentData
+) => {
+  return firebaseAdmin()
+    .firestore()
+    .collection(collection)
+    .doc(documentID)
+    .set(data, { merge: true });
 };
 
 export function deleteDocument(documentPath: string) {
