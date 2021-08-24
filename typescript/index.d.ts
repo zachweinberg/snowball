@@ -107,3 +107,10 @@ export interface VerifyEmailRequest {
 export interface VerifyEmailResponse extends BaseResponse {
     email: string;
 }
+export interface AddStockRequest {
+    portfolioID: string;
+    symbol: string;
+    costBasis: number;
+    quantity: number;
+    note?: string;
+}
