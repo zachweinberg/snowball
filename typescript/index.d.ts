@@ -111,6 +111,7 @@ export interface AddStockRequest {
     portfolioID: string;
     symbol: string;
     costBasis: number;
+    companyName: string;
     quantity: number;
     note?: string;
 }
