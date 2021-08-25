@@ -1,30 +1,16 @@
 import {
-  AssetType,
-  CashPosition,
   CreatePortfolioRequest,
   CreatePortfolioResponse,
-  CryptoPosition,
-  CustomPosition,
   GetPortfoliosResponse,
   Portfolio,
   PortfolioWithBalances,
-  Position,
-  RealEstatePosition,
-  StockPosition,
 } from '@zachweinberg/wealth-schema';
-import currency from 'currency.js';
 import { Router } from 'express';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { catchErrors, getUserFromAuthHeader, requireSignedIn } from '~/utils/api';
 import { fetchDocument, findDocuments } from '~/utils/db';
-import {
-  calculateCashValue,
-  calculateCryptoTotal,
-  calculateCustomsValue,
-  calculateRealEstateValue,
-  calculateStocksTotal,
-} from '~/utils/math';
 import { capitalize } from '~/utils/misc';
+import { calculatePortfolioValues } from '~/utils/positions';
 
 const portfoliosRouter = Router();
 
@@ -45,27 +31,8 @@ portfoliosRouter.get(
     let portfoliosWithBalances: PortfolioWithBalances[] = [];
 
     for (const portfolio of portfolios) {
-      const assets = await findDocuments<Position>(`/portfolios/${portfolio.id}/positions`);
-
-      const stocks = assets.filter((asset) => asset.assetType === AssetType.Stock) as StockPosition[];
-      const crypto = assets.filter((asset) => asset.assetType === AssetType.Crypto) as CryptoPosition[];
-      const realEstate = assets.filter((asset) => asset.assetType === AssetType.RealEstate) as RealEstatePosition[];
-      const cash = assets.filter((asset) => asset.assetType === AssetType.Cash) as CashPosition[];
-      const customs = assets.filter((asset) => asset.assetType === AssetType.Cash) as CustomPosition[];
-
-      const [stocksValue, cryptoValue] = await Promise.all([
-        calculateStocksTotal(stocks),
-        calculateCryptoTotal(crypto),
-      ]);
-      const realEstateValue = await calculateRealEstateValue(realEstate);
-      const cashValue = await calculateCashValue(cash);
-      const customsValue = await calculateCustomsValue(customs);
-
-      const totalValue = currency(stocksValue)
-        .add(cryptoValue)
-        .add(realEstateValue)
-        .add(cashValue)
-        .add(customsValue).value;
+      const { totalValue, stocksValue, cryptoValue, realEstateValue, cashValue, customsValue } =
+        await calculatePortfolioValues(portfolio.id);
 
       portfoliosWithBalances.push({
         ...portfolio,
@@ -141,10 +108,6 @@ portfoliosRouter.get(
       // Private portfolio
       return res.status(404).json({ status: 'error', error: 'Portfolio does not exist.' });
     }
-
-    // const response: PortfolioWithBalances = {
-    //   status: 'ok',
-    // };
 
     res.status(200).json({ status: 'ok', portfolio });
   })
