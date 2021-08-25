@@ -7,6 +7,7 @@ module.exports = {
   devtool: 'source-map',
   entry: {
     server: './src/server.ts',
+    cron: './src/cron/index.ts',
   },
   module: {
     rules: [

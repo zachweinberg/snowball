@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-interface CMCResponse {
+interface CMCQuotesResponse {
   data: {
     [symbol: string]: {
       id: number;
@@ -10,6 +10,17 @@ interface CMCResponse {
       quote: { USD: { price: number; market_cap: number; percent_change_24h: number } };
     };
   };
+}
+
+interface CMCAllCoinsResponse {
+  data: Array<{
+    id: number;
+    name: string;
+    symbol: string;
+    slug: string;
+    rank: number;
+    is_active: number;
+  }>;
 }
 
 const COINMARKETCAP_BASE_URL = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency';
@@ -24,7 +35,7 @@ const requestCoinMarketCap = async <T>(path: string) => {
 export const getCryptoPrices = async (coinSymbols: string[]): Promise<{ [symbol: string]: number | null }> => {
   const dedupedSymbols = [...new Set(coinSymbols)];
 
-  const response = await requestCoinMarketCap<CMCResponse>(
+  const response = await requestCoinMarketCap<CMCQuotesResponse>(
     `/quotes/latest?symbol=${dedupedSymbols.join(',')}&aux=is_active`
   );
 
@@ -32,4 +43,9 @@ export const getCryptoPrices = async (coinSymbols: string[]): Promise<{ [symbol:
     (accum, curr) => ({ ...accum, [curr.toUpperCase()]: response.data[curr]?.quote?.USD?.price ?? null }),
     {}
   );
+};
+
+export const getAllActiveCoins = async () => {
+  const data = await requestCoinMarketCap<CMCAllCoinsResponse>(`/map`);
+  return data.data;
 };
