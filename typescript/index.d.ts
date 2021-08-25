@@ -155,3 +155,9 @@ export interface PortfolioValues {
 export interface DailyBalance extends PortfolioValues {
     date: Date;
 }
+export interface StockPositionWithQuote extends StockPosition {
+    last: number;
+    marketValue: number;
+    dayChange: number;
+    gainLoss: number;
+}
