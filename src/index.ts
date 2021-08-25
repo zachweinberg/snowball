@@ -113,7 +113,7 @@ export interface GetPortfoliosResponse extends BaseResponse {
 }
 
 export interface GetPortfolioResponse extends BaseResponse {
-  portfolio: Portfolio;
+  portfolio: PortfolioWithQuotes;
 }
 
 export interface MeResponse extends BaseResponse {
@@ -187,4 +187,16 @@ export interface StockPositionWithQuote extends StockPosition {
   marketValue: number;
   dayChange: number;
   gainLoss: number;
+}
+
+export interface CryptoPositionWithQuote extends CryptoPosition {
+  last: number;
+  marketValue: number;
+  dayChange: number;
+  gainLoss: number;
+}
+
+export interface PortfolioWithQuotes {
+  stocks: StockPositionWithQuote[];
+  crypto: CryptoPositionWithQuote[];
 }
