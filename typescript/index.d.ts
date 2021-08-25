@@ -115,3 +115,11 @@ export interface AddStockRequest {
     quantity: number;
     note?: string;
 }
+export interface AddCryptoRequest {
+    portfolioID: string;
+    symbol: string;
+    costBasis: number;
+    coinName: string;
+    quantity: number;
+    note?: string;
+}
