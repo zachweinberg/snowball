@@ -71,7 +71,7 @@ export interface CashPosition extends Position {
     accountName?: string;
 }
 export interface CustomPosition extends Position {
-    name: string;
+    assetName: string;
     value: number;
 }
 export interface BaseResponse {
@@ -130,5 +130,17 @@ export interface AddRealEstateRequest {
     propertyType: RealEstatePropertyType;
     estimatedAppreciationRate: number;
     address?: string;
+    note?: string;
+}
+export interface AddCashRequest {
+    portfolioID: string;
+    amount: number;
+    accountName: string;
+    note?: string;
+}
+export interface AddCustomAssetRequest {
+    portfolioID: string;
+    value: number;
+    assetName: string;
     note?: string;
 }
