@@ -167,7 +167,7 @@ export interface CryptoPositionWithQuote extends CryptoPosition {
     dayChange: number;
     gainLoss: number;
 }
-export interface PortfolioWithQuotes {
+export interface PortfolioWithQuotes extends Portfolio {
     stocks: StockPositionWithQuote[];
     crypto: CryptoPositionWithQuote[];
 }
