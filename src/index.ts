@@ -148,8 +148,9 @@ export interface AddCryptoRequest {
 
 export interface AddRealEstateRequest {
   portfolioID: string;
-  value: string;
+  propertyValue: number;
   propertyType: RealEstatePropertyType;
   estimatedAppreciationRate: number;
   address?: string;
+  note?: string;
 }
