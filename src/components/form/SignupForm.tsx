@@ -74,7 +74,7 @@ const SignupForm: React.FunctionComponent = () => {
       onSubmit={onSubmit}
     >
       {(formik) => (
-        <Form className="bg-white rounded-md shadow-md p-9">
+        <Form className="p-10 bg-white rounded-md shadow-md">
           <p className="mb-8 text-3xl font-semibold tracking-wide text-blue3">
             Create an account
           </p>

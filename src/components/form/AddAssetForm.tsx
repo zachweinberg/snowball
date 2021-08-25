@@ -5,6 +5,7 @@ import { useState } from 'react';
 import AddStockForm from '~/components/form/AddStockForm';
 import AddCashForm from './AddCashForm';
 import AddCryptoForm from './AddCryptoForm';
+import AddCustomAssetForm from './AddCustomAssetForm';
 import AddRealEstateCrypto from './AddRealEstateForm';
 
 const availableTypes = [
@@ -51,6 +52,8 @@ const renderAssetForm = (assetType: AssetType | null, portfolioID, onClose: () =
       return <AddRealEstateCrypto afterAdd={onClose} portfolioID={portfolioID} />;
     case AssetType.Cash:
       return <AddCashForm afterAdd={onClose} portfolioID={portfolioID} />;
+    case AssetType.Custom:
+      return <AddCustomAssetForm afterAdd={onClose} portfolioID={portfolioID} />;
     default:
       return null;
   }

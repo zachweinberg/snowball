@@ -1,6 +1,7 @@
 import {
   AddCashRequest,
   AddCryptoRequest,
+  AddCustomAssetRequest,
   AddRealEstateRequest,
   AddStockRequest,
   CreatePortfolioRequest,
@@ -126,6 +127,13 @@ export const API = {
       '/api/positions/real-estate',
       'post',
       realEstateData
+    );
+  },
+  addCustomAssetToPortfolio: (customAssetData: AddCustomAssetRequest) => {
+    return request<AddCustomAssetRequest, undefined>(
+      '/api/positions/custom',
+      'post',
+      customAssetData
     );
   },
 };

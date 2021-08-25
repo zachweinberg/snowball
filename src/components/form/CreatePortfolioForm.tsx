@@ -52,7 +52,7 @@ const CreatePortfolioForm: React.FunctionComponent<Props> = ({
       onSubmit={onSubmit}
     >
       {(formik) => (
-        <Form className={classNames('p-10 bg-white', { 'shadow-sm rounded-md': firstTime })}>
+        <Form className={classNames('bg-white', { 'shadow-sm rounded-md p-10': firstTime })}>
           <p
             className={classNames('font-bold tracking-wide text-blue3', {
               'mb-5 text-2xl': firstTime,

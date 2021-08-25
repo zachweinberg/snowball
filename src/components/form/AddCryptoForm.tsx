@@ -70,7 +70,7 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({ afterAdd, portfolioID }
       onSubmit={onSubmit}
     >
       {(formik) => (
-        <Form className="p-10 bg-white">
+        <Form className="bg-white">
           <p className="mb-8 text-3xl font-bold tracking-wide text-blue3">Add Crypto</p>
           <div className="mb-5">
             <PositionSelector

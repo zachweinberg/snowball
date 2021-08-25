@@ -77,7 +77,7 @@ const AddRealEstateCrypto: React.FunctionComponent<Props> = ({
       onSubmit={onSubmit}
     >
       {(formik) => (
-        <Form className="p-10 bg-white">
+        <Form className="bg-white">
           <p className="mb-8 text-3xl font-bold tracking-wide text-blue3">Add Real Estate</p>
           <div className="mb-5">
             <MoneyInput
