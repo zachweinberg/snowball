@@ -62,6 +62,7 @@ export declare enum RealEstatePropertyType {
 }
 export interface RealEstatePosition extends Position {
     address?: string;
+    value: number;
     propertyType: RealEstatePropertyType;
     estimatedAppreciationRate: number;
 }
@@ -122,4 +123,11 @@ export interface AddCryptoRequest {
     coinName: string;
     quantity: number;
     note?: string;
+}
+export interface AddRealEstateRequest {
+    portfolioID: string;
+    value: string;
+    propertyType: RealEstatePropertyType;
+    estimatedAppreciationRate: number;
+    address?: string;
 }
