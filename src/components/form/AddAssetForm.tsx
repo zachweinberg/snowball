@@ -3,6 +3,9 @@ import { ArrowRightIcon } from '@heroicons/react/solid';
 import { AssetType } from '@zachweinberg/wealth-schema';
 import { useState } from 'react';
 import AddStockForm from '~/components/form/AddStockForm';
+import AddCashForm from './AddCashForm';
+import AddCryptoForm from './AddCryptoForm';
+import AddRealEstateCrypto from './AddRealEstateForm';
 
 const availableTypes = [
   { type: AssetType.Stock, label: 'Stock' },
@@ -43,7 +46,11 @@ const renderAssetForm = (assetType: AssetType | null, portfolioID, onClose: () =
     case AssetType.Stock:
       return <AddStockForm afterAdd={onClose} portfolioID={portfolioID} />;
     case AssetType.Crypto:
-      return <AddStockForm afterAdd={onClose} portfolioID={portfolioID} />;
+      return <AddCryptoForm afterAdd={onClose} portfolioID={portfolioID} />;
+    case AssetType.RealEstate:
+      return <AddRealEstateCrypto afterAdd={onClose} portfolioID={portfolioID} />;
+    case AssetType.Cash:
+      return <AddCashForm afterAdd={onClose} portfolioID={portfolioID} />;
     default:
       return null;
   }

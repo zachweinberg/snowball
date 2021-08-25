@@ -1,4 +1,7 @@
 import {
+  AddCashRequest,
+  AddCryptoRequest,
+  AddRealEstateRequest,
   AddStockRequest,
   CreatePortfolioRequest,
   CreatePortfolioResponse,
@@ -111,5 +114,18 @@ export const API = {
   },
   addStockToPortfolio: (stockData: AddStockRequest) => {
     return request<AddStockRequest, undefined>('/api/positions/stock', 'post', stockData);
+  },
+  addCryptoToPortfolio: (coinData: AddCryptoRequest) => {
+    return request<AddCryptoRequest, undefined>('/api/positions/crypto', 'post', coinData);
+  },
+  addCashToPortfolio: (cashData: AddCashRequest) => {
+    return request<AddCashRequest, undefined>('/api/positions/cash', 'post', cashData);
+  },
+  addRealEstateToPortfolio: (realEstateData: AddRealEstateRequest) => {
+    return request<AddRealEstateRequest, undefined>(
+      '/api/positions/real-estate',
+      'post',
+      realEstateData
+    );
   },
 };

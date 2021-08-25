@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import debounce from 'lodash/debounce';
+import Image from 'next/image';
 import { useCallback, useMemo, useState } from 'react';
 import { SearchPositionsResult } from '~/lib/algolia';
 
@@ -46,7 +47,7 @@ const AsyncSelect: React.FunctionComponent<Props> = ({
             className="flex items-center p-2 border-b cursor-pointer hover:bg-gray4 text-purple2"
             key={result.providerID}
           >
-            {/* <Image width={25} height={25} src={result.logoURL} /> */}
+            {result.logoURL && <Image width={25} height={25} src={result.logoURL} />}
             <p className="p-1 text-sm rounded-md whitespace-nowrap">{result.symbol}</p>
             <p className="ml-2 text-sm font-semibold truncate">{result.fullName}</p>
           </div>

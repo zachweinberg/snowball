@@ -80,7 +80,7 @@ const CreatePortfolioForm: React.FunctionComponent<Props> = ({
 
           {error && <p className="mb-1 text-sm text-red3">{error}</p>}
 
-          <Button type="submit" className="mt-3">
+          <Button type="submit" className="mt-3" disabled={formik.isSubmitting}>
             Create portfolio
           </Button>
         </Form>

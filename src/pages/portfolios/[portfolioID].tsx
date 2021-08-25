@@ -97,7 +97,7 @@ const PortfolioViewPage: NextPage = () => {
             <div>
               <Button type="button" onClick={() => setAddingAsset(true)}>
                 <PlusIcon className="w-5 h-4 mr-2 -ml-1" aria-hidden="true" />
-                Add asset
+                Add Asset
               </Button>
             </div>
           </div>
@@ -150,7 +150,7 @@ const PortfolioViewPage: NextPage = () => {
     <Layout title="Portfolio">
       {portfolio && (
         <FullScreenModal isOpen={addingAsset} onClose={() => setAddingAsset(false)}>
-          <div className="max-w-sm mx-auto">
+          <div className="max-w-md mx-auto">
             <AddAssetForm
               portfolioName={portfolio.name}
               portfolioID={portfolio.id}
