@@ -144,3 +144,14 @@ export interface AddCustomAssetRequest {
     assetName: string;
     note?: string;
 }
+export interface PortfolioValues {
+    cashValue: number;
+    stocksValue: number;
+    cryptoValue: number;
+    realEstateValue: number;
+    customsValue: number;
+    totalValue: number;
+}
+export interface DailyBalance extends PortfolioValues {
+    date: Date;
+}
