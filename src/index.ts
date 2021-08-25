@@ -69,7 +69,7 @@ export enum RealEstatePropertyType {
 }
 export interface RealEstatePosition extends Position {
   address?: string;
-  value: number;
+  propertyValue: number;
   propertyType: RealEstatePropertyType;
   estimatedAppreciationRate: number;
 }
