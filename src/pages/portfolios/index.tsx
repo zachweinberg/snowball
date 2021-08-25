@@ -1,5 +1,5 @@
 import { PlusIcon } from '@heroicons/react/solid';
-import { Portfolio } from '@zachweinberg/wealth-schema';
+import { PortfolioWithBalances } from '@zachweinberg/wealth-schema';
 import type { NextPage } from 'next';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
@@ -15,7 +15,7 @@ import { API } from '~/lib/api';
 
 const PortfolioListPage: NextPage = () => {
   const [creatingPortfolio, setCreatingPortfolio] = useState(false);
-  const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
+  const [portfolios, setPortfolios] = useState<PortfolioWithBalances[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -94,10 +94,7 @@ const PortfolioListPage: NextPage = () => {
             {portfolios.map((portfolio) => (
               <Link href={`/portfolios/${portfolio.id}`} key={portfolio.id}>
                 <a>
-                  <PortfolioSummaryCard
-                    portfolioName={portfolio.name}
-                    isPublic={portfolio.public}
-                  />
+                  <PortfolioSummaryCard portfolio={portfolio} />
                 </a>
               </Link>
             ))}

@@ -1,4 +1,5 @@
 import { RealEstatePropertyType } from '@zachweinberg/wealth-schema';
+import currency from 'currency.js';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useState } from 'react';
 import * as Yup from 'yup';
@@ -51,8 +52,10 @@ const AddRealEstateCrypto: React.FunctionComponent<Props> = ({
   const onSubmit = async (data: Values, actions: FormikHelpers<Values>) => {
     actions.setSubmitting(true);
 
+    const numberPropertyValue = currency(data.propertyValue).value;
+
     try {
-      const realEstateData = { ...data, portfolioID };
+      const realEstateData = { ...data, propertyValue: numberPropertyValue, portfolioID };
       await API.addRealEstateToPortfolio(realEstateData);
       afterAdd();
     } catch (err) {
@@ -104,10 +107,10 @@ const AddRealEstateCrypto: React.FunctionComponent<Props> = ({
 
           <div className="mb-5">
             <TextInput
-              label="Note"
+              label="Estimated Annual Appreciation %"
               name="estimatedAppreciationRate"
               type="number"
-              placeholder="Estimated appreciation %"
+              placeholder="Enter appreciation %"
             />
           </div>
 

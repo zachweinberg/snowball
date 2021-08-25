@@ -33,6 +33,7 @@ const TextInput: React.FunctionComponent<Props> = ({
             name={name}
             placeholder={placeholder}
             type={type}
+            value={form.values[name]}
             onChange={(e) => {
               form.setFieldValue(
                 name,
