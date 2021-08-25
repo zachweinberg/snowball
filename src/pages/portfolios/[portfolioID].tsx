@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import Button from '~/components/Button';
-import AddAssetForm from '~/components/forms/AddAssetForm';
+import AddAssetForm from '~/components/form/AddAssetForm';
 import FullScreenModal from '~/components/FullScreenModal';
 import Layout from '~/components/Layout';
 import MainChart from '~/components/MainChart';
@@ -14,7 +14,7 @@ import TableBase from '~/components/tables/TableBase';
 import Tabs from '~/components/Tabs';
 import { API } from '~/lib/api';
 
-const PortfolioViewPage: NextPage = (props) => {
+const PortfolioViewPage: NextPage = () => {
   const router = useRouter();
   const [addingAsset, setAddingAsset] = useState(false);
   const [portfolio, setPortfolio] = useState<Portfolio | null>(null);
@@ -23,6 +23,7 @@ const PortfolioViewPage: NextPage = (props) => {
 
   const loadPortfolio = async () => {
     setLoading(true);
+
     try {
       const portfolioData = await API.getPortfolio(router.query.portfolioID as string);
       setPortfolio(portfolioData.portfolio);
@@ -46,7 +47,6 @@ const PortfolioViewPage: NextPage = (props) => {
       return (
         <div className="max-w-md p-8 mx-auto bg-white rounded-md shadow-md">
           <p className="mb-6 text-xl font-medium text-center text-purple2">{error}</p>
-
           <Link href="/portfolios">
             <a>
               <Button type="button">Go Back</Button>
@@ -67,12 +67,6 @@ const PortfolioViewPage: NextPage = (props) => {
     if (portfolio) {
       return (
         <>
-          <FullScreenModal isOpen={addingAsset} onClose={() => setAddingAsset(false)}>
-            <div className="max-w-sm mx-auto">
-              <AddAssetForm portfolioName={portfolio.name} />
-            </div>
-          </FullScreenModal>
-
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center">
@@ -152,7 +146,26 @@ const PortfolioViewPage: NextPage = (props) => {
     return null;
   };
 
-  return <Layout title="Portfolio">{renderContent()}</Layout>;
+  return (
+    <Layout title="Portfolio">
+      {portfolio && (
+        <FullScreenModal isOpen={addingAsset} onClose={() => setAddingAsset(false)}>
+          <div className="max-w-sm mx-auto">
+            <AddAssetForm
+              portfolioName={portfolio.name}
+              portfolioID={portfolio.id}
+              onClose={() => {
+                loadPortfolio();
+                setAddingAsset(false);
+              }}
+            />
+          </div>
+        </FullScreenModal>
+      )}
+
+      {renderContent()}
+    </Layout>
+  );
 };
 
 export default PortfolioViewPage;

@@ -1,4 +1,5 @@
 import {
+  AddStockRequest,
   CreatePortfolioRequest,
   CreatePortfolioResponse,
   CreateUserRequest,
@@ -107,5 +108,8 @@ export const API = {
       'post',
       { name, public: isPublic }
     );
+  },
+  addStockToPortfolio: (stockData: AddStockRequest) => {
+    return request<AddStockRequest, undefined>('/api/positions/stock', 'post', stockData);
   },
 };

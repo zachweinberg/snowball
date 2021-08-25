@@ -3,7 +3,7 @@ import { Form, Formik, FormikHelpers } from 'formik';
 import { useState } from 'react';
 import * as Yup from 'yup';
 import Button from '~/components/Button';
-import TextInput from '~/components/TextInput';
+import TextInput from '~/components/form/TextInput';
 import { API } from '~/lib/api';
 
 interface Values {

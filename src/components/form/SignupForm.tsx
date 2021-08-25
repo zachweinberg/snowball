@@ -3,9 +3,9 @@ import { Form, Formik, FormikHelpers } from 'formik';
 import { useState } from 'react';
 import * as Yup from 'yup';
 import Button from '~/components/Button';
-import TextInput from '~/components/TextInput';
+import Select from '~/components/form/Select';
+import TextInput from '~/components/form/TextInput';
 import { useAuth } from '~/hooks/useAuth';
-import Select from '../Select';
 
 interface Values {
   email: string;

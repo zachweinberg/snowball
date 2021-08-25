@@ -5,7 +5,7 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
 import Button from '~/components/Button';
-import CreatePortfolioForm from '~/components/forms/CreatePortfolioForm';
+import CreatePortfolioForm from '~/components/form/CreatePortfolioForm';
 import FullScreenModal from '~/components/FullScreenModal';
 import Layout from '~/components/Layout';
 import PortfolioSummaryCard from '~/components/PortfolioSummaryCard';
@@ -61,19 +61,6 @@ const PortfolioListPage: NextPage = () => {
     if (portfolios && portfolios.length > 0) {
       return (
         <>
-          <FullScreenModal
-            isOpen={creatingPortfolio}
-            onClose={() => setCreatingPortfolio(false)}
-          >
-            <div className="max-w-sm mx-auto">
-              <CreatePortfolioForm
-                afterCreate={() => {
-                  loadPortfolios();
-                  setCreatingPortfolio(false);
-                }}
-              />
-            </div>
-          </FullScreenModal>
           <div className="flex justify-between">
             <div>
               <h2 className="mb-4 text-xl font-bold leading-7 text-blue3 sm:text-2xl sm:truncate">
@@ -123,7 +110,23 @@ const PortfolioListPage: NextPage = () => {
 
   return (
     <RequiredLoggedIn>
-      <Layout title="My Portfolios">{renderContent()}</Layout>
+      <Layout title="My Portfolios">
+        <FullScreenModal
+          isOpen={creatingPortfolio}
+          onClose={() => setCreatingPortfolio(false)}
+        >
+          <div className="max-w-sm mx-auto">
+            <CreatePortfolioForm
+              afterCreate={() => {
+                loadPortfolios();
+                setCreatingPortfolio(false);
+              }}
+            />
+          </div>
+        </FullScreenModal>
+
+        {renderContent()}
+      </Layout>
     </RequiredLoggedIn>
   );
 };

@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import Link from 'next/link';
 import React from 'react';
 import RequiredLoggedOut from '~/components/auth/RequireLoggedOut';
-import LoginForm from '~/components/forms/LoginForm';
+import LoginForm from '~/components/form/LoginForm';
 
 const LoginPage: NextPage = () => {
   return (

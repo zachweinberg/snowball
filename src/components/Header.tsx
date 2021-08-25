@@ -30,43 +30,41 @@ const Header: React.FunctionComponent = () => {
 
   return (
     <div>
-      <Disclosure as="nav" className="">
+      <Disclosure as="nav">
         {({ open }) => (
           <div className="bg-white border-b border-gray7">
             <div className="max-w-6xl px-4 mx-auto">
               <div className="flex items-center justify-between h-16">
-                <div className="flex items-center justify-between flex-1">
-                  <div className="flex-shrink-0">
-                    <Link href="/">
-                      <a>
-                        <CloudIcon
-                          className="w-8 h-8 cursor-pointer text-blue1 hover:opacity-80"
-                          aria-hidden="true"
-                        />
-                      </a>
-                    </Link>
-                  </div>
-                  {auth.user && (
-                    <div className="hidden md:block">
-                      <div className="flex items-baseline mr-10 space-x-4">
-                        {links.map((link, i) => (
-                          <Link href={link.href} key={i}>
-                            <a
-                              className={classNames(
-                                'px-3 py-2 text-lg font-semibold rounded-md',
-                                router.pathname.includes(link.href)
-                                  ? 'text-blue1'
-                                  : 'hover:text-blue1 text-blue3'
-                              )}
-                            >
-                              {link.label}
-                            </a>
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                <div>
+                  <Link href="/">
+                    <a>
+                      <CloudIcon
+                        className="w-8 h-8 cursor-pointer text-blue1 hover:opacity-80"
+                        aria-hidden="true"
+                      />
+                    </a>
+                  </Link>
                 </div>
+                {auth.user && (
+                  <div className="hidden md:block">
+                    <div className="flex items-baseline space-x-4">
+                      {links.map((link, i) => (
+                        <Link href={link.href} key={i}>
+                          <a
+                            className={classNames(
+                              'px-3 py-2 text-xl font-semibold rounded-md',
+                              router.pathname.includes(link.href)
+                                ? 'text-blue1'
+                                : 'hover:text-blue1 text-blue3'
+                            )}
+                          >
+                            {link.label}
+                          </a>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 {auth.user && (
                   <div className="hidden md:block">
                     <div className="flex items-center ml-4">

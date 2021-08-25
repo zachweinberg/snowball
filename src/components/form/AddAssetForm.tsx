@@ -2,7 +2,7 @@ import { Transition } from '@headlessui/react';
 import { ArrowRightIcon } from '@heroicons/react/solid';
 import { AssetType } from '@zachweinberg/wealth-schema';
 import { useState } from 'react';
-import StockForm from '~/components/forms/StockForm';
+import AddStockForm from '~/components/form/AddStockForm';
 
 const availableTypes = [
   { type: AssetType.Stock, label: 'Stock' },
@@ -15,6 +15,12 @@ const availableTypes = [
 interface AssetTypeRowProps {
   label: string;
   onSelect: () => void;
+}
+
+interface AddAssetFormProps {
+  portfolioName: string;
+  portfolioID: string;
+  onClose: () => void;
 }
 
 const AssetTypeRow: React.FunctionComponent<AssetTypeRowProps> = ({
@@ -32,21 +38,21 @@ const AssetTypeRow: React.FunctionComponent<AssetTypeRowProps> = ({
   );
 };
 
-interface AddAssetFormProps {
-  portfolioName: string;
-}
-
-const renderAssetForm = (assetType: AssetType | null) => {
+const renderAssetForm = (assetType: AssetType | null, portfolioID, onClose: () => void) => {
   switch (assetType) {
     case AssetType.Stock:
-      return <StockForm afterAdd={() => null} />;
+      return <AddStockForm afterAdd={onClose} portfolioID={portfolioID} />;
+    case AssetType.Crypto:
+      return <AddStockForm afterAdd={onClose} portfolioID={portfolioID} />;
     default:
       return null;
   }
 };
 
 const AddAssetForm: React.FunctionComponent<AddAssetFormProps> = ({
+  portfolioID,
   portfolioName,
+  onClose,
 }: AddAssetFormProps) => {
   const [assetType, setAssetType] = useState<AssetType | null>(null);
 
@@ -70,7 +76,7 @@ const AddAssetForm: React.FunctionComponent<AddAssetFormProps> = ({
           Select the asset type you would like to add:
         </p>
 
-        <div className="flex flex-col space-y-4 text-purple3">
+        <div className="flex flex-col space-y-4 text-purple2">
           {availableTypes.map((option) => (
             <AssetTypeRow
               key={option.label}
@@ -91,7 +97,7 @@ const AddAssetForm: React.FunctionComponent<AddAssetFormProps> = ({
         leaveFrom="translate-x-0 opacity-100"
         leaveTo="translate-x-24 opacity-0"
       >
-        {renderAssetForm(assetType)}
+        {renderAssetForm(assetType, portfolioID, onClose)}
       </Transition>
     </div>
   );
