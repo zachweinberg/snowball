@@ -225,3 +225,31 @@ paths:
             application/json:
               schema:
                 type: object
+  /positions/custom:
+    post:
+      summary: Add custom asset to a portfolio
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              required:
+                - portfolioID
+                - value
+                - assetName
+              properties:
+                portfolioID:
+                  type: string
+                assetName:
+                  type: string
+                value:
+                  type: number
+                note:
+                  type: string
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object

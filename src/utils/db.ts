@@ -25,19 +25,28 @@ const fetchDocumentSnapshot = async (collection: string, documentID: string) => 
   return doc;
 };
 
-const snapshotToType = <T extends object>(
-  snapshot: FirebaseFirestore.DocumentSnapshot
-): WithID<T> => {
+const normalizeTimestamps = <T extends object>(value: T): T =>
+  Object.keys(value).reduce((final, key) => {
+    const finalValue =
+      value[key] instanceof firebaseAdmin().firestore.Timestamp
+        ? value[key].toDate()
+        : value[key] !== null && typeof value[key] === 'object' && !Array.isArray(value[key])
+        ? normalizeTimestamps(value[key])
+        : value[key];
+    return {
+      ...final,
+      [key]: finalValue,
+    };
+  }, {} as T);
+
+const snapshotToType = <T extends object>(snapshot: FirebaseFirestore.DocumentSnapshot): WithID<T> => {
   return {
-    ...(snapshot.data() as T),
+    ...normalizeTimestamps<T>(snapshot.data() as T),
     id: snapshot.id,
   };
 };
 
-export const fetchDocument = async <T extends object>(
-  collection: string,
-  documentID: string
-): Promise<WithID<T>> => {
+export const fetchDocument = async <T extends object>(collection: string, documentID: string): Promise<WithID<T>> => {
   const doc = await fetchDocumentSnapshot(collection, documentID);
   return snapshotToType<T>(doc);
 };
@@ -75,11 +84,7 @@ export const findDocuments = async <T extends object>(
   return results.docs.map((doc) => snapshotToType<T>(doc));
 };
 
-export const createDocument = async <T>(
-  collection: string,
-  data: Partial<T>,
-  docID?: string
-): Promise<string> => {
+export const createDocument = async <T>(collection: string, data: Partial<T>, docID?: string): Promise<string> => {
   if (docID) {
     await firebaseAdmin().firestore().collection(collection).doc(docID).set(data, { merge: true });
     return docID;
@@ -89,16 +94,8 @@ export const createDocument = async <T>(
   }
 };
 
-export const updateDocument = async (
-  collection: string,
-  documentID: string,
-  data: FirebaseFirestore.DocumentData
-) => {
-  return firebaseAdmin()
-    .firestore()
-    .collection(collection)
-    .doc(documentID)
-    .set(data, { merge: true });
+export const updateDocument = async (collection: string, documentID: string, data: FirebaseFirestore.DocumentData) => {
+  return firebaseAdmin().firestore().collection(collection).doc(documentID).set(data, { merge: true });
 };
 
 export function deleteDocument(documentPath: string) {

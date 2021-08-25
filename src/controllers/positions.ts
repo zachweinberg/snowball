@@ -1,11 +1,13 @@
 import {
   AddCashRequest,
   AddCryptoRequest,
+  AddCustomAssetRequest,
   AddRealEstateRequest,
   AddStockRequest,
   AssetType,
   CashPosition,
   CryptoPosition,
+  CustomPosition,
   Portfolio,
   RealEstatePosition,
   StockPosition,
@@ -35,7 +37,7 @@ positionsRouter.post(
     const { portfolioID, symbol, companyName, quantity, costBasis, note } =
       req.body as AddStockRequest;
 
-    if (!userOwnsPortfolio(req, res, portfolioID)) {
+    if (!(await userOwnsPortfolio(req, res, portfolioID))) {
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
     }
 
@@ -64,7 +66,7 @@ positionsRouter.post(
     const { portfolioID, symbol, coinName, quantity, costBasis, note } =
       req.body as AddCryptoRequest;
 
-    if (!userOwnsPortfolio(req, res, portfolioID)) {
+    if (!(await userOwnsPortfolio(req, res, portfolioID))) {
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
     }
 
@@ -93,7 +95,7 @@ positionsRouter.post(
     const { portfolioID, address, estimatedAppreciationRate, propertyType, propertyValue, note } =
       req.body as AddRealEstateRequest;
 
-    if (!userOwnsPortfolio(req, res, portfolioID)) {
+    if (!(await userOwnsPortfolio(req, res, portfolioID))) {
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
     }
 
@@ -121,7 +123,7 @@ positionsRouter.post(
   catchErrors(async (req, res) => {
     const { portfolioID, amount, accountName, note } = req.body as AddCashRequest;
 
-    if (!userOwnsPortfolio(req, res, portfolioID)) {
+    if (!(await userOwnsPortfolio(req, res, portfolioID))) {
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
     }
 
@@ -129,6 +131,32 @@ positionsRouter.post(
       assetType: AssetType.Cash,
       accountName,
       amount,
+      createdAt: new Date(),
+      note: note ? note : '',
+    });
+
+    const response = {
+      status: 'ok',
+    };
+
+    res.status(200).json(response);
+  })
+);
+
+positionsRouter.post(
+  '/custom',
+  requireSignedIn,
+  catchErrors(async (req, res) => {
+    const { portfolioID, value, assetName, note } = req.body as AddCustomAssetRequest;
+
+    if (!(await userOwnsPortfolio(req, res, portfolioID))) {
+      return res.status(401).json({ status: 'error', error: 'Invalid.' });
+    }
+
+    await createDocument<CustomPosition>(`portfolios/${portfolioID}/positions`, {
+      assetType: AssetType.Custom,
+      value,
+      assetName,
       createdAt: new Date(),
       note: note ? note : '',
     });
