@@ -96,6 +96,56 @@ paths:
             application/json:
               schema:
                 type: object
+  /portfolios/{portfolioID}/stocks:
+    get:
+      summary: Fetch a portfolio's stocks
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
+  /portfolios/{portfolioID}/crypto:
+    get:
+      summary: Fetch a portfolio's crypto
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
+  /portfolios/{portfolioID}/real-estate:
+    get:
+      summary: Fetch a portfolio's real estate
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
+  /portfolios/{portfolioID}/customs:
+    get:
+      summary: Fetch a portfolio's custom assets
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
+  /portfolios/{portfolioID}/cash:
+    get:
+      summary: Fetch a portfolio's cash
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
   /positions/stock:
     post:
       summary: Add a stock to a portfolio

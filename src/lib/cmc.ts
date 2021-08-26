@@ -32,7 +32,14 @@ const requestCoinMarketCap = async <T>(path: string) => {
   return response.data as T;
 };
 
-export const getCryptoPrices = async (coinSymbols: string[]): Promise<{ [symbol: string]: number | null }> => {
+export const getCryptoPrices = async (
+  coinSymbols: string[]
+): Promise<{
+  [symbol: string]: {
+    latestPrice: number;
+    changePercent: number;
+  };
+}> => {
   const dedupedSymbols = [...new Set(coinSymbols)];
 
   const response = await requestCoinMarketCap<CMCQuotesResponse>(
@@ -40,7 +47,13 @@ export const getCryptoPrices = async (coinSymbols: string[]): Promise<{ [symbol:
   );
 
   return Object.keys(response.data).reduce(
-    (accum, curr) => ({ ...accum, [curr.toUpperCase()]: response.data[curr]?.quote?.USD?.price ?? null }),
+    (accum, curr) => ({
+      ...accum,
+      [curr.toUpperCase()]: {
+        latesPrice: response.data[curr]?.quote?.USD?.price ?? 0,
+        changePercent: response.data[curr]?.quote?.USD?.percent_change_24h ?? 0,
+      },
+    }),
     {}
   );
 };

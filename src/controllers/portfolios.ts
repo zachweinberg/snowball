@@ -1,12 +1,20 @@
 import {
+  AssetType,
   CreatePortfolioRequest,
   CreatePortfolioResponse,
+  CryptoPosition,
+  CryptoPositionWithQuote,
+  GetPortfolioResponse,
   GetPortfoliosResponse,
   Portfolio,
   PortfolioWithBalances,
+  StockPosition,
+  StockPositionWithQuote,
 } from '@zachweinberg/wealth-schema';
 import { Router } from 'express';
+import { getCryptoPrices } from '~/lib/cmc';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
+import { getStockPrices } from '~/lib/iex';
 import { catchErrors, getUserFromAuthHeader, requireSignedIn } from '~/utils/api';
 import { fetchDocument, findDocuments } from '~/utils/db';
 import { capitalize } from '~/utils/misc';
@@ -109,8 +117,105 @@ portfoliosRouter.get(
       return res.status(404).json({ status: 'error', error: 'Portfolio does not exist.' });
     }
 
-    res.status(200).json({ status: 'ok', portfolio });
+    const stockPositions = await findDocuments<StockPosition>(`portfolios/${portfolio.id}/positions`, [
+      { property: 'assetType', condition: '==', value: AssetType.Stock },
+    ]);
+
+    const priceMap = await getStockPrices(stockPositions.map((s) => s.symbol));
+
+    let stockPositionsWithQuotes: StockPositionWithQuote[] = [];
+
+    for (const stock of stockPositions) {
+      if (priceMap[stock.symbol]) {
+        stockPositionsWithQuotes.push({
+          ...stock,
+          dayChange: priceMap[stock.symbol].change * stock.quantity,
+          gainLoss: priceMap[stock.symbol].latestPrice * stock.quantity - stock.costBasis * stock.quantity,
+          marketValue: (priceMap[stock.symbol].latestPrice ?? 0) * stock.quantity,
+          symbol: stock.symbol,
+          last: priceMap[stock.symbol].latestPrice,
+        });
+      }
+    }
+
+    const cryptoPositions = await findDocuments<CryptoPosition>(`portfolios/${portfolio.id}/positions`, [
+      { property: 'assetType', condition: '==', value: AssetType.Crypto },
+    ]);
+
+    const cryptoPriceMap = await getCryptoPrices(cryptoPositions.map((s) => s.symbol));
+
+    let cryptoPositionsWithQuotes: CryptoPositionWithQuote[] = [];
+
+    for (const coin of cryptoPositions) {
+      if (cryptoPriceMap[coin.symbol]) {
+        cryptoPositionsWithQuotes.push({
+          ...coin,
+          dayChange:
+            cryptoPriceMap[coin.symbol].changePercent * cryptoPriceMap[coin.symbol].latestPrice * coin.quantity,
+          gainLoss: cryptoPriceMap[coin.symbol].latestPrice * coin.quantity - coin.costBasis * coin.quantity,
+          marketValue: (cryptoPriceMap[coin.symbol].latestPrice ?? 0) * coin.quantity,
+          symbol: coin.symbol,
+          last: cryptoPriceMap[coin.symbol].latestPrice,
+        });
+      }
+    }
+
+    const response: GetPortfolioResponse = {
+      status: 'ok',
+      portfolio: {
+        ...portfolio,
+        stocks: stockPositionsWithQuotes,
+        crypto: [],
+      },
+    };
+
+    res.status(200).json(response);
   })
 );
+
+// portfoliosRouter.get(
+//   '/:portfolioID/stocks',
+//   catchErrors(async (req, res) => {
+//     const portfolio = await fetchDocument<Portfolio>('portfolios', req.params.portfolioID);
+
+//     let isUsersPortfolio = await userOwnsPortfolio(req, res, portfolio.id);
+
+//     if (!portfolio.public && !isUsersPortfolio) {
+//       return res.status(404).json({ status: 'error', error: 'Invalid' });
+//     }
+
+//     const stockPositions = await findDocuments<StockPosition>(`portfolios/${portfolio.id}/positions`, [
+//       { property: 'assetType', condition: '==', value: AssetType.Stock },
+//     ]);
+
+//     const priceMap = await getStockPrices(stockPositions.map((s) => s.symbol));
+
+//     let stockPositionsWithQuotes: StockPositionWithQuote[] = [];
+
+//     for (const stock of stockPositions) {
+//       if (priceMap[stock.symbol]) {
+//         stockPositionsWithQuotes.push({
+//           ...stock,
+//           dayChange: priceMap[stock.symbol].change * stock.quantity,
+//           gainLoss: priceMap[stock.symbol].latestPrice * stock.quantity - stock.costBasis * stock.quantity,
+//           marketValue: (priceMap[stock.symbol].latestPrice ?? 0) * stock.quantity,
+//           symbol: stock.symbol,
+//           last: priceMap[stock.symbol].latestPrice,
+//         });
+//       }
+//     }
+
+//     const response: GetPortfolioResponse = {
+//       status: 'ok',
+//       portfolio: {
+//         ...portfolio,
+//         stocks: stockPositionsWithQuotes,
+//         crypto: [],
+//       },
+//     };
+
+//     res.status(200).json(response);
+//   })
+// );
 
 export default portfoliosRouter;

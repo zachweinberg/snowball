@@ -22,7 +22,7 @@ export const calculateStocksTotal = async (stockPositions: StockPosition[]): Pro
 
   for (const stockPosition of stockPositions) {
     if (priceMap[stockPosition.symbol]) {
-      total = total.add((priceMap[stockPosition.symbol] ?? 0) * stockPosition.quantity);
+      total = total.add((priceMap[stockPosition.symbol]?.latestPrice ?? 0) * stockPosition.quantity);
     }
   }
 

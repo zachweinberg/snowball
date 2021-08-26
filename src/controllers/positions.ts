@@ -8,34 +8,21 @@ import {
   CashPosition,
   CryptoPosition,
   CustomPosition,
-  Portfolio,
   RealEstatePosition,
   StockPosition,
 } from '@zachweinberg/wealth-schema';
 import { Router } from 'express';
 import { catchErrors, requireSignedIn } from '~/utils/api';
-import { createDocument, fetchDocument } from '~/utils/db';
+import { createDocument } from '~/utils/db';
+import { userOwnsPortfolio } from '~/utils/portfolios';
 
 const positionsRouter = Router();
-
-const userOwnsPortfolio = async (req, res, portfolioID) => {
-  const userID = req.authContext!.uid;
-
-  const portfolio = await fetchDocument<Portfolio>('portfolios', portfolioID);
-
-  if (portfolio.userID !== userID) {
-    return false;
-  }
-
-  return true;
-};
 
 positionsRouter.post(
   '/stock',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const { portfolioID, symbol, companyName, quantity, costBasis, note } =
-      req.body as AddStockRequest;
+    const { portfolioID, symbol, companyName, quantity, costBasis, note } = req.body as AddStockRequest;
 
     if (!(await userOwnsPortfolio(req, res, portfolioID))) {
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
@@ -63,8 +50,7 @@ positionsRouter.post(
   '/crypto',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const { portfolioID, symbol, coinName, quantity, costBasis, note } =
-      req.body as AddCryptoRequest;
+    const { portfolioID, symbol, coinName, quantity, costBasis, note } = req.body as AddCryptoRequest;
 
     if (!(await userOwnsPortfolio(req, res, portfolioID))) {
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
