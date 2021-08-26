@@ -22,7 +22,8 @@ export interface Portfolio {
 
 export type PortfolioWithBalances = Portfolio & {
   totalValue: number;
-  totalPercentChange: number;
+  dayChangePercent: number;
+  dayChange: number;
   stocksValue: number;
   cryptoValue: number;
   realEstateValue: number;
