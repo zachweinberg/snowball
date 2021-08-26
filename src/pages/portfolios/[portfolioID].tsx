@@ -1,5 +1,5 @@
 import { ChevronUpIcon, PlusIcon } from '@heroicons/react/solid';
-import { Portfolio } from '@zachweinberg/wealth-schema';
+import { PortfolioWithQuotes } from '@zachweinberg/wealth-schema';
 import type { NextPage } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -10,14 +10,14 @@ import FullScreenModal from '~/components/FullScreenModal';
 import Layout from '~/components/Layout';
 import MainChart from '~/components/MainChart';
 import Spinner from '~/components/Spinner';
-import TableBase from '~/components/tables/TableBase';
+import StocksTable from '~/components/tables/StocksTable';
 import Tabs from '~/components/Tabs';
 import { API } from '~/lib/api';
 
 const PortfolioViewPage: NextPage = () => {
   const router = useRouter();
   const [addingAsset, setAddingAsset] = useState(false);
-  const [portfolio, setPortfolio] = useState<Portfolio | null>(null);
+  const [portfolio, setPortfolio] = useState<PortfolioWithQuotes | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -139,7 +139,7 @@ const PortfolioViewPage: NextPage = () => {
             <MainChart />
           </div>
 
-          <TableBase />
+          <StocksTable stocks={portfolio.stocks} />
         </>
       );
     }

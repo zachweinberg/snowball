@@ -34,6 +34,7 @@ module.exports = {
       blue3: '#242F57',
       blue4: '#0c2052',
 
+      red2: '#ff5151',
       red3: '#ea2626',
     },
     extend: {
