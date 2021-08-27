@@ -10,7 +10,6 @@ import FullScreenModal from '~/components/FullScreenModal';
 import Layout from '~/components/Layout';
 import PortfolioSummaryCard from '~/components/PortfolioSummaryCard';
 import Spinner from '~/components/Spinner';
-import Tabs from '~/components/Tabs';
 import { API } from '~/lib/api';
 
 const PortfolioListPage: NextPage = () => {
@@ -61,23 +60,11 @@ const PortfolioListPage: NextPage = () => {
     if (portfolios && portfolios.length > 0) {
       return (
         <>
-          <div className="flex justify-between">
+          <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="mb-4 text-xl font-bold leading-7 text-blue3 sm:text-2xl sm:truncate">
+              <h2 className="text-xl font-bold leading-7 text-blue3 sm:text-2xl sm:truncate">
                 My Portfolios
               </h2>
-              <div className="mb-4">
-                <Tabs
-                  active={'1d'}
-                  options={[
-                    { label: '1d', onClick: () => null },
-                    { label: '1m', onClick: () => null },
-                    { label: '3m', onClick: () => null },
-                    { label: '1yr', onClick: () => null },
-                    { label: '2yr', onClick: () => null },
-                  ]}
-                />
-              </div>
             </div>
             <div>
               <Button

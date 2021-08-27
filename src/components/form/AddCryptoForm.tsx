@@ -1,3 +1,4 @@
+import { AssetType } from '@zachweinberg/wealth-schema';
 import currency from 'currency.js';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useState } from 'react';
@@ -81,6 +82,11 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({ afterAdd, portfolioID }
               onSelect={(symbol, fullName) => {
                 formik.setFieldValue('symbol', symbol);
                 formik.setFieldValue('coinName', fullName);
+                API.getQuote(symbol, AssetType.Crypto).then((quoteData) => {
+                  if (quoteData.latestPrice) {
+                    formik.setFieldValue('costBasis', quoteData.latestPrice);
+                  }
+                });
               }}
             />
           </div>

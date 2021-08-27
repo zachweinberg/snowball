@@ -4,12 +4,14 @@ import {
   AddCustomAssetRequest,
   AddRealEstateRequest,
   AddStockRequest,
+  AssetType,
   CreatePortfolioRequest,
   CreatePortfolioResponse,
   CreateUserRequest,
   CreateUserResponse,
   GetPortfolioResponse,
   GetPortfoliosResponse,
+  GetQuoteResponse,
   VerifyEmailRequest,
   VerifyEmailResponse,
 } from '@zachweinberg/wealth-schema';
@@ -134,6 +136,12 @@ export const API = {
       '/api/positions/custom',
       'post',
       customAssetData
+    );
+  },
+  getQuote: (symbol: string, type: AssetType) => {
+    return request<{ symbol: string; type: AssetType }, GetQuoteResponse>(
+      `/api/quotes?symbol=${symbol}&type=${type}`,
+      'get'
     );
   },
 };

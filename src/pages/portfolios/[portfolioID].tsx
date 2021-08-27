@@ -13,12 +13,14 @@ import Spinner from '~/components/Spinner';
 import StocksTable from '~/components/tables/StocksTable';
 import Tabs from '~/components/Tabs';
 import { API } from '~/lib/api';
+import { formatMoneyFromNumber } from '~/lib/money';
 
 const PortfolioViewPage: NextPage = () => {
   const router = useRouter();
   const [addingAsset, setAddingAsset] = useState(false);
   const [portfolio, setPortfolio] = useState<PortfolioWithQuotes | null>(null);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('All');
   const [error, setError] = useState('');
 
   const loadPortfolio = async () => {
@@ -69,27 +71,27 @@ const PortfolioViewPage: NextPage = () => {
         <>
           <div className="flex items-center justify-between">
             <div>
-              <div className="flex items-center">
-                <h2 className="mb-3 text-xl font-bold leading-7 text-blue3 sm:text-2xl sm:truncate">
+              <div className="flex items-center mb-4">
+                <h2 className="text-xl font-bold leading-7 text-blue3 sm:text-2xl sm:truncate">
                   {portfolio.name}
                 </h2>
                 {portfolio.public && (
-                  <div className="px-3 py-1 ml-3 text-xs font-medium rounded-full bg-gray6 text-purple2">
+                  <div className="px-3 py-1 ml-3 text-xs font-medium rounded-full bg-gray7 text-purple3">
                     Public
                   </div>
                 )}
               </div>
 
-              <div className="mb-9">
+              <div className="mb-4">
                 <Tabs
-                  active={'All'}
+                  active={activeTab}
                   options={[
-                    { label: 'All', onClick: () => null },
-                    { label: 'Stocks', onClick: () => null },
-                    { label: 'Crypto', onClick: () => null },
-                    { label: 'Real Estate', onClick: () => null },
-                    { label: 'Cash', onClick: () => null },
-                    { label: 'Custom', onClick: () => null },
+                    { label: 'All', onClick: () => setActiveTab('All') },
+                    { label: 'Stocks', onClick: () => setActiveTab('Stocks') },
+                    { label: 'Crypto', onClick: () => setActiveTab('Crypto') },
+                    { label: 'Real Estate', onClick: () => setActiveTab('Real Estate') },
+                    { label: 'Cash', onClick: () => setActiveTab('Cash') },
+                    { label: 'Custom', onClick: () => setActiveTab('Custom') },
                   ]}
                 />
               </div>
@@ -105,7 +107,7 @@ const PortfolioViewPage: NextPage = () => {
           <div className="inline-block">
             <p className="text-sm text-purple2">Total Value:</p>
             <div className="flex items-center mb-1">
-              <div className="mr-5 text-4xl font-light text-purple2">$514,272.41</div>
+              <div className="mr-5 text-4xl font-light text-purple2">{formatMoneyFromNumber(portfolio.)}</div>
               <div className="flex items-center ml-5 text-green2">
                 <div className="mr-2 text-xl font-semibold">+12,424.42</div>
               </div>
