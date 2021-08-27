@@ -172,7 +172,7 @@ export interface PortfolioWithQuotes extends Portfolio {
     stocks: StockPositionWithQuote[];
     crypto: CryptoPositionWithQuote[];
 }
-export interface GetQuoteResponse {
+export interface GetQuoteResponse extends BaseResponse {
     symbol: string;
     latestPrice: number;
 }
