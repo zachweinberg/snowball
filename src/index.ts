@@ -206,3 +206,15 @@ export interface GetQuoteResponse extends BaseResponse {
   symbol: string;
   latestPrice: number;
 }
+
+export interface NewsItem {
+  newsURL: string;
+  imageURL: string;
+  title: string;
+  text: string;
+  sourceName: string;
+  date: string;
+  topics: [];
+  sentiment: string;
+  type: string;
+}
