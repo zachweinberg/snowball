@@ -176,6 +176,9 @@ export interface GetQuoteResponse extends BaseResponse {
     symbol: string;
     latestPrice: number;
 }
+export interface GetNewsResponse extends BaseResponse {
+    news: NewsItem[];
+}
 export interface NewsItem {
     newsURL: string;
     imageURL: string;
