@@ -63,9 +63,9 @@ export declare enum RealEstatePropertyType {
 }
 export interface RealEstatePosition extends Position {
     address?: string;
+    thirdPartyData: boolean;
     propertyValue: number;
     propertyType: RealEstatePropertyType;
-    estimatedAppreciationRate: number;
 }
 export interface CashPosition extends Position {
     amount: number;
@@ -129,8 +129,8 @@ export interface AddRealEstateRequest {
     portfolioID: string;
     propertyValue: number;
     propertyType: RealEstatePropertyType;
-    estimatedAppreciationRate: number;
     address?: string;
+    thirdPartyData: boolean;
     note?: string;
 }
 export interface AddCashRequest {
