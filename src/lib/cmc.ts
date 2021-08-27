@@ -42,6 +42,10 @@ export const getCryptoPrices = async (
 }> => {
   const dedupedSymbols = [...new Set(coinSymbols)];
 
+  if (dedupedSymbols.length === 0) {
+    return {};
+  }
+
   const response = await requestCoinMarketCap<CMCQuotesResponse>(
     `/quotes/latest?symbol=${dedupedSymbols.join(',')}&aux=is_active`
   );
@@ -50,7 +54,7 @@ export const getCryptoPrices = async (
     (accum, curr) => ({
       ...accum,
       [curr.toUpperCase()]: {
-        latesPrice: response.data[curr]?.quote?.USD?.price ?? 0,
+        latestPrice: response.data[curr]?.quote?.USD?.price ?? 0,
         changePercent: response.data[curr]?.quote?.USD?.percent_change_24h ?? 0,
       },
     }),

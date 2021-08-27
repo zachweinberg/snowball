@@ -226,16 +226,16 @@ paths:
                 - portfolioID
                 - propertyValue
                 - propertyType
-                - estimatedAppreciationRate
+                - thirdPartyData
               properties:
                 portfolioID:
                   type: string
+                thirdPartyData:
+                  type: boolean
                 propertyValue:
                   type: number
                 propertyType:
                   type: string
-                estimatedAppreciationRate:
-                  type: number
                 address:
                   type: string
                 note:
@@ -296,6 +296,43 @@ paths:
                   type: number
                 note:
                   type: string
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
+  /quotes:
+    get:
+      summary: Get stock or crypto quote
+      parameters:
+        - name: symbol
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: type
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
+  /news:
+    get:
+      summary: Get news
+      parameters:
+        - name: symbol
+          in: query
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: Valid request

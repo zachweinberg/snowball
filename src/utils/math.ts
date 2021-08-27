@@ -6,7 +6,6 @@ import {
   StockPosition,
 } from '@zachweinberg/wealth-schema';
 import currency from 'currency.js';
-import { DateTime } from 'luxon';
 import { getCryptoPrices } from '~/lib/cmc';
 import { getStockPrices } from '~/lib/iex';
 
@@ -41,7 +40,7 @@ export const calculateCryptoTotal = async (cryptoPositions: CryptoPosition[]): P
 
   for (const cryptoPosition of cryptoPositions) {
     if (priceMap[cryptoPosition.symbol]) {
-      total = total.add((priceMap[cryptoPosition.symbol] ?? 0) * cryptoPosition.quantity);
+      total = total.add((priceMap[cryptoPosition.symbol].latestPrice ?? 0) * cryptoPosition.quantity);
     }
   }
 
@@ -57,13 +56,7 @@ export const calculateRealEstateValue = (realEstatePositions: RealEstatePosition
 
   for (const realEstatePosition of realEstatePositions) {
     if (realEstatePosition.propertyValue) {
-      const daysSinceAdding = Math.abs(DateTime.fromJSDate(realEstatePosition.createdAt).diffNow('days').days).toFixed(
-        4
-      );
-
-      const dailyAppreciationRate = realEstatePosition.estimatedAppreciationRate / 365;
-
-      total = total.add(realEstatePosition.propertyValue * (dailyAppreciationRate * Number(daysSinceAdding)));
+      total = total.add(realEstatePosition.propertyValue);
     }
   }
 

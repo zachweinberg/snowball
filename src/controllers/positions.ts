@@ -78,8 +78,7 @@ positionsRouter.post(
   '/real-estate',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const { portfolioID, address, estimatedAppreciationRate, propertyType, propertyValue, note } =
-      req.body as AddRealEstateRequest;
+    const { portfolioID, address, propertyType, propertyValue, note } = req.body as AddRealEstateRequest;
 
     if (!(await userOwnsPortfolio(req, res, portfolioID))) {
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
@@ -89,7 +88,6 @@ positionsRouter.post(
       assetType: AssetType.RealEstate,
       propertyType,
       propertyValue,
-      estimatedAppreciationRate,
       createdAt: new Date(),
       note: note ? note : '',
       address: address ? address : '',

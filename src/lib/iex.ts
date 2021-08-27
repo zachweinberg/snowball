@@ -30,6 +30,10 @@ export const getStockPrices = async (
 }> => {
   const dedupedSymbols = [...new Set(symbols)];
 
+  if (dedupedSymbols.length === 0) {
+    return {};
+  }
+
   const response = await requestIEX<IEXStockResponse>(
     `/stock/market/batch?types=quote&filter=latestPrice,change,changePercent&symbols=${dedupedSymbols.join(',')}`
   );
