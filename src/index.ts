@@ -73,7 +73,6 @@ export interface RealEstatePosition extends Position {
   thirdPartyData: boolean;
   propertyValue: number;
   propertyType: RealEstatePropertyType;
-  estimatedAppreciationRate: number;
 }
 
 export interface CashPosition extends Position {
@@ -152,7 +151,6 @@ export interface AddRealEstateRequest {
   portfolioID: string;
   propertyValue: number;
   propertyType: RealEstatePropertyType;
-  estimatedAppreciationRate: number;
   address?: string;
   thirdPartyData: boolean;
   note?: string;
