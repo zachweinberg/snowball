@@ -10,6 +10,7 @@ import { handleErrors, ignoreFavicon } from '~/utils/api';
 import newsRouter from './controllers/news';
 import positionsRouter from './controllers/positions';
 import quotesRouter from './controllers/quotes';
+import watchListRouter from './controllers/watchlist';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -38,6 +39,7 @@ const Server = {
       app.use('/api/positions', positionsRouter);
       app.use('/api/quotes', quotesRouter);
       app.use('/api/news', newsRouter);
+      app.use('/api/watchlist', watchListRouter);
       app.use(handleErrors);
 
       server = app.listen(PORT, () => {

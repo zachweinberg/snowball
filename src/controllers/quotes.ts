@@ -4,25 +4,28 @@ import { getCryptoPrices } from '~/lib/cmc';
 import { getStockPrices } from '~/lib/iex';
 import { catchErrors, requireSignedIn } from '~/utils/api';
 
-const positionsRouter = Router();
+const quotesRouter = Router();
 
-positionsRouter.get(
+quotesRouter.get(
   '/',
   requireSignedIn,
   catchErrors(async (req, res) => {
     const { type, symbol } = req.query as { type: AssetType; symbol: string };
 
     let latestPrice = 0;
+    let changePercent = 0;
 
     if (type === AssetType.Stock) {
       const response = await getStockPrices([symbol]);
       if (response[symbol]) {
         latestPrice = response[symbol].latestPrice;
+        changePercent = response[symbol].changePercent;
       }
     } else if (type === AssetType.Crypto) {
       const response = await getCryptoPrices([symbol]);
       if (response[symbol]) {
         latestPrice = response[symbol].latestPrice;
+        changePercent = response[symbol].changePercent;
       }
     }
 
@@ -30,10 +33,12 @@ positionsRouter.get(
       status: 'ok',
       symbol,
       latestPrice: Number(latestPrice.toFixed(2)),
+      changePercent: Number(changePercent.toFixed(2)),
+      changeDollars: Number(((1 + changePercent) * latestPrice).toFixed(2)),
     };
 
     res.status(200).json(response);
   })
 );
 
-export default positionsRouter;
+export default quotesRouter;
