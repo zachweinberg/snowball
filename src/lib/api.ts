@@ -40,7 +40,7 @@ axiosInstance.interceptors.response.use((response) => {
   return response;
 });
 
-const request = async <T, K>(
+export const request = async <T, K>(
   path: string,
   method: 'put' | 'post' | 'get' | 'delete',
   body?: T,
@@ -144,4 +144,11 @@ export const API = {
       'get'
     );
   },
+  // getMarketNews: (page: number, symbol?: string) => {
+  //   let url = `/api/news?page=${page}`;
+  //   if (symbol) {
+  //     url = `/api/news?page=${page}&symbol=${symbol}`;
+  //   }
+  //   return request<undefined, GetNewsResponse>(url, 'get');
+  // },
 };

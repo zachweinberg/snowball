@@ -62,9 +62,9 @@ const PortfolioListPage: NextPage = () => {
         <>
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="text-xl font-bold leading-7 text-blue3 sm:text-2xl sm:truncate">
+              <h1 className="text-xl font-bold leading-7 text-blue3 sm:text-2xl sm:truncate">
                 My Portfolios
-              </h2>
+              </h1>
             </div>
             <div>
               <Button

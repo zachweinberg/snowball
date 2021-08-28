@@ -72,9 +72,9 @@ const PortfolioViewPage: NextPage = () => {
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center mb-4">
-                <h2 className="text-xl font-bold leading-7 text-blue3 sm:text-2xl sm:truncate">
+                <h1 className="text-xl font-bold leading-7 text-blue3 sm:text-2xl sm:truncate">
                   {portfolio.name}
-                </h2>
+                </h1>
                 {portfolio.public && (
                   <div className="px-3 py-1 ml-3 text-xs font-medium rounded-full bg-gray7 text-purple3">
                     Public
@@ -107,7 +107,9 @@ const PortfolioViewPage: NextPage = () => {
           <div className="inline-block">
             <p className="text-sm text-purple2">Total Value:</p>
             <div className="flex items-center mb-1">
-              <div className="mr-5 text-4xl font-light text-purple2">{formatMoneyFromNumber(portfolio.)}</div>
+              <div className="mr-5 text-4xl font-light text-purple2">
+                {formatMoneyFromNumber(3)}
+              </div>
               <div className="flex items-center ml-5 text-green2">
                 <div className="mr-2 text-xl font-semibold">+12,424.42</div>
               </div>
