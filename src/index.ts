@@ -209,19 +209,17 @@ export interface GetQuoteResponse extends BaseResponse {
   changeDollars: number;
 }
 
+export interface WatchListItem {
+  assetType: AssetType;
+  symbol: string;
+  latestPrice: number;
+  changePercent: number;
+  changeDollars: number;
+}
+
 export interface GetWatchListResponse extends BaseResponse {
-  stocks: Array<{
-    symbol: string;
-    latestPrice: number;
-    changePercent: number;
-    changeDollars: number;
-  }>;
-  crypto: Array<{
-    symbol: string;
-    latestPrice: number;
-    changePercent: number;
-    changeDollars: number;
-  }>;
+  stocks: Array<AssetType>;
+  crypto: Array<AssetType>;
 }
 export interface GetNewsResponse extends BaseResponse {
   news: NewsItem[];
