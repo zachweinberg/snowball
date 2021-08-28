@@ -333,6 +333,11 @@ paths:
           required: false
           schema:
             type: string
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: number
       responses:
         '200':
           description: Valid request

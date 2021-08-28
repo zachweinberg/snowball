@@ -9,15 +9,28 @@ newsRouter.get(
   '/',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    let baseURL = `https://stocknewsapi.com/api/v1/category?section=general&items=10&token=${process.env.STOCK_NEWS_API_KEY}`;
+    let { symbol, page } = req.query as unknown as { symbol: string; page: number };
 
-    if (req.query.symbol) {
-      baseURL = `https://stocknewsapi.com/api/v1?tickers=${req.query.symbol}&items=50&token=${process.env.STOCK_NEWS_API_KEY}`;
+    if (page == 0 || !page) {
+      page = 1;
+    }
+
+    let baseURL = `https://stocknewsapi.com/api/v1/category?section=general&items=1&type=article&page=${page}&token=${process.env.STOCK_NEWS_API_KEY}`;
+
+    if (symbol) {
+      baseURL = `https://stocknewsapi.com/api/v1?tickers=${symbol}&items=1&type=article&page=${page}&token=${process.env.STOCK_NEWS_API_KEY}`;
     }
 
     const { data } = await axios.get(baseURL);
 
-    const news = data.data as NewsItem[];
+    const news: NewsItem[] = data.data.map((item) => ({
+      date: item.date,
+      imageURL: item.image_url,
+      newsURL: item.news_url,
+      sourceName: item.source_name,
+      text: item.text,
+      title: item.title,
+    }));
 
     const response: GetNewsResponse = {
       status: 'ok',

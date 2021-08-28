@@ -4,7 +4,7 @@ import axios from 'axios';
 import * as csv from 'fast-csv';
 import { getAllActiveCoins } from '~/lib/cmc';
 import { createDocument, findDocuments } from '~/utils/db';
-import { calculatePortfolioValues } from '~/utils/positions';
+import { calculatePortfolioSummary } from '~/utils/positions';
 
 interface CMCCoin {
   id: number;
@@ -142,7 +142,7 @@ const addDailyBalancesToPortfolio = async () => {
 
   for (const portfolio of portfolios) {
     const { cryptoValue, cashValue, stocksValue, realEstateValue, customsValue, totalValue } =
-      await calculatePortfolioValues(portfolio.id);
+      await calculatePortfolioSummary(portfolio.id);
 
     await createDocument<DailyBalance>(`portfolios/${portfolio.id}/dailyBalances`, {
       date: new Date(),
@@ -168,6 +168,7 @@ const runCron = async () => {
       case 'daily-balances':
         await addDailyBalancesToPortfolio();
         break;
+
       default:
         console.error('Invalid job. Did you supply the job name as a param?');
         break;
