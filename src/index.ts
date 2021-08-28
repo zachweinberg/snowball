@@ -209,6 +209,20 @@ export interface GetQuoteResponse extends BaseResponse {
   changeDollars: number;
 }
 
+export interface GetWatchListResponse extends BaseResponse {
+  stocks: Array<{
+    symbol: string;
+    latestPrice: number;
+    changePercent: number;
+    changeDollars: number;
+  }>;
+  crypto: Array<{
+    symbol: string;
+    latestPrice: number;
+    changePercent: number;
+    changeDollars: number;
+  }>;
+}
 export interface GetNewsResponse extends BaseResponse {
   news: NewsItem[];
 }
