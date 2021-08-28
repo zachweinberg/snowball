@@ -57,6 +57,18 @@ table {
 }
 
 @layer utilities {
+  @variants responsive {
+    /* Chrome, Safari and Opera */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+    }
+  }
+
   .spinner {
     -webkit-animation: spinner 0.65s linear infinite;
     animation: spinner 0.65s linear infinite;

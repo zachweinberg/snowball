@@ -8,17 +8,20 @@ interface Props {
 const NewsCard: React.FunctionComponent<Props> = ({ newsItem }: Props) => {
   return (
     <Link href={newsItem.newsURL}>
-      <a>
-        <div className="bg-white shadow rounded-sm p-5 mb-3 cursor-pointer hover:bg-blue0 transition-colors flex justify-between items-center">
-          <div className="flex flex-col justify-between h-full">
-            <h2 className="text-lg text-blue1 font-semibold">{newsItem.title}</h2>
-            <p className="text-purple2 mb-3 text-md">{newsItem.text}</p>
+      <a target="_blank">
+        <div className="flex items-center justify-between p-4 mb-2 transition-colors bg-white rounded-md shadow cursor-pointer hover:bg-blue0">
+          <div className="h-full">
+            <h2 className="text-lg font-semibold text-blue1">{newsItem.title}</h2>
+            <p className="mb-3 text-purple2 text-md">{newsItem.text}</p>
             <div>
               <p className="text-sm text-purple1">- {newsItem.sourceName}</p>
             </div>
           </div>
           <div className="ml-4">
-            <img src={newsItem.imageURL} className="max-w-xs w-40 h-40 object-cover" />
+            <img
+              src={newsItem.imageURL}
+              className="object-cover w-40 h-40 max-w-xs rounded-md"
+            />
           </div>
         </div>
       </a>

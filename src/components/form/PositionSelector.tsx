@@ -13,7 +13,7 @@ type Props = {
   className?: string;
 };
 
-const AsyncSelect: React.FunctionComponent<Props> = ({
+const PositionSelector: React.FunctionComponent<Props> = ({
   label,
   placeholder,
   name,
@@ -36,7 +36,7 @@ const AsyncSelect: React.FunctionComponent<Props> = ({
 
   const renderSearchResults = useMemo(() => {
     return searchResults.length === 0 ? null : (
-      <div className="absolute z-40 w-full h-48 mt-1 overflow-y-auto bg-gray2 border-purple1 border rounded-md">
+      <div className="absolute z-40 w-full h-48 mt-1 overflow-y-auto border rounded-md no-scrollbar bg-gray2 border-purple1">
         {searchResults.map((result) => (
           <div
             onClick={() => {
@@ -94,4 +94,4 @@ const AsyncSelect: React.FunctionComponent<Props> = ({
   );
 };
 
-export default AsyncSelect;
+export default PositionSelector;
