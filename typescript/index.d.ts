@@ -175,6 +175,8 @@ export interface PortfolioWithQuotes extends Portfolio {
 export interface GetQuoteResponse extends BaseResponse {
     symbol: string;
     latestPrice: number;
+    changePercent: number;
+    changeDollars: number;
 }
 export interface GetNewsResponse extends BaseResponse {
     news: NewsItem[];
