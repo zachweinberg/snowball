@@ -184,6 +184,7 @@ export interface WatchListItem {
     latestPrice: number;
     changePercent: number;
     changeDollars: number;
+    fullName: string;
     dateAdded: Date;
 }
 export interface GetWatchListResponse extends BaseResponse {
