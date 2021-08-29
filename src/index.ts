@@ -215,6 +215,7 @@ export interface WatchListItem {
   latestPrice: number;
   changePercent: number;
   changeDollars: number;
+  fullName: string;
   dateAdded: Date;
 }
 
