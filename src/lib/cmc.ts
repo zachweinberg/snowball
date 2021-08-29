@@ -49,13 +49,13 @@ export const getCryptoPrices = async (
   const response = await requestCoinMarketCap<CMCQuotesResponse>(
     `/quotes/latest?symbol=${dedupedSymbols.join(',')}&aux=is_active`
   );
-
+  console.log(response.data['BTC'].quote);
   return Object.keys(response.data).reduce(
     (accum, curr) => ({
       ...accum,
       [curr.toUpperCase()]: {
         latestPrice: response.data[curr]?.quote?.USD?.price ?? 0,
-        changePercent: response.data[curr]?.quote?.USD?.percent_change_24h ?? 0,
+        changePercent: (response.data[curr]?.quote?.USD?.percent_change_24h ?? 0) / 100,
       },
     }),
     {}
