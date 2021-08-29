@@ -4,6 +4,7 @@ import {
   AddCustomAssetRequest,
   AddRealEstateRequest,
   AddStockRequest,
+  AddWatchListItemRequest,
   AssetType,
   CreatePortfolioRequest,
   CreatePortfolioResponse,
@@ -12,6 +13,7 @@ import {
   GetPortfolioResponse,
   GetPortfoliosResponse,
   GetQuoteResponse,
+  GetWatchListResponse,
   VerifyEmailRequest,
   VerifyEmailResponse,
 } from '@zachweinberg/wealth-schema';
@@ -144,11 +146,14 @@ export const API = {
       'get'
     );
   },
-  // getMarketNews: (page: number, symbol?: string) => {
-  //   let url = `/api/news?page=${page}`;
-  //   if (symbol) {
-  //     url = `/api/news?page=${page}&symbol=${symbol}`;
-  //   }
-  //   return request<undefined, GetNewsResponse>(url, 'get');
-  // },
+  getWatchlist: () => {
+    return request<undefined, GetWatchListResponse>('/api/watchlist', 'get');
+  },
+  addAssetToWatchList: (symbol: string, fullName: string, assetType: AssetType) => {
+    return request<AddWatchListItemRequest, undefined>('/api/watchlist', 'post', {
+      symbol,
+      fullName,
+      assetType,
+    });
+  },
 };

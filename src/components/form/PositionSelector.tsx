@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import debounce from 'lodash/debounce';
 import Image from 'next/image';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { SearchPositionsResult } from '~/lib/algolia';
 
 type Props = {
@@ -23,6 +23,7 @@ const PositionSelector: React.FunctionComponent<Props> = ({
 }: Props) => {
   const [searchResults, setSearchResults] = useState<SearchPositionsResult[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const search = async (query) => {
     const response = await fetcher(query);
@@ -34,17 +35,38 @@ const PositionSelector: React.FunctionComponent<Props> = ({
     []
   );
 
+  const detectClick = (e) => {
+    if (!containerRef || containerRef.current === null) {
+      return;
+    }
+
+    if (!containerRef.current.contains(e.target as Node)) {
+      setSearchResults([]);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('click', detectClick);
+    return () => document.removeEventListener('click', detectClick);
+  }, []);
+
   const renderSearchResults = useMemo(() => {
     return searchResults.length === 0 ? null : (
-      <div className="absolute z-40 w-full h-48 mt-1 overflow-y-auto border rounded-md no-scrollbar bg-gray2 border-purple1">
-        {searchResults.map((result) => (
+      <div
+        ref={containerRef}
+        className="absolute z-40 w-full mt-1 overflow-y-auto border shadow-md rounded-md no-scrollbar bg-gray2 border-purple1"
+      >
+        {searchResults.map((result, i) => (
           <div
             onClick={() => {
               setSearchTerm(result.symbol);
               setSearchResults([]);
               onSelect(result.symbol, result.fullName);
             }}
-            className="flex items-center p-2 border-b cursor-pointer hover:bg-gray4 text-purple2"
+            className={classNames(
+              'flex items-center p-2 border-purple1 cursor-pointer hover:bg-gray4 text-purple2',
+              { 'border-b': i !== searchResults.length - 1 }
+            )}
             key={result.providerID}
           >
             {result.logoURL && <Image width={25} height={25} src={result.logoURL} />}

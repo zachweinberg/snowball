@@ -19,14 +19,14 @@ export interface SearchPositionsResult {
 
 export const searchStocks = async (searchTerm: string) => {
   const results = await stocksIndex.search<SearchPositionsResult>(searchTerm, {
-    hitsPerPage: 8,
+    hitsPerPage: 4,
   });
   return results.hits ?? [];
 };
 
 export const searchCrypto = async (searchTerm: string) => {
   const results = await cryptoIndex.search<SearchPositionsResult>(searchTerm, {
-    hitsPerPage: 8,
+    hitsPerPage: 4,
   });
   return results.hits ?? [];
 };

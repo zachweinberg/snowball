@@ -26,7 +26,7 @@ const PortfolioListPage: NextPage = () => {
         setPortfolios(portfoliosData.portfolios);
       }
     } catch (err) {
-      setError('Somethign went wrong');
+      setError('Something went wrong...');
     } finally {
       setLoading(false);
     }
