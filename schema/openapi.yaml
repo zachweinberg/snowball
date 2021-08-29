@@ -345,3 +345,38 @@ paths:
             application/json:
               schema:
                 type: object
+  /watchlist:
+    get:
+      summary: Get users watchlist
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      summary: Add item to watchlist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              required:
+                - symbol
+                - fullName
+                - assetType
+              properties:
+                symbol:
+                  type: string
+                assetType:
+                  type: string
+                fullName:
+                  type: string
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
