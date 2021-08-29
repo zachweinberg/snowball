@@ -196,6 +196,7 @@ export interface GetNewsResponse extends BaseResponse {
 export interface AddWatchListItemRequest {
     symbol: string;
     fullName: string;
+    assetType: AssetType;
 }
 export interface NewsItem {
     newsURL: string;
