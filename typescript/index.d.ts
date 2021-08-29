@@ -186,8 +186,8 @@ export interface WatchListItem {
     changeDollars: number;
 }
 export interface GetWatchListResponse extends BaseResponse {
-    stocks: Array<AssetType>;
-    crypto: Array<AssetType>;
+    stocks: Array<WatchListItem>;
+    crypto: Array<WatchListItem>;
 }
 export interface GetNewsResponse extends BaseResponse {
     news: NewsItem[];
