@@ -6,6 +6,7 @@ import Layout from '~/components/Layout';
 import Spinner from '~/components/Spinner';
 import { searchCrypto, searchStocks } from '~/lib/algolia';
 import { API } from '~/lib/api';
+import { formatMoneyFromNumber, formatPercentageChange } from '~/lib/money';
 
 const WatchList: NextPage = () => {
   const [symbol, setSymbol] = useState('');
@@ -34,8 +35,8 @@ const WatchList: NextPage = () => {
           <Spinner size={40} />
         </div>
       ) : (
-        <div className="mb-5">
-          <div className="grid grid-cols-2 gap-10">
+        <>
+          <div className="grid grid-cols-2 gap-10 mb-5">
             <div>
               <PositionSelector
                 label="Add stocks"
@@ -59,47 +60,38 @@ const WatchList: NextPage = () => {
               />
             </div>
           </div>
-        </div>
 
-        <div>
-          <tr className="transition-colors bg-white shadow-sm cursor-pointer hover:bg-blue0">
-              <td className="px-6 py-3 tracking-wider text-left truncate text-blue1 rounded-bl-md rounded-tl-md">
-                <div className="text-sm font-bold">{stock.symbol}</div>
-                <div className="w-40 text-sm font-medium text-left truncate text-purple2">
-                  {stock.companyName}
+          <div className="grid grid-cols-2 gap-10 mb-5">
+            <div>
+              {stocks.map((stock) => (
+                <div className="flex items-center justify-between p-3 mb-2 bg-white rounded-md shadow-md">
+                  <div>
+                    <span className="mr-3">{stock.symbol}</span>
+                    <span>{formatMoneyFromNumber(stock.latestPrice)}</span>
+                  </div>
+                  <div>
+                    <span className="mr-3">{formatMoneyFromNumber(stock.changeDollars)}</span>
+                    <span>{formatPercentageChange(stock.changePercent)}</span>
+                  </div>
                 </div>
-              </td>
-              <td className="px-6 py-3 text-sm font-medium tracking-wider text-left text-purple2">
-                {stock.quantity}
-              </td>
-              <td className="px-6 py-3 text-sm font-medium tracking-wider text-left text-purple2">
-                {formatMoneyFromNumber(stock.last)}
-              </td>
-              <td className="px-6 py-3 text-sm font-medium tracking-wider text-left text-purple2">
-                {formatMoneyFromNumber(stock.marketValue)}
-              </td>
-              <td
-                className={classNames(
-                  `px-6 py-3 text-sm font-medium tracking-wider text-left`,
-                  stock.dayChange < 0 ? 'text-red2' : 'text-green2'
-                )}
-              >
-                <i className="align-middle fas fa-sort-up"></i>
-                {formatMoneyFromNumber(stock.dayChange)}
-              </td>
-              <td className="px-6 py-3 text-sm font-medium tracking-wider text-left text-purple2">
-                {formatMoneyFromNumber(stock.costBasis)}
-              </td>
-              <td
-                className={classNames(
-                  'px-6 py-3 tracking-wider text-left font-medium rounded-br-md text-sm rounded-tr-md',
-                  stock.gainLoss < 0 ? 'text-red2' : 'text-green2'
-                )}
-              >
-                <i className="fas fa-sort-up"></i> {formatMoneyFromNumber(stock.gainLoss)}
-              </td>
-            </tr>
-        </div>
+              ))}
+            </div>
+            <div>
+              {crypto.map((coin) => (
+                <div className="flex items-center justify-between p-3 mb-2 bg-white rounded-md shadow-md">
+                  <div>
+                    <span className="mr-3">{coin.symbol}</span>
+                    <span>{formatMoneyFromNumber(coin.latestPrice)}</span>
+                  </div>
+                  <div>
+                    <span className="mr-3">{formatMoneyFromNumber(coin.changeDollars)}</span>
+                    <span>{formatPercentageChange(coin.changePercent)}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
       )}
     </Layout>
   );
