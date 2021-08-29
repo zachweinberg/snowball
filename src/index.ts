@@ -215,6 +215,7 @@ export interface WatchListItem {
   latestPrice: number;
   changePercent: number;
   changeDollars: number;
+  dateAdded: Date;
 }
 
 export interface GetWatchListResponse extends BaseResponse {
@@ -225,6 +226,10 @@ export interface GetNewsResponse extends BaseResponse {
   news: NewsItem[];
 }
 
+export interface AddWatchListItemRequest {
+  symbol: string;
+  fullName: string;
+}
 export interface NewsItem {
   newsURL: string;
   imageURL: string;
