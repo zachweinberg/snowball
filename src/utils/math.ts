@@ -96,5 +96,9 @@ export const calculateCustomsValue = (customPositions: CustomPosition[]): number
 };
 
 export const reversePercentage = (currentNum: number, percChange: number) => {
-  return (currentNum * 100) / (percChange + 100);
+  if (percChange > 0) {
+    return currentNum + currentNum / (1 + percChange);
+  } else {
+    return currentNum - currentNum / (1 - percChange);
+  }
 };
