@@ -13,13 +13,13 @@ const headers = [
 ];
 
 interface Props {
-  stocks: CryptoPositionWithQuote[];
+  crypto: CryptoPositionWithQuote[];
 }
 
 const CryptoTable: React.FunctionComponent<Props> = ({ crypto }: Props) => {
   return (
     <div className="min-w-full">
-      <p className="text-purple3 font-semibold text-xl">Crypto</p>
+      <p className="text-xl font-semibold text-purple3">Crypto</p>
       <table className="min-w-full">
         <tbody>
           <tr className="text-xs bg-white shadow-sm">
@@ -43,7 +43,7 @@ const CryptoTable: React.FunctionComponent<Props> = ({ crypto }: Props) => {
               <td className="px-6 py-3 tracking-wider text-left truncate text-blue1 rounded-bl-md rounded-tl-md">
                 <div className="text-sm font-bold">{coin.symbol}</div>
                 <div className="w-40 text-sm font-medium text-left truncate text-purple2">
-                  {coin.companyName}
+                  {coin.coinName}
                 </div>
               </td>
               <td className="px-6 py-3 text-sm font-medium tracking-wider text-left text-purple2">
