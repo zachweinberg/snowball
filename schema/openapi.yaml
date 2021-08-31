@@ -27,6 +27,8 @@ paths:
                   type: string
                 password:
                   type: string
+                confirmPassword:
+                  type: string
       responses:
         '200':
           description: Valid request
