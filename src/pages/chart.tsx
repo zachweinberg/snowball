@@ -16,7 +16,6 @@ const ChartTest: NextPage = () => {
           <ChevronDownIcon className="w-7 h-7" />
         </div>
       </div>
-
       <LineChart
         width={700}
         height={300}

@@ -9,7 +9,7 @@ export default class MyDocument extends Document {
           <meta name="theme-color" content="#000" />
           <meta name="description" content="Finance Hub"></meta>
         </Head>
-        <body className="font-sans antialiased bg-background">
+        <body className="antialiased font-poppins bg-background">
           <Main />
           <NextScript />
         </body>

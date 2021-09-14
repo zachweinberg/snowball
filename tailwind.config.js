@@ -38,11 +38,10 @@ module.exports = {
       red2: '#ff5151',
       red3: '#ea2626',
     },
+
     extend: {
       fontFamily: {
-        sans: ['Inter', ...defaultTheme.fontFamily.sans],
         poppins: ['Poppins', ...defaultTheme.fontFamily.sans],
-        montserrat: ['Montserrat'],
       },
     },
   },

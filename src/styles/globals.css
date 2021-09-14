@@ -2,14 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap');
-
 @font-face {
-  font-family: 'Inter';
+  font-family: 'Poppins';
+  font-weight: 500;
   font-style: normal;
-  font-weight: 100 900;
-  font-display: optional;
-  src: url(/fonts/Inter.woff2) format('woff2');
+  src: url('/fonts/poppins_500.woff2') format('woff2'),
+    url('/fonts/poppins_500.woff') format('woff');
+}
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 600;
+  font-style: normal;
+  src: url('/fonts/poppins_600.woff2') format('woff2'),
+    url('/fonts/poppins_600.woff') format('woff');
+}
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 700;
+  font-style: normal;
+  src: url('/fonts/poppins_700.woff2') format('woff2'),
+    url('/fonts/poppins_700.woff') format('woff');
 }
 
 html {
@@ -19,11 +31,13 @@ html {
 
 body {
   background-color: #eff6ff;
-}
-
-::selection,
-::-moz-selection {
-  background: rgb(179, 237, 255);
+  height: 100%;
+  -webkit-overflow-scrolling: touch;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-style: normal;
+  font-family: 'Poppins', sans-serif;
+  line-height: 1;
 }
 
 #nprogress .bar {
