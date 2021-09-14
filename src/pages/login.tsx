@@ -1,16 +1,22 @@
 import type { NextPage } from 'next';
+import Link from 'next/link';
 import React from 'react';
 import RequiredLoggedOut from '~/components/auth/RequireLoggedOut';
-import Typography from '~/components/Typography';
+import LoginForm from '~/components/form/LoginForm';
 
 const LoginPage: NextPage = () => {
   return (
     <RequiredLoggedOut>
-      <div className="max-w-2xl p-16 mx-auto bg-white rounded-lg mt-44">
-        <div></div>
-        <Typography element="h1" variant="Headline1">
-          Check out how your net worth has changed.
-        </Typography>
+      <div className="max-w-md mx-auto mt-16">
+        <LoginForm />
+        <p className="mt-3 text-sm text-center">
+          Don't have an account?{' '}
+          <Link href="/signup">
+            <a className="ml-1 font-semibold underline cursor-pointer text-blue1 hover:text-blue2">
+              Sign up
+            </a>
+          </Link>
+        </p>
       </div>
     </RequiredLoggedOut>
   );
