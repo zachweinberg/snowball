@@ -1,3 +1,5 @@
+import classNames from 'classnames';
+
 type VariantKeys =
   | 'Headline1'
   | 'Headline2'
@@ -8,30 +10,43 @@ type VariantKeys =
   | 'Button'
   | 'Label'
   | 'Table'
-  | 'TableSmall';
+  | 'TableSmall'
+  | 'Link';
 
 interface Props {
   variant: VariantKeys;
   element: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span' | 'p' | 'div' | 'a';
   children: React.ReactNode;
+  className?: string;
 }
 
-const Typography: React.FunctionComponent<Props> = ({ variant, element, children }: Props) => {
+const Typography: React.FunctionComponent<Props> = ({
+  variant,
+  element,
+  children,
+  className,
+  ...rest
+}: Props) => {
   const styles: Record<VariantKeys, string> = {
-    Headline1: 'font-poppins font-bold text-4xl',
-    Headline2: 'font-poppins font-bold text-22',
-    Headline3: 'font-poppins font-semibold text-18',
-    Numbers: 'font-poppins font-semibold text-28',
-    Paragraph: 'font-poppins font-medium text-16',
-    Navigation: 'font-poppins font-semibold text-14',
-    Button: 'font-poppins font-semibold text-16',
-    Label: 'font-poppins font-semibold text-14',
-    Table: 'font-poppins font-bold text-15',
-    TableSmall: 'font-poppins font-bold text-13',
+    Headline1: 'font-poppins font-bold text-[2rem] leading-tight text-dark',
+    Headline2: 'font-poppins font-bold text-[1.35rem]',
+    Headline3: 'font-poppins font-semibold text-[1.1rem]',
+    Numbers: 'font-poppins font-semibold text-[1.75rem]',
+    Paragraph: 'font-poppins font-medium text-[1rem] text-darkgray leading-tight',
+    Navigation: 'font-poppins font-semibold text-[0.9rem]',
+    Button: 'font-poppins font-semibold text-[1rem]',
+    Label: 'font-poppins font-semibold text-[0.9rem]',
+    Table: 'font-poppins font-bold text-[0.94rem]',
+    TableSmall: 'font-poppins font-bold text-[0.8rem]',
+    Link: 'font-poppins font-semibold text-[1rem] underline cursor-pointer text-evergreen hover:opacity-70',
   };
 
   const Element = element;
-  return <Element className={styles[variant]}>{children}</Element>;
+  return (
+    <Element className={classNames(styles[variant], className)} {...rest}>
+      {children}
+    </Element>
+  );
 };
 
 export default Typography;
