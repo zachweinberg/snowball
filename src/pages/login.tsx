@@ -18,7 +18,11 @@ const LoginPage: NextPage = () => {
               Need an account?
             </Typography>
             <Link href="/signup">
-              <Typography element="div" variant="Link" className="ml-2 underline">
+              <Typography
+                element="div"
+                variant="Link"
+                className="ml-2 underline text-evergreen"
+              >
                 Sign Up
               </Typography>
             </Link>
@@ -46,7 +50,7 @@ const LoginPage: NextPage = () => {
           </div>
           <div>
             <Link href="/reset-password">
-              <Typography element="div" variant="Link" className="underline">
+              <Typography element="div" variant="Link" className="underline text-evergreen">
                 Forgot Password
               </Typography>
             </Link>

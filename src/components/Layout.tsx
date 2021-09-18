@@ -15,7 +15,7 @@ const Layout: React.FunctionComponent<Props> = ({ children, title }: Props) => {
       <div className="relative min-h-screen" id="root">
         <Header />
         <main>
-          <div className="max-w-6xl px-4 pt-8 mx-auto">{children}</div>
+          <div className="px-4 pt-8 mx-auto max-w-7xl">{children}</div>
         </main>
       </div>
     </>

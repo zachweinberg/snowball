@@ -28,7 +28,7 @@ const Header: React.FunctionComponent = () => {
 
   return (
     <header className="bg-white">
-      <div className="max-w-6xl px-4 flex justify-between items-center mx-auto py-2">
+      <div className="flex items-center justify-between px-4 py-2 mx-auto max-w-7xl">
         <div>
           <Cloud width={35} />
         </div>
@@ -54,10 +54,10 @@ const Header: React.FunctionComponent = () => {
                 </li>
               ))}
             </ul>
-            <span className="inline-flex items-center justify-center h-10 w-10 rounded-full bg-dark mr-1">
+            <span className="inline-flex items-center justify-center w-10 h-10 mr-1 rounded-full bg-dark">
               <span className="text-lg font-medium leading-none text-white">Z</span>
             </span>
-            <ChevronDownIcon className="h-5 w-5 text-dark" />
+            <ChevronDownIcon className="w-5 h-5 text-dark" />
           </nav>
         </div>
       </div>
