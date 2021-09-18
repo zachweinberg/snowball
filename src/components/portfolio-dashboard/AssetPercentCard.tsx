@@ -34,7 +34,7 @@ const AssetPercentCard: React.FunctionComponent<Props> = ({
               strokeWidth="2"
               stroke={strokeColor ?? strokeGray}
               fill="transparent"
-              stroke-dasharray={`${percent * 100}, 100`}
+              strokeDasharray={`${percent * 100}, 100`}
               d="M18 2.0845
             a 15.9155 15.9155 0 0 1 0 31.831
             a 15.9155 15.9155 0 0 1 0 -31.831"

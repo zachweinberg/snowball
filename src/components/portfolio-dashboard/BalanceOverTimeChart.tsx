@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { LineSeries, XYPlot } from 'react-vis';
 
 const resolveConfig = require('tailwindcss/resolveConfig');
 const tailwindConfig = require('../../../tailwind.config');
@@ -7,36 +7,34 @@ const { theme } = resolveConfig(tailwindConfig);
 type Coords = Array<{ x: number; y: number }>;
 
 interface Props {
-  height: number;
-  width: number;
+  containerHeight: number;
+  containerWidth: number;
 }
 
-const BalanceOverTimeChart: React.FunctionComponent<Props> = ({ height, width }: Props) => {
-  const [loading, setLoading] = useState(true);
-  const [coords, setCoords] = useState<Coords>([]);
+interface DataPoint {
+  x: number;
+  y: number;
+}
 
-  useEffect(() => {
-    const randomPoints: Coords = [];
-
-    for (let element = 0; element < 20; element++) {
-      const y = Math.floor(Math.random() * 50) + 50;
-      randomPoints.push({
-        x: element,
-        y,
-      });
-    }
-
-    setCoords(randomPoints);
-    setLoading(false);
-  }, []);
-
+const BalanceOverTimeChart: React.FunctionComponent = () => {
   return (
-    <div className="h-full px-5 py-4 text-white rounded-3xl font-poppins bg-dark">
-      {!loading && (
-        <svg viewBox="0 0 100% 100%">
-          <path d="M 0 0 L 100 200 z" strokeWidth="2" stroke={theme.colors.lime} />
-        </svg>
-      )}
+    <div className="h-full w-full text-white rounded-3xl font-poppins bg-dark">
+      <XYPlot height="100%" width="100%">
+        <LineSeries
+          data={[
+            { x: 0, y: 8 },
+            { x: 1, y: 5 },
+            { x: 2, y: 4 },
+            { x: 3, y: 9 },
+            { x: 4, y: 1 },
+            { x: 5, y: 7 },
+            { x: 6, y: 6 },
+            { x: 7, y: 3 },
+            { x: 8, y: 2 },
+            { x: 9, y: 0 },
+          ]}
+        />
+      </XYPlot>
     </div>
   );
 };

@@ -36,7 +36,7 @@ const Header: React.FunctionComponent = () => {
           <nav className="flex items-center">
             <ul className="flex space-x-9 mr-9">
               {links.map((link) => (
-                <li>
+                <li key={link.href}>
                   <Link href={link.href}>
                     <Typography
                       element="div"

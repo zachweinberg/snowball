@@ -1,6 +1,5 @@
 import { AssetType } from '@zachweinberg/wealth-schema';
 import { NextPage } from 'next';
-import { useRef } from 'react';
 import Layout from '~/components/Layout';
 import AssetPercentCard from '~/components/portfolio-dashboard/AssetPercentCard';
 import BalanceOverTimeChart from '~/components/portfolio-dashboard/BalanceOverTimeChart';
@@ -11,8 +10,6 @@ const tailwindConfig = require('../../tailwind.config');
 const { theme } = resolveConfig(tailwindConfig);
 
 const New: NextPage = () => {
-  const chartRef = useRef<HTMLDivElement | null>(null);
-
   return (
     <Layout title="Dashboard">
       <Typography element="h1" variant="Headline1" className="mb-6">
@@ -20,13 +17,8 @@ const New: NextPage = () => {
       </Typography>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div className="h-64 lg:h-full" ref={chartRef}>
-          {chartRef.current && (
-            <BalanceOverTimeChart
-              width={chartRef.current!.offsetWidth}
-              height={chartRef.current!.offsetHeight}
-            />
-          )}
+        <div className="h-64 lg:h-full">
+          <BalanceOverTimeChart />
         </div>
         <div className="grid grid-cols-2 grid-rows-2 gap-6">
           <AssetPercentCard
