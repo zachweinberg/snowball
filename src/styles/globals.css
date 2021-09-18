@@ -30,7 +30,7 @@ html {
 }
 
 body {
-  background-color: #eff6ff;
+  background-color: #f9faff;
   height: 100%;
   -webkit-overflow-scrolling: touch;
   -webkit-font-smoothing: antialiased;
@@ -38,20 +38,6 @@ body {
   font-style: normal;
   font-family: 'Poppins', sans-serif;
   line-height: 1;
-}
-
-#nprogress .bar {
-  background: #2a62ff;
-  height: 3px;
-}
-
-.ticker-font-color {
-  color: #2962fc;
-}
-
-table {
-  border-collapse: separate;
-  border-spacing: 0 15px;
 }
 
 .ReactModal__Overlay {

@@ -1,16 +1,60 @@
+import classNames from 'classnames';
 import type { NextPage } from 'next';
-import React from 'react';
+import React, { useState } from 'react';
+import * as yup from 'yup';
 import RequiredLoggedOut from '~/components/auth/RequireLoggedOut';
 import Button from '~/components/Button';
 import Cloud from '~/components/Cloud';
 import TextInput from '~/components/form/TextInput';
 import Link from '~/components/Link';
 import Typography from '~/components/Typography';
+import { useAuth } from '~/hooks/useAuth';
+
+const loginSchema = yup.object().shape({
+  email: yup.string().email().required(),
+  password: yup.string().required(),
+});
 
 const LoginPage: NextPage = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const auth = useAuth();
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    const isValid = await loginSchema.isValid({
+      email,
+      password,
+    });
+
+    if (isValid) {
+      setLoading(true);
+      try {
+        await auth.login(email, password);
+      } catch (err) {
+        if (err.code === 'auth/user-not-found') {
+          setError('An account with that email and password could not be found.');
+        } else if (err.code === 'auth/wrong-password') {
+          setError('Invalid email or password.');
+        } else {
+          setError('Something went wrong.');
+        }
+        setLoading(false);
+      }
+    }
+  };
+
   return (
     <RequiredLoggedOut>
-      <div className="max-w-lg p-8 mx-auto mt-20 bg-white shadow-md rounded-2xl">
+      <form
+        className={classNames('max-w-lg p-8 mx-auto mt-20 bg-white shadow-md rounded-2xl', {
+          'opacity-70': loading,
+        })}
+        onSubmit={onSubmit}
+      >
         <div className="flex justify-between mb-20">
           <Cloud />
           <div className="flex">
@@ -37,30 +81,40 @@ const LoginPage: NextPage = () => {
           </Typography>
         </div>
 
-        <div className="mb-5">
-          <TextInput name="email" placeholder="Email address" type="email" className="mb-4" />
-          <TextInput name="password" placeholder="Password" type="password" />
+        <div className="mb-10">
+          <TextInput
+            name="email"
+            placeholder="Email address"
+            type="email"
+            className="mb-4"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <TextInput
+            name="password"
+            placeholder="Password"
+            type="password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </div>
 
-        <div className="flex justify-between mb-20">
-          <div>
-            <Typography element="p" variant="Paragraph">
-              Keep me signed in
-            </Typography>
-          </div>
+        <div className="flex justify-end mb-10">
           <div>
             <Link href="/reset-password">
               <Typography element="div" variant="Link" className="underline text-evergreen">
-                Forgot Password
+                Forgot Password?
               </Typography>
             </Link>
           </div>
         </div>
 
+        {error && <p className="mb-10 text-red">{error}</p>}
+
         <div className="mb-16">
-          <Button type="submit">Log in to my account</Button>
+          <Button type="submit" disabled={loading}>
+            Log in to my account
+          </Button>
         </div>
-      </div>
+      </form>
     </RequiredLoggedOut>
   );
 };

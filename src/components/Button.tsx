@@ -21,6 +21,7 @@ const Button: React.FunctionComponent<Props> = ({
       type={type}
       className={classNames(
         'w-full rounded-xl bg-dark text-white p-5 font-semibold hover:bg-opacity-80 transition-colors',
+        { 'opacity-70': disabled },
         className
       )}
       disabled={disabled}
