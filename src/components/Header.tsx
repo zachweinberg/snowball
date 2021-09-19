@@ -28,10 +28,10 @@ const Header: React.FunctionComponent = () => {
 
   return (
     <header className="bg-white">
-      <div className="flex items-center justify-between px-4 py-2 mx-auto max-w-7xl">
-        <div>
-          <Cloud width={35} />
-        </div>
+      <div className="flex items-center justify-between px-4 mx-auto max-w-7xl">
+        <Link href="/portfolios">
+          <Cloud width={35} className="hover:opacity-70" />
+        </Link>
         <div>
           <nav className="flex items-center">
             <ul className="flex space-x-9 mr-9">

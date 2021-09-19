@@ -4,15 +4,15 @@ import type { NextPage } from 'next';
 import { useCallback, useState } from 'react';
 import useSWRInfinite from 'swr/infinite';
 import Button from '~/components/Button';
+import TextInput from '~/components/form/TextInput';
 import Layout from '~/components/Layout';
-import NewsCard from '~/components/NewsCard';
-import Spinner from '~/components/Spinner';
+import Link from '~/components/Link';
+import Typography from '~/components/Typography';
 import { request } from '~/lib/api';
 
 type NewsPage = { news: NewsItem[]; status: string };
 
 const NewsPage: NextPage = () => {
-  const [textInput, setTextInput] = useState('');
   const [symbol, setSymbol] = useState('');
 
   const { data, error, size, setSize } = useSWRInfinite<NewsItem[]>(
@@ -45,37 +45,31 @@ const NewsPage: NextPage = () => {
 
   return (
     <Layout title="News">
-      <h1 className="mb-3 text-xl font-bold leading-7 text-blue3 sm:text-2xl sm:truncate">
-        News
-      </h1>
-
-      <div className="mb-3">
-        <input
-          value={textInput}
-          onChange={(e) => {
-            setTextInput(e.target.value.toUpperCase());
-            debouncedSearch(e.target.value.toUpperCase());
-          }}
-          placeholder="Filter by symbol..."
-          className="w-full px-3 py-2 border rounded-lg md:w-1/5 border-purple1 bg-gray2 placeholder-purple1 text-gray10 focus:outline-none focus:ring-blue1 focus:border-blue1"
-        />
+      <div className="flex items-center justify-between mb-7">
+        <Typography element="h1" variant="Headline1">
+          News
+        </Typography>
+        <div className="w-80">
+          <TextInput
+            type="text"
+            name="symbol"
+            placeholder="Filter news by symbol..."
+            onChange={(e) => {
+              debouncedSearch(e.target.value.toUpperCase());
+            }}
+          />
+        </div>
       </div>
-
-      <div className="mb-5">
-        {isEmpty ? <p>No news right now!</p> : null}
-        {isLoadingInitialData ? (
-          <div className="flex justify-center">
-            <Spinner size={40} />
-          </div>
-        ) : (
-          newsItems.map((newsItem, i) => <NewsCard key={i} newsItem={newsItem} />)
-        )}
+      <div className="grid grid-cols-2 gap-5 mb-10">
+        {newsItems.map((item) => (
+          <NewsCard newsItem={item} />
+        ))}
       </div>
-
-      <div className="flex justify-center pb-20">
+      <div className="flex justify-center">
         {!isLoadingInitialData && size < 10 && (
           <Button
             type="button"
+            secondary
             onClick={() => setSize(size + 1)}
             className="w-1/4"
             disabled={isLoadingMore || isLoadingInitialData}
@@ -89,3 +83,39 @@ const NewsPage: NextPage = () => {
 };
 
 export default NewsPage;
+
+interface Props {
+  newsItem: NewsItem;
+}
+
+const NewsCard: React.FunctionComponent<Props> = ({ newsItem }: Props) => {
+  return (
+    <Link href={newsItem.newsURL}>
+      <div className="flex items-center h-56 bg-white p-7 rounded-2xl hover:bg-gray">
+        <img
+          src={newsItem.imageURL}
+          className="object-cover max-w-xs w-36 h-36 mr-7 rounded-xl"
+        />
+        <div className="flex flex-col">
+          <div className="mb-2">
+            <Typography element="p" variant="Paragraph" className="font-normal">
+              {newsItem.sourceName}
+            </Typography>
+          </div>
+          <div>
+            <Typography element="h2" variant="Headline3" className="mb-5">
+              {newsItem.title}
+            </Typography>
+            <Typography
+              element="p"
+              variant="Paragraph"
+              className="font-normal truncate-paragraph"
+            >
+              {newsItem.text}
+            </Typography>
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+};

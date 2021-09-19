@@ -1,6 +1,5 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline';
 import { PortfolioWithBalances } from '@zachweinberg/wealth-schema';
-import SmallChart from '~/components/SmallChart';
 import { formatMoneyFromNumber, formatPercentageChange } from '~/lib/money';
 
 interface Props {
@@ -41,9 +40,7 @@ const PortfolioSummaryCard: React.FunctionComponent<Props> = ({ portfolio }: Pro
             </div>
           </div>
         </div>
-        <div className="self-end">
-          <SmallChart />
-        </div>
+        <div className="self-end">{/* <SmallChart /> */}</div>
       </div>
 
       <div className="grid grid-flow-row grid-cols-3 grid-rows-2 gap-4 mt-4 color">

@@ -10,6 +10,7 @@ interface AuthContext {
   signup: (userData: CreateUserRequest) => Promise<void>;
   logout: () => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
+  sendPasswordResetEmail: (email: string) => Promise<void>;
 }
 
 export const authContext = createContext<AuthContext>({
@@ -18,6 +19,7 @@ export const authContext = createContext<AuthContext>({
   signup: async () => {},
   logout: async () => {},
   login: async () => {},
+  sendPasswordResetEmail: async () => {},
 });
 
 export const AuthProvider = ({ children }) => {
@@ -72,5 +74,13 @@ const useFirebaseAuth = (): AuthContext => {
     router.push('/login');
   };
 
-  return { user, loading, signup, logout, login };
+  const sendPasswordResetEmail = async (email: string) => {
+    try {
+      await firebase.auth().sendPasswordResetEmail(email);
+    } catch (e) {
+      throw e;
+    }
+  };
+
+  return { user, loading, signup, logout, login, sendPasswordResetEmail };
 };
