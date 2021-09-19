@@ -22,12 +22,12 @@ interface Props {
 }
 
 const styles: Record<VariantKeys, string> = {
-  Headline1: 'font-poppins font-bold text-[2rem] leading-tight text-dark',
-  Headline2: 'font-poppins font-bold text-[1.35rem] text-dark',
-  Headline3: 'font-poppins font-semibold text-[1.1rem] text-dark leading-tight',
-  Headline4: 'font-poppins font-semibold text-[0.9rem] text-dark leading-tight',
+  Headline1: 'font-poppins font-bold text-[2rem] leading-tight',
+  Headline2: 'font-poppins font-bold text-[1.35rem]',
+  Headline3: 'font-poppins font-semibold text-[1.1rem] leading-tight',
+  Headline4: 'font-poppins font-semibold text-[0.9rem] leading-tight',
   Numbers: 'font-poppins font-semibold text-[1.75rem]',
-  Paragraph: 'font-poppins font-medium text-[1rem] text-darkgray leading-tight',
+  Paragraph: 'font-poppins font-medium text-[1rem] gray leading-tight',
   Navigation: 'font-poppins font-semibold text-[0.9rem]',
   Button: 'font-poppins font-semibold text-[1rem]',
   Label: 'font-poppins font-semibold text-[0.9rem]',

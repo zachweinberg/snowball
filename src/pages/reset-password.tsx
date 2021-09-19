@@ -3,11 +3,11 @@ import type { NextPage } from 'next';
 import React, { useState } from 'react';
 import * as yup from 'yup';
 import RequiredLoggedOut from '~/components/auth/RequireLoggedOut';
-import Button from '~/components/Button';
-import Cloud from '~/components/Cloud';
-import TextInput from '~/components/form/TextInput';
-import Link from '~/components/Link';
-import Typography from '~/components/Typography';
+import Button from '~/components/ui/Button';
+import Cloud from '~/components/ui/Cloud';
+import Link from '~/components/ui/Link';
+import TextInput from '~/components/ui/TextInput';
+import Typography from '~/components/ui/Typography';
 import { useAuth } from '~/hooks/useAuth';
 
 const passwordResetSchema = yup.object().shape({
@@ -74,8 +74,10 @@ const PasswordResetPage: NextPage = () => {
 
         <div className="mb-10">
           <TextInput
+            required
             name="email"
             placeholder="Email"
+            value={email}
             type="email"
             onChange={(e) => setEmail(e.target.value)}
           />

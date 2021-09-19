@@ -1,21 +1,23 @@
-import { ChevronUpIcon, PlusIcon } from '@heroicons/react/solid';
-import { PortfolioWithQuotes } from '@zachweinberg/wealth-schema';
+import { AssetType, PortfolioWithQuotes } from '@zachweinberg/wealth-schema';
 import type { NextPage } from 'next';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import Button from '~/components/Button';
 import AddAssetForm from '~/components/form/AddAssetForm';
-import FullScreenModal from '~/components/FullScreenModal';
-import Layout from '~/components/Layout';
-import MainChart from '~/components/MainChart';
-import Spinner from '~/components/Spinner';
-import StocksTable from '~/components/tables/StocksTable';
-import Tabs from '~/components/Tabs';
+import Layout from '~/components/layout/Layout';
+import AssetPercentCard from '~/components/portfolio-view/AssetPercentCard';
+import BalanceOverTimeChart from '~/components/portfolio-view/BalanceOverTimeChart';
+import Button from '~/components/ui/Button';
+import FullScreenModal from '~/components/ui/FullScreenModal';
+import Link from '~/components/ui/Link';
+import Spinner from '~/components/ui/Spinner';
+import Typography from '~/components/ui/Typography';
 import { API } from '~/lib/api';
-import { formatMoneyFromNumber } from '~/lib/money';
 
-const PortfolioViewPage: NextPage = () => {
+const resolveConfig = require('tailwindcss/resolveConfig');
+const tailwindConfig = require('../../../tailwind.config');
+const { theme } = resolveConfig(tailwindConfig);
+
+const PortfolioView: NextPage = () => {
   const router = useRouter();
   const [addingAsset, setAddingAsset] = useState(false);
   const [portfolio, setPortfolio] = useState<PortfolioWithQuotes | null>(null);
@@ -47,12 +49,10 @@ const PortfolioViewPage: NextPage = () => {
   const renderContent = () => {
     if (error) {
       return (
-        <div className="max-w-md p-8 mx-auto bg-white rounded-md shadow-md">
+        <div className="max-w-md p-8 mx-auto bg-white rounded-md">
           <p className="mb-6 text-xl font-medium text-center text-purple2">{error}</p>
           <Link href="/portfolios">
-            <a>
-              <Button type="button">Go Back</Button>
-            </a>
+            <Button type="button">Go Back</Button>
           </Link>
         </div>
       );
@@ -69,81 +69,48 @@ const PortfolioViewPage: NextPage = () => {
     if (portfolio) {
       return (
         <>
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center mb-4">
-                <h1 className="text-xl font-bold leading-7 text-blue3 sm:text-2xl sm:truncate">
-                  {portfolio.name}
-                </h1>
-                {portfolio.public && (
-                  <div className="px-3 py-1 ml-3 text-xs font-medium rounded-full bg-gray7 text-purple3">
-                    Public
-                  </div>
-                )}
-              </div>
-
-              <div className="mb-4">
-                <Tabs
-                  active={activeTab}
-                  options={[
-                    { label: 'All', onClick: () => setActiveTab('All') },
-                    { label: 'Stocks', onClick: () => setActiveTab('Stocks') },
-                    { label: 'Crypto', onClick: () => setActiveTab('Crypto') },
-                    { label: 'Real Estate', onClick: () => setActiveTab('Real Estate') },
-                    { label: 'Cash', onClick: () => setActiveTab('Cash') },
-                    { label: 'Custom', onClick: () => setActiveTab('Custom') },
-                  ]}
-                />
-              </div>
-            </div>
-            <div>
-              <Button type="button" onClick={() => setAddingAsset(true)}>
-                <PlusIcon className="w-5 h-4 mr-2 -ml-1" aria-hidden="true" />
-                Add Asset
+          <div className="flex items-center justify-between mb-7">
+            <Typography element="h1" variant="Headline1">
+              My Portfolio
+            </Typography>
+            <div className="w-56">
+              <Button type="button" onClick={() => setAddingAsset(true)} secondary>
+                + Add asset
               </Button>
             </div>
           </div>
 
-          <div className="inline-block">
-            <p className="text-sm text-purple2">Total Value:</p>
-            <div className="flex items-center mb-1">
-              <div className="mr-5 text-4xl font-light text-purple2">
-                {formatMoneyFromNumber(3)}
-              </div>
-              <div className="flex items-center ml-5 text-green2">
-                <div className="mr-2 text-xl font-semibold">+12,424.42</div>
-              </div>
-              <div className="flex items-center ml-5 text-green2">
-                <ChevronUpIcon className="w-5 h-5" aria-hidden="true" />
-                <div className="mr-2 text-xl font-semibold">21.01%</div>
-              </div>
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <div className="h-64 lg:h-full">
+              <BalanceOverTimeChart />
+            </div>
+            <div className="grid grid-cols-2 grid-rows-2 gap-6">
+              <AssetPercentCard
+                amount={412.32}
+                percentDecimal={0.7182}
+                strokeColor={theme.colors['lime']}
+                assetType={AssetType.Stock}
+              />
+              <AssetPercentCard
+                amount={124992.12}
+                percentDecimal={0.2182}
+                strokeColor={theme.colors['purple']}
+                assetType={AssetType.RealEstate}
+              />
+              <AssetPercentCard
+                amount={412.32}
+                percentDecimal={0.7182}
+                strokeColor={theme.colors['evergreen']}
+                assetType={AssetType.Crypto}
+              />
+              <AssetPercentCard
+                amount={41212.32}
+                percentDecimal={0.6182}
+                strokeColor={theme.colors['rust']}
+                assetType={AssetType.Cash}
+              />
             </div>
           </div>
-
-          <div className="mb-5">
-            <div className="flex justify-end w-full mb-2">
-              <div className="flex items-center p-2 text-sm font-semibold rounded-md">
-                <div className="px-3 py-1 rounded-md cursor-pointer text-blue3 hover:bg-blue1 hover:text-white">
-                  1D
-                </div>
-                <div className="px-3 py-1 rounded-md cursor-pointer text-blue3 hover:bg-blue1 hover:text-white">
-                  7D
-                </div>
-                <div className="px-3 py-1 rounded-md cursor-pointer text-blue3 hover:bg-blue1 hover:text-white">
-                  30D
-                </div>
-                <div className="px-3 py-1 rounded-md cursor-pointer text-blue3 hover:bg-blue1 hover:text-white">
-                  90D
-                </div>
-                <div className="px-3 py-1 rounded-md cursor-pointer text-blue3 hover:bg-blue1 hover:text-white">
-                  ALL
-                </div>
-              </div>
-            </div>
-            <MainChart />
-          </div>
-
-          <StocksTable stocks={portfolio.stocks} />
         </>
       );
     }
@@ -151,10 +118,10 @@ const PortfolioViewPage: NextPage = () => {
   };
 
   return (
-    <Layout title="Portfolio">
+    <Layout title={portfolio?.name ?? 'My Portfolio'}>
       {portfolio && (
         <FullScreenModal isOpen={addingAsset} onClose={() => setAddingAsset(false)}>
-          <div className="max-w-md mx-auto">
+          <div className="mx-auto">
             <AddAssetForm
               portfolioName={portfolio.name}
               portfolioID={portfolio.id}
@@ -172,4 +139,4 @@ const PortfolioViewPage: NextPage = () => {
   );
 };
 
-export default PortfolioViewPage;
+export default PortfolioView;

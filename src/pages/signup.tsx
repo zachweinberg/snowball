@@ -4,10 +4,10 @@ import type { NextPage } from 'next';
 import React, { useState } from 'react';
 import * as yup from 'yup';
 import RequiredLoggedOut from '~/components/auth/RequireLoggedOut';
-import Button from '~/components/Button';
-import TextInput from '~/components/form/TextInput';
-import Link from '~/components/Link';
-import Typography from '~/components/Typography';
+import Button from '~/components/ui/Button';
+import Link from '~/components/ui/Link';
+import TextInput from '~/components/ui/TextInput';
+import Typography from '~/components/ui/Typography';
 import { useAuth } from '~/hooks/useAuth';
 
 const signupSchema = yup.object().shape({
@@ -123,6 +123,7 @@ const SignUpPage: NextPage = () => {
           <TextInput
             name="name"
             placeholder="Your name"
+            value={name}
             required
             type="text"
             className="mb-4"
@@ -130,6 +131,7 @@ const SignUpPage: NextPage = () => {
           />
           <TextInput
             name="email"
+            value={email}
             placeholder="Email address"
             type="email"
             required
@@ -138,6 +140,7 @@ const SignUpPage: NextPage = () => {
           />
           <TextInput
             name="password"
+            value={password}
             placeholder="Password"
             type="password"
             className="mb-4"
@@ -145,6 +148,7 @@ const SignUpPage: NextPage = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
           <TextInput
+            value={passwordConfirm}
             name="confirmPassword"
             placeholder="Confirm password"
             required

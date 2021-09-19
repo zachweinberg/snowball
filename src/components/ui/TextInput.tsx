@@ -4,6 +4,7 @@ type Props = {
   type: 'text' | 'password' | 'email' | 'number';
   label?: string;
   name: string;
+  value: string;
   placeholder: string;
   required?: boolean;
   className?: string;
@@ -17,17 +18,19 @@ const TextInput: React.FunctionComponent<Props> = ({
   type,
   onChange,
   placeholder,
+  value,
   required,
 }: Props) => {
   return (
     <input
       type={type}
+      value={value}
       onChange={onChange}
       name={name}
       placeholder={placeholder}
       required={required}
       className={classNames(
-        'p-3 border-2 rounded-xl border-gray placeholder-darkgray w-full focus:outline-none focus:ring-evergreen focus:border-evergreen',
+        'p-3 border-2 rounded-xl bg-light border-gray placeholder-darkgray w-full focus:outline-none focus:ring-evergreen focus:border-evergreen',
         className
       )}
     />

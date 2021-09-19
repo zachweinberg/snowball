@@ -1,9 +1,9 @@
 import { ChevronDownIcon } from '@heroicons/react/outline';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
-import Cloud from '~/components/Cloud';
-import Link from '~/components/Link';
-import Typography from '~/components/Typography';
+import Cloud from '~/components/ui/Cloud';
+import Link from '~/components/ui/Link';
+import Typography from '~/components/ui/Typography';
 import { useAuth } from '~/hooks/useAuth';
 
 const profileLinks = [
@@ -43,7 +43,7 @@ const Header: React.FunctionComponent = () => {
                       variant="Link"
                       className={classNames(
                         'py-5',
-                        router.pathname === link.href
+                        router.pathname.includes(link.href)
                           ? 'border-lime text-dark border-b-4'
                           : 'text-darkgray'
                       )}
@@ -54,7 +54,10 @@ const Header: React.FunctionComponent = () => {
                 </li>
               ))}
             </ul>
-            <span className="inline-flex items-center justify-center w-10 h-10 mr-1 rounded-full bg-dark">
+            <span
+              className="inline-flex items-center justify-center w-10 h-10 mr-1 rounded-full bg-dark"
+              onClick={auth.logout}
+            >
               <span className="text-lg font-medium leading-none text-white">Z</span>
             </span>
             <ChevronDownIcon className="w-5 h-5 text-dark" />

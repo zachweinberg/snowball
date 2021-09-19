@@ -3,11 +3,11 @@ import debounce from 'lodash/debounce';
 import type { NextPage } from 'next';
 import { useCallback, useState } from 'react';
 import useSWRInfinite from 'swr/infinite';
-import Button from '~/components/Button';
-import TextInput from '~/components/form/TextInput';
-import Layout from '~/components/Layout';
-import Link from '~/components/Link';
-import Typography from '~/components/Typography';
+import Layout from '~/components/layout/Layout';
+import Button from '~/components/ui/Button';
+import Link from '~/components/ui/Link';
+import TextInput from '~/components/ui/TextInput';
+import Typography from '~/components/ui/Typography';
 import { request } from '~/lib/api';
 
 type NewsPage = { news: NewsItem[]; status: string };
@@ -52,6 +52,7 @@ const NewsPage: NextPage = () => {
         <div className="w-80">
           <TextInput
             type="text"
+            value={symbol}
             name="symbol"
             placeholder="Filter news by symbol..."
             onChange={(e) => {
