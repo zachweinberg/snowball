@@ -121,16 +121,14 @@ const PortfolioView: NextPage = () => {
     <Layout title={portfolio?.name ?? 'My Portfolio'}>
       {portfolio && (
         <FullScreenModal isOpen={addingAsset} onClose={() => setAddingAsset(false)}>
-          <div className="mx-auto">
-            <AddAssetForm
-              portfolioName={portfolio.name}
-              portfolioID={portfolio.id}
-              onClose={() => {
-                loadPortfolio();
-                setAddingAsset(false);
-              }}
-            />
-          </div>
+          <AddAssetForm
+            portfolioName={portfolio.name}
+            portfolioID={portfolio.id}
+            onClose={() => {
+              loadPortfolio();
+              setAddingAsset(false);
+            }}
+          />
         </FullScreenModal>
       )}
 

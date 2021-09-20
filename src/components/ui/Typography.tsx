@@ -23,7 +23,7 @@ interface Props {
 
 const styles: Record<VariantKeys, string> = {
   Headline1: 'font-poppins font-bold text-[2rem] leading-tight',
-  Headline2: 'font-poppins font-bold text-[1.35rem]',
+  Headline2: 'font-poppins font-bold text-[1.31rem]',
   Headline3: 'font-poppins font-semibold text-[1.1rem] leading-tight',
   Headline4: 'font-poppins font-semibold text-[0.9rem] leading-tight',
   Numbers: 'font-poppins font-semibold text-[1.75rem]',

@@ -9,7 +9,7 @@ interface Props {
 
 const PortfolioSummaryCard: React.FunctionComponent<Props> = ({ portfolio }: Props) => {
   return (
-    <div className="bg-white rounded-3xl p-7">
+    <div className="bg-white shadow-sm hover:shadow-md rounded-3xl p-7">
       <div className="flex justify-between pb-8 border-b border-bordergray">
         <div>
           <Typography variant="Headline3" element="h2" className="mb-3 text-darkgray">
