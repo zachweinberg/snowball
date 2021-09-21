@@ -1,3 +1,4 @@
+import { AssetType } from '@zachweinberg/wealth-schema';
 import currency from 'currency.js';
 import debounce from 'lodash/debounce';
 import { useCallback, useState } from 'react';
@@ -8,6 +9,7 @@ import { SearchPositionsResult, searchStocks } from '~/lib/algolia';
 import { API } from '~/lib/api';
 import Button from '../ui/Button';
 import InputResults from '../ui/InputResults';
+import MoneyInput from '../ui/MoneyInput';
 import TextArea from '../ui/TextArea';
 import Typography from '../ui/Typography';
 
@@ -19,7 +21,9 @@ const addStockSchema = yup.object().shape({
     .min(0, 'You must own more shares than that!')
     .max(100000000, 'Are you sure you own that many shares?')
     .required('Quantity of shares is required.'),
-  costBasis: Yup.string().required('Cost basis is required.'),
+  costBasis: Yup.number()
+    .min(0, 'Cost basis must be greater than 0.')
+    .required('Cost basis is required.'),
   companyName: Yup.string().required('Please select a ticker symbol.'),
   note: Yup.string(),
 });
@@ -38,41 +42,63 @@ const AddStockForm: React.FunctionComponent<Props> = ({
   const [error, setError] = useState<string>('');
   const [symbol, setSymbol] = useState('');
   const [companyName, setCompanyName] = useState('');
-  const [quantity, setQuantity] = useState(0);
-  const [costBasis, setCostBasis] = useState(0);
+  const [quantity, setQuantity] = useState<number | null>(null);
+  const [costBasis, setCostBasis] = useState<number | null>(null);
   const [note, setNote] = useState('');
   const [searchResults, setSearchResults] = useState<SearchPositionsResult[]>([]);
-
-  const search = async (query) => {
-    const response = await searchStocks(query);
-    setSearchResults(response);
-  };
+  const [loading, setLoading] = useState(false);
 
   const debouncedSearch = useCallback(
-    debounce((query) => search(query), 100),
+    debounce(async (query) => {
+      setLoading(true);
+      const response = await searchStocks(query);
+      setSearchResults(response);
+      setLoading(false);
+    }, 75),
     []
   );
 
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    const numberCostBasis = currency(costBasis).value;
+    let isValid = false;
 
     try {
-      await API.addStockToPortfolio({
-        portfolioID,
+      await addStockSchema.validate({
+        costBasis,
         symbol,
-        costBasis: numberCostBasis,
         companyName,
         quantity,
-        note: note ?? '',
+        note,
       });
-      afterAdd();
+      isValid = true;
     } catch (err) {
-      if (err.response?.data?.error) {
-        setError(err.response.data.error);
-      } else {
-        setError('Could not add stock.');
+      setError(err.errors?.[0] ?? '');
+    }
+
+    if (isValid) {
+      setLoading(true);
+
+      const numberCostBasis = currency(costBasis as number).value;
+      try {
+        await API.addStockToPortfolio({
+          portfolioID,
+          symbol,
+          costBasis: numberCostBasis,
+          companyName,
+          quantity: quantity as number,
+          note: note ?? '',
+        });
+
+        afterAdd();
+      } catch (err) {
+        if (err.response?.data?.error) {
+          setError(err.response.data.error);
+        } else {
+          setError('Could not add stock.');
+        }
+
+        setLoading(false);
       }
     }
   };
@@ -81,12 +107,12 @@ const AddStockForm: React.FunctionComponent<Props> = ({
     <form onSubmit={onSubmit} className="flex flex-col max-w-lg mx-auto" autoComplete="off">
       <Typography
         element="div"
-        className="cursor-pointer mb-10 text-darkgray flex items-center justify-center"
+        className="flex items-center justify-center mb-10 cursor-pointer text-darkgray"
         variant="Link"
         onClick={goBack}
       >
         <svg
-          className="h-5 w-5 fill-current mr-2"
+          className="w-5 h-5 mr-2 fill-current"
           viewBox="0 0 25 12"
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -102,7 +128,7 @@ const AddStockForm: React.FunctionComponent<Props> = ({
         Add a Stock
       </Typography>
 
-      <Typography element="p" variant="Paragraph" className="mb-7 text-darkgray text-center">
+      <Typography element="p" variant="Paragraph" className="text-center mb-7 text-darkgray">
         Add a specific equity to your portfolio.
       </Typography>
 
@@ -111,25 +137,43 @@ const AddStockForm: React.FunctionComponent<Props> = ({
           placeholder="Ticker Symbol"
           type="text"
           name="symbol"
+          required
           value={symbol}
           onChange={(e) => {
-            const q = e.target.value;
+            const query = e.target.value.toUpperCase();
 
-            setSymbol(q);
+            setSymbol(query);
 
-            if (q === '') {
+            if (query === '') {
               setSearchResults([]);
             } else {
-              debouncedSearch(q);
+              debouncedSearch(query);
             }
           }}
         />
 
         <InputResults
           onSelect={(symbol, fullName) => {
-            if (!symbol) {
-              setSearchResults([]);
+            setLoading(true);
+
+            if (symbol) {
+              if (!fullName) {
+                setError("We can't find that company. Please contact support.");
+                setLoading(false);
+                return;
+              }
+
+              API.getQuote(symbol, AssetType.Stock).then((quoteData) => {
+                if (quoteData.status === 'ok') {
+                  setCostBasis(quoteData.latestPrice);
+                }
+              });
+              setSymbol(symbol.toUpperCase());
+              setCompanyName(fullName);
             }
+
+            setSearchResults([]);
+            setLoading(false);
           }}
           searchResults={searchResults}
         />
@@ -138,27 +182,46 @@ const AddStockForm: React.FunctionComponent<Props> = ({
       <div className="grid grid-cols-2 gap-6 mb-4">
         <TextInput
           placeholder="Quantity"
+          required
           value={quantity}
+          type="number"
           name="quantity"
           onChange={(e) => setQuantity(e.target.value)}
         />
-        <TextInput
-          placeholder="Cost per share"
+        <MoneyInput
+          placeholder="Cost Per Share"
+          required
           value={costBasis}
           name="costBasis"
-          onChange={(e) => setCostBasis(e.target.value)}
+          onChange={(value) => setCostBasis(value)}
         />
       </div>
 
       <TextArea
         name="note"
         placeholder="Note (optional)"
-        value={name}
+        value={note}
         onChange={(e) => setNote(e.target.value)}
-        className="mb-14"
+        className="mb-7"
       />
 
-      <Button type="submit">Add stock to portfolio</Button>
+      <div className="space-y-2 font-medium text-center mb-7 text-darkgray">
+        {companyName && costBasis && quantity && (
+          <>
+            <p>{companyName}</p>
+            <p>
+              {quantity} shares at ${costBasis} per share
+            </p>
+            <p>Total cost basis: ${quantity * costBasis}</p>
+          </>
+        )}
+      </div>
+
+      {error && <p className="mb-4 text-center text-red">{error}</p>}
+
+      <Button type="submit" disabled={loading || !!error}>
+        Add stock to portfolio
+      </Button>
     </form>
   );
 };

@@ -29,14 +29,14 @@ const InputResults: React.FunctionComponent<Props> = ({ onSelect, searchResults 
   return searchResults.length === 0 ? null : (
     <div
       ref={containerRef}
-      className="absolute z-40 w-full mt-1 overflow-y-auto shadow-md rounded-xl no-scrollbar bg-white"
+      className="absolute z-40 w-full mt-4 overflow-y-auto bg-white shadow-2xl rounded-xl no-scrollbar"
     >
       {searchResults.map((result, i) => (
         <div
           onClick={() => {
             onSelect(result.symbol, result.fullName);
           }}
-          className="flex items-center p-2 cursor-pointer hover:bg-lightlime"
+          className="flex items-center p-4 cursor-pointer hover:bg-lightlime"
           key={result.providerID}
         >
           {result.logoURL && (

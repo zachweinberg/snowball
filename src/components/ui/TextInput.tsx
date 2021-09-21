@@ -4,7 +4,7 @@ type Props = {
   type: 'text' | 'password' | 'email' | 'number';
   label?: string;
   name: string;
-  value: string;
+  value: string | number | null;
   placeholder: string;
   required?: boolean;
   className?: string;
@@ -24,7 +24,7 @@ const TextInput: React.FunctionComponent<Props> = ({
   return (
     <input
       type={type}
-      value={value}
+      value={value ? value : undefined}
       onChange={onChange}
       name={name}
       placeholder={placeholder}
