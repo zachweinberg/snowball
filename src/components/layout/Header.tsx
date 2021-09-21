@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import { useRouter } from 'next/router';
 import Cloud from '~/components/ui/Cloud';
 import Link from '~/components/ui/Link';
-import Typography from '~/components/ui/Typography';
 import { useAuth } from '~/hooks/useAuth';
 
 const profileLinks = [
@@ -38,18 +37,16 @@ const Header: React.FunctionComponent = () => {
               {links.map((link) => (
                 <li key={link.href}>
                   <Link href={link.href}>
-                    <Typography
-                      element="div"
-                      variant="Link"
+                    <div
                       className={classNames(
-                        'py-5',
+                        'py-5 font-semibold text-[.95rem]',
                         router.pathname.includes(link.href)
                           ? 'border-lime text-dark border-b-4'
-                          : 'text-darkgray'
+                          : 'text-darkgray hover:text-dark'
                       )}
                     >
                       {link.label}
-                    </Typography>
+                    </div>
                   </Link>
                 </li>
               ))}

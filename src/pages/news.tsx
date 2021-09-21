@@ -7,7 +7,6 @@ import Layout from '~/components/layout/Layout';
 import Button from '~/components/ui/Button';
 import Link from '~/components/ui/Link';
 import TextInput from '~/components/ui/TextInput';
-import Typography from '~/components/ui/Typography';
 import { request } from '~/lib/api';
 
 type NewsPage = { news: NewsItem[]; status: string };
@@ -46,9 +45,7 @@ const NewsPage: NextPage = () => {
   return (
     <Layout title="News">
       <div className="flex items-center justify-between mb-7">
-        <Typography element="h1" variant="Headline1">
-          News
-        </Typography>
+        <h1 className="font-bold text-[1.75rem]">News</h1>
         <div className="w-80">
           <TextInput
             type="text"
@@ -99,21 +96,11 @@ const NewsCard: React.FunctionComponent<Props> = ({ newsItem }: Props) => {
         />
         <div className="flex flex-col">
           <div className="mb-2">
-            <Typography element="p" variant="Paragraph" className="font-normal">
-              {newsItem.sourceName}
-            </Typography>
+            <p className="font-normal text-[1.05rem]">{newsItem.sourceName}</p>
           </div>
           <div>
-            <Typography element="h2" variant="Headline3" className="mb-5">
-              {newsItem.title}
-            </Typography>
-            <Typography
-              element="p"
-              variant="Paragraph"
-              className="font-normal truncate-paragraph"
-            >
-              {newsItem.text}
-            </Typography>
+            <h2 className="mb-5 font-semibold text-[.9rem]">{newsItem.title}</h2>
+            <p className="font-normal truncate-paragraph">{newsItem.text}</p>
           </div>
         </div>
       </div>

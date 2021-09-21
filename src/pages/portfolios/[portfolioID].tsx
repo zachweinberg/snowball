@@ -10,7 +10,6 @@ import Button from '~/components/ui/Button';
 import FullScreenModal from '~/components/ui/FullScreenModal';
 import Link from '~/components/ui/Link';
 import Spinner from '~/components/ui/Spinner';
-import Typography from '~/components/ui/Typography';
 import { API } from '~/lib/api';
 
 const resolveConfig = require('tailwindcss/resolveConfig');
@@ -70,9 +69,7 @@ const PortfolioView: NextPage = () => {
       return (
         <>
           <div className="flex items-center justify-between mb-7">
-            <Typography element="h1" variant="Headline1">
-              My Portfolio
-            </Typography>
+            <h1 className="font-bold text-[1.75rem]">{portfolio.name}</h1>
             <div className="w-56">
               <Button type="button" onClick={() => setAddingAsset(true)} secondary>
                 + Add asset

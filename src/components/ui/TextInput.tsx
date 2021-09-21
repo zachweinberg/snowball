@@ -24,7 +24,7 @@ const TextInput: React.FunctionComponent<Props> = ({
   return (
     <input
       type={type}
-      value={value ? value : undefined}
+      value={value !== null ? value : undefined}
       onChange={onChange}
       name={name}
       placeholder={placeholder}

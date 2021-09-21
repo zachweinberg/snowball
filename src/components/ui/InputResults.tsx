@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 import { SearchPositionsResult } from '~/lib/algolia';
-import Typography from './Typography';
 
 interface Props {
   onSelect: (symbol: string | null, fullName?: string) => void;
@@ -43,20 +42,12 @@ const InputResults: React.FunctionComponent<Props> = ({ onSelect, searchResults 
             <Image width={25} height={25} src={result.logoURL} alt={result.fullName} />
           )}
           <div>
-            <Typography
-              element="p"
-              variant="Paragraph"
-              className="whitespace-nowrap text-evergreen"
-            >
+            <p className="whitespace-nowrap text-evergreen font-semibold text-[1.2rem] mb-1">
               {result.symbol}
-            </Typography>
-            <Typography
-              element="p"
-              variant="Paragraph"
-              className="whitespace-nowrap text-darkgray text-[0.9rem]"
-            >
+            </p>
+            <p className="whitespace-nowrap text-darkgray text-[0.95rem] font-medium">
               {result.fullName}
-            </Typography>
+            </p>
           </div>
         </div>
       ))}

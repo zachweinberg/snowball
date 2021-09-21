@@ -7,7 +7,6 @@ import Button from '~/components/ui/Button';
 import Cloud from '~/components/ui/Cloud';
 import Link from '~/components/ui/Link';
 import TextInput from '~/components/ui/TextInput';
-import Typography from '~/components/ui/Typography';
 import { useAuth } from '~/hooks/useAuth';
 
 const passwordResetSchema = yup.object().shape({
@@ -41,11 +40,12 @@ const PasswordResetPage: NextPage = () => {
       try {
         await auth.sendPasswordResetEmail(email);
       } catch (err) {
-        // Ignore
+        // Ignore, no problem
       }
 
       setSuccess(true);
       setError('');
+      setEmail('');
       setLoading(false);
     }
   };
@@ -53,55 +53,54 @@ const PasswordResetPage: NextPage = () => {
   return (
     <RequiredLoggedOut>
       <form
-        className={classNames('max-w-lg p-8 mx-auto mt-20 bg-white shadow-md rounded-2xl', {
-          'opacity-70': loading,
-        })}
         onSubmit={onSubmit}
+        className={classNames('max-w-lg p-8 mx-auto mt-20 bg-white shadow-md rounded-2xl', {
+          'bg-opacity-70': loading,
+        })}
       >
         <div className="flex justify-between mb-20">
           <Cloud />
+          <div className="flex font-semibold text-[1rem]">
+            <p className="text-darkgray">Back to</p>
+            <Link href="/login">
+              <span className="ml-1 underline text-evergreen hover:opacity-80">Login</span>
+            </Link>
+          </div>
         </div>
 
-        <div className="mb-10">
-          <Typography element="h1" variant="Headline1" className="mb-3 text-dark">
-            Having some trouble?
-          </Typography>
-          <Typography element="p" variant="Paragraph">
-            To reset your password, please provide the email address you used to register your
-            account.
-          </Typography>
+        <div className="mb-6">
+          <h1 className="text-dark font-bold text-[1.75rem] leading-tight mb-3">
+            Forget your password?
+          </h1>
+          <p className="font-medium text-[1.1rem] text-darkgray leading-tight">
+            Enter your email below and we will send you an email to reset your password.
+          </p>
         </div>
 
-        <div className="mb-10">
+        <div className="mb-5">
           <TextInput
-            required
             name="email"
-            placeholder="Email"
             value={email}
+            placeholder="Email address"
             type="email"
+            required
+            className="mb-4"
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
 
-        {error && <p className="mb-10 text-red">{error}</p>}
-
         {success && (
-          <p className="mb-10 text-evergreen">
+          <p className="mb-5 font-semibold text-evergreen">
             We've sent you an email with password reset instructions!
           </p>
         )}
 
+        {error && <p className="mb-10 text-red">{error}</p>}
+
         <div className="mb-16">
-          <Button type="submit" disabled={loading} className="mb-4">
+          <Button type="submit" disabled={loading}>
             Send password reset email
           </Button>
-          <div className="flex justify-center">
-            <Link href="/login">
-              <Typography element="div" variant="Link" className="underline text-evergreen">
-                Login
-              </Typography>
-            </Link>
-          </div>
         </div>
       </form>
     </RequiredLoggedOut>

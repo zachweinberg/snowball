@@ -7,7 +7,6 @@ import Button from '~/components/ui/Button';
 import Cloud from '~/components/ui/Cloud';
 import Link from '~/components/ui/Link';
 import TextInput from '~/components/ui/TextInput';
-import Typography from '~/components/ui/Typography';
 import { useAuth } from '~/hooks/useAuth';
 
 const loginSchema = yup.object().shape({
@@ -57,28 +56,20 @@ const LoginPage: NextPage = () => {
       >
         <div className="flex justify-between mb-20">
           <Cloud />
-          <div className="flex">
-            <Typography element="p" variant="Button" className="text-darkgray">
-              Need an account?
-            </Typography>
+          <div className="flex font-semibold text-[1rem]">
+            <p className="text-darkgray">Need an account?</p>
             <Link href="/signup">
-              <Typography
-                element="div"
-                variant="Link"
-                className="ml-2 underline text-evergreen"
-              >
-                Sign Up
-              </Typography>
+              <span className="ml-2 underline text-evergreen hover:opacity-80">Sign Up</span>
             </Link>
           </div>
         </div>
 
         <div className="mb-10">
-          <Typography element="h1" variant="Headline1" className="text-dark">
+          <h1 className="text-dark font-bold text-[1.75rem] leading-tight">
             Check out how your
             <br />
             Net Worth has changed.
-          </Typography>
+          </h1>
         </div>
 
         <div className="mb-10">
@@ -104,9 +95,9 @@ const LoginPage: NextPage = () => {
         <div className="flex justify-end mb-10">
           <div>
             <Link href="/reset-password">
-              <Typography element="div" variant="Link" className="underline text-evergreen">
+              <span className="underline text-evergreen font-semibold text-[1rem] hover:opacity-80">
                 Forgot Password?
-              </Typography>
+              </span>
             </Link>
           </div>
         </div>

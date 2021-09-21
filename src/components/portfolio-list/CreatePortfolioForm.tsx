@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import * as yup from 'yup';
-import Typography from '~/components/ui/Typography';
 import { API } from '~/lib/api';
 import Button from '../ui/Button';
 import TextInput from '../ui/TextInput';
@@ -51,13 +50,11 @@ const CreatePortfolioForm: React.FunctionComponent<Props> = ({
   };
 
   return (
-    <form className="text-center" onSubmit={onSubmit}>
-      <Typography variant="Headline1" element="h2" className="mb-3">
-        Create new portfolio
-      </Typography>
-      <Typography variant="Paragraph" element="h2" className="mb-8 text-darkgray">
+    <form className="text-center" onSubmit={onSubmit} autoComplete="off">
+      <h2 className="mb-3 font-bold text-dark text-[1.75rem]">Create new portfolio</h2>
+      <h2 className="mb-7 font-medium text-[1rem] text-darkgray">
         Give your new portfolio a name
-      </Typography>
+      </h2>
       <TextInput
         placeholder="Portfolio name"
         className="mb-10"
@@ -67,7 +64,9 @@ const CreatePortfolioForm: React.FunctionComponent<Props> = ({
         onChange={(e) => setPortfolioName(e.target.value)}
       />
       {error && <p className="mb-2 text-left text-red">{error}</p>}
-      <Button type="submit">Create portfolio</Button>
+      <Button type="submit" disabled={loading}>
+        Create portfolio
+      </Button>
     </form>
   );
 };

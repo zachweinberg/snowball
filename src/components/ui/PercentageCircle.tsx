@@ -3,7 +3,7 @@ import { formatPercentageChange } from '~/lib/money';
 interface Props {
   percentDecimal: number;
   strokeColor: string;
-  className: string;
+  className?: string;
 }
 
 const PercentageCircle: React.FunctionComponent<Props> = ({

@@ -1,7 +1,6 @@
 import { Transition } from '@headlessui/react';
 import { AssetType } from '@zachweinberg/wealth-schema';
 import { useState } from 'react';
-import Typography from '../ui/Typography';
 import AddStockForm from './AddStockForm';
 
 interface AddAssetFormProps {
@@ -120,12 +119,12 @@ const AddAssetForm: React.FunctionComponent<AddAssetFormProps> = ({
         leaveFrom="translate-x-0 opacity-100"
         leaveTo="-translate-x-24 opacity-0"
       >
-        <Typography element="h2" variant="Headline1" className="mb-3">
+        <h2 className="mb-3 font-bold text-[1.75rem] text-center">
           Add an asset to {portfolioName}
-        </Typography>
-        <Typography element="p" variant="Paragraph" className="mb-16 text-darkgray">
+        </h2>
+        <p className="mb-16 font-medium text-darkgray text-[1rem] text-center">
           Select the asset type you would like to add
-        </Typography>
+        </p>
 
         <div className="grid grid-cols-5 grid-rows-1 gap-7">
           {availableTypes.map((option) => (
@@ -169,12 +168,10 @@ const AssetTypeCard: React.FunctionComponent<AssetTypeCardProps> = ({
   return (
     <div
       onClick={onSelect}
-      className="flex flex-col items-center justify-center p-4 cursor-pointer bg-background rounded-3xl hover:shadow-md hover:border hover:border-darkgray"
+      className="flex flex-col items-center justify-center p-4 cursor-pointer bg-background rounded-3xl hover:shadow-md"
     >
       {svg}
-      <Typography element="span" variant="Headline2" className="mt-5">
-        {label}
-      </Typography>
+      <span className="mt-5 font-bold text-dark">{label}</span>
     </div>
   );
 };

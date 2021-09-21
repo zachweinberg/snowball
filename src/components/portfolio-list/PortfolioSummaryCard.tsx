@@ -1,7 +1,6 @@
 import { PortfolioWithBalances } from '@zachweinberg/wealth-schema';
 import { formatMoneyFromNumber } from '~/lib/money';
 import PercentageCircle from '../ui/PercentageCircle';
-import Typography from '../ui/Typography';
 
 interface Props {
   portfolio: PortfolioWithBalances;
@@ -12,12 +11,10 @@ const PortfolioSummaryCard: React.FunctionComponent<Props> = ({ portfolio }: Pro
     <div className="bg-white shadow-sm hover:shadow-md rounded-3xl p-7">
       <div className="flex justify-between pb-8 border-b border-bordergray">
         <div>
-          <Typography variant="Headline3" element="h2" className="mb-3 text-darkgray">
-            {portfolio.name}
-          </Typography>
-          <Typography variant="Headline1" element="p" className="mb-3">
+          <h2 className="mb-3 text-darkgray font-semibold text-[1rem]">{portfolio.name}</h2>
+          <p className="mb-3 font-bold text-dark text-[1.75rem]">
             {formatMoneyFromNumber(21341234.2134)}
-          </Typography>
+          </p>
           <div className="flex items-center">
             <svg
               width="12"
@@ -28,9 +25,7 @@ const PortfolioSummaryCard: React.FunctionComponent<Props> = ({ portfolio }: Pro
             >
               <path d="M6 0L12 10H0L6 0Z" fill="#00565B" />
             </svg>
-            <Typography variant="Headline3" element="p" className="ml-3 text-evergreen">
-              231.2 (0.34%)
-            </Typography>
+            <p className="ml-2 text-evergreen font-semibold text-[1rem]">231.2 (0.34%)</p>
           </div>
         </div>
         <div>
@@ -69,65 +64,33 @@ const PortfolioSummaryCard: React.FunctionComponent<Props> = ({ portfolio }: Pro
       </div>
 
       <div className="grid grid-cols-2 gap-3 pt-8">
-        <div className="flex items-center">
-          <PercentageCircle percentDecimal={0.124} strokeColor="red" className="w-16" />
-          <div className="ml-3">
-            <Typography element="p" variant="Headline3" className="mb-2">
-              $1,124.42
-            </Typography>
-            <Typography element="p" variant="Label" className="text-darkgray text-[1rem]">
-              Stocks
-            </Typography>
-          </div>
-        </div>
+        <AssetSummary label="Stocks" amount={18273} percentInt={0.0281} color="green" />
+        <AssetSummary label="Stocks" amount={1222} percentInt={0.431} color="red" />
+        <AssetSummary label="Stocks" amount={1} percentInt={0.71} color="purple" />
+        <AssetSummary label="Stocks" amount={346} percentInt={0.123} color="cyan" />
+        <AssetSummary label="Stocks" amount={43} percentInt={0.421} color="green" />
+      </div>
+    </div>
+  );
+};
 
-        <div className="flex items-center">
-          <PercentageCircle percentDecimal={0.124} strokeColor="red" className="w-16" />
-          <div className="ml-3">
-            <Typography element="p" variant="Headline3" className="mb-2">
-              $1,124.42
-            </Typography>
-            <Typography element="p" variant="Label" className="text-darkgray text-[1rem]">
-              Crypto
-            </Typography>
-          </div>
-        </div>
-
-        <div className="flex items-center">
-          <PercentageCircle percentDecimal={0.124} strokeColor="red" className="w-16" />
-          <div className="ml-3">
-            <Typography element="p" variant="Headline3" className="mb-2">
-              $1,124.42
-            </Typography>
-            <Typography element="p" variant="Label" className="text-darkgray text-[1rem]">
-              Real Estate
-            </Typography>
-          </div>
-        </div>
-
-        <div className="flex items-center">
-          <PercentageCircle percentDecimal={0.124} strokeColor="red" className="w-16" />
-          <div className="ml-3">
-            <Typography element="p" variant="Headline3" className="mb-2">
-              $1,124.42
-            </Typography>
-            <Typography element="p" variant="Label" className="text-darkgray text-[1rem]">
-              Cash
-            </Typography>
-          </div>
-        </div>
-
-        <div className="flex items-center">
-          <PercentageCircle percentDecimal={0.124} strokeColor="red" className="w-16" />
-          <div className="ml-3">
-            <Typography element="p" variant="Headline3" className="mb-2">
-              $1,124.42
-            </Typography>
-            <Typography element="p" variant="Label" className="text-darkgray text-[1rem]">
-              Custom
-            </Typography>
-          </div>
-        </div>
+const AssetSummary = ({
+  percentInt,
+  amount,
+  label,
+  color,
+}: {
+  percentInt: number;
+  amount: number;
+  label: string;
+  color: string;
+}) => {
+  return (
+    <div className="flex items-center">
+      <PercentageCircle percentDecimal={percentInt} strokeColor={color} className="w-16" />
+      <div className="ml-3">
+        <p className="mb-2 text-[1rem] font-semibold">{formatMoneyFromNumber(amount)}</p>
+        <p className="text-darkgray text-[.95rem] font-semibold">{label}</p>
       </div>
     </div>
   );

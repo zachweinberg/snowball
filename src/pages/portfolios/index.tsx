@@ -9,7 +9,6 @@ import PortfolioSummaryCard from '~/components/portfolio-list/PortfolioSummaryCa
 import Button from '~/components/ui/Button';
 import FullScreenModal from '~/components/ui/FullScreenModal';
 import Spinner from '~/components/ui/Spinner';
-import Typography from '~/components/ui/Typography';
 import { API } from '~/lib/api';
 
 const PortfolioListPage: NextPage = () => {
@@ -38,7 +37,7 @@ const PortfolioListPage: NextPage = () => {
 
   const renderContent = () => {
     if (error) {
-      return <p>{error}</p>;
+      return <p className="text-darkgray">{error}</p>;
     }
 
     if (loading) {
@@ -56,7 +55,7 @@ const PortfolioListPage: NextPage = () => {
             viewBox="0 0 150 150"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className="w-32 h-32 mb-8"
+            className="mb-8 w-28 h-28"
           >
             <circle cx="75" cy="75" r="75" fill="#EEEFF3" />
             <path
@@ -80,12 +79,10 @@ const PortfolioListPage: NextPage = () => {
               fill="#00565B"
             />
           </svg>
-          <Typography variant="Headline1" element="p" className="mb-5">
-            Welcome!
-          </Typography>
-          <Typography variant="Paragraph" element="p" className="mb-5 text-center">
-            You do not have any portfolios. Create one and start tracking your net worth.
-          </Typography>
+          <p className="mb-4 text-[1.75rem] font-bold text-dark">Welcome!</p>
+          <p className="mb-5 font-medium text-center text-darkgray text-[1rem] leading-tight">
+            You do not have any portfolios yet. Create one and start tracking your net worth.
+          </p>
           <Button
             type="button"
             secondary
@@ -132,9 +129,7 @@ const PortfolioListPage: NextPage = () => {
         </FullScreenModal>
 
         <div className="flex items-center justify-between mb-7">
-          <Typography element="h1" variant="Headline1">
-            My Portfolios
-          </Typography>
+          <h1 className="font-bold text-dark text-[1.75rem]">My Portfolios</h1>
           <div className="w-56">
             <Button type="button" onClick={() => setCreatingPortfolio(true)}>
               Create portfolio

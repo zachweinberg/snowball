@@ -11,7 +11,6 @@ import Button from '../ui/Button';
 import InputResults from '../ui/InputResults';
 import MoneyInput from '../ui/MoneyInput';
 import TextArea from '../ui/TextArea';
-import Typography from '../ui/Typography';
 
 const addStockSchema = yup.object().shape({
   symbol: Yup.string()
@@ -105,10 +104,8 @@ const AddStockForm: React.FunctionComponent<Props> = ({
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col max-w-lg mx-auto" autoComplete="off">
-      <Typography
-        element="div"
-        className="flex items-center justify-center mb-10 cursor-pointer text-darkgray"
-        variant="Link"
+      <div
+        className="flex items-center justify-center mb-10 cursor-pointer text-darkgray text-[.95rem] font-semibold"
         onClick={goBack}
       >
         <svg
@@ -122,15 +119,13 @@ const AddStockForm: React.FunctionComponent<Props> = ({
           />
         </svg>
         Back
-      </Typography>
+      </div>
 
-      <Typography element="h2" variant="Headline1" className="mb-3 text-center">
-        Add a Stock
-      </Typography>
+      <h2 className="mb-3 text-center text-[1.75rem] font-bold">Add a Stock</h2>
 
-      <Typography element="p" variant="Paragraph" className="text-center mb-7 text-darkgray">
+      <p className="text-center mb-7 text-darkgray text-[1rem] font-medium">
         Add a specific equity to your portfolio.
-      </Typography>
+      </p>
 
       <div className="relative mb-4">
         <TextInput
