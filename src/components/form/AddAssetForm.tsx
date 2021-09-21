@@ -78,23 +78,6 @@ const availableTypes = [
   },
 ];
 
-const renderAssetForm = (assetType: AssetType | null, portfolioID, onClose: () => void) => {
-  switch (assetType) {
-    case AssetType.Stock:
-      return <AddStockForm afterAdd={onClose} portfolioID={portfolioID} />;
-    // case AssetType.Crypto:
-    //   return <AddCryptoForm afterAdd={onClose} portfolioID={portfolioID} />;
-    // case AssetType.RealEstate:
-    //   return <AddRealEstateCrypto afterAdd={onClose} portfolioID={portfolioID} />;
-    // case AssetType.Cash:
-    //   return <AddCashForm afterAdd={onClose} portfolioID={portfolioID} />;
-    // case AssetType.Custom:
-    //   return <AddCustomAssetForm afterAdd={onClose} portfolioID={portfolioID} />;
-    default:
-      return null;
-  }
-};
-
 const AddAssetForm: React.FunctionComponent<AddAssetFormProps> = ({
   portfolioID,
   portfolioName,
@@ -102,8 +85,31 @@ const AddAssetForm: React.FunctionComponent<AddAssetFormProps> = ({
 }: AddAssetFormProps) => {
   const [assetType, setAssetType] = useState<AssetType | null>(null);
 
+  const renderAssetForm = () => {
+    switch (assetType) {
+      case AssetType.Stock:
+        return (
+          <AddStockForm
+            afterAdd={onClose}
+            portfolioID={portfolioID}
+            goBack={() => setAssetType(null)}
+          />
+        );
+      // case AssetType.Crypto:
+      //   return <AddCryptoForm afterAdd={onClose} portfolioID={portfolioID} />;
+      // case AssetType.RealEstate:
+      //   return <AddRealEstateCrypto afterAdd={onClose} portfolioID={portfolioID} />;
+      // case AssetType.Cash:
+      //   return <AddCashForm afterAdd={onClose} portfolioID={portfolioID} />;
+      // case AssetType.Custom:
+      //   return <AddCustomAssetForm afterAdd={onClose} portfolioID={portfolioID} />;
+      default:
+        return null;
+    }
+  };
+
   return (
-    <div className="relative max-w-5xl mx-auto mt-20 text-center">
+    <div className="relative max-w-5xl mx-auto mt-20">
       <Transition
         className="absolute w-full"
         show={assetType === null}
@@ -143,7 +149,7 @@ const AddAssetForm: React.FunctionComponent<AddAssetFormProps> = ({
         leaveFrom="translate-x-0 opacity-100"
         leaveTo="translate-x-24 opacity-0"
       >
-        {renderAssetForm(assetType, portfolioID, onClose)}
+        {renderAssetForm()}
       </Transition>
     </div>
   );

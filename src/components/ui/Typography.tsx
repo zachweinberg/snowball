@@ -19,6 +19,7 @@ interface Props {
   element: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span' | 'p' | 'div';
   children: React.ReactNode;
   className?: string;
+  [key: string]: any;
 }
 
 const styles: Record<VariantKeys, string> = {

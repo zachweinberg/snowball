@@ -16,6 +16,7 @@ module.exports = {
       background: '#F9FAFF',
       dark: '#141414',
       lime: '#CEF33C',
+      lightlime: '#F5FDD8',
       evergreen: '#00565B',
       rust: '#4E5B00',
       lightgray: '#ECEDEF',

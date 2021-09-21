@@ -49,10 +49,8 @@ const FullScreenModal: React.FunctionComponent<Props> = ({
           onClick={onClose}
         >
           <svg
-            width="40"
-            height="40"
+            className="h-8 w-8 fill-current mb-2"
             viewBox="0 0 40 40"
-            fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
@@ -65,7 +63,6 @@ const FullScreenModal: React.FunctionComponent<Props> = ({
             />
           </svg>
 
-          {/* <XIcon className="text-gray10 h-7 w-7" /> */}
           <p className="text-sm">Close</p>
         </div>
       </div>
