@@ -6,6 +6,7 @@ import AddAssetForm from '~/components/form/AddAssetForm';
 import Layout from '~/components/layout/Layout';
 import AssetPercentCard from '~/components/portfolio-view/AssetPercentCard';
 import BalanceOverTimeChart from '~/components/portfolio-view/BalanceOverTimeChart';
+import TableBase from '~/components/tables/TableBase';
 import Button from '~/components/ui/Button';
 import FullScreenModal from '~/components/ui/FullScreenModal';
 import Link from '~/components/ui/Link';
@@ -108,6 +109,8 @@ const PortfolioView: NextPage = () => {
               />
             </div>
           </div>
+
+          <TableBase />
         </>
       );
     }
