@@ -30,6 +30,13 @@
   src: url('/fonts/poppins_700.woff2') format('woff2'),
     url('/fonts/poppins_700.woff') format('woff');
 }
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: optional;
+  src: url(/fonts/manrope.ttf) format('ttf');
+}
 
 html {
   height: 100vh;

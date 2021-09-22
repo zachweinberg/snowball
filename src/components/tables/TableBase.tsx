@@ -1,65 +1,45 @@
-import { useMemo } from 'react';
-import { Column, useTable } from 'react-table';
+import React from 'react';
 
-const TableBase: React.FunctionComponent = () => {
-  const data = useMemo(
-    () => [
-      {
-        col1: 'Hello',
-        col2: 'World',
-      },
-    ],
-    []
-  );
+export interface TableHeader {}
+export interface Props {
+  headers: string[];
+  rows: Array<{ cells: Array<React.ReactNode> }>;
+  columnPercents: string;
+}
 
-  const columns: Column[] = useMemo(
-    () => [
-      {
-        Header: 'Column 1',
-        accessor: 'col1',
-      },
-      {
-        Header: 'Column 2',
-        accessor: 'col2',
-      },
-    ],
-    []
-  );
-
-  const tableInstance = useTable({ columns, data });
-
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;
-
+const TableBase: React.FunctionComponent<Props> = ({
+  headers,
+  rows,
+  columnPercents,
+}: Props) => {
   return (
-    <div className="w-full">
-      <div className="flex items-center justify-between">
-        <p className="font-semibold text-[1rem]">Watchlist</p>
+    <div className="w-full px-5 py-4 bg-white rounded-3xl">
+      <div className="flex items-center justify-between mb-5">
+        <p className="font-semibold text-[1rem]">Holdings</p>
         <p className="font-semibold text-[1rem]">Menu</p>
       </div>
 
-      <table {...getTableProps()}>
-        <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map((row) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map((cell) => {
-                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <div
+        style={{ display: 'grid', gap: '1rem', gridTemplateColumns: columnPercents }}
+        className="font-semibold text-[.9rem] text-darkgray mb-4"
+      >
+        {headers.map((header) => (
+          <div>{header}</div>
+        ))}
+      </div>
+
+      <div className="font-manrope">
+        {rows.map((row) => (
+          <div
+            className="border-b border-bordergray"
+            style={{ display: 'grid', gap: '1rem', gridTemplateColumns: columnPercents }}
+          >
+            {row.cells.map((cell) => (
+              <div>{cell}</div>
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

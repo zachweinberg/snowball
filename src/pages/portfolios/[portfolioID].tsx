@@ -78,7 +78,7 @@ const PortfolioView: NextPage = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-2">
             <div className="h-64 lg:h-full">
               <BalanceOverTimeChart />
             </div>
@@ -110,7 +110,35 @@ const PortfolioView: NextPage = () => {
             </div>
           </div>
 
-          <TableBase />
+          <TableBase
+            columnPercents="17% 10% 10% 10% 10% 20%"
+            headers={[
+              'Name',
+              'Quantity',
+              'Market Value',
+              'Day Change',
+              'Cost Basis',
+              'Gain / Loss',
+            ]}
+            rows={[
+              {
+                cells: [
+                  <div>
+                    <p className="mb-2 font-bold text-[1rem]">Apple</p>
+                    <p className="font-bold text-[.82rem] text-darkgray">AAPL</p>
+                  </div>,
+                  <p className="font-bold text-[1rem]">21</p>,
+                  <p className="font-bold text-[1rem]">$3,124.29</p>,
+                  <p className="font-bold text-[1rem] text-green">1.23%</p>,
+                  <p className="font-bold text-[1rem]">$100</p>,
+                  <div className="font-bold text-[1rem flex">
+                    <p className="mr-2">$1,113.83</p>
+                    <p className="text-green">(41.21%)</p>
+                  </div>,
+                ],
+              },
+            ]}
+          />
         </>
       );
     }

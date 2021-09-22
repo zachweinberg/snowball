@@ -27,6 +27,7 @@ module.exports = {
     extend: {
       fontFamily: {
         poppins: ['Poppins', ...defaultTheme.fontFamily.sans],
+        manrope: ['Manrope', ...defaultTheme.fontFamily.sans],
       },
     },
   },
