@@ -6,7 +6,7 @@ import AddAssetForm from '~/components/form/AddAssetForm';
 import Layout from '~/components/layout/Layout';
 import AssetPercentCard from '~/components/portfolio-view/AssetPercentCard';
 import BalanceOverTimeChart from '~/components/portfolio-view/BalanceOverTimeChart';
-import TableBase from '~/components/tables/TableBase';
+import StocksTable from '~/components/tables/StocksTable';
 import Button from '~/components/ui/Button';
 import FullScreenModal from '~/components/ui/FullScreenModal';
 import Link from '~/components/ui/Link';
@@ -19,9 +19,9 @@ const { theme } = resolveConfig(tailwindConfig);
 
 const PortfolioView: NextPage = () => {
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
   const [addingAsset, setAddingAsset] = useState(false);
   const [portfolio, setPortfolio] = useState<PortfolioWithQuotes | null>(null);
-  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('All');
   const [error, setError] = useState('');
 
@@ -33,9 +33,11 @@ const PortfolioView: NextPage = () => {
       setPortfolio(portfolioData.portfolio);
     } catch (err) {
       if (err.response.status === 404) {
-        setError("We couldn't find that portfolio.");
+        setError("Sorry, we couldn't find that portfolio.");
       } else {
-        setError('Something went wrong.');
+        setError(
+          'Something went wrong while loading this portfolio. Please contact support if this persists.'
+        );
       }
     } finally {
       setLoading(false);
@@ -84,7 +86,7 @@ const PortfolioView: NextPage = () => {
             </div>
             <div className="grid grid-cols-2 grid-rows-2 gap-6">
               <AssetPercentCard
-                amount={412.32}
+                amount={98}
                 percentDecimal={0.7182}
                 strokeColor={theme.colors['lime']}
                 assetType={AssetType.Stock}
@@ -110,35 +112,9 @@ const PortfolioView: NextPage = () => {
             </div>
           </div>
 
-          <TableBase
-            columnPercents="17% 10% 10% 10% 10% 20%"
-            headers={[
-              'Name',
-              'Quantity',
-              'Market Value',
-              'Day Change',
-              'Cost Basis',
-              'Gain / Loss',
-            ]}
-            rows={[
-              {
-                cells: [
-                  <div>
-                    <p className="mb-2 font-bold text-[1rem]">Apple</p>
-                    <p className="font-bold text-[.82rem] text-darkgray">AAPL</p>
-                  </div>,
-                  <p className="font-bold text-[1rem]">21</p>,
-                  <p className="font-bold text-[1rem]">$3,124.29</p>,
-                  <p className="font-bold text-[1rem] text-green">1.23%</p>,
-                  <p className="font-bold text-[1rem]">$100</p>,
-                  <div className="font-bold text-[1rem flex">
-                    <p className="mr-2">$1,113.83</p>
-                    <p className="text-green">(41.21%)</p>
-                  </div>,
-                ],
-              },
-            ]}
-          />
+          <div className="px-5 py-4 bg-white rounded-3xl">
+            <StocksTable stocks={portfolio.stocks} />
+          </div>
         </>
       );
     }

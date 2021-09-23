@@ -7,6 +7,7 @@ import * as yup from 'yup';
 import TextInput from '~/components/ui/TextInput';
 import { SearchPositionsResult, searchStocks } from '~/lib/algolia';
 import { API } from '~/lib/api';
+import { formatMoneyFromNumber } from '~/lib/money';
 import Button from '../ui/Button';
 import InputResults from '../ui/InputResults';
 import MoneyInput from '../ui/MoneyInput';
@@ -181,7 +182,7 @@ const AddStockForm: React.FunctionComponent<Props> = ({
           value={quantity}
           type="number"
           name="quantity"
-          onChange={(e) => setQuantity(e.target.value)}
+          onChange={(e) => setQuantity(Number(e.target.value))}
         />
         <MoneyInput
           placeholder="Cost Per Share"
@@ -205,16 +206,16 @@ const AddStockForm: React.FunctionComponent<Props> = ({
           <>
             <p>{companyName}</p>
             <p>
-              {quantity} shares at ${costBasis} per share
+              {quantity} shares at {formatMoneyFromNumber(costBasis)} per share
             </p>
-            <p>Total cost basis: ${quantity * costBasis}</p>
+            <p>Total cost basis: {formatMoneyFromNumber(quantity * costBasis)}</p>
           </>
         )}
       </div>
 
       {error && <p className="mb-4 text-center text-red">{error}</p>}
 
-      <Button type="submit" disabled={loading || !!error}>
+      <Button type="submit" disabled={loading}>
         Add stock to portfolio
       </Button>
     </form>

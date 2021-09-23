@@ -1,82 +1,144 @@
 import { StockPositionWithQuote } from '@zachweinberg/wealth-schema';
-import classNames from 'classnames';
-import { formatMoneyFromNumber } from '~/lib/money';
-
-const headers = [
-  'Ticker',
-  'Quantity',
-  'Last',
-  'Market Value',
-  'Day Change',
-  'Cost Basis',
-  'Gain/Loss',
-];
+import { useMemo, useState } from 'react';
+import { useTable } from 'react-table';
+import { formatMoneyFromNumber, formatPercentageChange } from '~/lib/money';
 
 interface Props {
   stocks: StockPositionWithQuote[];
 }
 
+interface TableData {
+  companyName: string;
+  symbol: string;
+  quantity: number;
+  marketValue: number;
+  dayChange: number;
+  costBasis: number;
+  gainLoss: number;
+}
+
+const buildData = (stocks: StockPositionWithQuote[]): TableData[] => {
+  return stocks.map((stock) => ({
+    companyName: stock.companyName,
+    symbol: stock.symbol,
+    quantity: stock.quantity,
+    marketValue: stock.marketValue,
+    dayChange: stock.dayChange,
+    costBasis: stock.costBasis,
+    gainLoss: stock.gainLoss,
+  }));
+};
+
 const StocksTable: React.FunctionComponent<Props> = ({ stocks }: Props) => {
+  const [units, setUnits] = useState<'dollars' | 'percents'>('dollars');
+
+  const data = useMemo<TableData[]>(() => buildData(stocks), []);
+
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Name',
+        accessor: 'companyName',
+        Cell: ({ row, value }) => (
+          <div>
+            <p className="mb-2">{value}</p>
+            <p className="text-darkgray text-[0.875rem]">{row.original.symbol}</p>
+          </div>
+        ),
+      },
+      {
+        Header: 'Quantity',
+        accessor: 'quantity',
+      },
+      {
+        Header: 'Market Value',
+        accessor: 'marketValue',
+        Cell: ({ value }) => formatMoneyFromNumber(value),
+      },
+      {
+        Header: 'Day Change',
+        accessor: 'dayChange',
+        Cell: ({ value }) => (
+          <p className={value >= 0 ? 'text-green' : 'text-red'}>
+            {units === 'dollars'
+              ? formatMoneyFromNumber(value)
+              : formatPercentageChange(value)}
+          </p>
+        ),
+      },
+      {
+        Header: 'Cost Basis',
+        accessor: 'costBasis',
+        Cell: ({ value }) => formatMoneyFromNumber(value),
+      },
+      {
+        Header: 'Gain / Loss',
+        accessor: 'gainLoss',
+        Cell: ({ value }) => (
+          <p className={value >= 0 ? 'text-green' : 'text-red'}>
+            {units === 'dollars'
+              ? formatMoneyFromNumber(value)
+              : formatPercentageChange(value)}
+          </p>
+        ),
+      },
+      {
+        Header: '',
+        accessor: 'arrow',
+        Cell: () => (
+          <svg
+            viewBox="0 0 4 20"
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 cursor-pointer fill-current text-darkgray"
+          >
+            <circle cx="2" cy="18" r="2" fill="#757784" />
+            <circle cx="2" cy="10" r="2" fill="#757784" />
+            <circle cx="2" cy="2" r="2" fill="#757784" />
+          </svg>
+        ),
+      },
+    ],
+    [units]
+  );
+
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
+    columns,
+    data,
+  });
+
   return (
-    <div className="min-w-full">
-      <p className="text-purple3 font-semibold text-xl">Stocks</p>
-      <table className="min-w-full">
-        <tbody>
-          <tr className="text-xs bg-white shadow-sm">
-            {headers.map((header, i) => (
-              <th
-                key={i}
-                className={classNames(
-                  `px-6 py-4 font-medium tracking-wider text-left uppercase text-purple2`,
-                  {
-                    'rounded-bl-md rounded-tl-md': i === 0,
-                    'rounded-br-md rounded-tr-md': i === headers.length - 1,
-                  }
-                )}
-              >
-                {header}
-              </th>
-            ))}
-          </tr>
-          {stocks.map((stock, i) => (
-            <tr className="transition-colors bg-white shadow-sm cursor-pointer hover:bg-blue0">
-              <td className="px-6 py-3 tracking-wider text-left truncate text-blue1 rounded-bl-md rounded-tl-md">
-                <div className="text-sm font-bold">{stock.symbol}</div>
-                <div className="w-40 text-sm font-medium text-left truncate text-purple2">
-                  {stock.companyName}
-                </div>
-              </td>
-              <td className="px-6 py-3 text-sm font-medium tracking-wider text-left text-purple2">
-                {stock.quantity}
-              </td>
-              <td className="px-6 py-3 text-sm font-medium tracking-wider text-left text-purple2">
-                {formatMoneyFromNumber(stock.last)}
-              </td>
-              <td className="px-6 py-3 text-sm font-medium tracking-wider text-left text-purple2">
-                {formatMoneyFromNumber(stock.marketValue)}
-              </td>
-              <td
-                className={classNames(
-                  `px-6 py-3 text-sm font-medium tracking-wider text-left`,
-                  stock.dayChange < 0 ? 'text-red2' : 'text-green2'
-                )}
-              >
-                <i className="align-middle fas fa-sort-up"></i>
-                {formatMoneyFromNumber(stock.dayChange)}
-              </td>
-              <td className="px-6 py-3 text-sm font-medium tracking-wider text-left text-purple2">
-                {formatMoneyFromNumber(stock.costBasis)}
-              </td>
-              <td
-                className={classNames(
-                  'px-6 py-3 tracking-wider text-left font-medium rounded-br-md text-sm rounded-tr-md',
-                  stock.gainLoss < 0 ? 'text-red2' : 'text-green2'
-                )}
-              >
-                <i className="fas fa-sort-up"></i> {formatMoneyFromNumber(stock.gainLoss)}
-              </td>
+    <div>
+      <button onClick={() => setUnits(units === 'dollars' ? 'percents' : 'dollars')}>
+        tg
+      </button>
+
+      <table {...getTableProps()} className="w-full text-left bg-white">
+        <thead>
+          {headerGroups.map((headerGroup) => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column) => (
+                <th {...column.getHeaderProps()} className="pb-2 font-semibold text-darkgray">
+                  {column.render('Header')}
+                </th>
+              ))}
             </tr>
           ))}
+        </thead>
+        <tbody {...getTableBodyProps()} className="font-bold font-manrope">
+          {rows.map((row, i) => {
+            prepareRow(row);
+            return (
+              <tr {...row.getRowProps()} className="border-b border-bordergray">
+                {row.cells.map((cell) => {
+                  return (
+                    <td className="py-3" {...cell.getCellProps()}>
+                      {cell.render('Cell')}
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
