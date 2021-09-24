@@ -73,7 +73,7 @@ const PortfolioView: NextPage = () => {
         <>
           <div className="flex items-center justify-between mb-7">
             <h1 className="font-bold text-[1.75rem]">{portfolio.name}</h1>
-            <div className="w-56">
+            <div className="w-44">
               <Button type="button" onClick={() => setAddingAsset(true)} secondary>
                 + Add asset
               </Button>

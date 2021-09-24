@@ -2,6 +2,7 @@ import { StockPositionWithQuote } from '@zachweinberg/wealth-schema';
 import { useMemo, useState } from 'react';
 import { useTable } from 'react-table';
 import { formatMoneyFromNumber, formatPercentageChange } from '~/lib/money';
+import Dropdown from '../ui/Dropdown';
 
 interface Props {
   stocks: StockPositionWithQuote[];
@@ -86,15 +87,20 @@ const StocksTable: React.FunctionComponent<Props> = ({ stocks }: Props) => {
         Header: '',
         accessor: 'arrow',
         Cell: () => (
-          <svg
-            viewBox="0 0 4 20"
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 cursor-pointer fill-current text-darkgray"
-          >
-            <circle cx="2" cy="18" r="2" fill="#757784" />
-            <circle cx="2" cy="10" r="2" fill="#757784" />
-            <circle cx="2" cy="2" r="2" fill="#757784" />
-          </svg>
+          <Dropdown
+            options={[{ label: 'Delete' }]}
+            button={() => (
+              <svg
+                viewBox="0 0 4 20"
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 cursor-pointer fill-current text-darkgray"
+              >
+                <circle cx="2" cy="18" r="2" fill="#757784" />
+                <circle cx="2" cy="10" r="2" fill="#757784" />
+                <circle cx="2" cy="2" r="2" fill="#757784" />
+              </svg>
+            )}
+          />
         ),
       },
     ],
