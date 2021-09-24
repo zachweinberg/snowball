@@ -16,7 +16,7 @@ const AssetPercentCard: React.FunctionComponent<Props> = ({
   strokeColor,
 }: Props) => {
   return (
-    <div className="p-3 bg-white rounded-xl">
+    <div className="p-3 bg-white border rounded-xl border-bordergray">
       <div className="grid items-center w-full h-full grid-cols-2 gap-2">
         <div className="hidden max-w-full mx-auto w-28 md:block">
           <PercentageCircle percentDecimal={percentDecimal} strokeColor={strokeColor} />

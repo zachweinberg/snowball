@@ -21,7 +21,7 @@ const Dropdown: React.FunctionComponent<Props> = ({ options, button }: Props) =>
         leaveFrom="transform opacity-100"
         leaveTo="transform opacity-0"
       >
-        <Menu.Items className="absolute right-0 w-48 mt-3 origin-top-right bg-white rounded-lg shadow-lg z-50 p-4 space-y-4 border border-lightgray">
+        <Menu.Items className="absolute right-0 z-50 w-48 p-4 mt-1 space-y-4 origin-top-right bg-white border rounded-lg shadow-lg border-lightgray">
           {options.map((opt) => (
             <div>
               <Menu.Item>

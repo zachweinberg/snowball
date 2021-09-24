@@ -27,7 +27,7 @@ const Header: React.FunctionComponent = () => {
       ];
 
   return (
-    <header className="bg-white">
+    <header className="bg-white border-b border-bordergray">
       <div className="flex items-center justify-between px-4 mx-auto max-w-7xl">
         <Link href="/portfolios">
           <Cloud width={35} className="hover:opacity-70" />

@@ -1,3 +1,4 @@
+import { ChevronDownIcon } from '@heroicons/react/outline';
 import { AssetType, PortfolioWithQuotes } from '@zachweinberg/wealth-schema';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
@@ -8,6 +9,7 @@ import AssetPercentCard from '~/components/portfolio-view/AssetPercentCard';
 import BalanceOverTimeChart from '~/components/portfolio-view/BalanceOverTimeChart';
 import StocksTable from '~/components/tables/StocksTable';
 import Button from '~/components/ui/Button';
+import Dropdown from '~/components/ui/Dropdown';
 import FullScreenModal from '~/components/ui/FullScreenModal';
 import Link from '~/components/ui/Link';
 import Spinner from '~/components/ui/Spinner';
@@ -112,7 +114,28 @@ const PortfolioView: NextPage = () => {
             </div>
           </div>
 
-          <div className="px-5 py-4 bg-white rounded-3xl">
+          <div className="px-5 py-4 bg-white border rounded-3xl border-bordergray">
+            <div className="flex justify-between mb-3">
+              <Dropdown
+                options={[{ label: 'Stocks' }, { label: 'Crypto' }]}
+                button={() => (
+                  <div className="flex items-center p-3 mb-4 border border-bordergray rounded-2xl">
+                    <p className="text-[1.1rem] font-semibold">Stocks</p>
+                    <ChevronDownIcon className="w-5 h-5 ml-2 font-semibold text-dark" />
+                  </div>
+                )}
+              />
+
+              <div className="flex items-center text-[1.4rem] text-evergreen">
+                <button className="px-4 py-2 mr-3 font-medium border-2 border-evergreen rounded-xl">
+                  $
+                </button>
+                <button className="px-4 py-2 font-medium border-2 border-bordergray rounded-xl hover:bg-bordergray">
+                  %
+                </button>
+              </div>
+            </div>
+
             <StocksTable stocks={portfolio.stocks} />
           </div>
         </>

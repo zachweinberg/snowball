@@ -114,10 +114,6 @@ const StocksTable: React.FunctionComponent<Props> = ({ stocks }: Props) => {
 
   return (
     <div>
-      <button onClick={() => setUnits(units === 'dollars' ? 'percents' : 'dollars')}>
-        tg
-      </button>
-
       <table {...getTableProps()} className="w-full text-left bg-white">
         <thead>
           {headerGroups.map((headerGroup) => (
