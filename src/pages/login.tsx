@@ -49,9 +49,12 @@ const LoginPage: NextPage = () => {
   return (
     <RequiredLoggedOut>
       <form
-        className={classNames('max-w-lg p-8 mx-auto mt-20 bg-white shadow-md rounded-2xl', {
-          'opacity-70': loading,
-        })}
+        className={classNames(
+          'max-w-lg border border-bordergray p-8 mx-auto mt-20 bg-white shadow-md rounded-2xl',
+          {
+            'opacity-70': loading,
+          }
+        )}
         onSubmit={onSubmit}
       >
         <div className="flex justify-between mb-20">

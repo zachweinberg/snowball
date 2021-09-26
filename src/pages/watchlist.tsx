@@ -2,6 +2,7 @@ import { WatchListItem } from '@zachweinberg/wealth-schema';
 import type { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import Layout from '~/components/layout/Layout';
+import Select from '~/components/ui/Select';
 import TextInput from '~/components/ui/TextInput';
 import { API } from '~/lib/api';
 
@@ -10,6 +11,8 @@ const WatchList: NextPage = () => {
   const [stocks, setStocks] = useState<WatchListItem[]>([]);
   const [crypto, setCrypto] = useState<WatchListItem[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const [watchListAsset, setWatchListAsset] = useState<string>('All');
 
   useEffect(() => {
     API.getWatchlist()
@@ -31,11 +34,20 @@ const WatchList: NextPage = () => {
       </div>
 
       <div className="flex justify-between">
-        <div className="rounded-3xl bg-white px-5 py-4 flex-1 mr-10">
-          <p className="font-semibold text-[1rem]">Your Watchlist</p>
+        <div className="flex-1 px-5 py-4 mr-10 bg-white border shadow-sm rounded-3xl border-bordergray">
+          <div className="flex items-center justify-between">
+            <p className="font-semibold text-[1rem]">Your Watchlist</p>
+            <div className="w-36">
+              <Select
+                onChange={(selected) => setWatchListAsset(selected)}
+                options={['All', 'Stocks', 'Crypto']}
+                selected={watchListAsset}
+              />
+            </div>
+          </div>
           <div className="flex flex-col items-center justify-center p-32 text-center">
             <svg
-              className="fill-current w-32 mb-8"
+              className="w-32 mb-8 fill-current"
               viewBox="0 0 150 150"
               xmlns="http://www.w3.org/2000/svg"
             >
@@ -61,11 +73,21 @@ const WatchList: NextPage = () => {
           </div>
         </div>
 
-        <div className="rounded-3xl bg-white px-5 py-4 w-96">
-          <p className="font-semibold text-[1rem]">Alerts</p>
-          <div className="flex flex-col items-center justify-center pt-32 px-10 text-center">
+        <div className="px-5 py-4 bg-white border shadow-sm rounded-3xl w-96 border-bordergray">
+          <div className="flex items-center justify-between">
+            <p className="font-semibold text-[1rem]">Alerts</p>
+            <div className="w-40">
+              <Select
+                onChange={(selected) => setWatchListAsset(selected)}
+                options={['All', 'Email', 'SMS']}
+                selected={watchListAsset}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center justify-center px-10 pt-32 text-center">
             <svg
-              className="fill-current w-32 mb-8"
+              className="w-32 mb-8 fill-current"
               viewBox="0 0 150 150"
               xmlns="http://www.w3.org/2000/svg"
             >

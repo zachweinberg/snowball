@@ -1,5 +1,5 @@
-import { ChevronDownIcon } from '@heroicons/react/outline';
 import { AssetType, PortfolioWithQuotes } from '@zachweinberg/wealth-schema';
+import classNames from 'classnames';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -9,9 +9,9 @@ import AssetPercentCard from '~/components/portfolio-view/AssetPercentCard';
 import BalanceOverTimeChart from '~/components/portfolio-view/BalanceOverTimeChart';
 import StocksTable from '~/components/tables/StocksTable';
 import Button from '~/components/ui/Button';
-import Dropdown from '~/components/ui/Dropdown';
 import FullScreenModal from '~/components/ui/FullScreenModal';
 import Link from '~/components/ui/Link';
+import Select from '~/components/ui/Select';
 import Spinner from '~/components/ui/Spinner';
 import { API } from '~/lib/api';
 
@@ -24,7 +24,8 @@ const PortfolioView: NextPage = () => {
   const [loading, setLoading] = useState(true);
   const [addingAsset, setAddingAsset] = useState(false);
   const [portfolio, setPortfolio] = useState<PortfolioWithQuotes | null>(null);
-  const [activeTab, setActiveTab] = useState('All');
+  const [activeTab, setActiveTab] = useState('All Assets');
+  const [unit, setUnit] = useState<'Dollar' | 'Percent'>('Dollar');
   const [error, setError] = useState('');
 
   const loadPortfolio = async () => {
@@ -92,47 +93,58 @@ const PortfolioView: NextPage = () => {
                 percentDecimal={0.7182}
                 strokeColor={theme.colors['lime']}
                 assetType={AssetType.Stock}
+                selected={activeTab === 'Stocks'}
+                onClick={() => setActiveTab('Stocks')}
               />
               <AssetPercentCard
                 amount={124992.12}
                 percentDecimal={0.2182}
                 strokeColor={theme.colors['purple']}
                 assetType={AssetType.RealEstate}
+                selected={activeTab === 'Real Estate'}
+                onClick={() => setActiveTab('Real Estate')}
               />
               <AssetPercentCard
                 amount={412.32}
                 percentDecimal={0.7182}
                 strokeColor={theme.colors['evergreen']}
                 assetType={AssetType.Crypto}
+                selected={activeTab === 'Crypto'}
+                onClick={() => setActiveTab('Crypto')}
               />
               <AssetPercentCard
                 amount={41212.32}
                 percentDecimal={0.6182}
                 strokeColor={theme.colors['rust']}
                 assetType={AssetType.Cash}
+                selected={activeTab === 'Cash'}
+                onClick={() => setActiveTab('Cash')}
               />
             </div>
           </div>
 
           <div className="px-5 py-4 bg-white border rounded-3xl border-bordergray">
-            <div className="flex justify-between mb-3">
-              <Dropdown
-                options={[{ label: 'Stocks' }, { label: 'Crypto' }]}
-                button={() => (
-                  <div className="flex items-center p-3 mb-4 border border-bordergray rounded-2xl">
-                    <p className="text-[1.1rem] font-semibold">Stocks</p>
-                    <ChevronDownIcon className="w-5 h-5 ml-2 font-semibold text-dark" />
-                  </div>
-                )}
-              />
+            <div className="flex mb-7">
+              <div className="mr-5 w-44">
+                <Select
+                  onChange={(selected) => setActiveTab(selected)}
+                  options={['All Assets', 'Stocks', 'Crypto', 'Real Estate', 'Cash']}
+                  selected={activeTab}
+                />
+              </div>
 
-              <div className="flex items-center text-[1.4rem] text-evergreen">
-                <button className="px-4 py-2 mr-3 font-medium border-2 border-evergreen rounded-xl">
-                  $
-                </button>
-                <button className="px-4 py-2 font-medium border-2 border-bordergray rounded-xl hover:bg-bordergray">
-                  %
-                </button>
+              <div className="flex items-center font-manrope">
+                {['Dollar', 'Percent'].map((u) => (
+                  <button
+                    onClick={() => setUnit(u as any)}
+                    className={classNames(
+                      'text-[1rem] h-full px-4 py-2 mr-3 font-bold border rounded-md text-darkgray hover:bg-light',
+                      { 'border-evergreen text-evergreen': u === unit }
+                    )}
+                  >
+                    {u}
+                  </button>
+                ))}
               </div>
             </div>
 

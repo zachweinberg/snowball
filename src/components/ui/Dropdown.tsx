@@ -27,7 +27,7 @@ const Dropdown: React.FunctionComponent<Props> = ({ options, button }: Props) =>
               <Menu.Item>
                 {({ active }) => (
                   <button
-                    className="text-dark font-semibold text-[0.9rem] w-full text-left hover:text-darkgray"
+                    className="text-dark font-medium text-[0.9rem] w-full text-left hover:text-darkgray"
                     onClick={opt.onClick}
                   >
                     {opt.label}

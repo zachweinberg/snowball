@@ -1,4 +1,5 @@
 import { AssetType } from '@zachweinberg/wealth-schema';
+import classNames from 'classnames';
 import PercentageCircle from '~/components/ui/PercentageCircle';
 import { formatMoneyFromNumber } from '~/lib/money';
 
@@ -7,6 +8,8 @@ interface Props {
   amount: number;
   percentDecimal: number;
   strokeColor: string;
+  onClick: () => void;
+  selected: boolean;
 }
 
 const AssetPercentCard: React.FunctionComponent<Props> = ({
@@ -14,9 +17,19 @@ const AssetPercentCard: React.FunctionComponent<Props> = ({
   percentDecimal,
   assetType,
   strokeColor,
+  selected,
+  onClick,
 }: Props) => {
   return (
-    <div className="p-3 bg-white border rounded-xl border-bordergray">
+    <div
+      onClick={onClick}
+      className={classNames(
+        'p-3 bg-white border rounded-xl border-bordergray cursor-pointer hover:bg-light',
+        {
+          'bg-light border-gray shadow-md': selected,
+        }
+      )}
+    >
       <div className="grid items-center w-full h-full grid-cols-2 gap-2">
         <div className="hidden max-w-full mx-auto w-28 md:block">
           <PercentageCircle percentDecimal={percentDecimal} strokeColor={strokeColor} />
