@@ -28,7 +28,7 @@ const PortfolioView: NextPage = () => {
   const [unit, setUnit] = useState<'Dollar' | 'Percent'>('Dollar');
   const [error, setError] = useState('');
 
-  const loadPortfolio = async () => {
+  const loadPortfolioData = async () => {
     setLoading(true);
 
     try {
@@ -48,7 +48,7 @@ const PortfolioView: NextPage = () => {
   };
 
   useEffect(() => {
-    loadPortfolio();
+    loadPortfolioData();
   }, []);
 
   const renderContent = () => {
@@ -157,14 +157,14 @@ const PortfolioView: NextPage = () => {
   };
 
   return (
-    <Layout title={portfolio?.name ?? 'My Portfolio'}>
+    <Layout title={portfolio?.name ?? 'Portfolio'}>
       {portfolio && (
         <FullScreenModal isOpen={addingAsset} onClose={() => setAddingAsset(false)}>
           <AddAssetForm
             portfolioName={portfolio.name}
             portfolioID={portfolio.id}
             onClose={() => {
-              loadPortfolio();
+              loadPortfolioData();
               setAddingAsset(false);
             }}
           />

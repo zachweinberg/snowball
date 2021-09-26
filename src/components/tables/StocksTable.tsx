@@ -88,7 +88,7 @@ const StocksTable: React.FunctionComponent<Props> = ({ stocks }: Props) => {
         accessor: 'arrow',
         Cell: () => (
           <Dropdown
-            options={[{ label: 'Delete' }]}
+            options={[{ label: 'Delete', onClick: () => null }]}
             button={() => (
               <svg
                 viewBox="0 0 4 20"
@@ -115,7 +115,7 @@ const StocksTable: React.FunctionComponent<Props> = ({ stocks }: Props) => {
   return (
     <div>
       <table {...getTableProps()} className="w-full text-left bg-white">
-        <thead>
+        <thead className="border-b border-bordergray">
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
