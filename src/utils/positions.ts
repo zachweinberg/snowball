@@ -49,7 +49,7 @@ export const calculatePortfolioSummary = async (portfolioID: string): Promise<Po
 
   const totalValue = currency(stocksValue).add(cryptoValue).add(realEstateValue).add(cashValue).add(customsValue).value;
 
-  const [latestBalance] = await findDocuments<DailyBalance>(
+  const [latestBalanceDoc] = await findDocuments<DailyBalance>(
     `/portfolios/${portfolioID}/dailyBalances`,
     [],
     {
@@ -62,9 +62,9 @@ export const calculatePortfolioSummary = async (portfolioID: string): Promise<Po
   let dayChange = 0;
   let dayChangePercent = 0;
 
-  if (latestBalance) {
-    dayChange = totalValue - latestBalance.totalValue;
-    dayChangePercent = dayChange / latestBalance.totalValue;
+  if (latestBalanceDoc) {
+    dayChange = totalValue - latestBalanceDoc.totalValue;
+    dayChangePercent = dayChange / latestBalanceDoc.totalValue;
   }
 
   return {
