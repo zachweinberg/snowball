@@ -3,10 +3,10 @@ import classNames from 'classnames';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import BalanceHistoryChart from '~/components/charts/BalanceHistoryChart';
 import AddAssetForm from '~/components/form/AddAssetForm';
 import Layout from '~/components/layout/Layout';
 import AssetPercentCard from '~/components/portfolio-view/AssetPercentCard';
-import BalanceOverTimeChart from '~/components/portfolio-view/BalanceOverTimeChart';
 import StocksTable from '~/components/tables/StocksTable';
 import Button from '~/components/ui/Button';
 import FullScreenModal from '~/components/ui/FullScreenModal';
@@ -84,8 +84,18 @@ const PortfolioView: NextPage = () => {
           </div>
 
           <div className="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-2">
-            <div className="h-64 lg:h-full">
-              <BalanceOverTimeChart />
+            <div className="h-64 lg:h-full bg-dark rounded-3xl">
+              <BalanceHistoryChart
+                width={225}
+                height={100}
+                data={[
+                  { balance: 9876, date: 1632690171489 },
+                  { balance: 9817, date: 1632690171813 },
+                  { balance: 9400, date: 1632690171910 },
+                  { balance: 10403, date: 1632690171950 },
+                  { balance: 15403, date: 1632690174950 },
+                ]}
+              />
             </div>
             <div className="grid grid-cols-2 grid-rows-2 gap-6">
               <AssetPercentCard

@@ -19,13 +19,16 @@ const PortfolioListPage: NextPage = () => {
 
   const loadPortfolios = async () => {
     setLoading(true);
+
     try {
       const portfoliosData = await API.getPortfolios();
       if (portfoliosData.portfolios) {
         setPortfolios(portfoliosData.portfolios);
       }
     } catch (err) {
-      setError('Something went wrong...');
+      setError(
+        'Something went wrong loading your portfolio list. Please contact support if this persists.'
+      );
     } finally {
       setLoading(false);
     }
@@ -79,7 +82,7 @@ const PortfolioListPage: NextPage = () => {
               fill="#00565B"
             />
           </svg>
-          <p className="mb-4 text-[1.75rem] font-bold text-dark">Welcome!</p>
+          <p className="mb-4 text-[1.75rem] font-bold text-dark">Welcome to Obsidian.</p>
           <p className="mb-5 font-medium text-center text-darkgray text-[1rem] leading-tight">
             You do not have any portfolios yet. Create one and start tracking your net worth.
           </p>
