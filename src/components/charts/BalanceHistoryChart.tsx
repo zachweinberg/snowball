@@ -2,7 +2,6 @@ import { curveLinear } from '@visx/curve';
 import { localPoint } from '@visx/event';
 import { LinearGradient } from '@visx/gradient';
 import { GridRows } from '@visx/grid';
-import { withParentSize } from '@visx/responsive';
 import { scaleLinear, scaleTime } from '@visx/scale';
 import { Area, Bar, Line } from '@visx/shape';
 import { defaultStyles, Tooltip, TooltipWithBounds, withTooltip } from '@visx/tooltip';
@@ -15,8 +14,8 @@ type Data = { date: number; balance: number };
 
 interface Props {
   data: Array<Data>;
-  parentWidth: number;
-  parentHeight: number;
+  width: number;
+  height: number;
 }
 
 const background = '#3b6978';
@@ -43,17 +42,17 @@ const margin = 32;
 const BalanceHistoryChart = withTooltip<Props, TooltipData>(
   ({
     data,
-    parentWidth,
-    parentHeight,
+    width,
+    height,
     showTooltip,
     hideTooltip,
     tooltipData,
     tooltipTop = 0,
     tooltipLeft = 0,
   }: Props & WithTooltipProvidedProps<TooltipData>) => {
-    if (parentWidth < 10) return null;
-    const innerWidth = parentWidth - margin * 2;
-    const innerHeight = parentHeight - margin * 2;
+    if (width < 10) return null;
+    const innerWidth = width - margin * 2;
+    const innerHeight = height - margin * 2;
 
     const dateScale = useMemo(
       () =>
@@ -99,12 +98,12 @@ const BalanceHistoryChart = withTooltip<Props, TooltipData>(
 
     return (
       <div>
-        <svg width={parentWidth} height={parentHeight}>
+        <svg width={width} height={height}>
           <rect
             x={0}
             y={0}
-            width={parentWidth}
-            height={parentHeight}
+            width={width}
+            height={height}
             fill="url(#area-background-gradient)"
             rx={14}
           />
@@ -205,4 +204,4 @@ const BalanceHistoryChart = withTooltip<Props, TooltipData>(
   }
 );
 
-export default withParentSize(BalanceHistoryChart);
+export default BalanceHistoryChart;

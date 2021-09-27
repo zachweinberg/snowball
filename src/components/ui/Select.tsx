@@ -11,8 +11,8 @@ interface Props {
 const Select: React.FunctionComponent<Props> = ({ onChange, selected, options }: Props) => {
   return (
     <Listbox value={selected} onChange={onChange}>
-      <div className="relative w-full cursor-pointer font-manrope">
-        <Listbox.Button className="relative w-full py-3 pl-3 pr-10 text-left bg-white border rounded-md shadow-sm cursor-pointer border-bordergray focus:outline-none hover:bg-light">
+      <div className="relative w-full cursor-pointer">
+        <Listbox.Button className="relative w-full py-4 pl-3 pr-10 text-left bg-white border rounded-md shadow-sm cursor-pointer border-bordergray focus:outline-none hover:bg-light">
           <span className="block font-semibold truncate">{selected}</span>
           <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
             <SelectorIcon className="w-5 h-5" aria-hidden="true" />

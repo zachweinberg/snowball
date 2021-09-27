@@ -1,128 +1,226 @@
-// import { AssetType } from '@zachweinberg/wealth-schema';
-// import currency from 'currency.js';
-// import { Form, Formik, FormikHelpers } from 'formik';
-// import { useState } from 'react';
-// import * as Yup from 'yup';
-// import MoneyInput from '~/components/form/MoneyInput';
-// import PositionSelector from '~/components/form/PositionSelector';
-// import Button from '~/components/ui/Button';
-// import TextInput from '~/components/ui/TextInput';
-// import { searchCrypto } from '~/lib/algolia';
-// import { API } from '~/lib/api';
+import { AssetType } from '@zachweinberg/wealth-schema';
+import currency from 'currency.js';
+import debounce from 'lodash/debounce';
+import { useCallback, useState } from 'react';
+import * as Yup from 'yup';
+import * as yup from 'yup';
+import TextInput from '~/components/ui/TextInput';
+import { searchCrypto, SearchPositionsResult } from '~/lib/algolia';
+import { API } from '~/lib/api';
+import { formatMoneyFromNumber } from '~/lib/money';
+import Button from '../ui/Button';
+import InputResults from '../ui/InputResults';
+import MoneyInput from '../ui/MoneyInput';
+import TextArea from '../ui/TextArea';
 
-// interface Values {
-//   symbol: string;
-//   quantity: number;
-//   costBasis: string;
-//   coinName: string;
-//   note?: string;
-// }
+const addCryptoSchema = yup.object().shape({
+  symbol: Yup.string()
+    .max(8, 'That coin symbol is too long.')
+    .required('Coin symbol is required.'),
+  quantity: Yup.number()
+    .min(0, 'You must own more coins than that!')
+    .max(100000000, 'Are you sure you own that many coins?')
+    .required('Quantity of coins is required.'),
+  costBasis: Yup.number()
+    .min(0, 'Cost basis must be greater than 0.')
+    .required('Cost basis is required.'),
+  coinName: Yup.string().required('Please select a coin symbol.'),
+  note: Yup.string(),
+});
 
-// const validationSchema = Yup.object({
-//   symbol: Yup.string()
-//     .max(10, 'That coin symbol is too long.')
-//     .required('Coin symbol is required.'),
-//   quantity: Yup.number()
-//     .min(0, 'You must own more coins than that!')
-//     .max(1000000000, 'Are you sure you own that many coins?')
-//     .required('Quantity is required.'),
-//   costBasis: Yup.string().required('Cost basis is required.'),
-//   coinName: Yup.string().required('Please select a coin symbol.'),
-//   note: Yup.string(),
-// });
+interface Props {
+  afterAdd: () => void;
+  goBack: () => void;
+  portfolioID: string;
+}
 
-// interface Props {
-//   afterAdd: () => void;
-//   portfolioID: string;
-// }
+const AddCryptoForm: React.FunctionComponent<Props> = ({
+  afterAdd,
+  portfolioID,
+  goBack,
+}: Props) => {
+  const [error, setError] = useState<string>('');
+  const [symbol, setSymbol] = useState('');
+  const [coinName, setCoinName] = useState('');
+  const [quantity, setQuantity] = useState<number | null>(null);
+  const [costBasis, setCostBasis] = useState<number | null>(null);
+  const [note, setNote] = useState('');
+  const [searchResults, setSearchResults] = useState<SearchPositionsResult[]>([]);
+  const [loading, setLoading] = useState(false);
 
-// const AddCryptoForm: React.FunctionComponent<Props> = ({ afterAdd, portfolioID }: Props) => {
-//   const [error, setError] = useState<string>('');
+  const debouncedSearch = useCallback(
+    debounce(async (query) => {
+      setLoading(true);
+      const response = await searchCrypto(query);
+      setSearchResults(response);
+      setLoading(false);
+    }, 75),
+    []
+  );
 
-//   const onSubmit = async (data: Values, actions: FormikHelpers<Values>) => {
-//     actions.setSubmitting(true);
+  const onSubmit = async (e) => {
+    e.preventDefault();
 
-//     const numberCostBasis = currency(data.costBasis).value;
+    let isValid = false;
 
-//     try {
-//       const coinData = { ...data, costBasis: numberCostBasis, portfolioID };
-//       await API.addCryptoToPortfolio(coinData);
-//       afterAdd();
-//     } catch (err) {
-//       if (err.response?.data?.error) {
-//         setError(err.response.data.error);
-//       } else {
-//         setError('Could not add crypto.');
-//       }
+    try {
+      await addCryptoSchema.validate({
+        costBasis,
+        symbol,
+        coinName,
+        quantity,
+        note,
+      });
+      isValid = true;
+    } catch (err) {
+      setError(err.errors?.[0] ?? '');
+    }
 
-//       actions.setSubmitting(false);
-//     }
-//   };
+    if (isValid) {
+      setLoading(true);
 
-//   return (
-//     <Formik
-//       initialValues={{
-//         symbol: '',
-//         quantity: 1,
-//         costBasis: '',
-//         coinName: '',
-//       }}
-//       validationSchema={validationSchema}
-//       onSubmit={onSubmit}
-//     >
-//       {(formik) => (
-//         <Form className="bg-white">
-//           <p className="mb-8 text-3xl font-bold tracking-wide text-blue3">Add Crypto</p>
-//           <div className="mb-5">
-//             <PositionSelector
-//               label="Coin symbol"
-//               name="symbol"
-//               placeholder="Example: ETH"
-//               fetcher={searchCrypto}
-//               onSelect={(symbol, fullName) => {
-//                 formik.setFieldValue('symbol', symbol);
-//                 formik.setFieldValue('coinName', fullName);
-//                 API.getQuote(symbol, AssetType.Crypto).then((quoteData) => {
-//                   if (quoteData.latestPrice) {
-//                     formik.setFieldValue('costBasis', quoteData.latestPrice);
-//                   }
-//                 });
-//               }}
-//             />
-//           </div>
+      const numberCostBasis = currency(costBasis as number).value;
 
-//           <div className="mb-5">
-//             <TextInput
-//               label="Quantity"
-//               name="quantity"
-//               type="number"
-//               placeholder="Enter number of coins"
-//             />
-//           </div>
+      try {
+        await API.addCryptoToPortfolio({
+          portfolioID,
+          symbol,
+          costBasis: numberCostBasis,
+          coinName,
+          quantity: quantity as number,
+          note: note ?? '',
+        });
 
-//           <div className="mb-5">
-//             <MoneyInput
-//               name="costBasis"
-//               placeholder="Enter cost per coin"
-//               label="Cost Basis"
-//             />
-//           </div>
+        afterAdd();
+      } catch (err) {
+        if (err.response?.data?.error) {
+          setError(err.response.data.error);
+        } else {
+          setError('Could not add crypto.');
+        }
 
-//           <div className="mb-5">
-//             <TextInput label="Note" name="note" type="text" placeholder="Optional note" />
-//           </div>
+        setLoading(false);
+      }
+    }
+  };
 
-//           {error && <p className="mb-1 text-sm text-red3">{error}</p>}
+  return (
+    <form onSubmit={onSubmit} className="flex flex-col max-w-lg mx-auto" autoComplete="off">
+      <div
+        className="flex items-center justify-center mb-10 cursor-pointer text-darkgray text-[.95rem] font-semibold"
+        onClick={goBack}
+      >
+        <svg
+          className="w-5 h-5 mr-2 fill-current"
+          viewBox="0 0 25 12"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0.283852 5.31499C0.284142 5.3147 0.284384 5.31436 0.284724 5.31407L5.34137 0.281805C5.72019 -0.095179 6.33292 -0.0937761 6.71 0.285095C7.08703 0.663918 7.08558 1.27664 6.70676 1.65368L3.31172 5.03226L23.8065 5.03226C24.341 5.03226 24.7742 5.46552 24.7742 6C24.7742 6.53448 24.341 6.96774 23.8065 6.96774L3.31177 6.96774L6.70671 10.3463C7.08554 10.7234 7.08699 11.3361 6.70995 11.7149C6.33287 12.0938 5.7201 12.0951 5.34132 11.7182L0.284674 6.68594C0.284384 6.68565 0.284142 6.68531 0.283805 6.68502C-0.0952124 6.30673 -0.0940032 5.69202 0.283852 5.31499Z"
+            fill="#757784"
+          />
+        </svg>
+        Back
+      </div>
 
-//           <Button type="submit" className="mt-3" disabled={formik.isSubmitting}>
-//             Add crypto to portfolio
-//           </Button>
-//         </Form>
-//       )}
-//     </Formik>
-//   );
-// };
+      <h2 className="mb-3 text-center text-[1.75rem] font-bold">Add Cryptocurrency</h2>
 
-// export default AddCryptoForm;
+      <p className="text-center mb-7 text-darkgray text-[1rem] font-medium">
+        Add a specific coin to your portfolio.
+      </p>
 
-export default () => {};
+      <div className="relative mb-4">
+        <TextInput
+          placeholder="Crypto Symbol"
+          type="text"
+          name="symbol"
+          required
+          value={symbol}
+          onChange={(e) => {
+            const query = e.target.value.toUpperCase();
+
+            setSymbol(query);
+
+            if (query === '') {
+              setSearchResults([]);
+            } else {
+              debouncedSearch(query);
+            }
+          }}
+        />
+
+        <InputResults
+          onSelect={(symbol, fullName) => {
+            setLoading(true);
+
+            if (symbol) {
+              if (!fullName) {
+                setError("We can't find that coin. Please contact support.");
+                setLoading(false);
+                return;
+              }
+
+              API.getQuote(symbol, AssetType.Crypto).then((quoteData) => {
+                if (quoteData.status === 'ok') {
+                  setCostBasis(quoteData.latestPrice);
+                }
+              });
+              setSymbol(symbol.toUpperCase());
+              setCoinName(fullName);
+            }
+
+            setSearchResults([]);
+            setLoading(false);
+          }}
+          searchResults={searchResults}
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-6 mb-4">
+        <TextInput
+          placeholder="Quantity"
+          required
+          value={quantity}
+          type="number"
+          name="quantity"
+          onChange={(e) => setQuantity(Number(e.target.value))}
+        />
+        <MoneyInput
+          placeholder="Cost Per Share"
+          required
+          value={costBasis}
+          name="costBasis"
+          onChange={(value) => setCostBasis(value)}
+        />
+      </div>
+
+      <TextArea
+        name="note"
+        placeholder="Note (optional)"
+        value={note}
+        onChange={(e) => setNote(e.target.value)}
+        className="mb-7"
+      />
+
+      <div className="space-y-2 font-medium text-center mb-7 text-darkgray">
+        {coinName && costBasis && quantity && (
+          <>
+            <p>{coinName}</p>
+            <p>
+              {quantity} coins at {formatMoneyFromNumber(costBasis)} per coin
+            </p>
+            <p>Total cost basis: {formatMoneyFromNumber(quantity * costBasis)}</p>
+          </>
+        )}
+      </div>
+
+      {error && <p className="mb-4 text-center text-red">{error}</p>}
+
+      <Button type="submit" disabled={loading}>
+        Add crypto to portfolio
+      </Button>
+    </form>
+  );
+};
+
+export default AddCryptoForm;

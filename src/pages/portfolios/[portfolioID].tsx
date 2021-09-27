@@ -83,8 +83,8 @@ const PortfolioView: NextPage = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-2">
-            <div className="h-64 lg:h-full bg-dark rounded-3xl">
+          <div className="grid gap-6 mb-6 grid-cols-1 grid-rows-3 lg:grid-cols-2 lg:grid-rows-2">
+            <div className="h-full bg-dark rounded-3xl">
               <BalanceHistoryChart
                 width={225}
                 height={100}
@@ -97,6 +97,7 @@ const PortfolioView: NextPage = () => {
                 ]}
               />
             </div>
+
             <div className="grid grid-cols-2 grid-rows-2 gap-6">
               <AssetPercentCard
                 amount={98}
@@ -131,34 +132,34 @@ const PortfolioView: NextPage = () => {
                 onClick={() => setActiveTab('Cash')}
               />
             </div>
-          </div>
 
-          <div className="px-5 py-4 bg-white border rounded-3xl border-bordergray">
-            <div className="flex mb-7">
-              <div className="mr-5 w-44">
-                <Select
-                  onChange={(selected) => setActiveTab(selected)}
-                  options={['All Assets', 'Stocks', 'Crypto', 'Real Estate', 'Cash']}
-                  selected={activeTab}
-                />
+            <div className="px-5 py-4 bg-white border rounded-3xl border-bordergray lg:col-span-2">
+              <div className="flex mb-7">
+                <div className="mr-5 w-44">
+                  <Select
+                    onChange={(selected) => setActiveTab(selected)}
+                    options={['All Assets', 'Stocks', 'Crypto', 'Real Estate', 'Cash']}
+                    selected={activeTab}
+                  />
+                </div>
+
+                <div className="flex items-center font-manrope">
+                  {['Dollar', 'Percent'].map((u) => (
+                    <button
+                      onClick={() => setUnit(u as any)}
+                      className={classNames(
+                        'text-[1rem] h-full px-4 py-2 mr-3 font-bold border rounded-md text-darkgray hover:bg-light',
+                        { 'border-evergreen text-evergreen': u === unit }
+                      )}
+                    >
+                      {u}
+                    </button>
+                  ))}
+                </div>
               </div>
 
-              <div className="flex items-center font-manrope">
-                {['Dollar', 'Percent'].map((u) => (
-                  <button
-                    onClick={() => setUnit(u as any)}
-                    className={classNames(
-                      'text-[1rem] h-full px-4 py-2 mr-3 font-bold border rounded-md text-darkgray hover:bg-light',
-                      { 'border-evergreen text-evergreen': u === unit }
-                    )}
-                  >
-                    {u}
-                  </button>
-                ))}
-              </div>
+              <StocksTable stocks={portfolio.stocks} />
             </div>
-
-            <StocksTable stocks={portfolio.stocks} />
           </div>
         </>
       );

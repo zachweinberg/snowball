@@ -1,6 +1,7 @@
 import { Transition } from '@headlessui/react';
 import { AssetType } from '@zachweinberg/wealth-schema';
 import { useState } from 'react';
+import AddCryptoForm from './AddCryptoForm';
 import AddStockForm from './AddStockForm';
 
 interface AddAssetFormProps {
@@ -94,8 +95,15 @@ const AddAssetForm: React.FunctionComponent<AddAssetFormProps> = ({
             goBack={() => setAssetType(null)}
           />
         );
-      // case AssetType.Crypto:
-      //   return <AddCryptoForm afterAdd={onClose} portfolioID={portfolioID} />;
+      case AssetType.Crypto:
+        return (
+          <AddCryptoForm
+            afterAdd={onClose}
+            portfolioID={portfolioID}
+            goBack={() => setAssetType(null)}
+          />
+        );
+
       // case AssetType.RealEstate:
       //   return <AddRealEstateCrypto afterAdd={onClose} portfolioID={portfolioID} />;
       // case AssetType.Cash:
