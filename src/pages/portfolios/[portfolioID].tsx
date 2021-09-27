@@ -1,4 +1,4 @@
-import { AssetType, PortfolioWithQuotes } from '@zachweinberg/wealth-schema';
+import { AssetColor, AssetType, PortfolioWithQuotes } from '@zachweinberg/wealth-schema';
 import classNames from 'classnames';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
@@ -83,7 +83,7 @@ const PortfolioView: NextPage = () => {
             </div>
           </div>
 
-          <div className="grid gap-6 mb-6 grid-cols-1 grid-rows-3 lg:grid-cols-2 lg:grid-rows-2">
+          <div className="grid grid-cols-1 grid-rows-3 gap-6 mb-6 lg:grid-cols-2 lg:grid-rows-2">
             <div className="h-full bg-dark rounded-3xl">
               <BalanceHistoryChart
                 width={225}
@@ -102,31 +102,31 @@ const PortfolioView: NextPage = () => {
               <AssetPercentCard
                 amount={98}
                 percentDecimal={0.7182}
-                strokeColor={theme.colors['lime']}
+                strokeColor={AssetColor.Stocks}
                 assetType={AssetType.Stock}
                 selected={activeTab === 'Stocks'}
                 onClick={() => setActiveTab('Stocks')}
               />
               <AssetPercentCard
-                amount={124992.12}
-                percentDecimal={0.2182}
-                strokeColor={theme.colors['purple']}
-                assetType={AssetType.RealEstate}
-                selected={activeTab === 'Real Estate'}
-                onClick={() => setActiveTab('Real Estate')}
-              />
-              <AssetPercentCard
                 amount={412.32}
                 percentDecimal={0.7182}
-                strokeColor={theme.colors['evergreen']}
+                strokeColor={AssetColor.Crypto}
                 assetType={AssetType.Crypto}
                 selected={activeTab === 'Crypto'}
                 onClick={() => setActiveTab('Crypto')}
               />
               <AssetPercentCard
+                amount={124992.12}
+                percentDecimal={0.2182}
+                strokeColor={AssetColor.RealEstate}
+                assetType={AssetType.RealEstate}
+                selected={activeTab === 'Real Estate'}
+                onClick={() => setActiveTab('Real Estate')}
+              />
+              <AssetPercentCard
                 amount={41212.32}
                 percentDecimal={0.6182}
-                strokeColor={theme.colors['rust']}
+                strokeColor={AssetColor.Cash}
                 assetType={AssetType.Cash}
                 selected={activeTab === 'Cash'}
                 onClick={() => setActiveTab('Cash')}

@@ -1,4 +1,4 @@
-import { PortfolioWithBalances } from '@zachweinberg/wealth-schema';
+import { AssetColor, PortfolioWithBalances } from '@zachweinberg/wealth-schema';
 import classNames from 'classnames';
 import PercentageCircle from '~/components/ui/PercentageCircle';
 import { formatMoneyFromNumber, formatPercentageChange } from '~/lib/money';
@@ -51,11 +51,11 @@ const PortfolioSummaryCard: React.FunctionComponent<Props> = ({ portfolio }: Pro
             width={225}
             height={100}
             data={[
-              { balance: 9876, date: 1632690171489 },
-              { balance: 9817, date: 1632690171813 },
-              { balance: 9400, date: 1632690171910 },
-              { balance: 10403, date: 1632690171950 },
-              { balance: 15403, date: 1632690174950 },
+              { balance: 5, date: 1632690171489 },
+              { balance: 800, date: 1632690171813 },
+              { balance: 55, date: 1632690171910 },
+              { balance: 25, date: 1632690171950 },
+              { balance: 102, date: 1632690174950 },
             ]}
           />
         </div>
@@ -66,31 +66,31 @@ const PortfolioSummaryCard: React.FunctionComponent<Props> = ({ portfolio }: Pro
           label="Stocks"
           amount={portfolio.stocksValue}
           percentInt={portfolio.stocksValue / portfolio.totalValue}
-          color="green"
+          color={AssetColor.Stocks}
         />
         <AssetSummary
           label="Crypto"
           amount={portfolio.cryptoValue}
           percentInt={portfolio.cryptoValue / portfolio.totalValue}
-          color="red"
+          color={AssetColor.Crypto}
         />
         <AssetSummary
           label="Real Estate"
           amount={portfolio.realEstateValue}
           percentInt={portfolio.realEstateValue / portfolio.totalValue}
-          color="red"
+          color={AssetColor.RealEstate}
         />
         <AssetSummary
           label="Cash"
           amount={portfolio.cashValue}
           percentInt={portfolio.cashValue / portfolio.totalValue}
-          color="red"
+          color={AssetColor.Cash}
         />
         <AssetSummary
           label="Custom Assets"
           amount={portfolio.customsValue}
           percentInt={portfolio.customsValue / portfolio.totalValue}
-          color="red"
+          color={AssetColor.Custom}
         />
       </div>
     </div>

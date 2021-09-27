@@ -41,7 +41,7 @@ const InputResults: React.FunctionComponent<Props> = ({ onSelect, searchResults 
           {result.logoURL && (
             <Image width={25} height={25} src={result.logoURL} alt={result.fullName} />
           )}
-          <div>
+          <div className="ml-4">
             <p className="whitespace-nowrap text-evergreen font-semibold text-[1.2rem] mb-1">
               {result.symbol}
             </p>
