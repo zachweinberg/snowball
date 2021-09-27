@@ -1,12 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RealEstatePropertyType = exports.AssetType = exports.InvestingExperienceLevel = void 0;
+exports.RealEstatePropertyType = exports.AssetType = exports.AssetColor = exports.InvestingExperienceLevel = void 0;
 var InvestingExperienceLevel;
 (function (InvestingExperienceLevel) {
     InvestingExperienceLevel["LessThanOneYear"] = "Less than a year";
     InvestingExperienceLevel["TwoToFiveYears"] = "Two to five years";
     InvestingExperienceLevel["OverFiveYears"] = "Over five years";
 })(InvestingExperienceLevel = exports.InvestingExperienceLevel || (exports.InvestingExperienceLevel = {}));
+var AssetColor;
+(function (AssetColor) {
+    AssetColor["Stocks"] = "#CEF33C";
+    AssetColor["Crypto"] = "#6600E8";
+    AssetColor["Cash"] = "#4E5B00";
+    AssetColor["Custom"] = "#72CB00";
+    AssetColor["RealEstate"] = "#00565B";
+})(AssetColor = exports.AssetColor || (exports.AssetColor = {}));
 var AssetType;
 (function (AssetType) {
     AssetType["Stock"] = "Stock";

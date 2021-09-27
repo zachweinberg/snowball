@@ -10,6 +10,13 @@ export declare enum InvestingExperienceLevel {
     TwoToFiveYears = "Two to five years",
     OverFiveYears = "Over five years"
 }
+export declare enum AssetColor {
+    Stocks = "#CEF33C",
+    Crypto = "#6600E8",
+    Cash = "#4E5B00",
+    Custom = "#72CB00",
+    RealEstate = "#00565B"
+}
 export interface Portfolio {
     id: string;
     userID: string;
