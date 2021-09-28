@@ -21,7 +21,7 @@ const BalanceHistoryChart: React.FunctionComponent<Props> = ({ data }: Props) =>
 
     return (
       <svg x={cx - 10} y={cy - 10} width={50} height={50} fill="green" viewBox="0 0 40 40">
-        <circle cx="20" cy="20" fill="green" r="50" />
+        <circle cx="20" cy="20" fill="green" r="0" />
       </svg>
     );
   };
