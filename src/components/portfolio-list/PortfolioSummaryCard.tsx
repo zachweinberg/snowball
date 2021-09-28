@@ -13,12 +13,12 @@ const PortfolioSummaryCard: React.FunctionComponent<Props> = ({ portfolio }: Pro
     <div className="transition-shadow bg-white border shadow-sm hover:shadow-md rounded-3xl p-7 border-bordergray">
       <div className="flex justify-between pb-8 border-b border-bordergray">
         <div className="flex flex-col justify-between">
-          <h2 className="mb-3 text-darkgray font-semibold text-[1rem]">{portfolio.name}</h2>
-          <p className="mb-3 font-bold text-dark text-[1.75rem]">
+          <h2 className="mb-3 text-darkgray font-semibold text-[1.1rem]">{portfolio.name}</h2>
+          <p className="mb-4 font-bold text-dark text-[1.75rem]">
             {formatMoneyFromNumber(portfolio.totalValue)}
           </p>
           <div className="flex items-center">
-            {portfolio.totalValue === 0 ? (
+            {portfolio.totalValue === 0 && (
               <svg
                 viewBox="0 0 10 10"
                 className="w-2 h-3 fill-current text-darkgray"
@@ -26,36 +26,39 @@ const PortfolioSummaryCard: React.FunctionComponent<Props> = ({ portfolio }: Pro
               >
                 <circle cx="5" cy="5" r="5" />
               </svg>
-            ) : (
-              <svg
-                viewBox="0 0 12 10"
-                className="w-2 h-3 fill-current"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M6 0L12 10H0L6 0Z" />
-              </svg>
             )}
-            <p
-              className={classNames(
-                'ml-2 font-semibold text-[1rem]',
-                portfolio.totalValue === 0 ? 'text-darkgray' : 'text-evergreen'
-              )}
-            >
-              {formatMoneyFromNumber(portfolio.dayChange)} (
-              {formatPercentageChange(portfolio.dayChangePercent)})
-            </p>
+            <div>
+              <p className="mb-1 text-sm font-medium text-darkgray">Day Change</p>
+              <p
+                className={classNames(
+                  'font-semibold text-[1rem]',
+                  portfolio.totalValue === 0
+                    ? 'text-darkgray'
+                    : portfolio.dayChange < 0
+                    ? 'text-red'
+                    : 'text-evergreen'
+                )}
+              >
+                {formatMoneyFromNumber(portfolio.dayChange)} (
+                {formatPercentageChange(portfolio.dayChangePercent)})
+              </p>
+            </div>
           </div>
         </div>
         <div>
           <Sparkline
             width={225}
-            height={100}
+            height={105}
             data={[
               { balance: 5, date: 1632690171489 },
-              { balance: 800, date: 1632690171813 },
-              { balance: 55, date: 1632690171910 },
-              { balance: 25, date: 1632690171950 },
-              { balance: 102, date: 1632690174950 },
+              { balance: 2, date: 1632690171813 },
+              { balance: 5, date: 1632690171910 },
+              { balance: 15, date: 1632690171950 },
+              { balance: 30, date: 1632690174950 },
+              { balance: 35, date: 1632690174950 },
+              { balance: 313, date: 1632690174950 },
+              { balance: 353, date: 1632690174950 },
+              { balance: 981, date: 1632690174950 },
             ]}
           />
         </div>

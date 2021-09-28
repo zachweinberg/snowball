@@ -84,16 +84,23 @@ const PortfolioView: NextPage = () => {
           </div>
 
           <div className="grid grid-cols-1 grid-rows-3 gap-6 mb-6 lg:grid-cols-2 lg:grid-rows-2">
-            <div className="h-full bg-dark rounded-3xl">
+            <div className="h-full px-5 py-12 bg-dark rounded-3xl">
               <BalanceHistoryChart
-                width={225}
-                height={100}
                 data={[
-                  { balance: 9876, date: 1632690171489 },
-                  { balance: 9817, date: 1632690171813 },
-                  { balance: 9400, date: 1632690171910 },
+                  { balance: 2222, date: 1632690171489 },
+                  { balance: 10982, date: 1632690171813 },
+                  { balance: 1029, date: 1632690171910 },
                   { balance: 10403, date: 1632690171950 },
                   { balance: 15403, date: 1632690174950 },
+                  { balance: 16403, date: 1632690174950 },
+                  { balance: 15403, date: 1632690174950 },
+                  { balance: 17403, date: 1632690174950 },
+                  { balance: 15403, date: 1632690174950 },
+                  { balance: 16403, date: 1632690174950 },
+                  { balance: 19403, date: 1632690174950 },
+                  { balance: 20403, date: 1632690174950 },
+                  { balance: 17403, date: 1632690174950 },
+                  { balance: 19403, date: 1632690174950 },
                 ]}
               />
             </div>
