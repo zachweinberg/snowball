@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import MaskedInput from 'react-text-mask';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
+import { formatMoneyFromNumber } from '~/lib/money';
 
 interface Props {
   name: string;
@@ -42,20 +43,17 @@ const MoneyInput: React.FunctionComponent<Props> = ({
       name={name}
       disabled={disabled}
       required={required}
-      value={value ? `$${value.toString()}` : null}
+      value={value === null ? '' : formatMoneyFromNumber(value ?? 0)}
       onChange={(e) => {
-        const stringVal = e.target.value;
+        const val: string = e.target.value;
+        console.log(val);
 
-        if (isNaN(stringVal) || !stringVal) {
-          onChange(null);
+        if (val === '') {
+          onChange(0);
           return;
         }
-
-        if (stringVal.includes('_')) {
-          return;
-        }
-
-        onChange(parseInt(stringVal.replace('$', '')));
+        console.log(val.replace(/\$|\,/g, ''));
+        onChange(parseInt(val.replace(/\$\,/g, '') ?? 0));
       }}
       placeholder={placeholder}
       className={classNames(

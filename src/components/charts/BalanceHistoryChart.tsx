@@ -40,7 +40,7 @@ const BalanceHistoryChart: React.FunctionComponent<Props> = ({ data }: Props) =>
         <Line
           // activeDot
           dot={<CustomizedDot />}
-          type="monotone"
+          type="linear"
           dataKey="balance"
           stroke="#CEF33C"
           strokeWidth={3}

@@ -176,7 +176,7 @@ const AssetTypeCard: React.FunctionComponent<AssetTypeCardProps> = ({
   return (
     <div
       onClick={onSelect}
-      className="flex flex-col items-center justify-center p-4 cursor-pointer bg-background rounded-3xl hover:shadow-md"
+      className="flex flex-col items-center justify-center p-4 border-2 border-transparent shadow cursor-pointer bg-background rounded-3xl hover:border-darkgray"
     >
       {svg}
       <span className="mt-5 font-bold text-dark">{label}</span>
