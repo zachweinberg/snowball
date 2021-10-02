@@ -2,7 +2,7 @@ import { AssetColor, AssetType, PortfolioWithQuotes } from '@zachweinberg/wealth
 import classNames from 'classnames';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import BalanceHistoryChart from '~/components/charts/BalanceHistoryChart';
 import AddAssetForm from '~/components/form/AddAssetForm';
 import Layout from '~/components/layout/Layout';
@@ -15,16 +15,12 @@ import Select from '~/components/ui/Select';
 import Spinner from '~/components/ui/Spinner';
 import { API } from '~/lib/api';
 
-const resolveConfig = require('tailwindcss/resolveConfig');
-const tailwindConfig = require('../../../tailwind.config');
-const { theme } = resolveConfig(tailwindConfig);
-
 const PortfolioView: NextPage = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [addingAsset, setAddingAsset] = useState(false);
   const [portfolio, setPortfolio] = useState<PortfolioWithQuotes | null>(null);
-  const [activeTab, setActiveTab] = useState('All Assets');
+  const [activeTab, setActiveTab] = useState<AssetType | 'All Assets'>('All Assets');
   const [unit, setUnit] = useState<'Dollar' | 'Percent'>('Dollar');
   const [error, setError] = useState('');
 
@@ -50,6 +46,15 @@ const PortfolioView: NextPage = () => {
   useEffect(() => {
     loadPortfolioData();
   }, []);
+  const portfolioTotal = useMemo(
+    () =>
+      (portfolio?.cashTotal ?? 0) +
+      (portfolio?.cryptoTotal ?? 0) +
+      (portfolio?.stocksTotal ?? 0) +
+      (portfolio?.customsTotal ?? 0) +
+      (portfolio?.realEstateTotal ?? 0),
+    [portfolio]
+  );
 
   const renderContent = () => {
     if (error) {
@@ -107,36 +112,36 @@ const PortfolioView: NextPage = () => {
 
             <div className="grid grid-cols-2 grid-rows-2 gap-6">
               <AssetPercentCard
-                amount={98}
-                percentDecimal={0.7182}
+                amount={portfolio.stocksTotal}
+                percentDecimal={portfolio.stocksTotal / portfolioTotal}
                 strokeColor={AssetColor.Stocks}
                 assetType={AssetType.Stock}
-                selected={activeTab === 'Stocks'}
-                onClick={() => setActiveTab('Stocks')}
+                selected={activeTab === AssetType.Stock}
+                onClick={() => setActiveTab(AssetType.Stock)}
               />
               <AssetPercentCard
-                amount={412.32}
-                percentDecimal={0.7182}
+                amount={portfolio.cryptoTotal}
+                percentDecimal={portfolio.cryptoTotal / portfolioTotal}
                 strokeColor={AssetColor.Crypto}
                 assetType={AssetType.Crypto}
-                selected={activeTab === 'Crypto'}
-                onClick={() => setActiveTab('Crypto')}
+                selected={activeTab === AssetType.Crypto}
+                onClick={() => setActiveTab(AssetType.Crypto)}
               />
               <AssetPercentCard
-                amount={124992.12}
-                percentDecimal={0.2182}
+                amount={portfolio.realEstateTotal}
+                percentDecimal={portfolio.realEstateTotal / portfolioTotal}
                 strokeColor={AssetColor.RealEstate}
                 assetType={AssetType.RealEstate}
-                selected={activeTab === 'Real Estate'}
-                onClick={() => setActiveTab('Real Estate')}
+                selected={activeTab === AssetType.RealEstate}
+                onClick={() => setActiveTab(AssetType.RealEstate)}
               />
               <AssetPercentCard
-                amount={41212.32}
-                percentDecimal={0.6182}
+                amount={portfolio.cashTotal}
+                percentDecimal={portfolio.cashTotal / portfolioTotal}
                 strokeColor={AssetColor.Cash}
                 assetType={AssetType.Cash}
-                selected={activeTab === 'Cash'}
-                onClick={() => setActiveTab('Cash')}
+                selected={activeTab === AssetType.Cash}
+                onClick={() => setActiveTab(AssetType.Cash)}
               />
             </div>
 
@@ -144,8 +149,14 @@ const PortfolioView: NextPage = () => {
               <div className="flex mb-7">
                 <div className="mr-5 w-44">
                   <Select
-                    onChange={(selected) => setActiveTab(selected)}
-                    options={['All Assets', 'Stocks', 'Crypto', 'Real Estate', 'Cash']}
+                    onChange={(selected) => setActiveTab(selected as any)}
+                    options={[
+                      'All Assets',
+                      AssetType.Stock,
+                      AssetType.Crypto,
+                      AssetType.RealEstate,
+                      AssetType.Cash,
+                    ]}
                     selected={activeTab}
                   />
                 </div>

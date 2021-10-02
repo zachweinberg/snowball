@@ -27,7 +27,7 @@ const PortfolioSummaryCard: React.FunctionComponent<Props> = ({ portfolio }: Pro
                 <circle cx="5" cy="5" r="5" />
               </svg>
             )}
-            <div>
+            <div className="ml-3">
               <p className="mb-1 text-sm font-medium text-darkgray">Day Change</p>
               <p
                 className={classNames(
