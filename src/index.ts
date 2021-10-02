@@ -208,6 +208,14 @@ export interface CryptoPositionWithQuote extends CryptoPosition {
 export interface PortfolioWithQuotes extends Portfolio {
   stocks: StockPositionWithQuote[];
   crypto: CryptoPositionWithQuote[];
+  cash: CashPosition[];
+  realEstate: RealEstatePosition[];
+  customs: CustomPosition[];
+  cashTotal: number;
+  realEstateTotal: number;
+  cryptoTotal: number;
+  stocksTotal: number;
+  customsTotal: number;
 }
 
 export interface GetQuoteResponse extends BaseResponse {
