@@ -13,14 +13,14 @@ import {
 import currency from 'currency.js';
 import { getCryptoPrices } from '~/lib/cmc';
 import { getStockPrices } from '~/lib/iex';
-import { findDocuments } from './db';
 import {
   calculateCashValue,
   calculateCryptoTotal,
   calculateCustomsValue,
   calculateRealEstateValue,
   calculateStocksTotal,
-} from './math';
+} from '~/utils/math';
+import { findDocuments } from './db';
 
 interface PortfolioValues {
   cashValue: number;
@@ -85,6 +85,13 @@ export const calculatePortfolioQuotes = async (
   stocks: StockPositionWithQuote[];
   crypto: CryptoPositionWithQuote[];
   cash: CashPosition[];
+  customs: CustomPosition[];
+  stocksTotal: number;
+  cryptoTotal: number;
+  realEstate;
+  realEstateTotal: number;
+  cashTotal: number;
+  customsTotal: number;
 }> => {
   const positions = await findDocuments<Position>(`portfolios/${portfolioID}/positions`);
 
@@ -130,9 +137,38 @@ export const calculatePortfolioQuotes = async (
     }
   }
 
+  let stocksTotal = currency(0);
+  let cryptoTotal = currency(0);
+  let realEstateTotal = currency(0);
+  let cashTotal = currency(0);
+  let customsTotal = currency(0);
+
+  for (const stockPosition of stockPositionsWithQuotes) {
+    stocksTotal = stocksTotal.add(stockPosition.marketValue);
+  }
+  for (const cryptoPosition of cryptoPositionsWithQuotes) {
+    cryptoTotal = cryptoTotal.add(cryptoPosition.marketValue);
+  }
+  for (const realEstatePosition of realEstatePositions) {
+    realEstateTotal = realEstateTotal.add(realEstatePosition.propertyValue);
+  }
+  for (const cashPosition of cashPositions) {
+    cashTotal = cashTotal.add(cashPosition.amount);
+  }
+  for (const customPosition of customsPositions) {
+    customsTotal = customsTotal.add(customPosition.value);
+  }
+
   return {
     stocks: stockPositionsWithQuotes,
     crypto: cryptoPositionsWithQuotes,
     cash: cashPositions,
+    realEstate: [],
+    customs: [],
+    stocksTotal: stocksTotal.value,
+    cryptoTotal: cryptoTotal.value,
+    realEstateTotal: realEstateTotal.value,
+    cashTotal: cashTotal.value,
+    customsTotal: customsTotal.value,
   };
 };

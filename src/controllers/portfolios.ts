@@ -110,13 +110,13 @@ portfoliosRouter.get(
       return res.status(404).json({ status: 'error', error: 'Portfolio does not exist.' });
     }
 
-    const d = await calculatePortfolioQuotes(portfolio.id);
+    const positionsAndTotals = await calculatePortfolioQuotes(portfolio.id);
 
     const response: GetPortfolioResponse = {
       status: 'ok',
       portfolio: {
         ...portfolio,
-        ...d,
+        ...positionsAndTotals,
       },
     };
 
