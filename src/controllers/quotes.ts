@@ -32,9 +32,9 @@ quotesRouter.get(
     const response: GetQuoteResponse = {
       status: 'ok',
       symbol,
-      latestPrice: Number(latestPrice.toFixed(2)),
-      changePercent: Number(changePercent.toFixed(2)),
-      changeDollars: Number(((1 + changePercent) * latestPrice).toFixed(2)),
+      latestPrice: Number(latestPrice),
+      changePercent: Number(changePercent),
+      changeDollars: Number((1 + changePercent) * latestPrice),
     };
 
     res.status(200).json(response);
