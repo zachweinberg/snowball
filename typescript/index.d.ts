@@ -33,6 +33,7 @@ export declare type PortfolioWithBalances = Portfolio & {
     realEstateValue: number;
     cashValue: number;
     customsValue: number;
+    dailyBalances: DailyBalance[];
 };
 export declare enum AssetType {
     Stock = "Stock",
