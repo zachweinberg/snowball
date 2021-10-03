@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RealEstatePropertyType = exports.AssetType = exports.AssetColor = exports.InvestingExperienceLevel = void 0;
+exports.Destination = exports.RealEstatePropertyType = exports.AssetType = exports.AssetColor = exports.InvestingExperienceLevel = void 0;
 var InvestingExperienceLevel;
 (function (InvestingExperienceLevel) {
     InvestingExperienceLevel["LessThanOneYear"] = "Less than a year";
@@ -33,3 +33,8 @@ var RealEstatePropertyType;
     RealEstatePropertyType["Storage"] = "Storage facility";
     RealEstatePropertyType["Other"] = "Other";
 })(RealEstatePropertyType = exports.RealEstatePropertyType || (exports.RealEstatePropertyType = {}));
+var Destination;
+(function (Destination) {
+    Destination["Email"] = "Email";
+    Destination["SMS"] = "SMS";
+})(Destination = exports.Destination || (exports.Destination = {}));
