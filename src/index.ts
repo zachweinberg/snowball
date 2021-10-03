@@ -37,6 +37,7 @@ export type PortfolioWithBalances = Portfolio & {
   realEstateValue: number;
   cashValue: number;
   customsValue: number;
+  dailyBalances: DailyBalance[];
 };
 
 export enum AssetType {
