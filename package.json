@@ -12,7 +12,7 @@
     "@headlessui/react": "^1.4.0",
     "@heroicons/react": "^1.0.3",
     "@tailwindcss/forms": "^0.3.3",
-    "@zachweinberg/wealth-schema": "^1.4.3",
+    "@zachweinberg/wealth-schema": "^1.4.4",
     "algoliasearch": "^4.10.4",
     "autoprefixer": "^10.3.1",
     "axios": "^0.21.1",

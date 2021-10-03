@@ -10,7 +10,7 @@ interface Props {
 
 const PortfolioSummaryCard: React.FunctionComponent<Props> = ({ portfolio }: Props) => {
   return (
-    <div className="transition-shadow bg-white border shadow-sm hover:shadow-md rounded-3xl p-7 border-bordergray">
+    <div className="transition-colors bg-white border shadow-sm hover:border-darkgray rounded-3xl p-7 border-bordergray">
       <div className="flex justify-between pb-8 border-b border-bordergray">
         <div className="flex flex-col justify-between">
           <h2 className="mb-3 text-darkgray font-semibold text-[1.1rem]">{portfolio.name}</h2>

@@ -31,7 +31,7 @@ const MoneyInput: React.FunctionComponent<Props> = ({
     thousandsSeparatorSymbol: ',',
     allowDecimal: true,
     decimalSymbol: '.',
-    decimalLimit: 2,
+    decimalLimit: 8,
     integerLimit: 9,
     allowNegative: false,
     allowLeadingZeroes: false,
@@ -46,13 +46,11 @@ const MoneyInput: React.FunctionComponent<Props> = ({
       value={value === null ? '' : formatMoneyFromNumber(value ?? 0)}
       onChange={(e) => {
         const val: string = e.target.value;
-        console.log(val);
 
         if (val === '') {
           onChange(0);
           return;
         }
-        console.log(val.replace(/\$|\,/g, ''));
         onChange(parseInt(val.replace(/\$\,/g, '') ?? 0));
       }}
       placeholder={placeholder}

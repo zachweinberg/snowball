@@ -49,7 +49,7 @@ const FullScreenModal: React.FunctionComponent<Props> = ({
           onClick={onClose}
         >
           <svg
-            className="h-8 w-8 fill-current mb-2"
+            className="w-8 h-8 mb-2 fill-current"
             viewBox="0 0 40 40"
             xmlns="http://www.w3.org/2000/svg"
           >

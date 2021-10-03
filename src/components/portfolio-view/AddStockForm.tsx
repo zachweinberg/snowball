@@ -1,11 +1,10 @@
 import { AssetType } from '@zachweinberg/wealth-schema';
 import currency from 'currency.js';
-import debounce from 'lodash/debounce';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import * as Yup from 'yup';
 import * as yup from 'yup';
 import TextInput from '~/components/ui/TextInput';
-import { searchCrypto, SearchPositionsResult } from '~/lib/algolia';
+import { SearchPositionsResult } from '~/lib/algolia';
 import { API } from '~/lib/api';
 import { formatMoneyFromNumber } from '~/lib/money';
 import Button from '../ui/Button';
@@ -13,18 +12,18 @@ import MoneyInput from '../ui/MoneyInput';
 import TextArea from '../ui/TextArea';
 import TextInputWithResults from '../ui/TextInputWithResults';
 
-const addCryptoSchema = yup.object().shape({
+const addStockSchema = yup.object().shape({
   symbol: Yup.string()
-    .max(8, 'That coin symbol is too long.')
-    .required('Coin symbol is required.'),
+    .max(8, 'That stock symbol is too long.')
+    .required('Stock symbol is required.'),
   quantity: Yup.number()
-    .min(0, 'You must own more coins than that!')
-    .max(100000000, 'Are you sure you own that many coins?')
-    .required('Quantity of coins is required.'),
+    .min(0, 'You must own more shares than that!')
+    .max(100000000, 'Are you sure you own that many shares?')
+    .required('Quantity of shares is required.'),
   costBasis: Yup.number()
     .min(0, 'Cost basis must be greater than 0.')
     .required('Cost basis is required.'),
-  coinName: Yup.string().required('Please select a coin symbol.'),
+  companyName: Yup.string().required('Please select a ticker symbol.'),
   note: Yup.string(),
 });
 
@@ -34,29 +33,19 @@ interface Props {
   portfolioID: string;
 }
 
-const AddCryptoForm: React.FunctionComponent<Props> = ({
+const AddStockForm: React.FunctionComponent<Props> = ({
   afterAdd,
   portfolioID,
   goBack,
 }: Props) => {
   const [error, setError] = useState<string>('');
   const [symbol, setSymbol] = useState('');
-  const [coinName, setCoinName] = useState('');
+  const [companyName, setCompanyName] = useState('');
   const [quantity, setQuantity] = useState<number | null>(null);
   const [costBasis, setCostBasis] = useState<number | null>(null);
   const [note, setNote] = useState('');
   const [searchResults, setSearchResults] = useState<SearchPositionsResult[]>([]);
   const [loading, setLoading] = useState(false);
-
-  const debouncedSearch = useCallback(
-    debounce(async (query) => {
-      setLoading(true);
-      const response = await searchCrypto(query);
-      setSearchResults(response);
-      setLoading(false);
-    }, 75),
-    []
-  );
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -64,10 +53,10 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
     let isValid = false;
 
     try {
-      await addCryptoSchema.validate({
+      await addStockSchema.validate({
         costBasis,
         symbol,
-        coinName,
+        companyName,
         quantity,
         note,
       });
@@ -80,13 +69,12 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
       setLoading(true);
 
       const numberCostBasis = currency(costBasis as number).value;
-
       try {
-        await API.addCryptoToPortfolio({
+        await API.addStockToPortfolio({
           portfolioID,
           symbol,
           costBasis: numberCostBasis,
-          coinName,
+          companyName,
           quantity: quantity as number,
           note: note ?? '',
         });
@@ -96,7 +84,7 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
         if (err.response?.data?.error) {
           setError(err.response.data.error);
         } else {
-          setError('Could not add crypto.');
+          setError('Could not add stock.');
         }
 
         setLoading(false);
@@ -123,25 +111,27 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
         Back
       </div>
 
-      <h2 className="mb-3 text-center text-[1.75rem] font-bold">Add Cryptocurrency</h2>
+      <h2 className="mb-3 text-center text-[1.75rem] font-bold">Add a Stock</h2>
 
       <p className="text-center mb-7 text-darkgray text-[1rem] font-medium">
-        Add a specific coin to your portfolio.
+        Add a specific equity to your portfolio.
       </p>
 
       <TextInputWithResults
-        placeholder="Add crypto"
-        type={AssetType.Crypto}
+        placeholder="Add stock"
+        backgroundColor="#F9FAFF"
+        type={AssetType.Stock}
+        floatingResults
         onError={(e) => setError(e)}
         onResult={(symbol, fullName) => {
-          API.getQuote(symbol, AssetType.Crypto).then((quoteData) => {
+          API.getQuote(symbol, AssetType.Stock).then((quoteData) => {
             if (quoteData.status === 'ok') {
               setCostBasis(quoteData.latestPrice);
             }
           });
 
           setSymbol(symbol.toUpperCase());
-          setCoinName(fullName);
+          setCompanyName(fullName);
         }}
       />
 
@@ -150,6 +140,7 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
           placeholder="Quantity"
           required
           value={quantity}
+          backgroundColor="#F9FAFF"
           type="number"
           name="quantity"
           onChange={(e) => setQuantity(Number(e.target.value))}
@@ -172,11 +163,11 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
       />
 
       <div className="space-y-2 font-medium text-center mb-7 text-darkgray">
-        {coinName && costBasis && quantity && (
+        {companyName && costBasis && quantity && (
           <>
-            <p>{coinName}</p>
+            <p>{companyName}</p>
             <p>
-              {quantity} coins at {formatMoneyFromNumber(costBasis)} per coin
+              {quantity} shares at {formatMoneyFromNumber(costBasis)} per share
             </p>
             <p>Total cost basis: {formatMoneyFromNumber(quantity * costBasis)}</p>
           </>
@@ -186,10 +177,10 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
       {error && <p className="mb-4 text-center text-red">{error}</p>}
 
       <Button type="submit" disabled={loading}>
-        Add crypto to portfolio
+        Add stock to portfolio
       </Button>
     </form>
   );
 };
 
-export default AddCryptoForm;
+export default AddStockForm;

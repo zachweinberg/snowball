@@ -7,7 +7,10 @@ interface Props {
   searchResults: SearchPositionsResult[];
 }
 
-const InputResults: React.FunctionComponent<Props> = ({ onSelect, searchResults }: Props) => {
+const FloatingSearchResults: React.FunctionComponent<Props> = ({
+  onSelect,
+  searchResults,
+}: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const detectClick = (e) => {
@@ -28,9 +31,9 @@ const InputResults: React.FunctionComponent<Props> = ({ onSelect, searchResults 
   return searchResults.length === 0 ? null : (
     <div
       ref={containerRef}
-      className="absolute z-40 w-full mt-4 overflow-y-auto bg-white shadow-2xl rounded-xl no-scrollbar"
+      className="absolute z-50 w-full mt-4 overflow-y-auto bg-white shadow-2xl rounded-xl no-scrollbar"
     >
-      {searchResults.map((result, i) => (
+      {searchResults.map((result) => (
         <div
           onClick={() => {
             onSelect(result.symbol, result.fullName);
@@ -55,4 +58,4 @@ const InputResults: React.FunctionComponent<Props> = ({ onSelect, searchResults 
   );
 };
 
-export default InputResults;
+export default FloatingSearchResults;

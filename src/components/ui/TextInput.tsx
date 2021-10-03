@@ -7,6 +7,7 @@ type Props = {
   value: string | number | null;
   placeholder: string;
   required?: boolean;
+  backgroundColor?: string;
   secondary?: boolean;
   className?: string;
   onChange: (e) => void;
@@ -16,11 +17,11 @@ const TextInput: React.FunctionComponent<Props> = ({
   label,
   className,
   name,
-  secondary = false,
   type,
   onChange,
   placeholder,
   value,
+  backgroundColor,
   required,
 }: Props) => {
   return (
@@ -31,10 +32,10 @@ const TextInput: React.FunctionComponent<Props> = ({
       name={name}
       placeholder={placeholder}
       required={required}
+      style={{ backgroundColor }}
       className={classNames(
         'p-3 border-2 rounded-xl border-gray placeholder-darkgray w-full focus:outline-none focus:ring-evergreen focus:border-evergreen',
-        className,
-        secondary ? 'bg-white' : 'bg-light'
+        className
       )}
     />
   );
