@@ -2,8 +2,11 @@ import { WatchListItem } from '@zachweinberg/wealth-schema';
 import type { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import Layout from '~/components/layout/Layout';
+import Button from '~/components/ui/Button';
+import Modal from '~/components/ui/Modal';
 import Select from '~/components/ui/Select';
 import TextInput from '~/components/ui/TextInput';
+import TextInputWithResults from '~/components/ui/TextInputWithResults';
 import { API } from '~/lib/api';
 
 const WatchList: NextPage = () => {
@@ -26,11 +29,36 @@ const WatchList: NextPage = () => {
 
   return (
     <Layout title="Watchlist">
+      <Modal isOpen>
+        <div className="mx-auto w-80">
+          <p className="text-[1.50rem] font-bold text-center text-dark mb-5">SOL</p>
+          <p className="text-[1.25rem] font-bold text-center text-dark mb-11">
+            Create a price alert
+          </p>
+          <div className="grid grid-cols-2 gap-3 mb-3">
+            <button className="p-4 border-2 rounded-2xl border-evergreen">Price Above</button>
+            <button className="p-4 border-2 rounded-2xl border-gray">Price Below</button>
+          </div>
+          <div className="mb-3">
+            <TextInput className="w-full" placeholder="Price" type="text" />
+          </div>
+          <Button>Create Alert</Button>
+        </div>
+      </Modal>
+
       <div className="flex items-center justify-between mb-7">
         <h1 className="font-bold text-dark text-[1.75rem]">Watchlist</h1>
-        <div className="w-96">
-          <TextInput placeholder="Search stocks or crypto" secondary type="text" />
-        </div>
+        <form className="w-96" autoComplete="off">
+          <TextInputWithResults
+            placeholder="Search stocks and crypto..."
+            type={'Both'}
+            onError={(e) => alert(e)}
+            onResult={(symbol, fullName) => {
+              setSymbol(symbol.toUpperCase());
+              // setCompanyName(fullName);
+            }}
+          />
+        </form>
       </div>
 
       <div className="flex justify-between">

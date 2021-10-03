@@ -1,7 +1,7 @@
 import React from 'react';
 import { Area, AreaChart } from 'recharts';
 
-type Data = { date: number; balance: number };
+type Data = { date: Date; balance: number };
 
 interface Props {
   width: number;
@@ -9,11 +9,14 @@ interface Props {
   data: Array<Data>;
 }
 
-const background = '#3b6978';
-const accentColor = '#00565B';
-const accentColorDark = '#757784';
-
 const Sparkline: React.FunctionComponent<Props> = ({ data, width, height }: Props) => {
+  if (data.length < 2) {
+    return (
+      <div className="flex items-center justify-center w-full h-full">
+        <p className="font-xs text-darkgray">No historical chart data yet</p>
+      </div>
+    );
+  }
   return (
     <AreaChart width={width} height={height} data={data}>
       <defs>

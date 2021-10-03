@@ -1,6 +1,5 @@
 import { PortfolioWithBalances } from '@zachweinberg/wealth-schema';
 import type { NextPage } from 'next';
-import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
 import Layout from '~/components/layout/Layout';
@@ -8,6 +7,7 @@ import CreatePortfolioForm from '~/components/portfolio-list/CreatePortfolioForm
 import PortfolioSummaryCard from '~/components/portfolio-list/PortfolioSummaryCard';
 import Button from '~/components/ui/Button';
 import FullScreenModal from '~/components/ui/FullScreenModal';
+import Link from '~/components/ui/Link';
 import Spinner from '~/components/ui/Spinner';
 import { API } from '~/lib/api';
 
@@ -103,9 +103,7 @@ const PortfolioListPage: NextPage = () => {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           {portfolios.map((portfolio) => (
             <Link href={`/portfolios/${portfolio.id}`} key={portfolio.id}>
-              <a>
-                <PortfolioSummaryCard portfolio={portfolio} />
-              </a>
+              <PortfolioSummaryCard portfolio={portfolio} />
             </Link>
           ))}
         </div>

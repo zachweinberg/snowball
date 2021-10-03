@@ -1,17 +1,16 @@
 import { AssetType } from '@zachweinberg/wealth-schema';
 import currency from 'currency.js';
-import debounce from 'lodash/debounce';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import * as Yup from 'yup';
 import * as yup from 'yup';
 import TextInput from '~/components/ui/TextInput';
-import { SearchPositionsResult, searchStocks } from '~/lib/algolia';
+import { SearchPositionsResult } from '~/lib/algolia';
 import { API } from '~/lib/api';
 import { formatMoneyFromNumber } from '~/lib/money';
 import Button from '../ui/Button';
-import InputResults from '../ui/InputResults';
 import MoneyInput from '../ui/MoneyInput';
 import TextArea from '../ui/TextArea';
+import TextInputWithResults from '../ui/TextInputWithResults';
 
 const addStockSchema = yup.object().shape({
   symbol: Yup.string()
@@ -47,16 +46,6 @@ const AddStockForm: React.FunctionComponent<Props> = ({
   const [note, setNote] = useState('');
   const [searchResults, setSearchResults] = useState<SearchPositionsResult[]>([]);
   const [loading, setLoading] = useState(false);
-
-  const debouncedSearch = useCallback(
-    debounce(async (query) => {
-      setLoading(true);
-      const response = await searchStocks(query);
-      setSearchResults(response);
-      setLoading(false);
-    }, 75),
-    []
-  );
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -128,52 +117,21 @@ const AddStockForm: React.FunctionComponent<Props> = ({
         Add a specific equity to your portfolio.
       </p>
 
-      <div className="relative mb-4">
-        <TextInput
-          placeholder="Ticker Symbol"
-          type="text"
-          name="symbol"
-          required
-          value={symbol}
-          onChange={(e) => {
-            const query = e.target.value.toUpperCase();
-
-            setSymbol(query);
-
-            if (query === '') {
-              setSearchResults([]);
-            } else {
-              debouncedSearch(query);
+      <TextInputWithResults
+        placeholder="Add stock"
+        type={AssetType.Stock}
+        onError={(e) => setError(e)}
+        onResult={(symbol, fullName) => {
+          API.getQuote(symbol, AssetType.Stock).then((quoteData) => {
+            if (quoteData.status === 'ok') {
+              setCostBasis(quoteData.latestPrice);
             }
-          }}
-        />
+          });
 
-        <InputResults
-          onSelect={(symbol, fullName) => {
-            setLoading(true);
-
-            if (symbol) {
-              if (!fullName) {
-                setError("We can't find that company. Please contact support.");
-                setLoading(false);
-                return;
-              }
-
-              API.getQuote(symbol, AssetType.Stock).then((quoteData) => {
-                if (quoteData.status === 'ok') {
-                  setCostBasis(quoteData.latestPrice);
-                }
-              });
-              setSymbol(symbol.toUpperCase());
-              setCompanyName(fullName);
-            }
-
-            setSearchResults([]);
-            setLoading(false);
-          }}
-          searchResults={searchResults}
-        />
-      </div>
+          setSymbol(symbol.toUpperCase());
+          setCompanyName(fullName);
+        }}
+      />
 
       <div className="grid grid-cols-2 gap-6 mb-4">
         <TextInput

@@ -23,7 +23,7 @@ const Dropdown: React.FunctionComponent<Props> = ({ options, button }: Props) =>
       >
         <Menu.Items className="absolute right-0 z-50 w-48 p-4 mt-1 space-y-4 origin-top-right bg-white border rounded-lg shadow-lg border-lightgray">
           {options.map((opt) => (
-            <div>
+            <div key={opt.label}>
               <Menu.Item>
                 {({ active }) => (
                   <button

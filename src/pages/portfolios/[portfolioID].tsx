@@ -91,22 +91,10 @@ const PortfolioView: NextPage = () => {
           <div className="grid grid-cols-1 grid-rows-3 gap-6 mb-6 lg:grid-cols-2 lg:grid-rows-2">
             <div className="h-full px-5 py-12 bg-dark rounded-3xl">
               <BalanceHistoryChart
-                data={[
-                  { balance: 2222, date: 1632690171489 },
-                  { balance: 10982, date: 1632690171813 },
-                  { balance: 1029, date: 1632690171910 },
-                  { balance: 10403, date: 1632690171950 },
-                  { balance: 15403, date: 1632690174950 },
-                  { balance: 16403, date: 1632690174950 },
-                  { balance: 15403, date: 1632690174950 },
-                  { balance: 17403, date: 1632690174950 },
-                  { balance: 15403, date: 1632690174950 },
-                  { balance: 16403, date: 1632690174950 },
-                  { balance: 19403, date: 1632690174950 },
-                  { balance: 20403, date: 1632690174950 },
-                  { balance: 17403, date: 1632690174950 },
-                  { balance: 19403, date: 1632690174950 },
-                ]}
+                data={portfolio.dailyBalances.map((d) => ({
+                  balance: d.totalValue,
+                  date: d.date,
+                }))}
               />
             </div>
 
@@ -164,6 +152,7 @@ const PortfolioView: NextPage = () => {
                 <div className="flex items-center font-manrope">
                   {['Dollar', 'Percent'].map((u) => (
                     <button
+                      key={u}
                       onClick={() => setUnit(u as any)}
                       className={classNames(
                         'text-[1rem] h-full px-4 py-2 mr-3 font-bold border rounded-md text-darkgray hover:bg-light',

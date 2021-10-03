@@ -49,17 +49,10 @@ const PortfolioSummaryCard: React.FunctionComponent<Props> = ({ portfolio }: Pro
           <Sparkline
             width={225}
             height={105}
-            data={[
-              { balance: 5, date: 1632690171489 },
-              { balance: 2, date: 1632690171813 },
-              { balance: 5, date: 1632690171910 },
-              { balance: 15, date: 1632690171950 },
-              { balance: 30, date: 1632690174950 },
-              { balance: 35, date: 1632690174950 },
-              { balance: 313, date: 1632690174950 },
-              { balance: 353, date: 1632690174950 },
-              { balance: 981, date: 1632690174950 },
-            ]}
+            data={portfolio.dailyBalances.map((bal) => ({
+              balance: bal.totalValue,
+              date: bal.date,
+            }))}
           />
         </div>
       </div>

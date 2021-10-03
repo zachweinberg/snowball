@@ -9,9 +9,9 @@ import { searchCrypto, SearchPositionsResult } from '~/lib/algolia';
 import { API } from '~/lib/api';
 import { formatMoneyFromNumber } from '~/lib/money';
 import Button from '../ui/Button';
-import InputResults from '../ui/InputResults';
 import MoneyInput from '../ui/MoneyInput';
 import TextArea from '../ui/TextArea';
+import TextInputWithResults from '../ui/TextInputWithResults';
 
 const addCryptoSchema = yup.object().shape({
   symbol: Yup.string()
@@ -129,52 +129,21 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
         Add a specific coin to your portfolio.
       </p>
 
-      <div className="relative mb-4">
-        <TextInput
-          placeholder="Crypto Symbol"
-          type="text"
-          name="symbol"
-          required
-          value={symbol}
-          onChange={(e) => {
-            const query = e.target.value.toUpperCase();
-
-            setSymbol(query);
-
-            if (query === '') {
-              setSearchResults([]);
-            } else {
-              debouncedSearch(query);
+      <TextInputWithResults
+        placeholder="Add crypto"
+        type={AssetType.Crypto}
+        onError={(e) => setError(e)}
+        onResult={(symbol, fullName) => {
+          API.getQuote(symbol, AssetType.Crypto).then((quoteData) => {
+            if (quoteData.status === 'ok') {
+              setCostBasis(quoteData.latestPrice);
             }
-          }}
-        />
+          });
 
-        <InputResults
-          onSelect={(symbol, fullName) => {
-            setLoading(true);
-
-            if (symbol) {
-              if (!fullName) {
-                setError("We can't find that coin. Please contact support.");
-                setLoading(false);
-                return;
-              }
-
-              API.getQuote(symbol, AssetType.Crypto).then((quoteData) => {
-                if (quoteData.status === 'ok') {
-                  setCostBasis(quoteData.latestPrice);
-                }
-              });
-              setSymbol(symbol.toUpperCase());
-              setCoinName(fullName);
-            }
-
-            setSearchResults([]);
-            setLoading(false);
-          }}
-          searchResults={searchResults}
-        />
-      </div>
+          setSymbol(symbol.toUpperCase());
+          setCoinName(fullName);
+        }}
+      />
 
       <div className="grid grid-cols-2 gap-6 mb-4">
         <TextInput

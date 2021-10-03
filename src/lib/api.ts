@@ -20,25 +20,34 @@ import {
 import axios from 'axios';
 import firebase from '~/lib/firebase';
 
-// const normalizeTimestamps = <T extends object>(value: T) =>
-//   Object.keys(value).reduce((final, key) => {
-//     const finalValue =
-//       typeof admin.firestore.Timestamp === 'object' &&
-//       value[key] instanceof admin.firestore.Timestamp
-//         ? value[key].toDate()
-//         : value[key] !== null && typeof value[key] === 'object' && !Array.isArray(value[key])
-//         ? normalizeTimestamps(value[key])
-//         : value[key];
-//     return {
-//       ...final,
-//       [key]: finalValue,
-//     };
-//   }, {} as T);
+// Convert object timestamps from Firestore to Dates
+const normalizeTimestamps = <T>(value: T): T =>
+  Object.keys(value).reduce((final, key) => {
+    let finalValue;
+
+    if (value[key] !== null && typeof value[key] === 'object' && value[key]._seconds) {
+      finalValue = new Date(value[key]._seconds * 1000);
+    } else if (
+      value[key] !== null &&
+      typeof value[key] === 'object' &&
+      !Array.isArray(value[key])
+    ) {
+      finalValue = normalizeTimestamps(value[key]);
+    } else if (Array.isArray(value[key])) {
+      finalValue = value[key].map(normalizeTimestamps);
+    } else {
+      finalValue = value[key];
+    }
+    return {
+      ...final,
+      [key]: finalValue,
+    };
+  }, {} as T);
 
 const axiosInstance = axios.create();
 
 axiosInstance.interceptors.response.use((response) => {
-  // response.data = normalizeTimestamps(response.data);
+  response.data = normalizeTimestamps(response.data);
   return response;
 });
 

@@ -1,15 +1,11 @@
 import React from 'react';
 import { CartesianGrid, Line, LineChart, ResponsiveContainer } from 'recharts';
 
-type Data = { date: number; balance: number };
+type Data = { date: Date; balance: number };
 
 interface Props {
   data: Array<Data>;
 }
-
-const background = '#3b6978';
-const accentColor = '#00565B';
-const accentColorDark = '#757784';
 
 const BalanceHistoryChart: React.FunctionComponent<Props> = ({ data }: Props) => {
   const CustomizedDot = (props) => {
@@ -26,7 +22,11 @@ const BalanceHistoryChart: React.FunctionComponent<Props> = ({ data }: Props) =>
     );
   };
 
-  return (
+  return data.length < 2 ? (
+    <div className="flex items-center justify-center w-full h-full">
+      <p className="text-gray text-md">No historical chart data yet. Check back soon!</p>
+    </div>
+  ) : (
     <ResponsiveContainer debounce={180}>
       <LineChart data={data}>
         <CartesianGrid

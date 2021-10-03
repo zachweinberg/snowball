@@ -35,7 +35,7 @@ const InputResults: React.FunctionComponent<Props> = ({ onSelect, searchResults 
           onClick={() => {
             onSelect(result.symbol, result.fullName);
           }}
-          className="flex items-center px-2 py-4 cursor-pointer hover:bg-lightlime"
+          className="flex items-center px-3 py-4 cursor-pointer hover:bg-lightlime"
           key={result.providerID}
         >
           {result.logoURL && (
