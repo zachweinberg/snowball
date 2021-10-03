@@ -217,6 +217,7 @@ export interface PortfolioWithQuotes extends Portfolio {
   cryptoTotal: number;
   stocksTotal: number;
   customsTotal: number;
+  dailyBalances: DailyBalance[];
 }
 
 export interface GetQuoteResponse extends BaseResponse {
