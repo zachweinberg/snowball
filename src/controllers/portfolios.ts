@@ -4,13 +4,13 @@ import {
   GetPortfolioResponse,
   GetPortfoliosResponse,
   Portfolio,
-  PortfolioWithBalances,
 } from '@zachweinberg/wealth-schema';
 import { Router } from 'express';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { catchErrors, getUserFromAuthHeader, requireSignedIn } from '~/utils/api';
 import { fetchDocument, findDocuments } from '~/utils/db';
 import { capitalize } from '~/utils/misc';
+import { getPortfolioDailyHistory } from '~/utils/portfolios';
 import { calculatePortfolioQuotes, calculatePortfolioSummary } from '~/utils/positions';
 
 const portfoliosRouter = Router();
@@ -29,13 +29,16 @@ portfoliosRouter.get(
       return res.status(200).json({ status: 'ok', portfolios: [] });
     }
 
-    let portfoliosWithBalances: PortfolioWithBalances[] = [];
+    let portfoliosWithBalances: any[] = [];
 
     for (const portfolio of portfolios) {
       const summary = await calculatePortfolioSummary(portfolio.id);
 
+      const dailyBalances = await getPortfolioDailyHistory(portfolio.id, 30);
+
       portfoliosWithBalances.push({
         ...portfolio,
+        dailyBalances,
         dayChange: summary.dayChange,
         dayChangePercent: summary.dayChangePercent,
         totalValue: summary.totalValue,
@@ -112,11 +115,14 @@ portfoliosRouter.get(
 
     const positionsAndTotals = await calculatePortfolioQuotes(portfolio.id);
 
+    const dailyBalances = await getPortfolioDailyHistory(portfolio.id);
+
     const response: GetPortfolioResponse = {
       status: 'ok',
       portfolio: {
         ...portfolio,
         ...positionsAndTotals,
+        dailyBalances,
       },
     };
 

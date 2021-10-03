@@ -1,4 +1,5 @@
-import { Portfolio } from '@zachweinberg/wealth-schema';
+import { DailyBalance, Portfolio } from '@zachweinberg/wealth-schema';
+import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { fetchDocument } from './db';
 
 export const userOwnsPortfolio = async (req, res, portfolioID) => {
@@ -11,4 +12,19 @@ export const userOwnsPortfolio = async (req, res, portfolioID) => {
   }
 
   return true;
+};
+
+export const getPortfolioDailyHistory = async (portfolioID: string, numDays?: number): Promise<DailyBalance[]> => {
+  let snapshotQuery = await firebaseAdmin()
+    .firestore()
+    .collection(`portfolios/${portfolioID}/dailyBalances`)
+    .orderBy('date', 'desc');
+
+  if (numDays) {
+    snapshotQuery = snapshotQuery.limit(numDays);
+  }
+
+  const snapshots = await snapshotQuery.get();
+
+  return snapshots.docs.map((d) => d.data()) as DailyBalance[];
 };
