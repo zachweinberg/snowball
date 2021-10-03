@@ -1,6 +1,6 @@
 {
   "name": "@zachweinberg/wealth-schema",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Wealth model schema",
   "types": "typescript/index.d.ts",
   "main": "typescript/index.js",
