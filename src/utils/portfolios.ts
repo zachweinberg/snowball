@@ -18,7 +18,7 @@ export const getPortfolioDailyHistory = async (portfolioID: string, numDays?: nu
   let snapshotQuery = await firebaseAdmin()
     .firestore()
     .collection(`portfolios/${portfolioID}/dailyBalances`)
-    .orderBy('date', 'desc');
+    .orderBy('date', 'asc');
 
   if (numDays) {
     snapshotQuery = snapshotQuery.limit(numDays);
