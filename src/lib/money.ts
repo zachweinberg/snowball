@@ -1,6 +1,7 @@
-export const formatMoneyFromNumber = (value: number): string =>
+export const formatMoneyFromNumber = (value: number, noRound: boolean = false): string =>
   new Intl.NumberFormat('en-US', {
     style: 'currency',
+    maximumFractionDigits: noRound ? 8 : 2,
     currency: 'USD',
   }).format(value);
 

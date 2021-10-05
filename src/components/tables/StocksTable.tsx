@@ -42,8 +42,8 @@ const StocksTable: React.FunctionComponent<Props> = ({ stocks }: Props) => {
         accessor: 'companyName',
         Cell: ({ row, value }) => (
           <div>
-            <p className="mb-2">{value}</p>
-            <p className="text-darkgray text-[0.875rem]">{row.original.symbol}</p>
+            <p className="mb-2">{row.original.symbol}</p>
+            <p className="text-darkgray text-[0.875rem]">{value}</p>
           </div>
         ),
       },
@@ -88,7 +88,11 @@ const StocksTable: React.FunctionComponent<Props> = ({ stocks }: Props) => {
         accessor: 'arrow',
         Cell: () => (
           <Dropdown
-            options={[{ label: 'Delete', onClick: () => null }]}
+            options={[
+              { label: 'Edit Cost Basis', onClick: () => null },
+              { label: 'Edit Quantity', onClick: () => null },
+              { label: 'Delete', onClick: () => null },
+            ]}
             button={() => (
               <svg
                 viewBox="0 0 4 20"

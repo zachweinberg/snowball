@@ -3,25 +3,24 @@ import currency from 'currency.js';
 import { useState } from 'react';
 import * as Yup from 'yup';
 import * as yup from 'yup';
-import TextInput from '~/components/ui/TextInput';
-import { SearchPositionsResult } from '~/lib/algolia';
 import { API } from '~/lib/api';
 import { formatMoneyFromNumber } from '~/lib/money';
 import Button from '../ui/Button';
 import MoneyInput from '../ui/MoneyInput';
+import QuantityInput from '../ui/QuantityInput';
 import TextArea from '../ui/TextArea';
 import TextInputWithResults from '../ui/TextInputWithResults';
 
 const addStockSchema = yup.object().shape({
   symbol: Yup.string()
-    .max(8, 'That stock symbol is too long.')
+    .max(6, 'That stock symbol is too long.')
     .required('Stock symbol is required.'),
   quantity: Yup.number()
-    .min(0, 'You must own more shares than that!')
+    .min(1, 'You must own more than 0 shares.')
     .max(100000000, 'Are you sure you own that many shares?')
     .required('Quantity of shares is required.'),
   costBasis: Yup.number()
-    .min(0, 'Cost basis must be greater than 0.')
+    .min(0.01, 'Cost basis must be greater than 0.')
     .required('Cost basis is required.'),
   companyName: Yup.string().required('Please select a ticker symbol.'),
   note: Yup.string(),
@@ -44,8 +43,9 @@ const AddStockForm: React.FunctionComponent<Props> = ({
   const [quantity, setQuantity] = useState<number | null>(null);
   const [costBasis, setCostBasis] = useState<number | null>(null);
   const [note, setNote] = useState('');
-  const [searchResults, setSearchResults] = useState<SearchPositionsResult[]>([]);
   const [loading, setLoading] = useState(false);
+
+  const canAdd = symbol && costBasis && costBasis > 0 && quantity && quantity > 0;
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -69,6 +69,7 @@ const AddStockForm: React.FunctionComponent<Props> = ({
       setLoading(true);
 
       const numberCostBasis = currency(costBasis as number).value;
+
       try {
         await API.addStockToPortfolio({
           portfolioID,
@@ -136,21 +137,20 @@ const AddStockForm: React.FunctionComponent<Props> = ({
       />
 
       <div className="grid grid-cols-2 gap-6 mb-4">
-        <TextInput
+        <QuantityInput
           placeholder="Quantity"
           required
           value={quantity}
           backgroundColor="#F9FAFF"
-          type="number"
           name="quantity"
-          onChange={(e) => setQuantity(Number(e.target.value))}
+          onChange={(val) => setQuantity(Number(val))}
         />
         <MoneyInput
           placeholder="Cost Per Share"
           required
           value={costBasis}
           name="costBasis"
-          onChange={(value) => setCostBasis(value)}
+          onChange={(val) => setCostBasis(val)}
         />
       </div>
 
@@ -162,22 +162,14 @@ const AddStockForm: React.FunctionComponent<Props> = ({
         className="mb-7"
       />
 
-      <div className="space-y-2 font-medium text-center mb-7 text-darkgray">
-        {companyName && costBasis && quantity && (
-          <>
-            <p>{companyName}</p>
-            <p>
-              {quantity} shares at {formatMoneyFromNumber(costBasis)} per share
-            </p>
-            <p>Total cost basis: {formatMoneyFromNumber(quantity * costBasis)}</p>
-          </>
-        )}
-      </div>
-
-      {error && <p className="mb-4 text-center text-red">{error}</p>}
+      {error && <p className="mb-6 font-semibold text-center text-red">{error}</p>}
 
       <Button type="submit" disabled={loading}>
-        Add stock to portfolio
+        {canAdd
+          ? `Add ${quantity} shares of ${symbol} for ${formatMoneyFromNumber(
+              costBasis * quantity
+            )}`
+          : 'Add stock'}
       </Button>
     </form>
   );

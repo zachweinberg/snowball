@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import ReactNumeric, { predefinedOptions } from 'react-numeric';
+import ReactNumeric from 'react-numeric';
 
 interface Props {
   name: string;
@@ -7,13 +7,13 @@ interface Props {
   placeholder: string;
   onChange: (e) => void;
   className?: string;
-  backgroundColor?: string;
   required?: boolean;
-  disabled?: boolean;
   numDecimals?: number;
+  disabled?: boolean;
+  backgroundColor?: string;
 }
 
-const MoneyInput: React.FunctionComponent<Props> = ({
+const QuantityInput: React.FunctionComponent<Props> = ({
   placeholder,
   onChange,
   disabled,
@@ -32,15 +32,15 @@ const MoneyInput: React.FunctionComponent<Props> = ({
       )}
       name={name}
       required={required}
-      value={value}
-      preDefined={predefinedOptions.dollarPos}
+      decimalCharacter="."
+      decimalPlaces={numDecimals ?? 2}
       minimumValue="0"
-      placeholder={placeholder}
       style={{ backgroundColor }}
       showWarnings={false}
+      value={value}
+      placeholder={placeholder}
+      allowDecimalPadding={false}
       disabled={disabled}
-      decimalPlaces={numDecimals ?? 2}
-      allowDecimalPadding
       onChange={(event, value) => {
         onChange(value);
       }}
@@ -48,4 +48,4 @@ const MoneyInput: React.FunctionComponent<Props> = ({
   );
 };
 
-export default MoneyInput;
+export default QuantityInput;

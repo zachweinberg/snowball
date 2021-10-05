@@ -24,9 +24,9 @@ const AssetPercentCard: React.FunctionComponent<Props> = ({
     <div
       onClick={onClick}
       className={classNames(
-        'p-3 bg-white border rounded-xl border-bordergray cursor-pointer hover:bg-light',
+        'p-3 bg-white border rounded-xl border-bordergray cursor-pointer hover:border-darkgray transition-colors',
         {
-          'bg-light border-gray shadow-md': selected,
+          'bg-light shadow-md border-darkgray': selected,
         }
       )}
     >

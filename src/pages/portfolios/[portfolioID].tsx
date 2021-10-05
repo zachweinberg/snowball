@@ -88,8 +88,8 @@ const PortfolioView: NextPage = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 grid-rows-3 gap-6 mb-6 lg:grid-cols-2 lg:grid-rows-2">
-            <div className="h-full px-5 py-12 bg-dark rounded-3xl">
+          <div className="grid grid-cols-1 grid-rows-2 gap-4 lg:grid-rows-1 lg:grid-cols-2 mb-7">
+            <div className="w-full h-full px-5 py-12 bg-dark rounded-3xl">
               <BalanceHistoryChart
                 data={portfolio.dailyBalances.map((d) => ({
                   balance: d.totalValue,
@@ -98,7 +98,7 @@ const PortfolioView: NextPage = () => {
               />
             </div>
 
-            <div className="grid grid-cols-2 grid-rows-2 gap-6">
+            <div className="grid grid-cols-2 gap-4">
               <AssetPercentCard
                 amount={portfolio.stocksTotal}
                 percentDecimal={portfolio.stocksTotal / portfolioTotal}
@@ -132,41 +132,41 @@ const PortfolioView: NextPage = () => {
                 onClick={() => setActiveTab(AssetType.Cash)}
               />
             </div>
+          </div>
 
-            <div className="px-5 py-4 bg-white border rounded-3xl border-bordergray lg:col-span-2">
-              <div className="flex mb-7">
-                <div className="mr-5 w-44">
-                  <Select
-                    onChange={(selected) => setActiveTab(selected as any)}
-                    options={[
-                      'All Assets',
-                      AssetType.Stock,
-                      AssetType.Crypto,
-                      AssetType.RealEstate,
-                      AssetType.Cash,
-                    ]}
-                    selected={activeTab}
-                  />
-                </div>
-
-                <div className="flex items-center font-manrope">
-                  {['Dollar', 'Percent'].map((u) => (
-                    <button
-                      key={u}
-                      onClick={() => setUnit(u as any)}
-                      className={classNames(
-                        'text-[1rem] h-full px-4 py-2 mr-3 font-bold border rounded-md text-darkgray hover:bg-light',
-                        { 'border-evergreen text-evergreen': u === unit }
-                      )}
-                    >
-                      {u}
-                    </button>
-                  ))}
-                </div>
+          <div className="px-5 py-4 bg-white border rounded-3xl border-bordergray">
+            <div className="flex mb-7">
+              <div className="mr-5 w-44">
+                <Select
+                  onChange={(selected) => setActiveTab(selected as any)}
+                  options={[
+                    'All Assets',
+                    AssetType.Stock,
+                    AssetType.Crypto,
+                    AssetType.RealEstate,
+                    AssetType.Cash,
+                  ]}
+                  selected={activeTab}
+                />
               </div>
 
-              <StocksTable stocks={portfolio.stocks} />
+              <div className="flex items-center font-manrope">
+                {['Dollar', 'Percent'].map((u) => (
+                  <button
+                    key={u}
+                    onClick={() => setUnit(u as any)}
+                    className={classNames(
+                      'text-[1rem] h-full px-4 py-2 mr-3 font-bold border rounded-md text-darkgray hover:bg-light',
+                      { 'border-evergreen text-evergreen': u === unit }
+                    )}
+                  >
+                    {u}
+                  </button>
+                ))}
+              </div>
             </div>
+
+            <StocksTable stocks={portfolio.stocks} />
           </div>
         </>
       );

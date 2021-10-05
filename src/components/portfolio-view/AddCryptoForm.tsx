@@ -1,15 +1,12 @@
 import { AssetType } from '@zachweinberg/wealth-schema';
-import currency from 'currency.js';
-import debounce from 'lodash/debounce';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import * as Yup from 'yup';
 import * as yup from 'yup';
-import TextInput from '~/components/ui/TextInput';
-import { searchCrypto, SearchPositionsResult } from '~/lib/algolia';
 import { API } from '~/lib/api';
 import { formatMoneyFromNumber } from '~/lib/money';
 import Button from '../ui/Button';
 import MoneyInput from '../ui/MoneyInput';
+import QuantityInput from '../ui/QuantityInput';
 import TextArea from '../ui/TextArea';
 import TextInputWithResults from '../ui/TextInputWithResults';
 
@@ -18,11 +15,11 @@ const addCryptoSchema = yup.object().shape({
     .max(8, 'That coin symbol is too long.')
     .required('Coin symbol is required.'),
   quantity: Yup.number()
-    .min(0, 'You must own more coins than that!')
+    .min(0.00000001, 'You must own more coins than that.')
     .max(100000000, 'Are you sure you own that many coins?')
     .required('Quantity of coins is required.'),
   costBasis: Yup.number()
-    .min(0, 'Cost basis must be greater than 0.')
+    .min(0.000000001, 'Cost basis must be greater than 0.')
     .required('Cost basis is required.'),
   coinName: Yup.string().required('Please select a coin symbol.'),
   note: Yup.string(),
@@ -45,18 +42,9 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
   const [quantity, setQuantity] = useState<number | null>(null);
   const [costBasis, setCostBasis] = useState<number | null>(null);
   const [note, setNote] = useState('');
-  const [searchResults, setSearchResults] = useState<SearchPositionsResult[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const debouncedSearch = useCallback(
-    debounce(async (query) => {
-      setLoading(true);
-      const response = await searchCrypto(query);
-      setSearchResults(response);
-      setLoading(false);
-    }, 75),
-    []
-  );
+  const canAdd = symbol && costBasis && costBasis > 0 && quantity && quantity > 0;
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -79,13 +67,11 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
     if (isValid) {
       setLoading(true);
 
-      const numberCostBasis = currency(costBasis as number).value;
-
       try {
         await API.addCryptoToPortfolio({
           portfolioID,
           symbol,
-          costBasis: numberCostBasis,
+          costBasis: costBasis as number,
           coinName,
           quantity: quantity as number,
           note: note ?? '',
@@ -123,10 +109,10 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
         Back
       </div>
 
-      <h2 className="mb-3 text-center text-[1.75rem] font-bold">Add Cryptocurrency</h2>
+      <h2 className="mb-3 text-center text-[1.75rem] font-bold">Add Crypto</h2>
 
       <p className="text-center mb-7 text-darkgray text-[1rem] font-medium">
-        Add a specific coin to your portfolio.
+        Add a specific cryptocurrency to your portfolio.
       </p>
 
       <TextInputWithResults
@@ -137,7 +123,6 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
         onError={(e) => setError(e)}
         onResult={(symbol, fullName) => {
           API.getQuote(symbol, AssetType.Crypto).then((quoteData) => {
-            console.log(quoteData);
             if (quoteData.status === 'ok') {
               setCostBasis(quoteData.latestPrice);
             }
@@ -149,21 +134,22 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
       />
 
       <div className="grid grid-cols-2 gap-6 mb-4">
-        <TextInput
+        <QuantityInput
           placeholder="Quantity"
           required
           value={quantity}
           backgroundColor="#F9FAFF"
-          type="number"
           name="quantity"
-          onChange={(e) => setQuantity(Number(e.target.value))}
+          numDecimals={8}
+          onChange={(val) => setQuantity(Number(val))}
         />
         <MoneyInput
           placeholder="Cost Per Share"
           required
           value={costBasis}
           name="costBasis"
-          onChange={(value) => setCostBasis(value)}
+          numDecimals={8}
+          onChange={(val) => setCostBasis(val)}
         />
       </div>
 
@@ -175,22 +161,15 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
         className="mb-7"
       />
 
-      <div className="space-y-2 font-medium text-center mb-7 text-darkgray">
-        {coinName && costBasis && quantity && (
-          <>
-            <p>{coinName}</p>
-            <p>
-              {quantity} coins at {formatMoneyFromNumber(costBasis)} per coin
-            </p>
-            <p>Total cost basis: {formatMoneyFromNumber(quantity * costBasis)}</p>
-          </>
-        )}
-      </div>
-
-      {error && <p className="mb-4 text-center text-red">{error}</p>}
+      {error && <p className="mb-6 font-semibold text-center text-red">{error}</p>}
 
       <Button type="submit" disabled={loading}>
-        Add crypto to portfolio
+        {canAdd
+          ? `Add ${quantity} ${symbol} for ${formatMoneyFromNumber(
+              costBasis * quantity,
+              true
+            )}`
+          : 'Add crypto'}
       </Button>
     </form>
   );

@@ -1,7 +1,9 @@
 import { Transition } from '@headlessui/react';
 import { AssetType } from '@zachweinberg/wealth-schema';
 import { useState } from 'react';
+import AddCashForm from './AddCashForm';
 import AddCryptoForm from './AddCryptoForm';
+import AddCustomAssetForm from './AddCustomAssetForm';
 import AddStockForm from './AddStockForm';
 
 interface AddAssetFormProps {
@@ -106,10 +108,22 @@ const AddAssetForm: React.FunctionComponent<AddAssetFormProps> = ({
 
       // case AssetType.RealEstate:
       //   return <AddRealEstateCrypto afterAdd={onClose} portfolioID={portfolioID} />;
-      // case AssetType.Cash:
-      //   return <AddCashForm afterAdd={onClose} portfolioID={portfolioID} />;
-      // case AssetType.Custom:
-      //   return <AddCustomAssetForm afterAdd={onClose} portfolioID={portfolioID} />;
+      case AssetType.Cash:
+        return (
+          <AddCashForm
+            afterAdd={onClose}
+            portfolioID={portfolioID}
+            goBack={() => setAssetType(null)}
+          />
+        );
+      case AssetType.Custom:
+        return (
+          <AddCustomAssetForm
+            afterAdd={onClose}
+            portfolioID={portfolioID}
+            goBack={() => setAssetType(null)}
+          />
+        );
       default:
         return null;
     }
@@ -134,7 +148,7 @@ const AddAssetForm: React.FunctionComponent<AddAssetFormProps> = ({
           Select the asset type you would like to add
         </p>
 
-        <div className="grid grid-cols-5 grid-rows-1 gap-7">
+        <div className="grid grid-cols-1 grid-rows-1 md:grid-cols-5 gap-7">
           {availableTypes.map((option) => (
             <AssetTypeCard
               key={option.label}
