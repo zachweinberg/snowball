@@ -22,7 +22,7 @@ positionsRouter.post(
   '/stock',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const { portfolioID, symbol, companyName, quantity, costBasis, note } = req.body as AddStockRequest;
+    const { portfolioID, symbol, companyName, quantity, costPerShare, note } = req.body as AddStockRequest;
 
     if (!(await userOwnsPortfolio(req, res, portfolioID))) {
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
@@ -31,7 +31,7 @@ positionsRouter.post(
     await createDocument<StockPosition>(`portfolios/${portfolioID}/positions`, {
       assetType: AssetType.Stock,
       companyName,
-      costBasis,
+      costPerShare,
       quantity,
       symbol: symbol.toUpperCase(),
       createdAt: new Date(),
@@ -50,7 +50,7 @@ positionsRouter.post(
   '/crypto',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const { portfolioID, symbol, coinName, quantity, costBasis, note, logoURL } = req.body as AddCryptoRequest;
+    const { portfolioID, symbol, coinName, quantity, costPerCoin, note, logoURL } = req.body as AddCryptoRequest;
 
     if (!(await userOwnsPortfolio(req, res, portfolioID))) {
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
@@ -59,7 +59,7 @@ positionsRouter.post(
     await createDocument<CryptoPosition>(`portfolios/${portfolioID}/positions`, {
       assetType: AssetType.Crypto,
       coinName,
-      costBasis,
+      costPerCoin,
       logoURL,
       quantity,
       symbol: symbol.toUpperCase(),

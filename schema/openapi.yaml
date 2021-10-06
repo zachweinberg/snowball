@@ -161,7 +161,7 @@ paths:
                 - symbol
                 - companyName
                 - quantity
-                - costBasis
+                - costPerShare
               properties:
                 portfolioID:
                   type: string
@@ -171,7 +171,7 @@ paths:
                   type: string
                 quantity:
                   type: number
-                costBasis:
+                costPerShare:
                   type: number
                 note:
                   type: string
@@ -195,7 +195,7 @@ paths:
                 - symbol
                 - coinName
                 - quantity
-                - costBasis
+                - costPerCoin
               properties:
                 portfolioID:
                   type: string
@@ -205,7 +205,7 @@ paths:
                   type: string
                 quantity:
                   type: number
-                costBasis:
+                costPerCoin:
                   type: number
                 note:
                   type: string
