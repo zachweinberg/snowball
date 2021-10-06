@@ -155,6 +155,7 @@ export interface AddCryptoRequest {
   coinName: string;
   quantity: number;
   note?: string;
+  logoURL?: string;
 }
 
 export interface AddRealEstateRequest {
