@@ -50,7 +50,7 @@ positionsRouter.post(
   '/crypto',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const { portfolioID, symbol, coinName, quantity, costBasis, note } = req.body as AddCryptoRequest;
+    const { portfolioID, symbol, coinName, quantity, costBasis, note, logoURL } = req.body as AddCryptoRequest;
 
     if (!(await userOwnsPortfolio(req, res, portfolioID))) {
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
@@ -60,6 +60,7 @@ positionsRouter.post(
       assetType: AssetType.Crypto,
       coinName,
       costBasis,
+      logoURL,
       quantity,
       symbol: symbol.toUpperCase(),
       createdAt: new Date(),

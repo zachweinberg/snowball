@@ -209,6 +209,8 @@ paths:
                   type: number
                 note:
                   type: string
+                logoURL:
+                  type: string
       responses:
         '200':
           description: Valid request
