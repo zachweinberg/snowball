@@ -172,6 +172,7 @@ export interface StockPositionWithQuote extends StockPosition {
     dayChange: number;
     gainLoss: number;
     dayChangePercent: number;
+    gainLossPercent: number;
 }
 export interface CryptoPositionWithQuote extends CryptoPosition {
     last: number;
@@ -179,6 +180,7 @@ export interface CryptoPositionWithQuote extends CryptoPosition {
     dayChange: number;
     gainLoss: number;
     dayChangePercent: number;
+    gainLossPercent: number;
 }
 export interface PortfolioWithQuotes extends Portfolio {
     stocks: StockPositionWithQuote[];
