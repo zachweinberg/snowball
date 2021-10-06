@@ -52,13 +52,13 @@ export interface StockPosition extends Position {
     symbol: string;
     companyName: string;
     quantity: number;
-    costBasis: number;
+    costPerShare: number;
 }
 export interface CryptoPosition extends Position {
     symbol: string;
     coinName: string;
     quantity: number;
-    costBasis: number;
+    costPerCoin: number;
     logoURL?: string;
 }
 export declare enum RealEstatePropertyType {
@@ -121,7 +121,7 @@ export interface VerifyEmailResponse extends BaseResponse {
 export interface AddStockRequest {
     portfolioID: string;
     symbol: string;
-    costBasis: number;
+    costPerShare: number;
     companyName: string;
     quantity: number;
     note?: string;
@@ -129,7 +129,7 @@ export interface AddStockRequest {
 export interface AddCryptoRequest {
     portfolioID: string;
     symbol: string;
-    costBasis: number;
+    costPerCoin: number;
     coinName: string;
     quantity: number;
     note?: string;
