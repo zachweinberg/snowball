@@ -171,12 +171,14 @@ export interface StockPositionWithQuote extends StockPosition {
     marketValue: number;
     dayChange: number;
     gainLoss: number;
+    dayChangePercent: number;
 }
 export interface CryptoPositionWithQuote extends CryptoPosition {
     last: number;
     marketValue: number;
     dayChange: number;
     gainLoss: number;
+    dayChangePercent: number;
 }
 export interface PortfolioWithQuotes extends Portfolio {
     stocks: StockPositionWithQuote[];
