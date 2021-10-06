@@ -278,3 +278,8 @@ export interface Alert {
   destination: Destination;
   destinationValue: string;
 }
+
+export enum Unit {
+  Dollars = "Dollars",
+  Percents = "Percents",
+}
