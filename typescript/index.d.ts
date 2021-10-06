@@ -59,6 +59,7 @@ export interface CryptoPosition extends Position {
     coinName: string;
     quantity: number;
     costBasis: number;
+    logoURL?: string;
 }
 export declare enum RealEstatePropertyType {
     SingleFamily = "Single family home",
