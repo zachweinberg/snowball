@@ -42,6 +42,7 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
   const [quantity, setQuantity] = useState<number | null>(null);
   const [costBasis, setCostBasis] = useState<number | null>(null);
   const [note, setNote] = useState('');
+  const [logoURL, setLogoURL] = useState('');
   const [loading, setLoading] = useState(false);
 
   const canAdd = symbol && costBasis && costBasis > 0 && quantity && quantity > 0;
@@ -75,6 +76,7 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
           coinName,
           quantity: quantity as number,
           note: note ?? '',
+          logoURL: logoURL ?? '',
         });
 
         afterAdd();
@@ -121,13 +123,18 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
         type={AssetType.Crypto}
         floatingResults
         onError={(e) => setError(e)}
-        onResult={(symbol, fullName) => {
+        onResult={(symbol, fullName, logoURL) => {
           API.getQuote(symbol, AssetType.Crypto).then((quoteData) => {
             if (quoteData.status === 'ok') {
               setCostBasis(quoteData.latestPrice);
             }
           });
 
+          if (logoURL) {
+            setLogoURL(logoURL);
+          } else {
+            setLogoURL('');
+          }
           setSymbol(symbol.toUpperCase());
           setCoinName(fullName);
         }}

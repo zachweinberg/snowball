@@ -9,7 +9,7 @@ interface Props {
   placeholder: string;
   type: AssetType;
   onError: (string) => void;
-  onResult: (symbol: string, fullName: string) => void;
+  onResult: (symbol: string, fullName: string, logoURL?: string) => void;
   backgroundColor?: string;
   clearOnSelection?: boolean;
   floatingResults?: boolean;
@@ -36,14 +36,14 @@ const TextInputWithResults: React.FunctionComponent<Props> = ({
     []
   );
 
-  const onSelectResult = (symbol, fullName) => {
+  const onSelectResult = (symbol, fullName, logoURL) => {
     if (symbol) {
       if (!fullName) {
         onError("We can't find that company. Please contact support.");
         return;
       }
 
-      onResult(symbol, fullName);
+      onResult(symbol, fullName, logoURL ?? undefined);
 
       if (clearOnSelection) {
         setSymbol('');

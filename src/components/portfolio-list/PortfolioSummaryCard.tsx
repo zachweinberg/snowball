@@ -49,11 +49,14 @@ const PortfolioSummaryCard: React.FunctionComponent<Props> = ({ portfolio }: Pro
           <Sparkline
             width={225}
             height={105}
-            data={portfolio.dailyBalances.map((bal) => ({
+            data={portfolio.dailyBalances.slice(0, 30).map((bal) => ({
               balance: bal.totalValue,
               date: bal.date,
             }))}
           />
+          {portfolio.dailyBalances.length > 2 && (
+            <p className="text-center text-xs text-darkgray">30 Day History</p>
+          )}
         </div>
       </div>
 

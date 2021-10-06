@@ -1,9 +1,10 @@
+import classNames from 'classnames';
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 import { SearchPositionsResult } from '~/lib/algolia';
 
 interface Props {
-  onSelect: (symbol: string | null, fullName?: string) => void;
+  onSelect: (symbol: string | null, fullName?: string, logoURL?: string) => void;
   searchResults: SearchPositionsResult[];
 }
 
@@ -36,13 +37,21 @@ const FloatingSearchResults: React.FunctionComponent<Props> = ({
       {searchResults.map((result) => (
         <div
           onClick={() => {
-            onSelect(result.symbol, result.fullName);
+            onSelect(result.symbol, result.fullName, result.logoURL);
           }}
-          className="flex items-center px-3 py-4 cursor-pointer hover:bg-lightlime"
+          className={classNames('flex items-center py-4 cursor-pointer hover:bg-lightlime', {
+            'pl-4': result.logoURL,
+          })}
           key={result.providerID}
         >
           {result.logoURL && (
-            <Image width={25} height={25} src={result.logoURL} alt={result.fullName} />
+            <Image
+              width={25}
+              height={25}
+              src={result.logoURL}
+              alt={result.fullName}
+              className="rounded-lg"
+            />
           )}
           <div className="ml-4">
             <p className="whitespace-nowrap text-evergreen font-semibold text-[1.2rem] mb-1">

@@ -25,7 +25,7 @@ const Button: React.FunctionComponent<Props> = ({
         'w-full rounded-xl p-5 font-semibold hover:opacity-90',
         { 'opacity-70 cursor-not-allowed': disabled },
         secondary
-          ? 'bg-background text-dark border-2 border-dark hover:bg-dark hover:text-white'
+          ? 'bg-background text-dark border-2 border-dark hover:bg-black hover:text-white'
           : 'bg-dark text-white',
         className
       )}

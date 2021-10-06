@@ -1,4 +1,4 @@
-import { AssetColor, AssetType, PortfolioWithQuotes } from '@zachweinberg/wealth-schema';
+import { AssetColor, AssetType, PortfolioWithQuotes, Unit } from '@zachweinberg/wealth-schema';
 import classNames from 'classnames';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
@@ -7,6 +7,7 @@ import BalanceHistoryChart from '~/components/charts/BalanceHistoryChart';
 import Layout from '~/components/layout/Layout';
 import AddAssetForm from '~/components/portfolio-view/AddAssetForm';
 import AssetPercentCard from '~/components/portfolio-view/AssetPercentCard';
+import CryptoTable from '~/components/tables/CryptoTable';
 import StocksTable from '~/components/tables/StocksTable';
 import Button from '~/components/ui/Button';
 import FullScreenModal from '~/components/ui/FullScreenModal';
@@ -21,7 +22,7 @@ const PortfolioView: NextPage = () => {
   const [addingAsset, setAddingAsset] = useState(false);
   const [portfolio, setPortfolio] = useState<PortfolioWithQuotes | null>(null);
   const [activeTab, setActiveTab] = useState<AssetType | 'All Assets'>('All Assets');
-  const [unit, setUnit] = useState<'Dollar' | 'Percent'>('Dollar');
+  const [unit, setUnit] = useState<Unit>(Unit.Dollars);
   const [error, setError] = useState('');
 
   const loadPortfolioData = async () => {
@@ -46,6 +47,22 @@ const PortfolioView: NextPage = () => {
   useEffect(() => {
     loadPortfolioData();
   }, []);
+
+  const renderTable = () => {
+    if (portfolio) {
+      switch (activeTab) {
+        case AssetType.Stock:
+          return <StocksTable stocks={portfolio.stocks} unit={unit} />;
+        case AssetType.Crypto:
+          return <CryptoTable crypto={portfolio.crypto} unit={unit} />;
+        default:
+          return null;
+      }
+    } else {
+      return null;
+    }
+  };
+
   const portfolioTotal = useMemo(
     () =>
       (portfolio?.cashTotal ?? 0) +
@@ -78,7 +95,7 @@ const PortfolioView: NextPage = () => {
 
     if (portfolio) {
       return (
-        <>
+        <div className="pb-16">
           <div className="flex items-center justify-between mb-7">
             <h1 className="font-bold text-[1.75rem]">{portfolio.name}</h1>
             <div className="w-44">
@@ -150,13 +167,13 @@ const PortfolioView: NextPage = () => {
                 />
               </div>
 
-              <div className="flex items-center font-manrope">
-                {['Dollar', 'Percent'].map((u) => (
+              <div className="flex items-center">
+                {[Unit.Dollars, Unit.Percents].map((u) => (
                   <button
                     key={u}
-                    onClick={() => setUnit(u as any)}
+                    onClick={() => setUnit(u)}
                     className={classNames(
-                      'text-[1rem] h-full px-4 py-2 mr-3 font-bold border rounded-md text-darkgray hover:bg-light',
+                      'text-[1rem] px-4 py-2 mr-3 font-bold border rounded-md text-darkgray hover:bg-light',
                       { 'border-evergreen text-evergreen': u === unit }
                     )}
                   >
@@ -166,9 +183,9 @@ const PortfolioView: NextPage = () => {
               </div>
             </div>
 
-            <StocksTable stocks={portfolio.stocks} />
+            {renderTable()}
           </div>
-        </>
+        </div>
       );
     }
     return null;

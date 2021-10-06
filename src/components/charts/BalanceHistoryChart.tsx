@@ -30,7 +30,7 @@ const BalanceHistoryChart: React.FunctionComponent<Props> = ({ data }: Props) =>
     <ResponsiveContainer debounce={180}>
       <LineChart data={data}>
         <CartesianGrid
-          strokeDasharray="8"
+          strokeDasharray="5"
           vertical={false}
           horizontal
           stroke="#4F4F4F"

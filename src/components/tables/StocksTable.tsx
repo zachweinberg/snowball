@@ -1,11 +1,12 @@
-import { StockPositionWithQuote } from '@zachweinberg/wealth-schema';
-import { useMemo, useState } from 'react';
+import { StockPositionWithQuote, Unit } from '@zachweinberg/wealth-schema';
+import { useMemo } from 'react';
 import { useTable } from 'react-table';
 import { formatMoneyFromNumber, formatPercentageChange } from '~/lib/money';
 import Dropdown from '../ui/Dropdown';
 
 interface Props {
   stocks: StockPositionWithQuote[];
+  unit: Unit;
 }
 
 interface TableData {
@@ -30,9 +31,7 @@ const buildData = (stocks: StockPositionWithQuote[]): TableData[] => {
   }));
 };
 
-const StocksTable: React.FunctionComponent<Props> = ({ stocks }: Props) => {
-  const [units, setUnits] = useState<'dollars' | 'percents'>('dollars');
-
+const StocksTable: React.FunctionComponent<Props> = ({ stocks, unit }: Props) => {
   const data = useMemo<TableData[]>(() => buildData(stocks), []);
 
   const columns = useMemo(
@@ -41,9 +40,9 @@ const StocksTable: React.FunctionComponent<Props> = ({ stocks }: Props) => {
         Header: 'Name',
         accessor: 'companyName',
         Cell: ({ row, value }) => (
-          <div>
-            <p className="mb-2">{row.original.symbol}</p>
-            <p className="text-darkgray text-[0.875rem]">{value}</p>
+          <div style={{ maxWidth: '240px' }}>
+            <p className="mb-2 text-evergreen">{row.original.symbol}</p>
+            <p className="text-darkgray text-[0.875rem] truncate leading-tight">{value}</p>
           </div>
         ),
       },
@@ -61,7 +60,7 @@ const StocksTable: React.FunctionComponent<Props> = ({ stocks }: Props) => {
         accessor: 'dayChange',
         Cell: ({ value }) => (
           <p className={value >= 0 ? 'text-green' : 'text-red'}>
-            {units === 'dollars'
+            {unit === Unit.Dollars
               ? formatMoneyFromNumber(value)
               : formatPercentageChange(value)}
           </p>
@@ -77,7 +76,7 @@ const StocksTable: React.FunctionComponent<Props> = ({ stocks }: Props) => {
         accessor: 'gainLoss',
         Cell: ({ value }) => (
           <p className={value >= 0 ? 'text-green' : 'text-red'}>
-            {units === 'dollars'
+            {unit === Unit.Dollars
               ? formatMoneyFromNumber(value)
               : formatPercentageChange(value)}
           </p>
@@ -108,7 +107,7 @@ const StocksTable: React.FunctionComponent<Props> = ({ stocks }: Props) => {
         ),
       },
     ],
-    [units]
+    [unit]
   );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
