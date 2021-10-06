@@ -1,7 +1,7 @@
 import { StockPositionWithQuote, Unit } from '@zachweinberg/wealth-schema';
 import { useMemo } from 'react';
 import { useTable } from 'react-table';
-import { formatMoneyFromNumber, formatPercentageChange } from '~/lib/money';
+import { formatMoneyFromNumber, formatNumber, formatPercentageChange } from '~/lib/money';
 import Dropdown from '../ui/Dropdown';
 
 interface Props {
@@ -15,8 +15,9 @@ interface TableData {
   quantity: number;
   marketValue: number;
   dayChange: number;
-  costBasis: number;
+  costPerShare: number;
   gainLoss: number;
+  last: number;
 }
 
 const buildData = (stocks: StockPositionWithQuote[]): TableData[] => {
@@ -26,8 +27,11 @@ const buildData = (stocks: StockPositionWithQuote[]): TableData[] => {
     quantity: stock.quantity,
     marketValue: stock.marketValue,
     dayChange: stock.dayChange,
-    costBasis: stock.costBasis,
+    dayChangePercent: stock.dayChangePercent,
+    costPerShare: stock.costPerShare,
     gainLoss: stock.gainLoss,
+    last: stock.last,
+    gainLossPercent: stock.gainLossPercent,
   }));
 };
 
@@ -51,6 +55,11 @@ const StocksTable: React.FunctionComponent<Props> = ({ stocks, unit }: Props) =>
         accessor: 'quantity',
       },
       {
+        Header: 'Last',
+        accessor: 'last',
+        Cell: ({ value }) => formatNumber(value),
+      },
+      {
         Header: 'Market Value',
         accessor: 'marketValue',
         Cell: ({ value }) => formatMoneyFromNumber(value),
@@ -58,27 +67,27 @@ const StocksTable: React.FunctionComponent<Props> = ({ stocks, unit }: Props) =>
       {
         Header: 'Day Change',
         accessor: 'dayChange',
-        Cell: ({ value }) => (
+        Cell: ({ row, value }) => (
           <p className={value >= 0 ? 'text-green' : 'text-red'}>
             {unit === Unit.Dollars
               ? formatMoneyFromNumber(value)
-              : formatPercentageChange(value)}
+              : formatPercentageChange(row.original.dayChangePercent)}
           </p>
         ),
       },
       {
         Header: 'Cost Basis',
-        accessor: 'costBasis',
-        Cell: ({ value }) => formatMoneyFromNumber(value),
+        accessor: 'costPerShare',
+        Cell: ({ row, value }) => formatMoneyFromNumber(value * row.original.quantity),
       },
       {
         Header: 'Gain / Loss',
         accessor: 'gainLoss',
-        Cell: ({ value }) => (
+        Cell: ({ row, value }) => (
           <p className={value >= 0 ? 'text-green' : 'text-red'}>
             {unit === Unit.Dollars
               ? formatMoneyFromNumber(value)
-              : formatPercentageChange(value)}
+              : formatPercentageChange(row.original.gainLossPercent)}
           </p>
         ),
       },
@@ -122,7 +131,10 @@ const StocksTable: React.FunctionComponent<Props> = ({ stocks, unit }: Props) =>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps()} className="pb-2 font-semibold text-darkgray">
+                <th
+                  {...column.getHeaderProps()}
+                  className="pb-2 text-sm font-semibold text-darkgray"
+                >
                   {column.render('Header')}
                 </th>
               ))}
@@ -136,7 +148,7 @@ const StocksTable: React.FunctionComponent<Props> = ({ stocks, unit }: Props) =>
               <tr {...row.getRowProps()} className="border-b border-bordergray">
                 {row.cells.map((cell) => {
                   return (
-                    <td className="py-3" {...cell.getCellProps()}>
+                    <td className="py-3 text-sm" {...cell.getCellProps()}>
                       {cell.render('Cell')}
                     </td>
                   );

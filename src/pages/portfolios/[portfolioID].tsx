@@ -7,6 +7,7 @@ import BalanceHistoryChart from '~/components/charts/BalanceHistoryChart';
 import Layout from '~/components/layout/Layout';
 import AddAssetForm from '~/components/portfolio-view/AddAssetForm';
 import AssetPercentCard from '~/components/portfolio-view/AssetPercentCard';
+import CashTable from '~/components/tables/CashTable';
 import CryptoTable from '~/components/tables/CryptoTable';
 import StocksTable from '~/components/tables/StocksTable';
 import Button from '~/components/ui/Button';
@@ -55,6 +56,8 @@ const PortfolioView: NextPage = () => {
           return <StocksTable stocks={portfolio.stocks} unit={unit} />;
         case AssetType.Crypto:
           return <CryptoTable crypto={portfolio.crypto} unit={unit} />;
+        case AssetType.Cash:
+          return <CashTable cash={portfolio.cash} />;
         default:
           return null;
       }

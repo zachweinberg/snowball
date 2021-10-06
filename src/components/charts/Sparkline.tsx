@@ -28,6 +28,7 @@ const Sparkline: React.FunctionComponent<Props> = ({ data, width, height }: Prop
           </linearGradient>
         </defs>
         <Area
+          isAnimationActive={false}
           type="linear"
           strokeWidth={3}
           dataKey="balance"

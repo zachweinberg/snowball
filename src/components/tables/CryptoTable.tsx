@@ -1,7 +1,7 @@
 import { CryptoPositionWithQuote, Unit } from '@zachweinberg/wealth-schema';
 import { useMemo } from 'react';
 import { useTable } from 'react-table';
-import { formatMoneyFromNumber, formatPercentageChange } from '~/lib/money';
+import { formatMoneyFromNumber, formatNumber, formatPercentageChange } from '~/lib/money';
 import Dropdown from '../ui/Dropdown';
 interface Props {
   crypto: CryptoPositionWithQuote[];
@@ -14,8 +14,9 @@ interface TableData {
   quantity: number;
   marketValue: number;
   dayChange: number;
-  costBasis: number;
+  costPerCoin: number;
   gainLoss: number;
+  last: number;
 }
 
 const buildData = (crypto: CryptoPositionWithQuote[]): TableData[] => {
@@ -24,10 +25,13 @@ const buildData = (crypto: CryptoPositionWithQuote[]): TableData[] => {
     symbol: crypto.symbol,
     quantity: crypto.quantity,
     marketValue: crypto.marketValue,
+    dayChangePercent: crypto.dayChangePercent,
     dayChange: crypto.dayChange,
-    costBasis: crypto.costBasis,
+    costPerCoin: crypto.costPerCoin,
     gainLoss: crypto.gainLoss,
+    last: crypto.last,
     logoURL: crypto.logoURL,
+    gainLossPercent: crypto.gainLossPercent,
   }));
 };
 
@@ -46,11 +50,11 @@ const CryptoTable: React.FunctionComponent<Props> = ({ crypto, unit }: Props) =>
                 <img
                   src={row.original.logoURL}
                   alt={value}
-                  className="h-8 w-8 mr-3 rounded-lg"
+                  className="w-8 h-8 mr-3 rounded-md"
                 />
               )}
 
-              <div>
+              <div className="w-full">
                 <p className="mb-2 text-evergreen">{row.original.symbol}</p>
                 <p className="text-darkgray text-[0.875rem] truncate leading-tight">{value}</p>
               </div>
@@ -61,6 +65,12 @@ const CryptoTable: React.FunctionComponent<Props> = ({ crypto, unit }: Props) =>
       {
         Header: 'Quantity',
         accessor: 'quantity',
+        Cell: ({ value }) => formatNumber(value),
+      },
+      {
+        Header: 'Last',
+        accessor: 'last',
+        Cell: ({ value }) => formatMoneyFromNumber(value),
       },
       {
         Header: 'Market Value',
@@ -70,27 +80,27 @@ const CryptoTable: React.FunctionComponent<Props> = ({ crypto, unit }: Props) =>
       {
         Header: 'Day Change',
         accessor: 'dayChange',
-        Cell: ({ value }) => (
+        Cell: ({ row, value }) => (
           <p className={value >= 0 ? 'text-green' : 'text-red'}>
             {unit === Unit.Dollars
               ? formatMoneyFromNumber(value)
-              : formatPercentageChange(value)}
+              : formatPercentageChange(row.original.dayChangePercent)}
           </p>
         ),
       },
       {
         Header: 'Cost Basis',
-        accessor: 'costBasis',
-        Cell: ({ value }) => formatMoneyFromNumber(value),
+        accessor: 'costPerCoin',
+        Cell: ({ row, value }) => formatMoneyFromNumber(value * row.original.quantity),
       },
       {
         Header: 'Gain / Loss',
         accessor: 'gainLoss',
-        Cell: ({ value }) => (
+        Cell: ({ row, value }) => (
           <p className={value >= 0 ? 'text-green' : 'text-red'}>
             {unit === Unit.Dollars
               ? formatMoneyFromNumber(value)
-              : formatPercentageChange(value)}
+              : formatPercentageChange(row.original.gainLossPercent)}
           </p>
         ),
       },
@@ -134,7 +144,10 @@ const CryptoTable: React.FunctionComponent<Props> = ({ crypto, unit }: Props) =>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps()} className="pb-2 font-semibold text-darkgray">
+                <th
+                  {...column.getHeaderProps()}
+                  className="pb-2 text-sm font-semibold text-darkgray"
+                >
                   {column.render('Header')}
                 </th>
               ))}
@@ -148,7 +161,7 @@ const CryptoTable: React.FunctionComponent<Props> = ({ crypto, unit }: Props) =>
               <tr {...row.getRowProps()} className="border-b border-bordergray">
                 {row.cells.map((cell) => {
                   return (
-                    <td className="py-3" {...cell.getCellProps()}>
+                    <td className="py-3 text-sm" {...cell.getCellProps()}>
                       {cell.render('Cell')}
                     </td>
                   );

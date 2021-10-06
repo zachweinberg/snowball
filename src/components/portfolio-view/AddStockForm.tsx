@@ -1,5 +1,4 @@
 import { AssetType } from '@zachweinberg/wealth-schema';
-import currency from 'currency.js';
 import { useState } from 'react';
 import * as Yup from 'yup';
 import * as yup from 'yup';
@@ -19,7 +18,7 @@ const addStockSchema = yup.object().shape({
     .min(1, 'You must own more than 0 shares.')
     .max(100000000, 'Are you sure you own that many shares?')
     .required('Quantity of shares is required.'),
-  costBasis: Yup.number()
+  costPerShare: Yup.number()
     .min(0.01, 'Cost basis must be greater than 0.')
     .required('Cost basis is required.'),
   companyName: Yup.string().required('Please select a ticker symbol.'),
@@ -41,11 +40,11 @@ const AddStockForm: React.FunctionComponent<Props> = ({
   const [symbol, setSymbol] = useState('');
   const [companyName, setCompanyName] = useState('');
   const [quantity, setQuantity] = useState<number | null>(null);
-  const [costBasis, setCostBasis] = useState<number | null>(null);
+  const [costPerShare, setCostPerShare] = useState<number | null>(null);
   const [note, setNote] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const canAdd = symbol && costBasis && costBasis > 0 && quantity && quantity > 0;
+  const canAdd = symbol && costPerShare && costPerShare > 0 && quantity && quantity > 0;
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -54,7 +53,7 @@ const AddStockForm: React.FunctionComponent<Props> = ({
 
     try {
       await addStockSchema.validate({
-        costBasis,
+        costPerShare,
         symbol,
         companyName,
         quantity,
@@ -68,13 +67,11 @@ const AddStockForm: React.FunctionComponent<Props> = ({
     if (isValid) {
       setLoading(true);
 
-      const numberCostBasis = currency(costBasis as number).value;
-
       try {
         await API.addStockToPortfolio({
           portfolioID,
           symbol,
-          costBasis: numberCostBasis,
+          costPerShare: costPerShare as number,
           companyName,
           quantity: quantity as number,
           note: note ?? '',
@@ -127,7 +124,7 @@ const AddStockForm: React.FunctionComponent<Props> = ({
         onResult={(symbol, fullName) => {
           API.getQuote(symbol, AssetType.Stock).then((quoteData) => {
             if (quoteData.status === 'ok') {
-              setCostBasis(quoteData.latestPrice);
+              setCostPerShare(quoteData.latestPrice);
             }
           });
 
@@ -148,9 +145,9 @@ const AddStockForm: React.FunctionComponent<Props> = ({
         <MoneyInput
           placeholder="Cost Per Share"
           required
-          value={costBasis}
-          name="costBasis"
-          onChange={(val) => setCostBasis(val)}
+          value={costPerShare}
+          name="costPerShare"
+          onChange={(val) => setCostPerShare(val)}
         />
       </div>
 
@@ -167,7 +164,7 @@ const AddStockForm: React.FunctionComponent<Props> = ({
       <Button type="submit" disabled={loading}>
         {canAdd
           ? `Add ${quantity} shares of ${symbol} for ${formatMoneyFromNumber(
-              costBasis * quantity
+              costPerShare * quantity
             )}`
           : 'Add stock'}
       </Button>

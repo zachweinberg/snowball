@@ -1,9 +1,12 @@
-export const formatMoneyFromNumber = (value: number, noRound: boolean = false): string =>
-  new Intl.NumberFormat('en-US', {
+export const formatMoneyFromNumber = (value: number): string => {
+  return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    maximumFractionDigits: noRound ? 8 : 2,
+    maximumFractionDigits: value.toString().includes('.00') ? 8 : 2, // For numbers that are below a penny, show 8 decimals
     currency: 'USD',
   }).format(value);
+};
+
+export const formatNumber = (value: number) => new Intl.NumberFormat('en-US').format(value);
 
 export const formatPercentageChange = (percentDecimal: number): string => {
   let val = new Intl.NumberFormat('en-US', {
