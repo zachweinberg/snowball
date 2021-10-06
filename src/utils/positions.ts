@@ -110,11 +110,15 @@ export const calculatePortfolioQuotes = async (
 
   for (const stock of stockPositions) {
     if (stockPriceMap[stock.symbol]) {
+      const gainLoss =
+        (stockPriceMap[stock.symbol]?.latestPrice ?? 0) * stock.quantity - stock.costBasis * stock.quantity;
+
       stockPositionsWithQuotes.push({
         ...stock,
         dayChange: (stockPriceMap[stock.symbol]?.change ?? 0) * stock.quantity,
         dayChangePercent: (stockPriceMap[stock.symbol]?.changePercent ?? 0) * stock.quantity,
-        gainLoss: (stockPriceMap[stock.symbol]?.latestPrice ?? 0) * stock.quantity - stock.costBasis * stock.quantity,
+        gainLoss,
+        gainLossPercent: gainLoss / (stock.costBasis * stock.quantity),
         marketValue: (stockPriceMap[stock.symbol]?.latestPrice ?? 0) * stock.quantity,
         last: stockPriceMap[stock.symbol]?.latestPrice ?? 0,
       });
@@ -130,11 +134,14 @@ export const calculatePortfolioQuotes = async (
         (cryptoPriceMap[coin.symbol]?.latestPrice ?? 0) *
         coin.quantity;
 
+      const gainLoss = (cryptoPriceMap[coin.symbol]?.latestPrice ?? 0) * coin.quantity - coin.costBasis * coin.quantity;
+
       cryptoPositionsWithQuotes.push({
         ...coin,
         dayChange,
         dayChangePercent: cryptoPriceMap[coin.symbol]?.changePercent ?? 0,
-        gainLoss: (cryptoPriceMap[coin.symbol]?.latestPrice ?? 0) * coin.quantity - coin.costBasis * coin.quantity,
+        gainLoss,
+        gainLossPercent: gainLoss / (coin.costBasis * coin.quantity),
         marketValue: (cryptoPriceMap[coin.symbol].latestPrice ?? 0) * coin.quantity,
         last: cryptoPriceMap[coin.symbol]?.latestPrice ?? 0,
         logoURL: coin.logoURL ?? '',
