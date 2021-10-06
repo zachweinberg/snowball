@@ -133,6 +133,7 @@ export const calculatePortfolioQuotes = async (
         gainLoss: (cryptoPriceMap[coin.symbol]?.latestPrice ?? 0) * coin.quantity - coin.costBasis * coin.quantity,
         marketValue: (cryptoPriceMap[coin.symbol].latestPrice ?? 0) * coin.quantity,
         last: cryptoPriceMap[coin.symbol]?.latestPrice ?? 0,
+        logoURL: coin.logoURL ?? '',
       });
     }
   }
