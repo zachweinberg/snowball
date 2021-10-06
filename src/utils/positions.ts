@@ -113,6 +113,7 @@ export const calculatePortfolioQuotes = async (
       stockPositionsWithQuotes.push({
         ...stock,
         dayChange: (stockPriceMap[stock.symbol]?.change ?? 0) * stock.quantity,
+        dayChangePercent: (stockPriceMap[stock.symbol]?.changePercent ?? 0) * stock.quantity,
         gainLoss: (stockPriceMap[stock.symbol]?.latestPrice ?? 0) * stock.quantity - stock.costBasis * stock.quantity,
         marketValue: (stockPriceMap[stock.symbol]?.latestPrice ?? 0) * stock.quantity,
         last: stockPriceMap[stock.symbol]?.latestPrice ?? 0,
@@ -124,12 +125,15 @@ export const calculatePortfolioQuotes = async (
 
   for (const coin of cryptoPositions) {
     if (cryptoPriceMap[coin.symbol]) {
+      const dayChange =
+        (1 + (cryptoPriceMap[coin.symbol]?.changePercent ?? 0) / 100) *
+        (cryptoPriceMap[coin.symbol]?.latestPrice ?? 0) *
+        coin.quantity;
+
       cryptoPositionsWithQuotes.push({
         ...coin,
-        dayChange:
-          (1 + (cryptoPriceMap[coin.symbol]?.changePercent ?? 0) / 100) *
-          (cryptoPriceMap[coin.symbol]?.latestPrice ?? 0) *
-          coin.quantity,
+        dayChange,
+        dayChangePercent: cryptoPriceMap[coin.symbol]?.changePercent ?? 0,
         gainLoss: (cryptoPriceMap[coin.symbol]?.latestPrice ?? 0) * coin.quantity - coin.costBasis * coin.quantity,
         marketValue: (cryptoPriceMap[coin.symbol].latestPrice ?? 0) * coin.quantity,
         last: cryptoPriceMap[coin.symbol]?.latestPrice ?? 0,
