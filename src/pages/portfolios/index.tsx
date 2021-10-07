@@ -88,7 +88,7 @@ const PortfolioListPage: NextPage = () => {
           </p>
           <Button
             type="button"
-            secondary
+            variant="secondary"
             className="w-56"
             onClick={() => setCreatingPortfolio(true)}
           >

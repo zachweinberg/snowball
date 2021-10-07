@@ -2,11 +2,13 @@ import { StockPositionWithQuote, Unit } from '@zachweinberg/wealth-schema';
 import { useMemo } from 'react';
 import { useTable } from 'react-table';
 import { formatMoneyFromNumber, formatNumber, formatPercentageChange } from '~/lib/money';
+import Button from '../ui/Button';
 import Dropdown from '../ui/Dropdown';
 
 interface Props {
   stocks: StockPositionWithQuote[];
   unit: Unit;
+  onAddAsset: () => void;
 }
 
 interface TableData {
@@ -35,7 +37,18 @@ const buildData = (stocks: StockPositionWithQuote[]): TableData[] => {
   }));
 };
 
-const StocksTable: React.FunctionComponent<Props> = ({ stocks, unit }: Props) => {
+const StocksTable: React.FunctionComponent<Props> = ({ stocks, unit, onAddAsset }: Props) => {
+  if (stocks.length === 0) {
+    return (
+      <div className="text-center mx-auto py-16">
+        <p className="text-lg mb-3 font-semibold">Add some stocks to your portfolio:</p>
+        <Button type="button" onClick={onAddAsset} className="w-64">
+          + Add Stock
+        </Button>
+      </div>
+    );
+  }
+
   const data = useMemo<TableData[]>(() => buildData(stocks), []);
 
   const columns = useMemo(
@@ -45,7 +58,7 @@ const StocksTable: React.FunctionComponent<Props> = ({ stocks, unit }: Props) =>
         accessor: 'companyName',
         Cell: ({ row, value }) => (
           <div style={{ maxWidth: '240px' }}>
-            <p className="mb-2 text-evergreen">{row.original.symbol}</p>
+            <p className="mb-1 text-evergreen">{row.original.symbol}</p>
             <p className="text-darkgray text-[0.875rem] truncate leading-tight">{value}</p>
           </div>
         ),

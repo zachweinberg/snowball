@@ -67,7 +67,7 @@ const NewsPage: NextPage = () => {
         {!isLoadingInitialData && size < 10 && (
           <Button
             type="button"
-            secondary
+            variant="secondary"
             onClick={() => setSize(size + 1)}
             className="w-1/4"
             disabled={isLoadingMore || isLoadingInitialData}

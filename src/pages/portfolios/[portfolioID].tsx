@@ -9,10 +9,12 @@ import AddAssetForm from '~/components/portfolio-view/AddAssetForm';
 import AssetPercentCard from '~/components/portfolio-view/AssetPercentCard';
 import CashTable from '~/components/tables/CashTable';
 import CryptoTable from '~/components/tables/CryptoTable';
+import RealEstateTable from '~/components/tables/RealEstateTable';
 import StocksTable from '~/components/tables/StocksTable';
 import Button from '~/components/ui/Button';
 import FullScreenModal from '~/components/ui/FullScreenModal';
 import Link from '~/components/ui/Link';
+import Modal from '~/components/ui/Modal';
 import Select from '~/components/ui/Select';
 import Spinner from '~/components/ui/Spinner';
 import { API } from '~/lib/api';
@@ -22,9 +24,10 @@ const PortfolioView: NextPage = () => {
   const [loading, setLoading] = useState(true);
   const [addingAsset, setAddingAsset] = useState(false);
   const [portfolio, setPortfolio] = useState<PortfolioWithQuotes | null>(null);
-  const [activeTab, setActiveTab] = useState<AssetType | 'All Assets'>('All Assets');
+  const [activeTab, setActiveTab] = useState<AssetType | 'All assets'>('All assets');
   const [unit, setUnit] = useState<Unit>(Unit.Dollars);
   const [error, setError] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const loadPortfolioData = async () => {
     setLoading(true);
@@ -53,11 +56,30 @@ const PortfolioView: NextPage = () => {
     if (portfolio) {
       switch (activeTab) {
         case AssetType.Stock:
-          return <StocksTable stocks={portfolio.stocks} unit={unit} />;
+          return (
+            <StocksTable
+              stocks={portfolio.stocks}
+              unit={unit}
+              onAddAsset={() => setAddingAsset(true)}
+            />
+          );
         case AssetType.Crypto:
-          return <CryptoTable crypto={portfolio.crypto} unit={unit} />;
+          return (
+            <CryptoTable
+              crypto={portfolio.crypto}
+              unit={unit}
+              onAddAsset={() => setAddingAsset(true)}
+            />
+          );
         case AssetType.Cash:
-          return <CashTable cash={portfolio.cash} />;
+          return <CashTable cash={portfolio.cash} onAddAsset={() => setAddingAsset(true)} />;
+        case AssetType.RealEstate:
+          return (
+            <RealEstateTable
+              realEstate={portfolio.realEstate}
+              onAddAsset={() => setAddingAsset(true)}
+            />
+          );
         default:
           return null;
       }
@@ -98,97 +120,111 @@ const PortfolioView: NextPage = () => {
 
     if (portfolio) {
       return (
-        <div className="pb-16">
-          <div className="flex items-center justify-between mb-7">
-            <h1 className="font-bold text-[1.75rem]">{portfolio.name}</h1>
-            <div className="w-44">
-              <Button type="button" onClick={() => setAddingAsset(true)} secondary>
-                + Add Asset
-              </Button>
-            </div>
-          </div>
+        <>
+          <Modal isOpen={isDeleting} onClose={() => setIsDeleting(false)}>
+            <Button type="button">Delete</Button>
+          </Modal>
 
-          <div className="grid grid-cols-1 grid-rows-2 gap-4 lg:grid-rows-1 lg:grid-cols-2 mb-7">
-            <div className="w-full h-full px-5 py-12 bg-dark rounded-3xl">
-              <BalanceHistoryChart
-                data={portfolio.dailyBalances.map((d) => ({
-                  balance: d.totalValue,
-                  date: d.date,
-                }))}
-              />
+          <div className="pb-16">
+            <div className="flex items-center justify-between mb-7">
+              <h1 className="font-bold text-[1.75rem]">{portfolio.name}</h1>
+              <div className="w-44">
+                <Button type="button" onClick={() => setAddingAsset(true)} variant="secondary">
+                  + Add Asset
+                </Button>
+              </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <AssetPercentCard
-                amount={portfolio.stocksTotal}
-                percentDecimal={portfolio.stocksTotal / portfolioTotal}
-                strokeColor={AssetColor.Stocks}
-                assetType={AssetType.Stock}
-                selected={activeTab === AssetType.Stock}
-                onClick={() => setActiveTab(AssetType.Stock)}
-              />
-              <AssetPercentCard
-                amount={portfolio.cryptoTotal}
-                percentDecimal={portfolio.cryptoTotal / portfolioTotal}
-                strokeColor={AssetColor.Crypto}
-                assetType={AssetType.Crypto}
-                selected={activeTab === AssetType.Crypto}
-                onClick={() => setActiveTab(AssetType.Crypto)}
-              />
-              <AssetPercentCard
-                amount={portfolio.realEstateTotal}
-                percentDecimal={portfolio.realEstateTotal / portfolioTotal}
-                strokeColor={AssetColor.RealEstate}
-                assetType={AssetType.RealEstate}
-                selected={activeTab === AssetType.RealEstate}
-                onClick={() => setActiveTab(AssetType.RealEstate)}
-              />
-              <AssetPercentCard
-                amount={portfolio.cashTotal}
-                percentDecimal={portfolio.cashTotal / portfolioTotal}
-                strokeColor={AssetColor.Cash}
-                assetType={AssetType.Cash}
-                selected={activeTab === AssetType.Cash}
-                onClick={() => setActiveTab(AssetType.Cash)}
-              />
-            </div>
-          </div>
-
-          <div className="px-5 py-4 bg-white border rounded-3xl border-bordergray">
-            <div className="flex mb-7">
-              <div className="mr-5 w-44">
-                <Select
-                  onChange={(selected) => setActiveTab(selected as any)}
-                  options={[
-                    'All Assets',
-                    AssetType.Stock,
-                    AssetType.Crypto,
-                    AssetType.RealEstate,
-                    AssetType.Cash,
-                  ]}
-                  selected={activeTab}
+            <div className="grid grid-cols-1 grid-rows-2 gap-4 lg:grid-rows-1 lg:grid-cols-2 mb-7">
+              <div className="w-full h-full px-5 py-12 bg-dark rounded-3xl">
+                <BalanceHistoryChart
+                  data={portfolio.dailyBalances.map((d) => ({
+                    balance: d.totalValue,
+                    date: d.date,
+                  }))}
                 />
               </div>
 
-              <div className="flex items-center">
-                {[Unit.Dollars, Unit.Percents].map((u) => (
-                  <button
-                    key={u}
-                    onClick={() => setUnit(u)}
-                    className={classNames(
-                      'text-[1rem] px-4 py-2 mr-3 font-bold border rounded-md text-darkgray hover:bg-light',
-                      { 'border-evergreen text-evergreen': u === unit }
-                    )}
-                  >
-                    {u}
-                  </button>
-                ))}
+              <div className="grid grid-cols-3 gap-4">
+                <AssetPercentCard
+                  amount={portfolio.stocksTotal}
+                  percentDecimal={portfolio.stocksTotal / portfolioTotal}
+                  strokeColor={AssetColor.Stocks}
+                  assetType={AssetType.Stock}
+                  selected={activeTab === AssetType.Stock}
+                  onClick={() => setActiveTab(AssetType.Stock)}
+                />
+                <AssetPercentCard
+                  amount={portfolio.cryptoTotal}
+                  percentDecimal={portfolio.cryptoTotal / portfolioTotal}
+                  strokeColor={AssetColor.Crypto}
+                  assetType={AssetType.Crypto}
+                  selected={activeTab === AssetType.Crypto}
+                  onClick={() => setActiveTab(AssetType.Crypto)}
+                />
+                <AssetPercentCard
+                  amount={portfolio.realEstateTotal}
+                  percentDecimal={portfolio.realEstateTotal / portfolioTotal}
+                  strokeColor={AssetColor.RealEstate}
+                  assetType={AssetType.RealEstate}
+                  selected={activeTab === AssetType.RealEstate}
+                  onClick={() => setActiveTab(AssetType.RealEstate)}
+                />
+                <AssetPercentCard
+                  amount={portfolio.cashTotal}
+                  percentDecimal={portfolio.cashTotal / portfolioTotal}
+                  strokeColor={AssetColor.Cash}
+                  assetType={AssetType.Cash}
+                  selected={activeTab === AssetType.Cash}
+                  onClick={() => setActiveTab(AssetType.Cash)}
+                />
+                <AssetPercentCard
+                  amount={portfolio.cashTotal}
+                  percentDecimal={portfolio.cashTotal / portfolioTotal}
+                  strokeColor={AssetColor.Cash}
+                  assetType={AssetType.Cash}
+                  selected={activeTab === AssetType.Cash}
+                  onClick={() => setActiveTab(AssetType.Cash)}
+                />
               </div>
             </div>
 
-            {renderTable()}
+            <div className="px-5 py-4 bg-white border rounded-3xl border-bordergray">
+              <div className="flex mb-7">
+                <div className="mr-5 w-44">
+                  <Select
+                    onChange={(selected) => setActiveTab(selected as any)}
+                    options={[
+                      'All assets',
+                      AssetType.Stock,
+                      AssetType.Crypto,
+                      AssetType.RealEstate,
+                      AssetType.Cash,
+                    ]}
+                    selected={activeTab}
+                  />
+                </div>
+
+                <div className="flex items-center">
+                  {[Unit.Dollars, Unit.Percents].map((u) => (
+                    <button
+                      key={u}
+                      onClick={() => setUnit(u)}
+                      className={classNames(
+                        'text-[1rem] px-4 py-2 mr-3 font-bold border rounded-md text-darkgray hover:bg-light',
+                        { 'border-evergreen text-evergreen': u === unit }
+                      )}
+                    >
+                      {u}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {renderTable()}
+            </div>
           </div>
-        </div>
+        </>
       );
     }
     return null;

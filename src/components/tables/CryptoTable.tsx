@@ -2,10 +2,12 @@ import { CryptoPositionWithQuote, Unit } from '@zachweinberg/wealth-schema';
 import { useMemo } from 'react';
 import { useTable } from 'react-table';
 import { formatMoneyFromNumber, formatNumber, formatPercentageChange } from '~/lib/money';
+import Button from '../ui/Button';
 import Dropdown from '../ui/Dropdown';
 interface Props {
   crypto: CryptoPositionWithQuote[];
   unit: Unit;
+  onAddAsset: () => void;
 }
 
 interface TableData {
@@ -35,7 +37,18 @@ const buildData = (crypto: CryptoPositionWithQuote[]): TableData[] => {
   }));
 };
 
-const CryptoTable: React.FunctionComponent<Props> = ({ crypto, unit }: Props) => {
+const CryptoTable: React.FunctionComponent<Props> = ({ crypto, unit, onAddAsset }: Props) => {
+  if (crypto.length === 0) {
+    return (
+      <div className="text-center mx-auto py-16">
+        <p className="text-lg mb-3 font-semibold">Add some crypto to your portfolio:</p>
+        <Button type="button" onClick={onAddAsset} className="w-64">
+          + Add Crypto
+        </Button>
+      </div>
+    );
+  }
+
   const data = useMemo<TableData[]>(() => buildData(crypto), []);
 
   const columns = useMemo(
@@ -55,7 +68,7 @@ const CryptoTable: React.FunctionComponent<Props> = ({ crypto, unit }: Props) =>
               )}
 
               <div className="w-full">
-                <p className="mb-2 text-evergreen">{row.original.symbol}</p>
+                <p className="mb-1 text-evergreen">{row.original.symbol}</p>
                 <p className="text-darkgray text-[0.875rem] truncate leading-tight">{value}</p>
               </div>
             </div>

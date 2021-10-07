@@ -1,4 +1,4 @@
-import { CashPosition } from '@zachweinberg/wealth-schema';
+import { RealEstatePosition, RealEstatePropertyType } from '@zachweinberg/wealth-schema';
 import { useMemo } from 'react';
 import { useTable } from 'react-table';
 import Dropdown from '~/components/ui/Dropdown';
@@ -7,45 +7,54 @@ import Button from '../ui/Button';
 
 interface Props {
   onAddAsset: () => void;
-  cash: CashPosition[];
+  realEstate: RealEstatePosition[];
 }
 
 interface TableData {
-  accountName: string;
-  value: number;
+  address: string;
+  propertyValue: number;
+  propertyType: RealEstatePropertyType;
 }
 
-const buildData = (cash: CashPosition[]): TableData[] => {
-  return cash.map((cash) => ({
-    accountName: cash.accountName ?? 'Cash account',
-    value: cash.amount,
+const buildData = (realEstate: RealEstatePosition[]): TableData[] => {
+  return realEstate.map((realEstate) => ({
+    address: realEstate.address ?? '-',
+    propertyValue: realEstate.propertyValue,
+    propertyType: realEstate.propertyType,
   }));
 };
 
-const CashTable: React.FunctionComponent<Props> = ({ cash, onAddAsset }: Props) => {
-  if (cash.length === 0) {
+const RealEstateTable: React.FunctionComponent<Props> = ({
+  realEstate,
+  onAddAsset,
+}: Props) => {
+  if (realEstate.length === 0) {
     return (
       <div className="text-center mx-auto py-16">
-        <p className="text-lg mb-3 font-semibold">Add some cash to your portfolio:</p>
+        <p className="text-lg mb-3 font-semibold">Add some real estate to your portfolio:</p>
         <Button type="button" onClick={onAddAsset} className="w-64">
-          + Add Cash
+          + Add Real Estate
         </Button>
       </div>
     );
   }
 
-  const data = useMemo<TableData[]>(() => buildData(cash), []);
+  const data = useMemo<TableData[]>(() => buildData(realEstate), []);
 
   const columns = useMemo(
     () => [
       {
-        Header: 'Account',
-        accessor: 'accountName',
+        Header: 'Address',
+        accessor: 'address',
       },
       {
-        Header: 'Cash Amount',
-        accessor: 'value',
+        Header: 'Property Value',
+        accessor: 'propertyValue',
         Cell: ({ value }) => formatMoneyFromNumber(value),
+      },
+      {
+        Header: 'Property Type',
+        accessor: 'propertyType',
       },
       {
         Header: '',
@@ -117,4 +126,4 @@ const CashTable: React.FunctionComponent<Props> = ({ cash, onAddAsset }: Props) 
   );
 };
 
-export default CashTable;
+export default RealEstateTable;
