@@ -13,7 +13,7 @@ import {
 } from '@zachweinberg/wealth-schema';
 import { Router } from 'express';
 import { catchErrors, requireSignedIn } from '~/utils/api';
-import { createDocument } from '~/utils/db';
+import { createDocument, deleteDocument } from '~/utils/db';
 import { userOwnsPortfolio } from '~/utils/portfolios';
 
 const positionsRouter = Router();
@@ -151,6 +151,27 @@ positionsRouter.post(
     };
 
     res.status(200).json(response);
+  })
+);
+
+positionsRouter.delete(
+  '/:positionID',
+  requireSignedIn,
+  catchErrors(async (req, res) => {
+    const { portfolioID } = req.query as { positionID: string; portfolioID: string };
+    const { positionID } = req.params;
+
+    if (!positionID || !portfolioID) {
+      return res.status(400).end();
+    }
+
+    if (!(await userOwnsPortfolio(req, res, portfolioID))) {
+      return res.status(401).json({ status: 'error', error: 'Invalid.' });
+    }
+
+    await deleteDocument(`portfolios/${portfolioID}/positions/${positionID}`);
+
+    res.status(200).end();
   })
 );
 

@@ -307,6 +307,22 @@ paths:
             application/json:
               schema:
                 type: object
+  /positions/{positionID}:
+    delete:
+      summary: Delete position from portfolio
+      parameters:
+        - name: portfolioID
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
   /quotes:
     get:
       summary: Get stock or crypto quote
