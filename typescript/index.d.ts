@@ -40,7 +40,8 @@ export declare enum AssetType {
     RealEstate = "Real Estate",
     Crypto = "Crypto",
     Cash = "Cash",
-    Custom = "Custom"
+    Custom = "Custom",
+    Options = "Options"
 }
 export interface Position {
     id: string;

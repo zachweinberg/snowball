@@ -22,6 +22,7 @@ var AssetType;
     AssetType["Crypto"] = "Crypto";
     AssetType["Cash"] = "Cash";
     AssetType["Custom"] = "Custom";
+    AssetType["Options"] = "Options";
 })(AssetType = exports.AssetType || (exports.AssetType = {}));
 var RealEstatePropertyType;
 (function (RealEstatePropertyType) {
