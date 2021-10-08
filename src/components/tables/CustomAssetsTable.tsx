@@ -1,48 +1,50 @@
-import { CashPosition, Unit } from '@zachweinberg/wealth-schema';
+import { CustomPosition, Unit } from '@zachweinberg/wealth-schema';
 import { useMemo } from 'react';
 import Dropdown from '~/components/ui/Dropdown';
 import { formatMoneyFromNumber } from '~/lib/money';
 import Button from '../ui/Button';
 import { BaseTable } from './BaseTable';
-import { buildCashData, CashTableData } from './builders';
+import { buildCustomAssetData, CustomAssetTableData } from './builders';
 
 interface Props {
-  cash: CashPosition[];
+  custom: CustomPosition[];
   unit: Unit;
   onAddAsset: () => void;
-  onDelete: (cashID: string, name: string) => void;
+  onDelete: (customID: string, name: string) => void;
 }
 
-const CashTable: React.FunctionComponent<Props> = ({
-  cash,
-  unit,
+const CustomAssetsTable: React.FunctionComponent<Props> = ({
+  custom,
   onAddAsset,
+  unit,
   onDelete,
 }: Props) => {
-  if (cash.length === 0) {
+  console.log(custom);
+  if (custom.length === 0) {
     return (
       <div className="text-center mx-auto py-16">
-        <p className="text-lg mb-3 font-semibold">Add some cash to your portfolio:</p>
+        <p className="text-lg mb-3 font-semibold">Add some custom assets to your portfolio:</p>
         <Button type="button" onClick={onAddAsset} className="w-64">
-          + Add Cash
+          + Add Custom Asset
         </Button>
       </div>
     );
   }
 
-  const data = useMemo<CashTableData[]>(() => buildCashData(cash), []);
+  const data = useMemo<CustomAssetTableData[]>(() => buildCustomAssetData(custom), []);
 
   const columns = useMemo(
     () => [
       {
-        Header: 'Account',
-        accessor: 'accountName',
+        Header: 'Name',
+        accessor: 'name',
       },
       {
-        Header: 'Cash Amount',
-        accessor: 'value',
+        Header: 'Property Value',
+        accessor: 'propertyValue',
         Cell: ({ value }) => formatMoneyFromNumber(value),
       },
+
       {
         Header: '',
         accessor: 'arrow',
@@ -67,10 +69,10 @@ const CashTable: React.FunctionComponent<Props> = ({
         ),
       },
     ],
-    []
+    [unit]
   );
 
   return <BaseTable columns={columns} data={data} />;
 };
 
-export default CashTable;
+export default CustomAssetsTable;

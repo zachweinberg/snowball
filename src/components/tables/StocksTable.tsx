@@ -1,55 +1,36 @@
 import { StockPositionWithQuote, Unit } from '@zachweinberg/wealth-schema';
 import { useMemo } from 'react';
-import { useTable } from 'react-table';
 import { formatMoneyFromNumber, formatNumber, formatPercentageChange } from '~/lib/money';
 import Button from '../ui/Button';
 import Dropdown from '../ui/Dropdown';
+import { BaseTable } from './BaseTable';
+import { buildStockData, StocksTableData } from './builders';
 
 interface Props {
   stocks: StockPositionWithQuote[];
   unit: Unit;
   onAddAsset: () => void;
+  onDelete: (stockID: string, name: string) => void;
 }
 
-interface TableData {
-  companyName: string;
-  symbol: string;
-  quantity: number;
-  marketValue: number;
-  dayChange: number;
-  costPerShare: number;
-  gainLoss: number;
-  last: number;
-}
-
-const buildData = (stocks: StockPositionWithQuote[]): TableData[] => {
-  return stocks.map((stock) => ({
-    companyName: stock.companyName,
-    symbol: stock.symbol,
-    quantity: stock.quantity,
-    marketValue: stock.marketValue,
-    dayChange: stock.dayChange,
-    dayChangePercent: stock.dayChangePercent,
-    costPerShare: stock.costPerShare,
-    gainLoss: stock.gainLoss,
-    last: stock.last,
-    gainLossPercent: stock.gainLossPercent,
-  }));
-};
-
-const StocksTable: React.FunctionComponent<Props> = ({ stocks, unit, onAddAsset }: Props) => {
+const StocksTable: React.FunctionComponent<Props> = ({
+  stocks,
+  unit,
+  onDelete,
+  onAddAsset,
+}: Props) => {
   if (stocks.length === 0) {
     return (
       <div className="text-center mx-auto py-16">
         <p className="text-lg mb-3 font-semibold">Add some stocks to your portfolio:</p>
         <Button type="button" onClick={onAddAsset} className="w-64">
-          + Add Stock
+          + Add Stocks
         </Button>
       </div>
     );
   }
 
-  const data = useMemo<TableData[]>(() => buildData(stocks), []);
+  const data = useMemo<StocksTableData[]>(() => buildStockData(stocks), []);
 
   const columns = useMemo(
     () => [
@@ -106,13 +87,13 @@ const StocksTable: React.FunctionComponent<Props> = ({ stocks, unit, onAddAsset 
       },
       {
         Header: '',
-        accessor: 'arrow',
-        Cell: () => (
+        accessor: 'id',
+        Cell: ({ value, row }) => (
           <Dropdown
             options={[
               { label: 'Edit Cost Basis', onClick: () => null },
               { label: 'Edit Quantity', onClick: () => null },
-              { label: 'Delete', onClick: () => null },
+              { label: 'Delete', onClick: () => onDelete(value, row.original.symbol) },
             ]}
             button={() => (
               <svg
@@ -132,47 +113,7 @@ const StocksTable: React.FunctionComponent<Props> = ({ stocks, unit, onAddAsset 
     [unit]
   );
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
-    columns,
-    data,
-  });
-
-  return (
-    <div>
-      <table {...getTableProps()} className="w-full text-left bg-white">
-        <thead className="border-b border-bordergray">
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <th
-                  {...column.getHeaderProps()}
-                  className="pb-2 text-sm font-semibold text-darkgray"
-                >
-                  {column.render('Header')}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()} className="font-bold font-manrope">
-          {rows.map((row, i) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()} className="border-b border-bordergray">
-                {row.cells.map((cell) => {
-                  return (
-                    <td className="py-3 text-sm" {...cell.getCellProps()}>
-                      {cell.render('Cell')}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
-  );
+  return <BaseTable columns={columns} data={data} />;
 };
 
 export default StocksTable;

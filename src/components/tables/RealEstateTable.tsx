@@ -1,32 +1,23 @@
-import { RealEstatePosition, RealEstatePropertyType } from '@zachweinberg/wealth-schema';
+import { RealEstatePosition, Unit } from '@zachweinberg/wealth-schema';
 import { useMemo } from 'react';
-import { useTable } from 'react-table';
 import Dropdown from '~/components/ui/Dropdown';
 import { formatMoneyFromNumber } from '~/lib/money';
 import Button from '../ui/Button';
+import { BaseTable } from './BaseTable';
+import { buildRealEstateData, RealEstateTableData } from './builders';
 
 interface Props {
-  onAddAsset: () => void;
   realEstate: RealEstatePosition[];
+  unit: Unit;
+  onAddAsset: () => void;
+  onDelete: (realEstateID: string, name: string) => void;
 }
-
-interface TableData {
-  address: string;
-  propertyValue: number;
-  propertyType: RealEstatePropertyType;
-}
-
-const buildData = (realEstate: RealEstatePosition[]): TableData[] => {
-  return realEstate.map((realEstate) => ({
-    address: realEstate.address ?? '-',
-    propertyValue: realEstate.propertyValue,
-    propertyType: realEstate.propertyType,
-  }));
-};
 
 const RealEstateTable: React.FunctionComponent<Props> = ({
   realEstate,
   onAddAsset,
+  unit,
+  onDelete,
 }: Props) => {
   if (realEstate.length === 0) {
     return (
@@ -39,7 +30,7 @@ const RealEstateTable: React.FunctionComponent<Props> = ({
     );
   }
 
-  const data = useMemo<TableData[]>(() => buildData(realEstate), []);
+  const data = useMemo<RealEstateTableData[]>(() => buildRealEstateData(realEstate), []);
 
   const columns = useMemo(
     () => [
@@ -80,50 +71,10 @@ const RealEstateTable: React.FunctionComponent<Props> = ({
         ),
       },
     ],
-    []
+    [unit]
   );
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
-    columns,
-    data,
-  });
-
-  return (
-    <div>
-      <table {...getTableProps()} className="w-full text-left bg-white">
-        <thead className="border-b border-bordergray">
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <th
-                  {...column.getHeaderProps()}
-                  className="pb-2 text-sm font-semibold text-darkgray"
-                >
-                  {column.render('Header')}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()} className="font-bold font-manrope">
-          {rows.map((row, i) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()} className="border-b border-bordergray">
-                {row.cells.map((cell) => {
-                  return (
-                    <td className="py-3 text-sm" {...cell.getCellProps()}>
-                      {cell.render('Cell')}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
-  );
+  return <BaseTable columns={columns} data={data} />;
 };
 
 export default RealEstateTable;

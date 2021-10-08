@@ -165,4 +165,12 @@ export const API = {
       assetType,
     });
   },
+  deleteAssetFromPortfolio: (positionID: string, portfolioID: string) => {
+    return request<undefined, undefined>(
+      `/api/positions/${positionID}?portfolioID=${portfolioID}`,
+      'delete',
+      undefined,
+      false
+    );
+  },
 };

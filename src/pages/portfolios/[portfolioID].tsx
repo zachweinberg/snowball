@@ -9,6 +9,7 @@ import AddAssetForm from '~/components/portfolio-view/AddAssetForm';
 import AssetPercentCard from '~/components/portfolio-view/AssetPercentCard';
 import CashTable from '~/components/tables/CashTable';
 import CryptoTable from '~/components/tables/CryptoTable';
+import CustomAssetsTable from '~/components/tables/CustomAssetsTable';
 import RealEstateTable from '~/components/tables/RealEstateTable';
 import StocksTable from '~/components/tables/StocksTable';
 import Button from '~/components/ui/Button';
@@ -28,6 +29,11 @@ const PortfolioView: NextPage = () => {
   const [unit, setUnit] = useState<Unit>(Unit.Dollars);
   const [error, setError] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteAsset, setDeleteAsset] = useState<{
+    type: AssetType;
+    id: string;
+    name: string;
+  } | null>(null);
 
   const loadPortfolioData = async () => {
     setLoading(true);
@@ -61,6 +67,10 @@ const PortfolioView: NextPage = () => {
               stocks={portfolio.stocks}
               unit={unit}
               onAddAsset={() => setAddingAsset(true)}
+              onDelete={(stockID, name) => {
+                setDeleteAsset({ id: stockID, type: AssetType.Stock, name });
+                setIsDeleting(true);
+              }}
             />
           );
         case AssetType.Crypto:
@@ -69,15 +79,46 @@ const PortfolioView: NextPage = () => {
               crypto={portfolio.crypto}
               unit={unit}
               onAddAsset={() => setAddingAsset(true)}
+              onDelete={(cryptoID, name) => {
+                setDeleteAsset({ id: cryptoID, type: AssetType.Crypto, name });
+                setIsDeleting(true);
+              }}
             />
           );
         case AssetType.Cash:
-          return <CashTable cash={portfolio.cash} onAddAsset={() => setAddingAsset(true)} />;
+          return (
+            <CashTable
+              unit={unit}
+              cash={portfolio.cash}
+              onAddAsset={() => setAddingAsset(true)}
+              onDelete={(cashID, name) => {
+                setDeleteAsset({ id: cashID, type: AssetType.Cash, name });
+                setIsDeleting(true);
+              }}
+            />
+          );
         case AssetType.RealEstate:
           return (
             <RealEstateTable
+              unit={unit}
               realEstate={portfolio.realEstate}
               onAddAsset={() => setAddingAsset(true)}
+              onDelete={(realEstateID, name) => {
+                setDeleteAsset({ id: realEstateID, type: AssetType.RealEstate, name });
+                setIsDeleting(true);
+              }}
+            />
+          );
+        case AssetType.Custom:
+          return (
+            <CustomAssetsTable
+              unit={unit}
+              custom={portfolio.customs}
+              onAddAsset={() => setAddingAsset(true)}
+              onDelete={(customID, name) => {
+                setDeleteAsset({ id: customID, type: AssetType.Custom, name });
+                setIsDeleting(true);
+              }}
             />
           );
         default:
@@ -97,6 +138,14 @@ const PortfolioView: NextPage = () => {
       (portfolio?.realEstateTotal ?? 0),
     [portfolio]
   );
+
+  const onDeleteAsset = async () => {
+    if (deleteAsset && portfolio) {
+      await API.deleteAssetFromPortfolio(deleteAsset.id, portfolio.id);
+      setIsDeleting(false);
+      loadPortfolioData();
+    }
+  };
 
   const renderContent = () => {
     if (error) {
@@ -122,7 +171,19 @@ const PortfolioView: NextPage = () => {
       return (
         <>
           <Modal isOpen={isDeleting} onClose={() => setIsDeleting(false)}>
-            <Button type="button">Delete</Button>
+            <div className="p-7">
+              <p className="font-bold mb-4 text-lg">
+                Remove {deleteAsset?.name} from this portfolio?
+              </p>
+              <div className="flex items-center">
+                <Button type="button" className="mr-2" onClick={() => setIsDeleting(false)}>
+                  Cancel
+                </Button>
+                <Button type="button" variant="danger" onClick={onDeleteAsset}>
+                  Delete
+                </Button>
+              </div>
+            </div>
           </Modal>
 
           <div className="pb-16">
@@ -179,12 +240,12 @@ const PortfolioView: NextPage = () => {
                   onClick={() => setActiveTab(AssetType.Cash)}
                 />
                 <AssetPercentCard
-                  amount={portfolio.cashTotal}
-                  percentDecimal={portfolio.cashTotal / portfolioTotal}
-                  strokeColor={AssetColor.Cash}
-                  assetType={AssetType.Cash}
-                  selected={activeTab === AssetType.Cash}
-                  onClick={() => setActiveTab(AssetType.Cash)}
+                  amount={portfolio.customsTotal}
+                  percentDecimal={portfolio.customsTotal / portfolioTotal}
+                  strokeColor={AssetColor.Custom}
+                  assetType={AssetType.Custom}
+                  selected={activeTab === AssetType.Custom}
+                  onClick={() => setActiveTab(AssetType.Custom)}
                 />
               </div>
             </div>

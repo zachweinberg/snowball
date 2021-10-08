@@ -1,43 +1,24 @@
 import { CryptoPositionWithQuote, Unit } from '@zachweinberg/wealth-schema';
 import { useMemo } from 'react';
-import { useTable } from 'react-table';
 import { formatMoneyFromNumber, formatNumber, formatPercentageChange } from '~/lib/money';
 import Button from '../ui/Button';
 import Dropdown from '../ui/Dropdown';
+import { BaseTable } from './BaseTable';
+import { buildCryptoData, CryptoTableData } from './builders';
+
 interface Props {
   crypto: CryptoPositionWithQuote[];
   unit: Unit;
   onAddAsset: () => void;
+  onDelete: (cryptoID: string, name: string) => void;
 }
 
-interface TableData {
-  coinName: string;
-  symbol: string;
-  quantity: number;
-  marketValue: number;
-  dayChange: number;
-  costPerCoin: number;
-  gainLoss: number;
-  last: number;
-}
-
-const buildData = (crypto: CryptoPositionWithQuote[]): TableData[] => {
-  return crypto.map((crypto) => ({
-    coinName: crypto.coinName,
-    symbol: crypto.symbol,
-    quantity: crypto.quantity,
-    marketValue: crypto.marketValue,
-    dayChangePercent: crypto.dayChangePercent,
-    dayChange: crypto.dayChange,
-    costPerCoin: crypto.costPerCoin,
-    gainLoss: crypto.gainLoss,
-    last: crypto.last,
-    logoURL: crypto.logoURL,
-    gainLossPercent: crypto.gainLossPercent,
-  }));
-};
-
-const CryptoTable: React.FunctionComponent<Props> = ({ crypto, unit, onAddAsset }: Props) => {
+const CryptoTable: React.FunctionComponent<Props> = ({
+  crypto,
+  unit,
+  onDelete,
+  onAddAsset,
+}: Props) => {
   if (crypto.length === 0) {
     return (
       <div className="text-center mx-auto py-16">
@@ -49,7 +30,7 @@ const CryptoTable: React.FunctionComponent<Props> = ({ crypto, unit, onAddAsset 
     );
   }
 
-  const data = useMemo<TableData[]>(() => buildData(crypto), []);
+  const data = useMemo<CryptoTableData[]>(() => buildCryptoData(crypto), []);
 
   const columns = useMemo(
     () => [
@@ -119,13 +100,13 @@ const CryptoTable: React.FunctionComponent<Props> = ({ crypto, unit, onAddAsset 
       },
       {
         Header: '',
-        accessor: 'arrow',
-        Cell: () => (
+        accessor: 'id',
+        Cell: ({ row, value }) => (
           <Dropdown
             options={[
               { label: 'Edit Cost Basis', onClick: () => null },
               { label: 'Edit Quantity', onClick: () => null },
-              { label: 'Delete', onClick: () => null },
+              { label: 'Delete', onClick: () => onDelete(value, row.original.symbol) },
             ]}
             button={() => (
               <svg
@@ -145,47 +126,7 @@ const CryptoTable: React.FunctionComponent<Props> = ({ crypto, unit, onAddAsset 
     [unit]
   );
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
-    columns,
-    data,
-  });
-
-  return (
-    <div>
-      <table {...getTableProps()} className="w-full text-left bg-white">
-        <thead className="border-b border-bordergray">
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <th
-                  {...column.getHeaderProps()}
-                  className="pb-2 text-sm font-semibold text-darkgray"
-                >
-                  {column.render('Header')}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()} className="font-bold font-manrope">
-          {rows.map((row, i) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()} className="border-b border-bordergray">
-                {row.cells.map((cell) => {
-                  return (
-                    <td className="py-3 text-sm" {...cell.getCellProps()}>
-                      {cell.render('Cell')}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
-  );
+  return <BaseTable columns={columns} data={data} />;
 };
 
 export default CryptoTable;
