@@ -39,7 +39,7 @@ const LoginPage: NextPage = () => {
         } else if (err.code === 'auth/wrong-password') {
           setError('Invalid email or password.');
         } else {
-          setError('Something went wrong.');
+          setError('Invalid email or password.');
         }
         setLoading(false);
       }
