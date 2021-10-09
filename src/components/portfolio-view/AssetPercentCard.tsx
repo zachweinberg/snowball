@@ -1,4 +1,4 @@
-import { AssetType } from '@zachweinberg/wealth-schema';
+import { AssetType } from '@zachweinberg/obsidian-schema';
 import classNames from 'classnames';
 import PercentageCircle from '~/components/ui/PercentageCircle';
 import { formatMoneyFromNumber } from '~/lib/money';

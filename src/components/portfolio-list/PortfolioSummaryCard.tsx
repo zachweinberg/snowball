@@ -1,4 +1,4 @@
-import { AssetColor, PortfolioWithBalances } from '@zachweinberg/wealth-schema';
+import { AssetColor, PortfolioWithBalances } from '@zachweinberg/obsidian-schema';
 import classNames from 'classnames';
 import PercentageCircle from '~/components/ui/PercentageCircle';
 import { formatMoneyFromNumber, formatPercentageChange } from '~/lib/money';

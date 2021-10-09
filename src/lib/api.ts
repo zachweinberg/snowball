@@ -16,7 +16,7 @@ import {
   GetWatchListResponse,
   VerifyEmailRequest,
   VerifyEmailResponse,
-} from '@zachweinberg/wealth-schema';
+} from '@zachweinberg/obsidian-schema';
 import axios from 'axios';
 import firebase from '~/lib/firebase';
 

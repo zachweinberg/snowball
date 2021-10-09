@@ -1,4 +1,9 @@
-import { AssetColor, AssetType, PortfolioWithQuotes, Unit } from '@zachweinberg/wealth-schema';
+import {
+  AssetColor,
+  AssetType,
+  PortfolioWithQuotes,
+  Unit,
+} from '@zachweinberg/obsidian-schema';
 import classNames from 'classnames';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
@@ -238,6 +243,14 @@ const PortfolioView: NextPage = () => {
                   assetType={AssetType.Cash}
                   selected={activeTab === AssetType.Cash}
                   onClick={() => setActiveTab(AssetType.Cash)}
+                />
+                <AssetPercentCard
+                  amount={portfolio.optionsTotal}
+                  percentDecimal={portfolio.optionsTotal / portfolioTotal}
+                  strokeColor={AssetColor.Options}
+                  assetType={AssetType.Options}
+                  selected={activeTab === AssetType.Options}
+                  onClick={() => setActiveTab(AssetType.Options)}
                 />
                 <AssetPercentCard
                   amount={portfolio.customsTotal}

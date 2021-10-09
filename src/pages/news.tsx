@@ -1,4 +1,4 @@
-import { GetNewsResponse, NewsItem } from '@zachweinberg/wealth-schema';
+import { GetNewsResponse, NewsItem } from '@zachweinberg/obsidian-schema';
 import debounce from 'lodash/debounce';
 import type { NextPage } from 'next';
 import { useCallback, useState } from 'react';

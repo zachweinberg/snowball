@@ -1,5 +1,5 @@
 import { EyeIcon } from '@heroicons/react/outline';
-import { AssetType } from '@zachweinberg/wealth-schema';
+import { AssetType } from '@zachweinberg/obsidian-schema';
 import { useEffect, useState } from 'react';
 import Modal from '~/components/ui/Modal';
 import TextInputWithResults from '~/components/ui/TextInputWithResults';

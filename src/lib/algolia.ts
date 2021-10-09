@@ -1,4 +1,4 @@
-import { AssetType } from '@zachweinberg/wealth-schema';
+import { AssetType } from '@zachweinberg/obsidian-schema';
 import algoliasearch from 'algoliasearch/lite';
 
 const algoliaClient = algoliasearch(

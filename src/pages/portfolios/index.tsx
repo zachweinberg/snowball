@@ -1,4 +1,4 @@
-import { PortfolioWithBalances } from '@zachweinberg/wealth-schema';
+import { PortfolioWithBalances } from '@zachweinberg/obsidian-schema';
 import type { NextPage } from 'next';
 import React, { useEffect, useState } from 'react';
 import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';

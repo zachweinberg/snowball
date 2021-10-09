@@ -1,9 +1,10 @@
 import { Transition } from '@headlessui/react';
-import { AssetType } from '@zachweinberg/wealth-schema';
+import { AssetType } from '@zachweinberg/obsidian-schema';
 import { useState } from 'react';
 import AddCashForm from './AddCashForm';
 import AddCryptoForm from './AddCryptoForm';
 import AddCustomAssetForm from './AddCustomAssetForm';
+import AddRealEstateForm from './AddRealEstateForm';
 import AddStockForm from './AddStockForm';
 
 interface AddAssetFormProps {
@@ -105,9 +106,14 @@ const AddAssetForm: React.FunctionComponent<AddAssetFormProps> = ({
             goBack={() => setAssetType(null)}
           />
         );
-
-      // case AssetType.RealEstate:
-      //   return <AddRealEstateCrypto afterAdd={onClose} portfolioID={portfolioID} />;
+      case AssetType.RealEstate:
+        return (
+          <AddRealEstateForm
+            afterAdd={onClose}
+            portfolioID={portfolioID}
+            goBack={() => setAssetType(null)}
+          />
+        );
       case AssetType.Cash:
         return (
           <AddCashForm

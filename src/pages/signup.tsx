@@ -1,4 +1,4 @@
-import { InvestingExperienceLevel } from '@zachweinberg/wealth-schema';
+import { InvestingExperienceLevel } from '@zachweinberg/obsidian-schema';
 import classNames from 'classnames';
 import type { NextPage } from 'next';
 import React, { useState } from 'react';

@@ -1,4 +1,4 @@
-import { CustomPosition, Unit } from '@zachweinberg/wealth-schema';
+import { CustomPosition, Unit } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
 import Dropdown from '~/components/ui/Dropdown';
 import { formatMoneyFromNumber } from '~/lib/money';

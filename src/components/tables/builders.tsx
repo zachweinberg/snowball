@@ -5,7 +5,7 @@ import {
   RealEstatePosition,
   RealEstatePropertyType,
   StockPositionWithQuote,
-} from '@zachweinberg/wealth-schema';
+} from '@zachweinberg/obsidian-schema';
 
 // Stocks
 export interface StocksTableData {

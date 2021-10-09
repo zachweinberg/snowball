@@ -1,4 +1,4 @@
-import { CryptoPositionWithQuote, Unit } from '@zachweinberg/wealth-schema';
+import { CryptoPositionWithQuote, Unit } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
 import { formatMoneyFromNumber, formatNumber, formatPercentageChange } from '~/lib/money';
 import Button from '../ui/Button';

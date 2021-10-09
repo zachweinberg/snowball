@@ -1,4 +1,4 @@
-import { AssetType } from '@zachweinberg/wealth-schema';
+import { AssetType } from '@zachweinberg/obsidian-schema';
 import { debounce } from 'lodash';
 import { useCallback, useState } from 'react';
 import { searchCrypto, SearchPositionsResult, searchStocks } from '~/lib/algolia';

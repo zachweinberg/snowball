@@ -1,4 +1,4 @@
-import { AssetType } from '@zachweinberg/wealth-schema';
+import { AssetType } from '@zachweinberg/obsidian-schema';
 import { useState } from 'react';
 import * as Yup from 'yup';
 import * as yup from 'yup';

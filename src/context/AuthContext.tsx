@@ -1,4 +1,4 @@
-import { CreateUserRequest, User } from '@zachweinberg/wealth-schema';
+import { CreateUserRequest, User } from '@zachweinberg/obsidian-schema';
 import { useRouter } from 'next/router';
 import { createContext, useEffect, useState } from 'react';
 import { API } from '~/lib/api';
