@@ -18,6 +18,7 @@ export enum AssetColor {
   Cash = "#4E5B00",
   Custom = "#72CB00",
   RealEstate = "#00565B",
+  Options = "#00365B",
 }
 
 export interface Portfolio {
