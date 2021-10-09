@@ -1,7 +1,7 @@
 {
-  "name": "@zachweinberg/wealth-schema",
+  "name": "@zachweinberg/obsidian-schema",
   "version": "1.7.1",
-  "description": "Wealth model schema",
+  "description": "Obsidian Tracker model schema",
   "types": "typescript/index.d.ts",
   "main": "typescript/index.js",
   "scripts": {
@@ -16,7 +16,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zachweinberg/wealth-schema.git"
+    "url": "git+https://github.com/zachweinberg/obsidian-schema.git"
   },
   "author": "Zach Weinberg",
   "license": "ISC",
