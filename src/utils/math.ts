@@ -4,7 +4,7 @@ import {
   CustomPosition,
   RealEstatePosition,
   StockPosition,
-} from '@zachweinberg/wealth-schema';
+} from '@zachweinberg/obsidian-schema';
 import currency from 'currency.js';
 import { getCryptoPrices } from '~/lib/cmc';
 import { getStockPrices } from '~/lib/iex';

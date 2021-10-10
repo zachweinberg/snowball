@@ -1,4 +1,4 @@
-import { DailyBalance, Portfolio } from '@zachweinberg/wealth-schema';
+import { DailyBalance, Portfolio } from '@zachweinberg/obsidian-schema';
 import algoliasearch from 'algoliasearch';
 import axios from 'axios';
 import * as csv from 'fast-csv';

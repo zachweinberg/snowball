@@ -1,4 +1,4 @@
-import { AddWatchListItemRequest, AssetType, GetWatchListResponse, WatchListItem } from '@zachweinberg/wealth-schema';
+import { AddWatchListItemRequest, AssetType, GetWatchListResponse, WatchListItem } from '@zachweinberg/obsidian-schema';
 import { Router } from 'express';
 import { getCryptoPrices } from '~/lib/cmc';
 import { getStockPrices } from '~/lib/iex';

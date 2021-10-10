@@ -4,7 +4,7 @@ import {
   GetPortfolioResponse,
   GetPortfoliosResponse,
   Portfolio,
-} from '@zachweinberg/wealth-schema';
+} from '@zachweinberg/obsidian-schema';
 import { Router } from 'express';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { catchErrors, getUserFromAuthHeader, requireSignedIn } from '~/utils/api';

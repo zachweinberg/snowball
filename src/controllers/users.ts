@@ -5,7 +5,7 @@ import {
   User,
   VerifyEmailRequest,
   VerifyEmailResponse,
-} from '@zachweinberg/wealth-schema';
+} from '@zachweinberg/obsidian-schema';
 import { Router } from 'express';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { catchErrors, requireSignedIn } from '~/utils/api';
@@ -36,9 +36,7 @@ usersRouter.post(
   catchErrors(async (req, res) => {
     const { email } = req.body as VerifyEmailRequest;
 
-    const existingUsers = await findDocuments<User>('users', [
-      { property: 'email', condition: '==', value: email },
-    ]);
+    const existingUsers = await findDocuments<User>('users', [{ property: 'email', condition: '==', value: email }]);
 
     if (existingUsers.length === 0) {
       return res.status(404).json({ status: 'error', error: 'Invalid email or password.' });
@@ -58,9 +56,7 @@ usersRouter.post(
   catchErrors(async (req, res) => {
     const { email, investingExperienceLevel, name, password } = req.body as CreateUserRequest;
 
-    const existingUsers = await findDocuments<User>('users', [
-      { property: 'email', condition: '==', value: email },
-    ]);
+    const existingUsers = await findDocuments<User>('users', [{ property: 'email', condition: '==', value: email }]);
 
     if (existingUsers.length > 0) {
       return res.status(400).json({
@@ -98,9 +94,7 @@ usersRouter.post(
       res.status(200).json(response);
     } catch (err) {
       if (err.code === 'auth/email-already-exists') {
-        return res
-          .status(400)
-          .json({ status: 'error', error: 'An account with that email already exists.' });
+        return res.status(400).json({ status: 'error', error: 'An account with that email already exists.' });
       }
       if (err.code === 'auth/invalid-password') {
         return res.status(400).json({ status: 'error', error: 'Please use a stronger password.' });

@@ -1,4 +1,4 @@
-import { GetNewsResponse, NewsItem } from '@zachweinberg/wealth-schema';
+import { GetNewsResponse, NewsItem } from '@zachweinberg/obsidian-schema';
 import axios from 'axios';
 import { Router } from 'express';
 import { catchErrors, requireSignedIn } from '~/utils/api';

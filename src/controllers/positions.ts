@@ -10,7 +10,7 @@ import {
   CustomPosition,
   RealEstatePosition,
   StockPosition,
-} from '@zachweinberg/wealth-schema';
+} from '@zachweinberg/obsidian-schema';
 import { Router } from 'express';
 import { catchErrors, requireSignedIn } from '~/utils/api';
 import { createDocument, deleteDocument } from '~/utils/db';

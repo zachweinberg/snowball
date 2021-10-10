@@ -1,4 +1,4 @@
-import { DailyBalance, Portfolio } from '@zachweinberg/wealth-schema';
+import { DailyBalance, Portfolio } from '@zachweinberg/obsidian-schema';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { fetchDocument } from './db';
 

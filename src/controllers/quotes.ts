@@ -1,4 +1,4 @@
-import { AssetType, GetQuoteResponse } from '@zachweinberg/wealth-schema';
+import { AssetType, GetQuoteResponse } from '@zachweinberg/obsidian-schema';
 import { Router } from 'express';
 import { getCryptoPrices } from '~/lib/cmc';
 import { getStockPrices } from '~/lib/iex';
