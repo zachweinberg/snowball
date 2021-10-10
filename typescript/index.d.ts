@@ -228,7 +228,7 @@ export interface NewsItem {
     title: string;
     text: string;
     sourceName: string;
-    date: string;
+    date: Date;
     topics: [];
     sentiment: string;
     type: string;
