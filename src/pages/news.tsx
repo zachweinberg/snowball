@@ -1,11 +1,11 @@
 import { GetNewsResponse, NewsItem } from '@zachweinberg/obsidian-schema';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import debounce from 'lodash/debounce';
 import type { NextPage } from 'next';
 import { useCallback, useState } from 'react';
 import useSWRInfinite from 'swr/infinite';
 import Layout from '~/components/layout/Layout';
 import Button from '~/components/ui/Button';
-import Link from '~/components/ui/Link';
 import TextInput from '~/components/ui/TextInput';
 import { request } from '~/lib/api';
 
@@ -58,9 +58,11 @@ const NewsPage: NextPage = () => {
           />
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-5 mb-10">
-        {newsItems.map((item) => (
-          <NewsCard newsItem={item} />
+      <div className="grid grid-cols-3 gap-5 mb-10">
+        {newsItems.map((item: NewsItem) => (
+          <a href={item.newsURL} target="__blank">
+            <NewsCard newsItem={item} />
+          </a>
         ))}
       </div>
       <div className="flex justify-center">
@@ -87,23 +89,25 @@ interface Props {
 }
 
 const NewsCard: React.FunctionComponent<Props> = ({ newsItem }: Props) => {
+  const getDateString = () => {
+    const parsedDate = new Date(newsItem.date);
+    const twentyFourHours = 1000 * 60 * 60 * 24;
+    const dayAgo = parsedDate.if(parsedDate > dayAgo);
+    formatDistanceToNow(new Date(newsItem.date), {
+      addSuffix: true,
+    });
+  };
+
   return (
-    <Link href={newsItem.newsURL}>
-      <div className="flex items-center h-56 bg-white p-7 rounded-2xl hover:bg-gray">
-        <img
-          src={newsItem.imageURL}
-          className="object-cover max-w-xs w-36 h-36 mr-7 rounded-xl"
-        />
-        <div className="flex flex-col">
-          <div className="mb-2">
-            <p className="font-normal text-[1.05rem]">{newsItem.sourceName}</p>
-          </div>
-          <div>
-            <h2 className="mb-5 font-semibold text-[.9rem]">{newsItem.title}</h2>
-            <p className="font-normal truncate-paragraph">{newsItem.text}</p>
-          </div>
-        </div>
+    <div className="flex p-6 bg-white border rounded-md border-bordergray">
+      <img
+        src={newsItem.imageURL}
+        className="object-cover rounded-md w-28 h-28 max-h-28 max-w-28"
+      />
+      <div className="text-sm text-darkgray">
+        <span>{getDateString()}</span>
+        <span>| {newsItem.sourceName}</span>
       </div>
-    </Link>
+    </div>
   );
 };
