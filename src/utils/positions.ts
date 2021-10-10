@@ -5,7 +5,6 @@ import {
   CryptoPositionWithQuote,
   CustomPosition,
   DailyBalance,
-  OptionPosition,
   Position,
   RealEstatePosition,
   StockPosition,
@@ -89,7 +88,7 @@ export const calculatePortfolioQuotes = async (
   customs: CustomPosition[];
   stocksTotal: number;
   cryptoTotal: number;
-  realEstate;
+  realEstate: RealEstatePosition[];
   realEstateTotal: number;
   cashTotal: number;
   customsTotal: number;
@@ -100,7 +99,6 @@ export const calculatePortfolioQuotes = async (
   const cryptoPositions = positions.filter((p) => p.assetType === AssetType.Crypto) as CryptoPosition[];
   const realEstatePositions = positions.filter((p) => p.assetType === AssetType.RealEstate) as RealEstatePosition[];
   const cashPositions = positions.filter((p) => p.assetType === AssetType.Cash) as CashPosition[];
-  const optionsPositions = positions.filter((p) => p.assetType === AssetType.Options) as OptionPosition[];
   const customsPositions = positions.filter((p) => p.assetType === AssetType.Custom) as CustomPosition[];
 
   const [stockPriceMap, cryptoPriceMap] = await Promise.all([
@@ -170,9 +168,6 @@ export const calculatePortfolioQuotes = async (
   }
   for (const cashPosition of cashPositions) {
     cashTotal = cashTotal.add(cashPosition.amount);
-  }
-  for (const optionPosition of optionsPositions) {
-    optionsTotal = optionsTotal.add(optionPosition.costPerContract);
   }
   for (const customPosition of customsPositions) {
     customsTotal = customsTotal.add(customPosition.value);
