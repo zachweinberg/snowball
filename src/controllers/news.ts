@@ -1,9 +1,16 @@
-import { GetNewsResponse, NewsItem } from '@zachweinberg/obsidian-schema';
+import { GetNewsResponse } from '@zachweinberg/obsidian-schema';
 import axios from 'axios';
+import * as chrono from 'chrono-node';
 import { Router } from 'express';
 import { catchErrors, requireSignedIn } from '~/utils/api';
 
 const newsRouter = Router();
+
+const formatDate = (dateStr: string): Date => {
+  const splitted = dateStr.split(' ');
+  const [, day, month, year, time, zone] = splitted;
+  return chrono.parseDate(`${day.trim()} ${month.trim()} ${year.trim()} ${time.trim()} ${zone.trim()}`);
+};
 
 newsRouter.get(
   '/',
@@ -19,8 +26,8 @@ newsRouter.get(
 
     const { data } = await axios.get(baseURL);
 
-    const news: NewsItem[] = data.data.map((item) => ({
-      date: item.date,
+    const news = data.data.map((item) => ({
+      date: formatDate(item.date),
       imageURL: item.image_url,
       newsURL: item.news_url,
       sourceName: item.source_name,
