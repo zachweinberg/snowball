@@ -6,6 +6,7 @@ import {
   VerifyEmailRequest,
   VerifyEmailResponse,
 } from '@zachweinberg/obsidian-schema';
+import crypto from 'crypto';
 import { Router } from 'express';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { catchErrors, requireSignedIn } from '~/utils/api';
@@ -13,6 +14,17 @@ import { createDocument, fetchDocument, findDocuments } from '~/utils/db';
 import { capitalize } from '~/utils/misc';
 
 const usersRouter = Router();
+
+const generateVerificationToken = async (): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    crypto.randomBytes(46, (err, buf) => {
+      if (err) {
+        return reject(err);
+      }
+      return resolve(buf.toString('hex'));
+    });
+  });
+};
 
 usersRouter.get(
   '/me',
@@ -82,6 +94,8 @@ usersRouter.post(
         investingExperienceLevel,
         name: capitalize(name).trim(),
         createdAt: new Date(),
+        verified: false,
+        verificationCode: await generateVerificationToken(),
       };
 
       await createDocument<User>('users', userDataToSet, newUser.uid);
