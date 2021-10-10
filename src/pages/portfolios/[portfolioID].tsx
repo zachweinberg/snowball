@@ -202,7 +202,7 @@ const PortfolioView: NextPage = () => {
             </div>
 
             <div className="grid grid-cols-1 grid-rows-2 gap-4 lg:grid-rows-1 lg:grid-cols-2 mb-7">
-              <div className="w-full h-full px-5 py-12 bg-dark rounded-3xl">
+              <div className="px-5 bg-dark rounded-3xl relative">
                 <BalanceHistoryChart
                   data={portfolio.dailyBalances.map((d) => ({
                     balance: d.totalValue,
