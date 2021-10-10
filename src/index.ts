@@ -4,6 +4,8 @@ export interface User {
   investingExperienceLevel: InvestingExperienceLevel;
   name: string;
   createdAt: Date;
+  verified: boolean;
+  verificationCode?: string;
 }
 
 export enum InvestingExperienceLevel {
