@@ -12,6 +12,7 @@
   },
   "license": "ISC",
   "dependencies": {
+    "@sentry/node": "^6.13.3",
     "@zachweinberg/obsidian-schema": "^1.7.4",
     "algoliasearch": "^4.10.4",
     "axios": "^0.21.1",
@@ -23,7 +24,8 @@
     "fast-csv": "^4.3.6",
     "firebase-admin": "^9.11.1",
     "luxon": "^2.0.2",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "redis": "^3.1.2"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
@@ -32,6 +34,7 @@
     "@types/node": "^16.6.1",
     "@types/react": "^17.0.17",
     "@types/react-modal": "^3.12.1",
+    "@types/redis": "^2.8.32",
     "@typescript-eslint/eslint-plugin": "^4.29.1",
     "@typescript-eslint/parser": "^4.29.1",
     "eslint": "7.32.0",

@@ -12,6 +12,7 @@ import {
   StockPosition,
 } from '@zachweinberg/obsidian-schema';
 import { Router } from 'express';
+import { deleteRedisKey } from '~/lib/redis';
 import { catchErrors, requireSignedIn } from '~/utils/api';
 import { createDocument, deleteDocument } from '~/utils/db';
 import { userOwnsPortfolio } from '~/utils/portfolios';
@@ -23,6 +24,7 @@ positionsRouter.post(
   requireSignedIn,
   catchErrors(async (req, res) => {
     const { portfolioID, symbol, companyName, quantity, costPerShare, note } = req.body as AddStockRequest;
+    const redisKey = `portfolio-${portfolioID}`;
 
     if (!(await userOwnsPortfolio(req, res, portfolioID))) {
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
@@ -38,6 +40,8 @@ positionsRouter.post(
       note: note ? note : '',
     });
 
+    await deleteRedisKey(redisKey);
+
     const response = {
       status: 'ok',
     };
@@ -51,6 +55,7 @@ positionsRouter.post(
   requireSignedIn,
   catchErrors(async (req, res) => {
     const { portfolioID, symbol, coinName, quantity, costPerCoin, note, logoURL } = req.body as AddCryptoRequest;
+    const redisKey = `portfolio-${portfolioID}`;
 
     if (!(await userOwnsPortfolio(req, res, portfolioID))) {
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
@@ -67,6 +72,8 @@ positionsRouter.post(
       note: note ? note : '',
     });
 
+    await deleteRedisKey(redisKey);
+
     const response = {
       status: 'ok',
     };
@@ -80,6 +87,7 @@ positionsRouter.post(
   requireSignedIn,
   catchErrors(async (req, res) => {
     const { portfolioID, address, propertyType, propertyValue, note } = req.body as AddRealEstateRequest;
+    const redisKey = `portfolio-${portfolioID}`;
 
     if (!(await userOwnsPortfolio(req, res, portfolioID))) {
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
@@ -94,6 +102,8 @@ positionsRouter.post(
       address: address ? address : '',
     });
 
+    await deleteRedisKey(redisKey);
+
     const response = {
       status: 'ok',
     };
@@ -107,6 +117,7 @@ positionsRouter.post(
   requireSignedIn,
   catchErrors(async (req, res) => {
     const { portfolioID, amount, accountName, note } = req.body as AddCashRequest;
+    const redisKey = `portfolio-${portfolioID}`;
 
     if (!(await userOwnsPortfolio(req, res, portfolioID))) {
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
@@ -119,6 +130,8 @@ positionsRouter.post(
       createdAt: new Date(),
       note: note ? note : '',
     });
+
+    await deleteRedisKey(redisKey);
 
     const response = {
       status: 'ok',
@@ -133,6 +146,7 @@ positionsRouter.post(
   requireSignedIn,
   catchErrors(async (req, res) => {
     const { portfolioID, value, assetName, note } = req.body as AddCustomAssetRequest;
+    const redisKey = `portfolio-${portfolioID}`;
 
     if (!(await userOwnsPortfolio(req, res, portfolioID))) {
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
@@ -145,6 +159,8 @@ positionsRouter.post(
       createdAt: new Date(),
       note: note ? note : '',
     });
+
+    await deleteRedisKey(redisKey);
 
     const response = {
       status: 'ok',
@@ -160,6 +176,7 @@ positionsRouter.delete(
   catchErrors(async (req, res) => {
     const { portfolioID } = req.query as { positionID: string; portfolioID: string };
     const { positionID } = req.params;
+    const redisKey = `portfolio-${portfolioID}`;
 
     if (!positionID || !portfolioID) {
       return res.status(400).end();
@@ -170,6 +187,8 @@ positionsRouter.delete(
     }
 
     await deleteDocument(`portfolios/${portfolioID}/positions/${positionID}`);
+
+    await deleteRedisKey(redisKey);
 
     res.status(200).end();
   })

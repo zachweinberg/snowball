@@ -7,6 +7,7 @@ import {
 } from '@zachweinberg/obsidian-schema';
 import { Router } from 'express';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
+import { deleteRedisKey, getRedisKey, setRedisKey } from '~/lib/redis';
 import { catchErrors, getUserFromAuthHeader, requireSignedIn } from '~/utils/api';
 import { fetchDocument, findDocuments } from '~/utils/db';
 import { capitalize } from '~/utils/misc';
@@ -20,6 +21,13 @@ portfoliosRouter.get(
   requireSignedIn,
   catchErrors(async (req, res) => {
     const userID = req.authContext!.uid;
+    const redisKey = `portfoliolist-${userID}`;
+
+    const cachedResponse = await getRedisKey(redisKey);
+
+    if (cachedResponse) {
+      return res.status(200).json(JSON.parse(cachedResponse));
+    }
 
     const portfolios = await findDocuments<Portfolio>('portfolios', [
       { property: 'userID', condition: '==', value: userID },
@@ -55,6 +63,8 @@ portfoliosRouter.get(
       portfolios: portfoliosWithBalances,
     };
 
+    await setRedisKey(redisKey, response, 20);
+
     res.status(200).json(response);
   })
 );
@@ -65,6 +75,7 @@ portfoliosRouter.post(
   catchErrors(async (req, res) => {
     const { name, public: isPublic } = req.body as CreatePortfolioRequest;
     const userID = req.authContext!.uid;
+    const redisKey = `portfoliolist-${userID}`;
 
     const existingPortfolios = await findDocuments<Portfolio>('portfolios', [
       { property: 'userID', condition: '==', value: userID },
@@ -91,6 +102,8 @@ portfoliosRouter.post(
       portfolio: portfolioDataToSet,
     };
 
+    await deleteRedisKey(redisKey);
+
     res.status(200).json(response);
   })
 );
@@ -98,6 +111,8 @@ portfoliosRouter.post(
 portfoliosRouter.get(
   '/:portfolioID',
   catchErrors(async (req, res) => {
+    const redisKey = `portfolio-${req.params.portfolioID}`;
+
     let userOwnsPortfolio = false;
 
     const portfolio = await fetchDocument<Portfolio>('portfolios', req.params.portfolioID);
@@ -113,6 +128,12 @@ portfoliosRouter.get(
       return res.status(404).json({ status: 'error', error: 'Portfolio does not exist.' });
     }
 
+    const cachedResponse = await getRedisKey(redisKey);
+
+    if (cachedResponse) {
+      return res.status(200).json(JSON.parse(cachedResponse));
+    }
+
     const positionsAndTotals = await calculatePortfolioQuotes(portfolio.id);
 
     const dailyBalances = await getPortfolioDailyHistory(portfolio.id);
@@ -125,6 +146,8 @@ portfoliosRouter.get(
         dailyBalances,
       },
     };
+
+    await setRedisKey(redisKey, response, 12);
 
     res.status(200).json(response);
   })
