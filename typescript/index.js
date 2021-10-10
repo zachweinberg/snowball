@@ -14,7 +14,6 @@ var AssetColor;
     AssetColor["Cash"] = "#4E5B00";
     AssetColor["Custom"] = "#72CB00";
     AssetColor["RealEstate"] = "#00565B";
-    AssetColor["Options"] = "#00365B";
 })(AssetColor = exports.AssetColor || (exports.AssetColor = {}));
 var AssetType;
 (function (AssetType) {
@@ -23,7 +22,6 @@ var AssetType;
     AssetType["Crypto"] = "Crypto";
     AssetType["Cash"] = "Cash";
     AssetType["Custom"] = "Custom";
-    AssetType["Options"] = "Options";
 })(AssetType = exports.AssetType || (exports.AssetType = {}));
 var RealEstatePropertyType;
 (function (RealEstatePropertyType) {

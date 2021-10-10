@@ -15,8 +15,7 @@ export declare enum AssetColor {
     Crypto = "#6600E8",
     Cash = "#4E5B00",
     Custom = "#72CB00",
-    RealEstate = "#00565B",
-    Options = "#00365B"
+    RealEstate = "#00565B"
 }
 export interface Portfolio {
     id: string;
@@ -34,7 +33,6 @@ export declare type PortfolioWithBalances = Portfolio & {
     realEstateValue: number;
     cashValue: number;
     customsValue: number;
-    optionsValue: number;
     dailyBalances: DailyBalance[];
 };
 export declare enum AssetType {
@@ -42,8 +40,7 @@ export declare enum AssetType {
     RealEstate = "Real Estate",
     Crypto = "Crypto",
     Cash = "Cash",
-    Custom = "Custom",
-    Options = "Options"
+    Custom = "Custom"
 }
 export interface Position {
     id: string;
@@ -56,14 +53,6 @@ export interface StockPosition extends Position {
     companyName: string;
     quantity: number;
     costPerShare: number;
-}
-export interface OptionPosition extends Position {
-    symbol: string;
-    companyName: string;
-    quantity: number;
-    costPerContract: number;
-    expiry: string;
-    strike: number;
 }
 export interface CryptoPosition extends Position {
     symbol: string;
@@ -172,7 +161,6 @@ export interface PortfolioValues {
     cryptoValue: number;
     realEstateValue: number;
     customsValue: number;
-    optionsValue: number;
     totalValue: number;
 }
 export interface DailyBalance extends PortfolioValues {
@@ -194,25 +182,15 @@ export interface CryptoPositionWithQuote extends CryptoPosition {
     dayChangePercent: number;
     gainLossPercent: number;
 }
-export interface OptionPositionWithQuote extends OptionPosition {
-    last: number;
-    marketValue: number;
-    dayChange: number;
-    gainLoss: number;
-    dayChangePercent: number;
-    gainLossPercent: number;
-}
 export interface PortfolioWithQuotes extends Portfolio {
     stocks: StockPositionWithQuote[];
     crypto: CryptoPositionWithQuote[];
     cash: CashPosition[];
-    options: OptionPositionWithQuote[];
     realEstate: RealEstatePosition[];
     customs: CustomPosition[];
     cashTotal: number;
     realEstateTotal: number;
     cryptoTotal: number;
-    optionsTotal: number;
     stocksTotal: number;
     customsTotal: number;
     dailyBalances: DailyBalance[];
