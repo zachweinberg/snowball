@@ -18,10 +18,10 @@ newsRouter.get(
   catchErrors(async (req, res) => {
     let { symbol, page } = req.query as unknown as { symbol?: string; page: number };
 
-    let baseURL = `https://stocknewsapi.com/api/v1/category?section=general&items=6&type=article&page=${page}&token=${process.env.STOCK_NEWS_API_KEY}`;
+    let baseURL = `https://stocknewsapi.com/api/v1/category?section=general&items=9&type=article&page=${page}&token=${process.env.STOCK_NEWS_API_KEY}`;
 
     if (symbol) {
-      baseURL = `https://stocknewsapi.com/api/v1?tickers=${symbol}&items=6&type=article&page=${page}&token=${process.env.STOCK_NEWS_API_KEY}`;
+      baseURL = `https://stocknewsapi.com/api/v1?tickers=${symbol}&items=9&type=article&page=${page}&token=${process.env.STOCK_NEWS_API_KEY}`;
     }
 
     const { data } = await axios.get(baseURL);
