@@ -244,14 +244,7 @@ const PortfolioView: NextPage = () => {
                   selected={activeTab === AssetType.Cash}
                   onClick={() => setActiveTab(AssetType.Cash)}
                 />
-                <AssetPercentCard
-                  amount={portfolio.optionsTotal}
-                  percentDecimal={portfolio.optionsTotal / portfolioTotal}
-                  strokeColor={AssetColor.Options}
-                  assetType={AssetType.Options}
-                  selected={activeTab === AssetType.Options}
-                  onClick={() => setActiveTab(AssetType.Options)}
-                />
+
                 <AssetPercentCard
                   amount={portfolio.customsTotal}
                   percentDecimal={portfolio.customsTotal / portfolioTotal}
@@ -305,7 +298,7 @@ const PortfolioView: NextPage = () => {
   };
 
   return (
-    <Layout title={portfolio?.name ?? 'Portfolio'}>
+    <Layout title={`${portfolio?.name ?? 'Portfolio'} - Obsidian Tracker`}>
       {portfolio && (
         <FullScreenModal isOpen={addingAsset} onClose={() => setAddingAsset(false)}>
           <AddAssetForm

@@ -114,7 +114,7 @@ const PortfolioListPage: NextPage = () => {
 
   return (
     <RequiredLoggedIn>
-      <Layout title="My Portfolios">
+      <Layout title="My Portfolios - Obsidian Tracker">
         <FullScreenModal
           isOpen={creatingPortfolio}
           onClose={() => setCreatingPortfolio(false)}

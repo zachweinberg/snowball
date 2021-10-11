@@ -1,6 +1,7 @@
 import { InvestingExperienceLevel } from '@zachweinberg/obsidian-schema';
 import classNames from 'classnames';
 import type { NextPage } from 'next';
+import Head from 'next/head';
 import React, { useState } from 'react';
 import * as yup from 'yup';
 import RequiredLoggedOut from '~/components/auth/RequireLoggedOut';
@@ -77,82 +78,88 @@ const SignUpPage: NextPage = () => {
   };
 
   return (
-    <RequiredLoggedOut>
-      <form
-        onSubmit={onSubmit}
-        className={classNames(
-          'max-w-lg border border-bordergray p-8 mx-auto mt-20 bg-white shadow-md rounded-2xl',
-          {
-            'bg-opacity-70': loading,
-          }
-        )}
-      >
-        <div className="flex justify-between mb-20">
-          <Cloud />
-          <div className="flex font-semibold text-[1rem]">
-            <p className="text-darkgray">Already have an account?</p>
-            <Link href="/login">
-              <span className="ml-2 underline text-evergreen hover:opacity-80">Login</span>
-            </Link>
+    <>
+      <Head>
+        <title>Signup - Obsidian Tracker</title>
+      </Head>
+      <RequiredLoggedOut>
+        <form
+          onSubmit={onSubmit}
+          className={classNames(
+            'max-w-lg border border-bordergray p-8 mx-auto mt-20 bg-white shadow-md rounded-2xl',
+            {
+              'bg-opacity-70': loading,
+            }
+          )}
+        >
+          <div className="flex justify-between mb-20">
+            <Cloud />
+            <div className="flex font-semibold text-[1rem]">
+              <p className="text-darkgray">Already have an account?</p>
+              <Link href="/login">
+                <span className="ml-2 underline text-evergreen hover:opacity-80">Login</span>
+              </Link>
+            </div>
           </div>
-        </div>
 
-        <div className="mb-6">
-          <h1 className="text-dark font-bold text-[1.75rem] leading-tight mb-3">
-            Create an account
-          </h1>
-          <p className="font-medium text-[1.1rem] text-darkgray leading-tight">
-            Sign up below to start tracking your assets and amplify your financial experience.
-          </p>
-        </div>
+          <div className="mb-6">
+            <h1 className="text-dark font-bold text-[1.75rem] leading-tight mb-3">
+              Create an account
+            </h1>
+            <p className="font-medium text-[1.1rem] text-darkgray leading-tight">
+              Sign up below to start tracking your assets and amplify your financial
+              experience.
+            </p>
+          </div>
 
-        <div className="mb-10">
-          <TextInput
-            name="name"
-            placeholder="Your name"
-            value={name}
-            required
-            type="text"
-            className="mb-4"
-            onChange={(e) => setName(e.target.value)}
-          />
-          <TextInput
-            name="email"
-            value={email}
-            placeholder="Email address"
-            type="email"
-            required
-            className="mb-4"
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <TextInput
-            name="password"
-            value={password}
-            placeholder="Password"
-            type="password"
-            className="mb-4"
-            required
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <TextInput
-            value={passwordConfirm}
-            name="confirmPassword"
-            placeholder="Confirm password"
-            required
-            type="password"
-            onChange={(e) => setPasswordConfirm(e.target.value)}
-          />
-        </div>
+          <div className="mb-10">
+            <TextInput
+              name="name"
+              placeholder="Your name"
+              value={name}
+              required
+              type="text"
+              className="mb-4"
+              onChange={(e) => setName(e.target.value)}
+            />
+            <TextInput
+              name="email"
+              value={email}
+              placeholder="Email address"
+              type="email"
+              required
+              className="mb-4"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <TextInput
+              name="password"
+              value={password}
+              placeholder="Password"
+              type="password"
+              className="mb-4"
+              required
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <TextInput
+              value={passwordConfirm}
+              name="confirmPassword"
+              placeholder="Confirm password"
+              required
+              type="password"
+              onChange={(e) => setPasswordConfirm(e.target.value)}
+            />
+          </div>
 
-        {error && <p className="mb-10 text-red">{error}</p>}
+          {error && <p className="mb-10 text-red">{error}</p>}
 
-        <div className="mb-16">
-          <Button type="submit" disabled={loading}>
-            Create account
-          </Button>
-        </div>
-      </form>
-    </RequiredLoggedOut>
+          <div className="mb-16">
+            <Button type="submit" disabled={loading}>
+              Create account
+            </Button>
+          </div>
+        </form>
+      </RequiredLoggedOut>
+    </>
   );
 };
 

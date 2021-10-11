@@ -1,6 +1,7 @@
 import { GetNewsResponse, NewsItem } from '@zachweinberg/obsidian-schema';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import debounce from 'lodash/debounce';
+import { DateTime } from 'luxon';
 import type { NextPage } from 'next';
 import { useCallback, useState } from 'react';
 import useSWRInfinite from 'swr/infinite';
@@ -43,7 +44,7 @@ const NewsPage: NextPage = () => {
   const isEmpty = data?.[0]?.length === 0;
 
   return (
-    <Layout title="News">
+    <Layout title="News - Obsidian Tracker">
       <div className="flex items-center justify-between mb-7">
         <h1 className="font-bold text-[1.75rem]">News</h1>
         <div className="w-80">
@@ -90,23 +91,28 @@ interface Props {
 
 const NewsCard: React.FunctionComponent<Props> = ({ newsItem }: Props) => {
   const getDateString = () => {
-    const parsedDate = new Date(newsItem.date);
-    const twentyFourHours = 1000 * 60 * 60 * 24;
-    const dayAgo = parsedDate.if(parsedDate > dayAgo);
-    formatDistanceToNow(new Date(newsItem.date), {
-      addSuffix: true,
-    });
+    const newsDate = DateTime.fromISO(newsItem.date);
+    const dayAgo = DateTime.local().minus({ days: 1 });
+
+    if (newsDate < dayAgo) {
+      return newsDate.toFormat('DD');
+    } else {
+      return formatDistanceToNow(new Date(newsItem.date), {
+        addSuffix: true,
+      });
+    }
   };
 
   return (
     <div className="flex p-6 bg-white border rounded-md border-bordergray">
       <img
         src={newsItem.imageURL}
-        className="object-cover rounded-md w-28 h-28 max-h-28 max-w-28"
+        className="object-cover rounded-md w-28 h-28 max-h-28 max-w-28 mr-2"
       />
       <div className="text-sm text-darkgray">
-        <span>{getDateString()}</span>
-        <span>| {newsItem.sourceName}</span>
+        <p>
+          {getDateString()} | {newsItem.sourceName}
+        </p>
       </div>
     </div>
   );

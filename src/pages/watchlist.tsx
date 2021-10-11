@@ -68,7 +68,7 @@ const WatchList: NextPage = () => {
   // }, []);
 
   return (
-    <Layout title="Watchlist">
+    <Layout title="Watchlist - Obsidian Tracker">
       <AddToWatchlistModal
         open={addingToWatchList}
         onClose={() => setAddingToWatchlist(false)}

@@ -18,7 +18,7 @@ const Contact: NextPage = () => {
   };
 
   return (
-    <Layout title="Contact Us">
+    <Layout title="Contact - Obsidian Tracker">
       <div className="max-w-xl p-6 mx-auto bg-white border rounded-lg border-gray">
         <h1 className="mb-6 text-4xl font-bold text-center">Contact Us</h1>
 
