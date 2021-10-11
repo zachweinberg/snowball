@@ -10,12 +10,13 @@ import {
   CreatePortfolioResponse,
   CreateUserRequest,
   CreateUserResponse,
+  GetNewsResponse,
   GetPortfolioResponse,
   GetPortfoliosResponse,
   GetQuoteResponse,
   GetWatchListResponse,
   VerifyEmailRequest,
-  VerifyEmailResponse,
+  VerifyEmailResponse
 } from '@zachweinberg/obsidian-schema';
 import axios from 'axios';
 import firebase from '~/lib/firebase';
@@ -172,5 +173,11 @@ export const API = {
       undefined,
       false
     );
+  },
+  getNewsBypage: (pageNumber: number, symbol?: string) => {
+    const url = symbol
+      ? `/api/news?page=${pageNumber}&symbol=${symbol}`
+      : `/api/news?page=${pageNumber}`;
+    return request<undefined, GetNewsResponse>(url, 'get');
   },
 };

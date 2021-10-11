@@ -25,7 +25,7 @@ const Header: React.FunctionComponent = () => {
         { label: 'Login', href: '/login' },
         { label: 'Sign up', href: '/signup' },
       ];
-
+  console.log(auth.user);
   return (
     <header className="bg-white border-b border-bordergray">
       <div className="flex items-center justify-between px-4 mx-auto max-w-7xl">
@@ -62,7 +62,9 @@ const Header: React.FunctionComponent = () => {
               button={() => (
                 <div className="flex items-center">
                   <span className="inline-flex items-center justify-center w-10 h-10 mr-1 rounded-full bg-dark hover:opacity-90">
-                    <span className="text-lg font-medium leading-none text-white">Z</span>
+                    <span className="text-lg font-medium leading-none text-white">
+                      {auth.user?.name?.[0]}
+                    </span>
                   </span>
                   <ChevronDownIcon className="w-5 h-5 text-dark" />
                 </div>

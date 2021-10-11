@@ -84,7 +84,9 @@ const PortfolioListPage: NextPage = () => {
           </svg>
           <p className="mb-4 text-[1.75rem] font-bold text-dark">Welcome to Obsidian.</p>
           <p className="mb-5 font-medium text-center text-darkgray text-[1rem] leading-tight">
-            You do not have any portfolios yet. Create one and start tracking your net worth.
+            You do not have any portfolios yet.
+            <br />
+            Create one and start tracking your net worth.
           </p>
           <Button
             type="button"
