@@ -157,7 +157,7 @@ usersRouter.post(
       response.verified = true;
     } else {
       if (token === user.verificationCode) {
-        await updateDocument('users', userID, { verificationToken: firestore.FieldValue.delete() });
+        await updateDocument('users', userID, { verified: true, verificationCode: firestore.FieldValue.delete() });
         response.verified = true;
       }
     }
