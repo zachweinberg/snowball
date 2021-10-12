@@ -53,6 +53,29 @@ paths:
             application/json:
               schema:
                 type: object
+  /users/check-verification-token:
+    post:
+      summary: Check verification token matches and verify account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              required:
+                - token
+                - userID
+              properties:
+                token:
+                  type: string
+                userID:
+                  type: string
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
   /users/resend-email:
     post:
       summary: Resend email verification

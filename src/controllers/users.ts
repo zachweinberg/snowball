@@ -1,4 +1,6 @@
 import {
+  CheckVerificationTokenRequest,
+  CheckVerificationTokenResponse,
   CreateUserRequest,
   CreateUserResponse,
   MeResponse,
@@ -8,6 +10,7 @@ import {
 } from '@zachweinberg/obsidian-schema';
 import crypto from 'crypto';
 import { Router } from 'express';
+import { firestore } from 'firebase-admin';
 import { sendVerifyEmailEmail } from '~/lib/email';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { catchErrors, requireSignedIn } from '~/utils/api';
@@ -104,7 +107,7 @@ usersRouter.post(
 );
 
 usersRouter.post(
-  '/verify',
+  '/check',
   catchErrors(async (req, res) => {
     const { email } = req.body as VerifyEmailRequest;
 
@@ -138,6 +141,29 @@ usersRouter.post(
     await sendVerifyEmailEmail(user.email, verificationCode, userID);
 
     res.status(200).end();
+  })
+);
+
+usersRouter.post(
+  '/check-verification-token',
+  requireSignedIn,
+  catchErrors(async (req, res) => {
+    const { token, userID } = req.body as CheckVerificationTokenRequest;
+
+    const user = await fetchDocument<User>('users', userID);
+
+    const response: CheckVerificationTokenResponse = { verified: false, status: 'ok' };
+
+    if (user.verified) {
+      response.verified = true;
+    } else {
+      if (token === user.verificationCode) {
+        await updateDocument('users', userID, { verificationToken: firestore.FieldValue.delete() });
+        response.verified = true;
+      }
+    }
+
+    res.status(200).json(response);
   })
 );
 
