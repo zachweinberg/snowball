@@ -176,6 +176,7 @@ positionsRouter.delete(
   catchErrors(async (req, res) => {
     const { portfolioID } = req.query as { positionID: string; portfolioID: string };
     const { positionID } = req.params;
+    const userID = req.authContext!.uid;
     const redisKey = `portfolio-${portfolioID}`;
 
     if (!positionID || !portfolioID) {
@@ -189,6 +190,7 @@ positionsRouter.delete(
     await deleteDocument(`portfolios/${portfolioID}/positions/${positionID}`);
 
     await deleteRedisKey(redisKey);
+    await deleteRedisKey(`portfoliolist-${userID}`);
 
     res.status(200).end();
   })
