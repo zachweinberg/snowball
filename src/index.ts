@@ -96,7 +96,6 @@ export interface BaseResponse {
 
 export interface CreateUserRequest {
   name: string;
-  investingExperienceLevel: InvestingExperienceLevel;
   email: string;
   password: string;
 }
