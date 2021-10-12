@@ -11,7 +11,7 @@ import TextInput from '~/components/ui/TextInput';
 import { API } from '~/lib/api';
 
 const getDateString = (newsItem: NewsItem) => {
-  const newsDate = DateTime.fromISO(newsItem.date);
+  const newsDate = DateTime.fromISO(newsItem.date as any);
   const dayAgo = DateTime.local().minus({ days: 1 });
 
   if (newsDate < dayAgo) {
