@@ -66,7 +66,7 @@ usersRouter.post(
 usersRouter.post(
   '/',
   catchErrors(async (req, res) => {
-    const { email, investingExperienceLevel, name, password } = req.body as CreateUserRequest;
+    const { email, name, password } = req.body as CreateUserRequest;
 
     const existingUsers = await findDocuments<User>('users', [{ property: 'email', condition: '==', value: email }]);
 
@@ -91,7 +91,6 @@ usersRouter.post(
       const userDataToSet: User = {
         id: newUser.uid,
         email,
-        investingExperienceLevel,
         name: capitalize(name).trim(),
         createdAt: new Date(),
         verified: false,

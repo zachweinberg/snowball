@@ -16,14 +16,11 @@ paths:
               required:
                 - name
                 - email
-                - investingExperienceLevel
                 - password
               properties:
                 name:
                   type: string
                 email:
-                  type: string
-                investingExperienceLevel:
                   type: string
                 password:
                   type: string
