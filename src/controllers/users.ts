@@ -8,9 +8,10 @@ import {
 } from '@zachweinberg/obsidian-schema';
 import crypto from 'crypto';
 import { Router } from 'express';
+import { sendVerifyEmailEmail } from '~/lib/email';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { catchErrors, requireSignedIn } from '~/utils/api';
-import { createDocument, fetchDocument, findDocuments } from '~/utils/db';
+import { createDocument, fetchDocument, findDocuments, updateDocument } from '~/utils/db';
 import { capitalize } from '~/utils/misc';
 
 const usersRouter = Router();
@@ -44,26 +45,6 @@ usersRouter.get(
 );
 
 usersRouter.post(
-  '/verify',
-  catchErrors(async (req, res) => {
-    const { email } = req.body as VerifyEmailRequest;
-
-    const existingUsers = await findDocuments<User>('users', [{ property: 'email', condition: '==', value: email }]);
-
-    if (existingUsers.length === 0) {
-      return res.status(404).json({ status: 'error', error: 'Invalid email or password.' });
-    }
-
-    const response: VerifyEmailResponse = {
-      status: 'ok',
-      email,
-    };
-
-    res.status(200).json(response);
-  })
-);
-
-usersRouter.post(
   '/',
   catchErrors(async (req, res) => {
     const { email, name, password } = req.body as CreateUserRequest;
@@ -88,16 +69,20 @@ usersRouter.post(
           disabled: false,
         });
 
+      const verificationCode = await generateVerificationToken();
+
       const userDataToSet: User = {
         id: newUser.uid,
         email,
         name: capitalize(name).trim(),
         createdAt: new Date(),
         verified: false,
-        verificationCode: await generateVerificationToken(),
+        verificationCode,
       };
 
       await createDocument<User>('users', userDataToSet, newUser.uid);
+
+      await sendVerifyEmailEmail(email, verificationCode, newUser.uid);
 
       const response: CreateUserResponse = {
         status: 'ok',
@@ -115,6 +100,42 @@ usersRouter.post(
 
       throw err;
     }
+  })
+);
+
+usersRouter.post(
+  '/verify',
+  catchErrors(async (req, res) => {
+    const { email } = req.body as VerifyEmailRequest;
+
+    const existingUsers = await findDocuments<User>('users', [{ property: 'email', condition: '==', value: email }]);
+
+    if (existingUsers.length === 0) {
+      return res.status(404).json({ status: 'error', error: 'Invalid email or password.' });
+    }
+
+    const response: VerifyEmailResponse = {
+      status: 'ok',
+      email,
+    };
+
+    res.status(200).json(response);
+  })
+);
+
+usersRouter.post(
+  '/resend-email',
+  requireSignedIn,
+  catchErrors(async (req, res) => {
+    const userID = req.authContext!.uid;
+
+    const verificationCode = await generateVerificationToken();
+
+    const user = await fetchDocument<User>('users', userID);
+
+    await updateDocument('users', userID, { verificationCode });
+
+    await sendVerifyEmailEmail(user.email, verificationCode, userID);
   })
 );
 

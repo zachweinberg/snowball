@@ -19,17 +19,18 @@ const sendEmail = async (
   });
 };
 
-export const sendVerifyEmailEmail = async (toEmail: string) => {
+export const sendVerifyEmailEmail = async (toEmail: string, token: string, userID: string) => {
   const html = `
     <h1>Welcome to Obsidian Tracker.</h1>
     <p>We can't wait to help you track your net worth.</p>
-    <p>Click here to verify your email address</p>
+    <a href="https://obsidiantracker.com/verify?t=${token}&u=${userID}">Click here to verify your email address</a>
   `;
 
   const text = `
   Welcome to Obsidian Tracker.\n
   We can't wait to help you track your net worth.\n
-  Click here to verify your email address.
+  Click here to verify your email address:
+  https://obsidiantracker.com/verify?t=${token}&u=${userID}
 `;
 
   await sendEmail(toEmail, 'Please verify your email address', html, text, 'verify-email');
