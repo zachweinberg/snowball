@@ -104,7 +104,7 @@ const SignUpPage: NextPage = () => {
             <h1 className="text-dark font-bold text-[1.75rem] leading-tight mb-3">
               Create an account
             </h1>
-            <p className="font-medium text-[1.1rem] text-darkgray leading-tight">
+            <p className="font-medium text-[1.1rem] text-darkgray leading-snug">
               Sign up below to start tracking your assets and amplify your financial
               experience.
             </p>

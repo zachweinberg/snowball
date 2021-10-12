@@ -5,6 +5,7 @@ import Cloud from '~/components/ui/Cloud';
 import Dropdown from '~/components/ui/Dropdown';
 import Link from '~/components/ui/Link';
 import { useAuth } from '~/hooks/useAuth';
+import { API } from '~/lib/api';
 
 const profileLinks = [
   { label: 'Account', href: '/account' },
@@ -29,8 +30,14 @@ const Header: React.FunctionComponent = () => {
   return (
     <>
       {!auth.user?.verified && (
-        <div className="w-full p-3 bg-lime">
-          Please verify your email address by clicking the link in the email we've sent you.
+        <div className="w-full p-2 bg-lime text-center text-dark opacity-70 text-sm">
+          Please verify your email address by clicking the link in the email we've sent you.{' '}
+          <span
+            onClick={API.resendVerificationEmail}
+            className="underline font-semibold ml-2 cursor-pointer hover:text-darkgray"
+          >
+            Resend email
+          </span>
         </div>
       )}
       <header className="bg-white border-b border-bordergray">

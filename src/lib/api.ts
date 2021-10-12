@@ -97,6 +97,9 @@ export const API = {
   getMe: () => {
     return request<undefined, MeResponse>(`/api/users/me`, 'get');
   },
+  resendVerificationEmail: () => {
+    return request<undefined, undefined>('/api/users/resend-email', 'post');
+  },
   createUser: (userData: CreateUserRequest) => {
     return request<CreateUserRequest, CreateUserResponse>(
       '/api/users',
