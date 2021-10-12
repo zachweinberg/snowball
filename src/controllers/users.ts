@@ -159,6 +159,9 @@ usersRouter.post(
 
     if (token === user.verificationCode) {
       await updateDocument('users', userID, { verified: true, verificationCode: firestore.FieldValue.delete() });
+
+      await firebaseAdmin().auth().updateUser(userID, { emailVerified: true });
+
       response.verified = true;
     } else {
       response.verified = false;
