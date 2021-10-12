@@ -1,16 +1,10 @@
 export interface User {
     id: string;
     email: string;
-    investingExperienceLevel: InvestingExperienceLevel;
     name: string;
     createdAt: Date;
     verified: boolean;
     verificationCode?: string;
-}
-export declare enum InvestingExperienceLevel {
-    LessThanOneYear = "Less than a year",
-    TwoToFiveYears = "Two to five years",
-    OverFiveYears = "Over five years"
 }
 export declare enum AssetColor {
     Stocks = "#CEF33C",
@@ -91,7 +85,6 @@ export interface BaseResponse {
 }
 export interface CreateUserRequest {
     name: string;
-    investingExperienceLevel: InvestingExperienceLevel;
     email: string;
     password: string;
 }
