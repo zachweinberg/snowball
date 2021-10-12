@@ -91,6 +91,13 @@ export interface CreateUserRequest {
 export interface CreateUserResponse extends BaseResponse {
     user: User;
 }
+export interface CheckVerificationTokenRequest {
+    token: string;
+    userID: string;
+}
+export interface CheckVerificationTokenResponse extends BaseResponse {
+    verified: boolean;
+}
 export interface CreatePortfolioRequest {
     name: string;
     public: boolean;
