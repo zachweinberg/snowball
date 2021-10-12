@@ -136,6 +136,8 @@ usersRouter.post(
     await updateDocument('users', userID, { verificationCode });
 
     await sendVerifyEmailEmail(user.email, verificationCode, userID);
+
+    res.status(200).end();
   })
 );
 
