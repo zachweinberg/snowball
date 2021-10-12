@@ -56,6 +56,16 @@ paths:
             application/json:
               schema:
                 type: object
+  /users/me:
+    get:
+      summary: Get me
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
   /portfolios:
     get:
       summary: Fetch all users portfolios
