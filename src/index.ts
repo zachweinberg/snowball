@@ -100,6 +100,12 @@ export interface CreateUserRequest {
   password: string;
 }
 
+export interface SendContactEmailRequest {
+  name: string;
+  email?: string;
+  message: string;
+}
+
 export interface CreateUserResponse extends BaseResponse {
   user: User;
 }
