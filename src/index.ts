@@ -1,17 +1,10 @@
 export interface User {
   id: string;
   email: string;
-  investingExperienceLevel: InvestingExperienceLevel;
   name: string;
   createdAt: Date;
   verified: boolean;
   verificationCode?: string;
-}
-
-export enum InvestingExperienceLevel {
-  LessThanOneYear = "Less than a year",
-  TwoToFiveYears = "Two to five years",
-  OverFiveYears = "Over five years",
 }
 
 export enum AssetColor {
