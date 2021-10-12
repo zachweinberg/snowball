@@ -146,7 +146,6 @@ usersRouter.post(
 
 usersRouter.post(
   '/check-verification-token',
-  requireSignedIn,
   catchErrors(async (req, res) => {
     const { token, userID } = req.body as CheckVerificationTokenRequest;
 
