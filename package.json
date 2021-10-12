@@ -12,7 +12,7 @@
     "@headlessui/react": "^1.4.0",
     "@heroicons/react": "^1.0.3",
     "@tailwindcss/forms": "^0.3.3",
-    "@zachweinberg/obsidian-schema": "^1.7.4",
+    "@zachweinberg/obsidian-schema": "^1.7.8",
     "algoliasearch": "^4.10.4",
     "autoprefixer": "^10.3.1",
     "axios": "^0.21.1",

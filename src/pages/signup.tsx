@@ -1,4 +1,3 @@
-import { InvestingExperienceLevel } from '@zachweinberg/obsidian-schema';
 import classNames from 'classnames';
 import type { NextPage } from 'next';
 import Head from 'next/head';
@@ -60,7 +59,6 @@ const SignUpPage: NextPage = () => {
           email,
           name,
           password,
-          investingExperienceLevel: InvestingExperienceLevel.LessThanOneYear,
         });
       } catch (err) {
         if (err.response.data.error) {
