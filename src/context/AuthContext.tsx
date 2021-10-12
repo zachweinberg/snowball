@@ -45,8 +45,15 @@ const useFirebaseAuth = (): AuthContext => {
 
   useEffect(() => {
     const unsubscribe = firebase.auth().onIdTokenChanged((user) => {
-      handleUser(user);
-      setLoading(false);
+      if (user) {
+        API.getMe().then((userData) => {
+          setUser(userData.me);
+          setLoading(false);
+        });
+      } else {
+        handleUser(null);
+        setLoading(false);
+      }
     });
     return unsubscribe;
   }, []);

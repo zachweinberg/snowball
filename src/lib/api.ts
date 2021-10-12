@@ -15,8 +15,9 @@ import {
   GetPortfoliosResponse,
   GetQuoteResponse,
   GetWatchListResponse,
+  MeResponse,
   VerifyEmailRequest,
-  VerifyEmailResponse
+  VerifyEmailResponse,
 } from '@zachweinberg/obsidian-schema';
 import axios from 'axios';
 import firebase from '~/lib/firebase';
@@ -93,6 +94,9 @@ export const request = async <T, K>(
 };
 
 export const API = {
+  getMe: () => {
+    return request<undefined, MeResponse>(`/api/users/me`, 'get');
+  },
   createUser: (userData: CreateUserRequest) => {
     return request<CreateUserRequest, CreateUserResponse>(
       '/api/users',

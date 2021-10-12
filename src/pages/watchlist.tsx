@@ -1,9 +1,11 @@
+import { WatchListItem } from '@zachweinberg/obsidian-schema';
 import type { NextPage } from 'next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Layout from '~/components/layout/Layout';
 import Button from '~/components/ui/Button';
 import AddAlertModal from '~/components/watchlist/AddAlertModal';
 import AddToWatchlistModal from '~/components/watchlist/AddToWatchlistModal';
+import { API } from '~/lib/api';
 
 const WatchlistIcon = () => (
   <svg
@@ -56,22 +58,33 @@ const BellIcon = () => (
 const WatchList: NextPage = () => {
   const [addingToWatchList, setAddingToWatchlist] = useState(false);
   const [addingAlert, setAddingAlert] = useState(false);
+  const [watchListStocks, setWatchListStocks] = useState<WatchListItem[]>([]);
+  const [watchListCrypto, setWatchListCrypto] = useState<WatchListItem[]>([]);
 
-  // useEffect(() => {
-  //   API.getWatchlist()
-  //     .then((watchlistData) => {
-  //       setStocks(watchlistData.stocks);
-  //       setCrypto(watchlistData.crypto);
-  //     })
-  //     .catch((err) => alert('Could not load your watchlist.'))
-  //     .finally(() => setLoading(false));
-  // }, []);
+  const loadWatchList = async () => {
+    try {
+      const watchlistData = await API.getWatchlist();
+      setWatchListStocks(watchlistData.stocks);
+      setWatchListCrypto(watchlistData.crypto);
+    } catch (err) {
+      alert('Could not load your watchlist. Please contact us if this persists.');
+    }
+  };
+
+  useEffect(() => {
+    loadWatchList();
+  }, []);
 
   return (
     <Layout title="Watchlist - Obsidian Tracker">
       <AddToWatchlistModal
         open={addingToWatchList}
-        onClose={() => setAddingToWatchlist(false)}
+        onClose={(reload) => {
+          setAddingToWatchlist(false);
+
+          if (reload) {
+          }
+        }}
       />
       <AddAlertModal open={addingAlert} onClose={() => setAddingAlert(false)} />
 
@@ -84,21 +97,29 @@ const WatchList: NextPage = () => {
           <div className="flex items-center justify-between">
             <p className="font-semibold text-[1rem]">Your Watchlist</p>
           </div>
-          <div className="flex flex-col items-center justify-center p-32 text-center">
-            <WatchlistIcon />
-            <p className="font-bold text-[1.25rem] mb-3">
-              Keep track of your favorite assets.
-            </p>
-            <p className="font-medium text-[1rem] text-darkgray leading-tight mb-8">
-              Your watchlist can help you track the prices of stocks and cryptocurrencies. Add
-              one below:
-            </p>
-            <div className="w-56">
-              <Button type="button" onClick={() => setAddingToWatchlist(true)}>
-                + Add to watchlist
-              </Button>
+          {watchListStocks.length === 0 && watchListCrypto.length === 0 ? (
+            <div className="flex flex-col items-center justify-center p-32 text-center">
+              <WatchlistIcon />
+              <p className="font-bold text-[1.25rem] mb-3">
+                Keep track of your favorite assets.
+              </p>
+              <p className="font-medium text-[1rem] text-darkgray leading-tight mb-8">
+                Your watchlist can help you track the prices of stocks and cryptocurrencies.
+                Add one below:
+              </p>
+              <div className="w-56">
+                <Button type="button" onClick={() => setAddingToWatchlist(true)}>
+                  + Add to watchlist
+                </Button>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div>
+              {watchListStocks.map((stock) => (
+                <div>{stock.symbol}</div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="w-full px-5 py-4 bg-white border shadow-sm rounded-3xl lg:w-96 border-bordergray">

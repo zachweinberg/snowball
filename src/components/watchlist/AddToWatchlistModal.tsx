@@ -3,11 +3,12 @@ import { AssetType } from '@zachweinberg/obsidian-schema';
 import { useEffect, useState } from 'react';
 import Modal from '~/components/ui/Modal';
 import TextInputWithResults from '~/components/ui/TextInputWithResults';
+import { API } from '~/lib/api';
 import Button from '../ui/Button';
 
 interface Props {
   open: boolean;
-  onClose: () => void;
+  onClose: (reload: boolean) => void;
 }
 
 const AddToWatchlistModal: React.FunctionComponent<Props> = ({ open, onClose }: Props) => {
@@ -19,12 +20,17 @@ const AddToWatchlistModal: React.FunctionComponent<Props> = ({ open, onClose }: 
     }
   }, [open]);
 
+  const addToWatchList = async (symbol: string, fullName: string, assetType: AssetType) => {
+    await API.addAssetToWatchList(symbol, fullName, assetType);
+    onClose(true);
+  };
+
   return (
-    <Modal isOpen={open} onClose={onClose}>
+    <Modal isOpen={open} onClose={() => onClose(false)}>
       <div className="relative p-6" style={{ width: '430px' }}>
         {assetType === null && (
           <div className="w-full">
-            <div className="flex justify-center mb-8">
+            <div className="flex justify-center mb-4">
               <EyeIcon className="w-10 h-10 text-evergreen" />
             </div>
 
@@ -44,7 +50,7 @@ const AddToWatchlistModal: React.FunctionComponent<Props> = ({ open, onClose }: 
         )}
 
         {assetType !== null && (
-          <div className="w-full h-96">
+          <div className="w-full" style={{ height: '550px' }}>
             <div className="flex items-center justify-between mb-2">
               <div
                 className="cursor-pointer text-gray text-[.95rem] font-semibold w-1/3"
@@ -61,8 +67,8 @@ const AddToWatchlistModal: React.FunctionComponent<Props> = ({ open, onClose }: 
                   />
                 </svg>
               </div>
-              <p className="text-[1.25rem] font-bold text-center text-dark w-1/3">
-                Select asset
+              <p className="text-[1.1rem] font-bold text-center text-dark w-1/3">
+                Select {assetType}
               </p>
               <div className="w-1/3"></div>
             </div>
@@ -71,8 +77,8 @@ const AddToWatchlistModal: React.FunctionComponent<Props> = ({ open, onClose }: 
               <TextInputWithResults
                 placeholder="Enter symbol"
                 type={assetType}
-                onResult={(a) => console.log(a)}
-                onError={(e) => console.error(e)}
+                onResult={(stock, fullName) => addToWatchList(stock, fullName, assetType)}
+                onError={(e) => alert(e)}
               />
             </form>
           </div>

@@ -17,7 +17,7 @@ const FlatSearchResults: React.FunctionComponent<Props> = ({
           onClick={() => {
             onSelect(result.symbol, result.fullName, result.logoURL);
           }}
-          className="p-3 overflow-auto text-left cursor-pointer hover:bg-lightlime"
+          className="p-3 text-left cursor-pointer flex-nowrap hover:bg-lightlime"
           key={result.providerID}
         >
           {result.logoURL && (
@@ -33,7 +33,7 @@ const FlatSearchResults: React.FunctionComponent<Props> = ({
             <p className="whitespace-nowrap text-evergreen font-semibold text-[1.2rem] mb-1">
               {result.symbol}
             </p>
-            <p className="whitespace-nowrap text-darkgray text-[0.95rem] font-medium">
+            <p className="whitespace-nowrap text-darkgray text-[0.95rem] font-medium truncate leading-tight">
               {result.fullName}
             </p>
           </div>

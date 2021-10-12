@@ -25,7 +25,7 @@ const Header: React.FunctionComponent = () => {
         { label: 'Login', href: '/login' },
         { label: 'Sign up', href: '/signup' },
       ];
-  console.log(auth.user);
+
   return (
     <header className="bg-white border-b border-bordergray">
       <div className="flex items-center justify-between px-4 mx-auto max-w-7xl">
