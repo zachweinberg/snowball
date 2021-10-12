@@ -21,8 +21,8 @@ const CryptoTable: React.FunctionComponent<Props> = ({
 }: Props) => {
   if (crypto.length === 0) {
     return (
-      <div className="text-center mx-auto py-16">
-        <p className="text-lg mb-3 font-semibold">Add some crypto to your portfolio:</p>
+      <div className="py-16 mx-auto text-center">
+        <p className="mb-3 text-lg font-semibold">Add some crypto to your portfolio:</p>
         <Button type="button" onClick={onAddAsset} className="w-64">
           + Add Crypto
         </Button>
@@ -109,15 +109,17 @@ const CryptoTable: React.FunctionComponent<Props> = ({
               { label: 'Delete', onClick: () => onDelete(value, row.original.symbol) },
             ]}
             button={() => (
-              <svg
-                viewBox="0 0 4 20"
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 cursor-pointer fill-current text-darkgray"
-              >
-                <circle cx="2" cy="18" r="2" fill="#757784" />
-                <circle cx="2" cy="10" r="2" fill="#757784" />
-                <circle cx="2" cy="2" r="2" fill="#757784" />
-              </svg>
+              <div className="w-10 cursor-pointer">
+                <svg
+                  viewBox="0 0 4 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 fill-current text-darkgray"
+                >
+                  <circle cx="2" cy="18" r="2" fill="#757784" />
+                  <circle cx="2" cy="10" r="2" fill="#757784" />
+                  <circle cx="2" cy="2" r="2" fill="#757784" />
+                </svg>
+              </div>
             )}
           />
         ),

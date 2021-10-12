@@ -80,7 +80,7 @@ const LoginPage: NextPage = () => {
             </h1>
           </div>
 
-          <div className="mb-10">
+          <div className="mb-5">
             <TextInput
               name="email"
               value={email}
@@ -100,17 +100,17 @@ const LoginPage: NextPage = () => {
             />
           </div>
 
-          <div className="flex justify-end mb-10">
+          {error && <p className="mb-5 font-medium text-center text-red">{error}</p>}
+
+          <div className="flex justify-center mb-5">
             <div>
               <Link href="/reset-password">
-                <span className="underline text-evergreen font-semibold text-[1rem] hover:opacity-80">
+                <span className="underline text-evergreen font-medium text-[1rem] hover:opacity-80">
                   Forgot Password?
                 </span>
               </Link>
             </div>
           </div>
-
-          {error && <p className="mb-10 text-red">{error}</p>}
 
           <div className="mb-16">
             <Button type="submit" disabled={loading}>

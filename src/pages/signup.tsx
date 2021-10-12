@@ -110,7 +110,7 @@ const SignUpPage: NextPage = () => {
             </p>
           </div>
 
-          <div className="mb-10">
+          <div className="mb-5">
             <TextInput
               name="name"
               placeholder="Your name"
@@ -148,7 +148,7 @@ const SignUpPage: NextPage = () => {
             />
           </div>
 
-          {error && <p className="mb-10 text-red">{error}</p>}
+          {error && <p className="mb-5 font-medium text-center text-red">{error}</p>}
 
           <div className="mb-16">
             <Button type="submit" disabled={loading}>

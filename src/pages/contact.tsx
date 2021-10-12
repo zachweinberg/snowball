@@ -5,6 +5,7 @@ import Layout from '~/components/layout/Layout';
 import Button from '~/components/ui/Button';
 import TextArea from '~/components/ui/TextArea';
 import TextInput from '~/components/ui/TextInput';
+import { API } from '~/lib/api';
 
 const Contact: NextPage = () => {
   const [name, setName] = useState('');
@@ -12,9 +13,16 @@ const Contact: NextPage = () => {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
-  const onSubmit = async () => {
-    console.log(name, message, email);
-    setSubmitted(true);
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await API.sendContactEmail(name, message, email);
+      setSubmitted(true);
+    } catch (err) {
+      alert(
+        'Oops! Something went wrong while trying to submit your message. Please try again.'
+      );
+    }
   };
 
   return (

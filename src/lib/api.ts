@@ -6,6 +6,8 @@ import {
   AddStockRequest,
   AddWatchListItemRequest,
   AssetType,
+  CheckVerificationTokenRequest,
+  CheckVerificationTokenResponse,
   CreatePortfolioRequest,
   CreatePortfolioResponse,
   CreateUserRequest,
@@ -16,6 +18,7 @@ import {
   GetQuoteResponse,
   GetWatchListResponse,
   MeResponse,
+  SendContactEmailRequest,
   VerifyEmailRequest,
   VerifyEmailResponse,
 } from '@zachweinberg/obsidian-schema';
@@ -100,6 +103,14 @@ export const API = {
   resendVerificationEmail: () => {
     return request<undefined, undefined>('/api/users/resend-email', 'post');
   },
+  checkVerificationToken: (token: string, userID: string) => {
+    return request<CheckVerificationTokenRequest, CheckVerificationTokenResponse>(
+      '/api/users/check-verification-token',
+      'post',
+      { token, userID },
+      false
+    );
+  },
   createUser: (userData: CreateUserRequest) => {
     return request<CreateUserRequest, CreateUserResponse>(
       '/api/users',
@@ -108,9 +119,9 @@ export const API = {
       false
     );
   },
-  verifyEmailExists: (email: string) => {
+  checkEmailExists: (email: string) => {
     return request<VerifyEmailRequest, VerifyEmailResponse>(
-      '/api/users/verify',
+      '/api/users/check',
       'post',
       { email },
       false
@@ -186,5 +197,13 @@ export const API = {
       ? `/api/news?page=${pageNumber}&symbol=${symbol}`
       : `/api/news?page=${pageNumber}`;
     return request<undefined, GetNewsResponse>(url, 'get');
+  },
+  sendContactEmail: (name: string, message: string, email?: string) => {
+    return request<SendContactEmailRequest, undefined>(
+      '/api/users/contact',
+      'post',
+      { email, message, name },
+      false
+    );
   },
 };

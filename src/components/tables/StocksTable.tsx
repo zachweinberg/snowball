@@ -21,8 +21,8 @@ const StocksTable: React.FunctionComponent<Props> = ({
 }: Props) => {
   if (stocks.length === 0) {
     return (
-      <div className="text-center mx-auto py-16">
-        <p className="text-lg mb-3 font-semibold">Add some stocks to your portfolio:</p>
+      <div className="py-16 mx-auto text-center">
+        <p className="mb-3 text-lg font-semibold">Add some stocks to your portfolio:</p>
         <Button type="button" onClick={onAddAsset} className="w-64">
           + Add Stocks
         </Button>
@@ -39,7 +39,7 @@ const StocksTable: React.FunctionComponent<Props> = ({
         accessor: 'companyName',
         Cell: ({ row, value }) => (
           <div style={{ maxWidth: '240px' }}>
-            <p className="mb-1 text-evergreen">{row.original.symbol}</p>
+            <p className="text-evergreen">{row.original.symbol}</p>
             <p className="text-darkgray text-[0.875rem] truncate leading-tight">{value}</p>
           </div>
         ),

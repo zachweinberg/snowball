@@ -40,7 +40,7 @@ const AssetPercentCard: React.FunctionComponent<Props> = ({
         <div className="m-auto">
           <p className="mb-2 font-bold text-[1.25rem]">{assetType}</p>
           <p className="text-darkgray font-semibold text-[1rem]">
-            {formatMoneyFromNumber(amount ?? 0)}
+            {formatMoneyFromNumber(amount ?? 0, true)}
           </p>
         </div>
       </div>

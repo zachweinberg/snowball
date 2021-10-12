@@ -48,7 +48,7 @@ const AddRealEstateForm: React.FunctionComponent<Props> = ({
   const [note, setNote] = useState<string>('');
   const [loading, setLoading] = useState(false);
 
-  const canAdd = propertyValue && propertyType && propertyValue > 0 && address;
+  const canAdd = propertyValue && propertyType && propertyValue > 0;
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -146,8 +146,8 @@ const AddRealEstateForm: React.FunctionComponent<Props> = ({
 
       <Button type="submit" disabled={loading}>
         {canAdd
-          ? `Add a ${propertyType} for ${formatMoneyFromNumber(propertyValue)}`
-          : 'Add stock'}
+          ? `Add ${propertyType} for ${formatMoneyFromNumber(propertyValue)}`
+          : 'Add Real Estate'}
       </Button>
     </form>
   );

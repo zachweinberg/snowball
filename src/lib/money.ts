@@ -1,8 +1,10 @@
-export const formatMoneyFromNumber = (value: number): string => {
-  if (value > 10000 && value < 1000000) {
-    return `~${(value / 1000).toFixed(1)}K`;
-  } else if (value > 1000000) {
-    return `~${(value / 1000000).toFixed(1)}M`;
+export const formatMoneyFromNumber = (value: number, condense: boolean = false): string => {
+  if (condense && value > 10000 && value < 1000000) {
+    return `~${(value / 1000).toFixed(2)}K`;
+  } else if (condense && value > 1000000) {
+    return `~${(value / 1000000).toFixed(2)}M`;
+  } else if (condense && value > 1000000000) {
+    return `~${(value / 1000000000).toFixed(2)}B`;
   } else {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',

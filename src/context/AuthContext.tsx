@@ -68,7 +68,7 @@ const useFirebaseAuth = (): AuthContext => {
 
   const login = async (email: string, password: string) => {
     try {
-      await API.verifyEmailExists(email);
+      await API.checkEmailExists(email);
       await firebase.auth().signInWithEmailAndPassword(email, password);
     } catch (e) {
       throw e;

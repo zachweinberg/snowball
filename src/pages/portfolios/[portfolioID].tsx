@@ -177,7 +177,7 @@ const PortfolioView: NextPage = () => {
         <>
           <Modal isOpen={isDeleting} onClose={() => setIsDeleting(false)}>
             <div className="p-7">
-              <p className="font-bold mb-4 text-lg">
+              <p className="mb-4 text-lg font-bold">
                 Remove {deleteAsset?.name} from this portfolio?
               </p>
               <div className="flex items-center">
@@ -202,7 +202,7 @@ const PortfolioView: NextPage = () => {
             </div>
 
             <div className="grid grid-cols-1 grid-rows-2 gap-4 lg:grid-rows-1 lg:grid-cols-2 mb-7">
-              <div className="px-5 bg-dark rounded-3xl relative">
+              <div className="relative px-5 bg-dark rounded-3xl">
                 <BalanceHistoryChart
                   data={portfolio.dailyBalances.map((d) => ({
                     balance: d.totalValue,
@@ -278,7 +278,7 @@ const PortfolioView: NextPage = () => {
                       key={u}
                       onClick={() => setUnit(u)}
                       className={classNames(
-                        'text-[1rem] px-4 py-2 mr-3 font-bold border rounded-md text-darkgray hover:bg-light',
+                        'text-[1rem] px-3 py-2 font-semibold  rounded-md text-darkgray hover:bg-light',
                         { 'border-evergreen text-evergreen': u === unit }
                       )}
                     >

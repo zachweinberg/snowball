@@ -103,7 +103,7 @@ const PasswordResetPage: NextPage = () => {
             </p>
           )}
 
-          {error && <p className="mb-10 text-red">{error}</p>}
+          {error && <p className="mb-5 font-medium text-center text-red">{error}</p>}
 
           <div className="mb-16">
             <Button type="submit" disabled={loading}>

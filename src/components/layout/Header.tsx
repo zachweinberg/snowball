@@ -29,12 +29,12 @@ const Header: React.FunctionComponent = () => {
 
   return (
     <>
-      {!auth.user?.verified && (
-        <div className="w-full p-2 bg-lime text-center text-dark opacity-70 text-sm">
+      {auth.user && !auth.user.verified && (
+        <div className="w-full p-2 text-sm text-center bg-lime text-dark opacity-70">
           Please verify your email address by clicking the link in the email we've sent you.{' '}
           <span
             onClick={API.resendVerificationEmail}
-            className="underline font-semibold ml-2 cursor-pointer hover:text-darkgray"
+            className="ml-2 font-semibold underline cursor-pointer hover:text-darkgray"
           >
             Resend email
           </span>
