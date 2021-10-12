@@ -154,12 +154,14 @@ usersRouter.post(
     const response: CheckVerificationTokenResponse = { verified: false, status: 'ok' };
 
     if (user.verified) {
+      throw new Error('Already verified');
+    }
+
+    if (token === user.verificationCode) {
+      await updateDocument('users', userID, { verified: true, verificationCode: firestore.FieldValue.delete() });
       response.verified = true;
     } else {
-      if (token === user.verificationCode) {
-        await updateDocument('users', userID, { verified: true, verificationCode: firestore.FieldValue.delete() });
-        response.verified = true;
-      }
+      response.verified = false;
     }
 
     res.status(200).json(response);
