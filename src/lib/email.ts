@@ -2,7 +2,7 @@ import * as postmark from 'postmark';
 
 const emailClient = new postmark.ServerClient(process.env.POSTMARK_API_KEY!);
 
-const sendEmail = async (
+export const sendEmail = async (
   toEmail: string,
   subject: string,
   htmlBody: string,

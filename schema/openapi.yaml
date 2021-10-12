@@ -33,6 +33,31 @@ paths:
             application/json:
               schema:
                 type: object
+  /users/contact:
+    post:
+      summary: Create a user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              required:
+                - name
+                - message
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                message:
+                  type: string
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
   /users/verify:
     post:
       summary: Verify an email exists in database

@@ -4,6 +4,7 @@ import {
   CreateUserRequest,
   CreateUserResponse,
   MeResponse,
+  SendContactEmailRequest,
   User,
   VerifyEmailRequest,
   VerifyEmailResponse,
@@ -11,7 +12,7 @@ import {
 import crypto from 'crypto';
 import { Router } from 'express';
 import { firestore } from 'firebase-admin';
-import { sendVerifyEmailEmail } from '~/lib/email';
+import { sendEmail, sendVerifyEmailEmail } from '~/lib/email';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { catchErrors, requireSignedIn } from '~/utils/api';
 import { createDocument, fetchDocument, findDocuments, updateDocument } from '~/utils/db';
@@ -29,6 +30,26 @@ const generateVerificationToken = async (): Promise<string> => {
     });
   });
 };
+
+usersRouter.post(
+  '/contact',
+  catchErrors(async (req, res) => {
+    const { name, email, message } = req.body as SendContactEmailRequest;
+
+    const body = `
+      Name: ${name}
+      Return email: ${email ? email : 'None'}
+      Message: ${message}
+    `;
+    await sendEmail('zach@obsidiantracker.com', 'Contact request', `<p>${body}</p>`, body, 'contact-requests');
+
+    const response = {
+      status: 'ok',
+    };
+
+    res.status(200).json(response);
+  })
+);
 
 usersRouter.get(
   '/me',
