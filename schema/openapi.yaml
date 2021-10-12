@@ -5,6 +5,21 @@ info:
 servers:
   - url: /api
 paths:
+  /users/resend-email:
+    post:
+      summary: Resend email verification
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
   /users:
     post:
       summary: Create a user
