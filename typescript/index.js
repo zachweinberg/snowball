@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Unit = exports.Destination = exports.RealEstatePropertyType = exports.AssetType = exports.AssetColor = void 0;
+exports.Period = exports.Unit = exports.Destination = exports.RealEstatePropertyType = exports.AssetType = exports.AssetColor = void 0;
 var AssetColor;
 (function (AssetColor) {
     AssetColor["Stocks"] = "#CEF33C";
@@ -37,3 +37,9 @@ var Unit;
     Unit["Dollars"] = "Dollars";
     Unit["Percents"] = "Percents";
 })(Unit = exports.Unit || (exports.Unit = {}));
+var Period;
+(function (Period) {
+    Period["Daily"] = "Daily";
+    Period["Weekly"] = "Weekly";
+    Period["Monthly"] = "Monthly";
+})(Period = exports.Period || (exports.Period = {}));

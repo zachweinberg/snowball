@@ -17,8 +17,8 @@ export interface Portfolio {
     id: string;
     userID: string;
     name: string;
-    public: boolean;
     createdAt: Date;
+    settings: PortfolioSettings;
 }
 export declare type PortfolioWithBalances = Portfolio & {
     totalValue: number;
@@ -256,4 +256,15 @@ export interface Alert {
 export declare enum Unit {
     Dollars = "Dollars",
     Percents = "Percents"
+}
+export declare enum Period {
+    Daily = "Daily",
+    Weekly = "Weekly",
+    Monthly = "Monthly"
+}
+export interface PortfolioSettings {
+    private: boolean;
+    defaultAssetType: AssetType;
+    reminderEmailPeriod: Period;
+    summaryEmailPeriod: Period;
 }
