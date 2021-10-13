@@ -21,8 +21,8 @@ const RealEstateTable: React.FunctionComponent<Props> = ({
 }: Props) => {
   if (realEstate.length === 0) {
     return (
-      <div className="text-center mx-auto py-16">
-        <p className="text-lg mb-3 font-semibold">Add some real estate to your portfolio:</p>
+      <div className="py-16 mx-auto text-center">
+        <p className="mb-3 text-lg font-semibold">Add some real estate to your portfolio:</p>
         <Button type="button" onClick={onAddAsset} className="w-64">
           + Add Real Estate
         </Button>
@@ -37,6 +37,7 @@ const RealEstateTable: React.FunctionComponent<Props> = ({
       {
         Header: 'Address',
         accessor: 'address',
+        Cell: ({ value }) => (value ? value : '-'),
       },
       {
         Header: 'Property Value',

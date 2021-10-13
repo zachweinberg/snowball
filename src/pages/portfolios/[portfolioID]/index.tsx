@@ -118,7 +118,7 @@ const PortfolioView: NextPage = () => {
           return (
             <CustomAssetsTable
               unit={unit}
-              custom={portfolio.customs}
+              customs={portfolio.customs}
               onAddAsset={() => setAddingAsset(true)}
               onDelete={(customID, name) => {
                 setDeleteAsset({ id: customID, type: AssetType.Custom, name });
@@ -205,14 +205,15 @@ const PortfolioView: NextPage = () => {
                   </Button>
                 </div>
                 <div className="w-44">
-                  <Button
-                    type="button"
-                    onClick={() => setAddingAsset(true)}
-                    variant="secondary"
-                    className="flex items-center justify-center"
-                  >
-                    Settings
-                  </Button>
+                  <Link href={`/portfolios/${portfolio.id}/settings`}>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      className="flex items-center justify-center"
+                    >
+                      Settings
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -319,8 +320,9 @@ const PortfolioView: NextPage = () => {
           <AddAssetForm
             portfolioName={portfolio.name}
             portfolioID={portfolio.id}
-            onClose={() => {
-              loadPortfolioData();
+            onClose={async (assetTypeAdded) => {
+              await loadPortfolioData();
+              setActiveTab(assetTypeAdded);
               setAddingAsset(false);
             }}
           />

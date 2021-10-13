@@ -8,16 +8,16 @@ import MoneyInput from '../ui/MoneyInput';
 import TextArea from '../ui/TextArea';
 import TextInput from '../ui/TextInput';
 
-const addCustomSchema = yup.object().shape({
+const addCustomAssetSchema = yup.object().shape({
   assetName: Yup.string()
     .min(1, 'Please use a longer asset name.')
-    .max(35, 'Please use a shorter asset name.')
+    .max(30, 'Please use a shorter asset name.')
     .required('Asset name is required.'),
   value: Yup.number()
     .typeError('Please enter a valid value.')
-    .min(0.01, 'Custom asset must be worth more.')
-    .max(1000000000, 'Are you sure your custom asset is worth that much?')
-    .required('Asset value is required.'),
+    .min(0.01, 'Value too low.')
+    .max(1000000000, 'Are you sure your asset is worth that much?')
+    .required('Value amount is required.'),
   note: Yup.string(),
 });
 
@@ -46,7 +46,7 @@ const AddCustomAssetForm: React.FunctionComponent<Props> = ({
     let isValid = false;
 
     try {
-      await addCustomSchema.validate({
+      await addCustomAssetSchema.validate({
         assetName,
         value,
         note,
@@ -116,7 +116,7 @@ const AddCustomAssetForm: React.FunctionComponent<Props> = ({
       />
 
       <MoneyInput
-        placeholder="Asset value"
+        placeholder="Value"
         required
         value={value}
         name="value"

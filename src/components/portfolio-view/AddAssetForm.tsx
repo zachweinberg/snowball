@@ -10,7 +10,7 @@ import AddStockForm from './AddStockForm';
 interface AddAssetFormProps {
   portfolioName: string;
   portfolioID: string;
-  onClose: () => void;
+  onClose: (assetTypeAdded: AssetType) => void;
 }
 
 const availableTypes = [
@@ -93,7 +93,7 @@ const AddAssetForm: React.FunctionComponent<AddAssetFormProps> = ({
       case AssetType.Stock:
         return (
           <AddStockForm
-            afterAdd={onClose}
+            afterAdd={() => onClose(AssetType.Stock)}
             portfolioID={portfolioID}
             goBack={() => setAssetType(null)}
           />
@@ -101,7 +101,7 @@ const AddAssetForm: React.FunctionComponent<AddAssetFormProps> = ({
       case AssetType.Crypto:
         return (
           <AddCryptoForm
-            afterAdd={onClose}
+            afterAdd={() => onClose(AssetType.Crypto)}
             portfolioID={portfolioID}
             goBack={() => setAssetType(null)}
           />
@@ -109,7 +109,7 @@ const AddAssetForm: React.FunctionComponent<AddAssetFormProps> = ({
       case AssetType.RealEstate:
         return (
           <AddRealEstateForm
-            afterAdd={onClose}
+            afterAdd={() => onClose(AssetType.RealEstate)}
             portfolioID={portfolioID}
             goBack={() => setAssetType(null)}
           />
@@ -117,7 +117,7 @@ const AddAssetForm: React.FunctionComponent<AddAssetFormProps> = ({
       case AssetType.Cash:
         return (
           <AddCashForm
-            afterAdd={onClose}
+            afterAdd={() => onClose(AssetType.Cash)}
             portfolioID={portfolioID}
             goBack={() => setAssetType(null)}
           />
@@ -125,7 +125,7 @@ const AddAssetForm: React.FunctionComponent<AddAssetFormProps> = ({
       case AssetType.Custom:
         return (
           <AddCustomAssetForm
-            afterAdd={onClose}
+            afterAdd={() => onClose(AssetType.Custom)}
             portfolioID={portfolioID}
             goBack={() => setAssetType(null)}
           />

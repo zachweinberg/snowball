@@ -12,12 +12,15 @@ import {
   CreatePortfolioResponse,
   CreateUserRequest,
   CreateUserResponse,
+  EditPortfolioSettingsRequest,
   GetNewsResponse,
   GetPortfolioResponse,
+  GetPortfolioSettingsResponse,
   GetPortfoliosResponse,
   GetQuoteResponse,
   GetWatchListResponse,
   MeResponse,
+  PortfolioSettings,
   SendContactEmailRequest,
   VerifyEmailRequest,
   VerifyEmailResponse,
@@ -136,6 +139,19 @@ export const API = {
       'get',
       undefined,
       false
+    );
+  },
+  getPortfolioSettings: (portfolioID: string) => {
+    return request<undefined, GetPortfolioSettingsResponse>(
+      `/api/portfolios/${portfolioID}/settings`,
+      'get'
+    );
+  },
+  editPortfolioSettings: (portfolioID: string, settings: PortfolioSettings) => {
+    return request<EditPortfolioSettingsRequest, undefined>(
+      `/api/portfolios/${portfolioID}/settings`,
+      'put',
+      { settings }
     );
   },
   createPortfolio: (name: string, isPublic: boolean = false) => {

@@ -104,11 +104,13 @@ export const buildRealEstateData = (
 export interface CustomAssetTableData {
   assetName: string;
   id: string;
+  value: number;
 }
 
 export const buildCustomAssetData = (custom: CustomPosition[]): CustomAssetTableData[] => {
   return custom.map((c) => ({
     id: c.id,
     assetName: c.assetName,
+    value: c.value,
   }));
 };

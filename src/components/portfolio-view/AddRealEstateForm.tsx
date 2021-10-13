@@ -6,6 +6,7 @@ import { formatMoneyFromNumber } from '~/lib/money';
 import Button from '../ui/Button';
 import MoneyInput from '../ui/MoneyInput';
 import Select from '../ui/Select';
+import TextInput from '../ui/TextInput';
 
 interface Props {
   afterAdd: () => void;
@@ -142,6 +143,15 @@ const AddRealEstateForm: React.FunctionComponent<Props> = ({
           selected={propertyType}
         />
       </div>
+
+      <TextInput
+        className="mb-4"
+        name="address"
+        placeholder="Address (optional)"
+        type="text"
+        value={address}
+        onChange={(e) => setAddress(e.target.value)}
+      />
 
       {error && <p className="mb-6 font-semibold text-center text-red">{error}</p>}
 

@@ -7,23 +7,22 @@ import { BaseTable } from './BaseTable';
 import { buildCustomAssetData, CustomAssetTableData } from './builders';
 
 interface Props {
-  custom: CustomPosition[];
+  customs: CustomPosition[];
   unit: Unit;
   onAddAsset: () => void;
-  onDelete: (customID: string, name: string) => void;
+  onDelete: (customAssetID: string, name: string) => void;
 }
 
-const CustomAssetsTable: React.FunctionComponent<Props> = ({
-  custom,
-  onAddAsset,
+const CustomAssetTable: React.FunctionComponent<Props> = ({
+  customs,
   unit,
+  onAddAsset,
   onDelete,
 }: Props) => {
-  console.log(custom);
-  if (custom.length === 0) {
+  if (customs.length === 0) {
     return (
-      <div className="text-center mx-auto py-16">
-        <p className="text-lg mb-3 font-semibold">Add some custom assets to your portfolio:</p>
+      <div className="py-16 mx-auto text-center">
+        <p className="mb-3 text-lg font-semibold">Add a custom asset to your portfolio:</p>
         <Button type="button" onClick={onAddAsset} className="w-64">
           + Add Custom Asset
         </Button>
@@ -31,20 +30,19 @@ const CustomAssetsTable: React.FunctionComponent<Props> = ({
     );
   }
 
-  const data = useMemo<CustomAssetTableData[]>(() => buildCustomAssetData(custom), []);
+  const data = useMemo<CustomAssetTableData[]>(() => buildCustomAssetData(customs), []);
 
   const columns = useMemo(
     () => [
       {
         Header: 'Name',
-        accessor: 'name',
+        accessor: 'assetName',
       },
       {
-        Header: 'Property Value',
-        accessor: 'propertyValue',
+        Header: 'Value',
+        accessor: 'value',
         Cell: ({ value }) => formatMoneyFromNumber(value),
       },
-
       {
         Header: '',
         accessor: 'arrow',
@@ -69,10 +67,10 @@ const CustomAssetsTable: React.FunctionComponent<Props> = ({
         ),
       },
     ],
-    [unit]
+    []
   );
 
   return <BaseTable columns={columns} data={data} />;
 };
 
-export default CustomAssetsTable;
+export default CustomAssetTable;
