@@ -154,7 +154,6 @@ export const calculatePortfolioQuotes = async (
   let cryptoTotal = currency(0);
   let realEstateTotal = currency(0);
   let cashTotal = currency(0);
-  let optionsTotal = currency(0);
   let customsTotal = currency(0);
 
   for (const stockPosition of stockPositionsWithQuotes) {
@@ -177,8 +176,8 @@ export const calculatePortfolioQuotes = async (
     stocks: stockPositionsWithQuotes,
     crypto: cryptoPositionsWithQuotes,
     cash: cashPositions,
-    realEstate: [],
-    customs: [],
+    realEstate: realEstatePositions,
+    customs: customsPositions,
     stocksTotal: stocksTotal.value,
     cryptoTotal: cryptoTotal.value,
     realEstateTotal: realEstateTotal.value,
