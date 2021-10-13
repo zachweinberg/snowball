@@ -58,7 +58,7 @@ paths:
             application/json:
               schema:
                 type: object
-  /users/verify:
+  /users/check:
     post:
       summary: Verify an email exists in database
       requestBody:
