@@ -208,6 +208,12 @@ export interface GetQuoteResponse extends BaseResponse {
     changePercent: number;
     changeDollars: number;
 }
+export interface GetPortfolioSettingsResponse extends BaseResponse {
+    portfolio: Portfolio;
+}
+export interface EditPortfolioSettingsRequest {
+    settings: PortfolioSettings;
+}
 export interface WatchListItem {
     assetType: AssetType;
     symbol: string;
