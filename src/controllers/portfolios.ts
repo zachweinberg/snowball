@@ -1,20 +1,81 @@
 import {
+  AssetType,
   CreatePortfolioRequest,
   CreatePortfolioResponse,
+  EditPortfolioSettingsRequest,
   GetPortfolioResponse,
+  GetPortfolioSettingsResponse,
   GetPortfoliosResponse,
+  Period,
   Portfolio,
 } from '@zachweinberg/obsidian-schema';
 import { Router } from 'express';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { deleteRedisKey, getRedisKey, setRedisKey } from '~/lib/redis';
 import { catchErrors, getUserFromAuthHeader, requireSignedIn } from '~/utils/api';
-import { fetchDocument, findDocuments } from '~/utils/db';
+import { fetchDocument, findDocuments, updateDocument } from '~/utils/db';
 import { capitalize } from '~/utils/misc';
 import { getPortfolioDailyHistory } from '~/utils/portfolios';
 import { calculatePortfolioQuotes, calculatePortfolioSummary } from '~/utils/positions';
 
 const portfoliosRouter = Router();
+
+portfoliosRouter.get(
+  '/:portfolioID/settings',
+  catchErrors(async (req, res) => {
+    let userOwnsPortfolio = false;
+
+    const portfolio = await fetchDocument<Portfolio>('portfolios', req.params.portfolioID);
+
+    const authUser = await getUserFromAuthHeader(req, false);
+
+    if (authUser && portfolio.userID === authUser.uid) {
+      userOwnsPortfolio = true;
+    }
+
+    if (!userOwnsPortfolio) {
+      // Private portfolio
+      return res.status(404).json({ status: 'error', error: 'Could not find page.' });
+    }
+
+    const response: GetPortfolioSettingsResponse = {
+      status: 'ok',
+      portfolio,
+    };
+
+    res.status(200).json(response);
+  })
+);
+
+portfoliosRouter.put(
+  '/:portfolioID/settings',
+  catchErrors(async (req, res) => {
+    const { settings } = req.body as EditPortfolioSettingsRequest;
+
+    let userOwnsPortfolio = false;
+
+    const portfolio = await fetchDocument<Portfolio>('portfolios', req.params.portfolioID);
+
+    const authUser = await getUserFromAuthHeader(req, false);
+
+    if (authUser && portfolio.userID === authUser.uid) {
+      userOwnsPortfolio = true;
+    }
+
+    if (!userOwnsPortfolio) {
+      // Private portfolio
+      return res.status(403).end();
+    }
+
+    await updateDocument('portfolios', req.params.portfolioID, { settings });
+
+    const response = {
+      status: 'ok',
+    };
+
+    res.status(200).json(response);
+  })
+);
 
 portfoliosRouter.get(
   '/',
@@ -90,9 +151,14 @@ portfoliosRouter.post(
     const portfolioDataToSet: Portfolio = {
       id: newPortfolioDocRef.id,
       userID,
-      public: isPublic,
       name: capitalize(name).trim(),
       createdAt: new Date(),
+      settings: {
+        defaultAssetType: AssetType.Stock,
+        private: isPublic ? false : true,
+        reminderEmailPeriod: Period.Weekly,
+        summaryEmailPeriod: Period.Weekly,
+      },
     };
 
     await newPortfolioDocRef.set(portfolioDataToSet, { merge: true });
@@ -123,7 +189,7 @@ portfoliosRouter.get(
       userOwnsPortfolio = true;
     }
 
-    if (!portfolio.public && !userOwnsPortfolio) {
+    if (portfolio.settings.private && !userOwnsPortfolio) {
       // Private portfolio
       return res.status(404).json({ status: 'error', error: 'Portfolio does not exist.' });
     }

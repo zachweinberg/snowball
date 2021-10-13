@@ -164,6 +164,45 @@ paths:
             application/json:
               schema:
                 type: object
+  /portfolios/{portfolioID}/settings:
+    get:
+      summary: Fetch a portfolio's settings
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      summary: Edit portfolios settings
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              required:
+                - private
+                - defaultAssetType
+                - reminderEmailPeriod
+                - summaryEmailPeriod
+              properties:
+                private:
+                  type: boolean
+                reminderEmailPeriod:
+                  type: string
+                summaryEmailPeriod:
+                  type: string
+                defaultAssetType:
+                  type: string
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
+
   /portfolios/{portfolioID}/stocks:
     get:
       summary: Fetch a portfolio's stocks
