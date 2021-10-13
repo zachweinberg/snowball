@@ -14,6 +14,7 @@ const addCashSchema = yup.object().shape({
     .max(30, 'Please use a shorter account name.')
     .required('Account name is required.'),
   amount: Yup.number()
+    .typeError('Please enter a valid amount.')
     .min(0.01, 'You must have more cash than that.')
     .max(1000000000, 'Are you sure you have that much cash?')
     .required('Cash amount is required.'),

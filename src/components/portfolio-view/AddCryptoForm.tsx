@@ -15,10 +15,12 @@ const addCryptoSchema = yup.object().shape({
     .max(8, 'That coin symbol is too long.')
     .required('Coin symbol is required.'),
   quantity: Yup.number()
+    .typeError('Please enter a valid quantity.')
     .min(0.00000001, 'You must own more coins than that.')
     .max(10000000000, 'Are you sure you own that many coins?')
     .required('Quantity of coins is required.'),
   costPerCoin: Yup.number()
+    .typeError('Please enter a valid cost per coin.')
     .min(0.000000001, 'Cost basis must be greater than 0.')
     .required('Cost basis is required.'),
   coinName: Yup.string().required('Please select a coin symbol.'),

@@ -15,10 +15,12 @@ const addStockSchema = yup.object().shape({
     .max(6, 'That stock symbol is too long.')
     .required('Stock symbol is required.'),
   quantity: Yup.number()
+    .typeError('Please enter a valid quantity.')
     .min(1, 'You must own more than 0 shares.')
     .max(100000000, 'Are you sure you own that many shares?')
     .required('Quantity of shares is required.'),
   costPerShare: Yup.number()
+    .typeError('Please enter a valid cost per share.')
     .min(0.01, 'Cost basis must be greater than 0.')
     .required('Cost basis is required.'),
   companyName: Yup.string().required('Please select a ticker symbol.'),

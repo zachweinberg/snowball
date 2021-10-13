@@ -15,6 +15,7 @@ interface Props {
 
 const addRealEstateSchema = Yup.object({
   propertyValue: Yup.number()
+    .typeError('Please enter a valid property value.')
     .min(0.01, 'Please enter a larger amount.')
     .max(1000000000, "That's a pretty big number!")
     .required('Property value is required'),

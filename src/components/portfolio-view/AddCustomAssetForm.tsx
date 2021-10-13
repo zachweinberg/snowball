@@ -14,6 +14,7 @@ const addCustomSchema = yup.object().shape({
     .max(35, 'Please use a shorter asset name.')
     .required('Asset name is required.'),
   value: Yup.number()
+    .typeError('Please enter a valid value.')
     .min(0.01, 'Custom asset must be worth more.')
     .max(1000000000, 'Are you sure your custom asset is worth that much?')
     .required('Asset value is required.'),

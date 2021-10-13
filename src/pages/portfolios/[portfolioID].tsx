@@ -30,7 +30,7 @@ const PortfolioView: NextPage = () => {
   const [loading, setLoading] = useState(true);
   const [addingAsset, setAddingAsset] = useState(false);
   const [portfolio, setPortfolio] = useState<PortfolioWithQuotes | null>(null);
-  const [activeTab, setActiveTab] = useState<AssetType | 'All assets'>('All assets');
+  const [activeTab, setActiveTab] = useState<AssetType>(AssetType.Stock);
   const [unit, setUnit] = useState<Unit>(Unit.Dollars);
   const [error, setError] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
@@ -194,10 +194,26 @@ const PortfolioView: NextPage = () => {
           <div className="pb-16">
             <div className="flex items-center justify-between mb-7">
               <h1 className="font-bold text-[1.75rem]">{portfolio.name}</h1>
-              <div className="w-44">
-                <Button type="button" onClick={() => setAddingAsset(true)} variant="secondary">
-                  + Add Asset
-                </Button>
+              <div className="flex items-center">
+                <div className="mr-3 w-44">
+                  <Button
+                    type="button"
+                    onClick={() => setAddingAsset(true)}
+                    variant="secondary"
+                  >
+                    + Add Asset
+                  </Button>
+                </div>
+                <div className="w-44">
+                  <Button
+                    type="button"
+                    onClick={() => setAddingAsset(true)}
+                    variant="secondary"
+                    className="flex items-center justify-center"
+                  >
+                    Settings
+                  </Button>
+                </div>
               </div>
             </div>
 
@@ -262,7 +278,6 @@ const PortfolioView: NextPage = () => {
                   <Select
                     onChange={(selected) => setActiveTab(selected as any)}
                     options={[
-                      'All assets',
                       AssetType.Stock,
                       AssetType.Crypto,
                       AssetType.RealEstate,

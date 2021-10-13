@@ -13,7 +13,7 @@ const Select: React.FunctionComponent<Props> = ({ onChange, selected, options }:
     <Listbox value={selected} onChange={onChange}>
       <div className="relative w-full cursor-pointer">
         <Listbox.Button className="relative w-full py-4 pl-3 pr-10 leading-normal text-left bg-white border rounded-md shadow-sm cursor-pointer border-bordergray focus:outline-none hover:bg-light">
-          <span className="block font-semibold truncate">{selected}</span>
+          <span className="block font-medium truncate">{selected}</span>
           <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
             <SelectorIcon className="w-5 h-5" aria-hidden="true" />
           </span>
@@ -32,7 +32,7 @@ const Select: React.FunctionComponent<Props> = ({ onChange, selected, options }:
                 className="relative py-3 pl-3 border-b select-none pr-9 text-dark hover:bg-light border-bordergray"
                 value={opt}
               >
-                <span className="block font-semibold">{opt}</span>
+                <span className="block font-medium">{opt}</span>
               </Listbox.Option>
             ))}
           </Listbox.Options>

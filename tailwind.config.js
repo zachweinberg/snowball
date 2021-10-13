@@ -21,7 +21,7 @@ module.exports = {
       rust: '#4E5B00',
       lightgray: '#ECEDEF',
       purple: '#6600E8',
-      green: '#69bb00',
+      green: '#5aa100',
       red: '#D0291E',
     },
     extend: {
