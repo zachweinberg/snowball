@@ -164,6 +164,15 @@ paths:
             application/json:
               schema:
                 type: object
+    delete:
+      summary: Delete a portfolio and subcollections
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
   /portfolios/{portfolioID}/settings:
     get:
       summary: Fetch a portfolio's settings

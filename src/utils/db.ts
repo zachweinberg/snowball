@@ -1,4 +1,5 @@
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
+import { logSentryError } from '~/lib/sentry';
 
 type WithID<T> = T & {
   id: string;
@@ -98,6 +99,44 @@ export const updateDocument = async (collection: string, documentID: string, dat
   return firebaseAdmin().firestore().collection(collection).doc(documentID).set(data, { merge: true });
 };
 
-export function deleteDocument(documentPath: string) {
+export const deleteDocument = (documentPath: string) => {
   return firebaseAdmin().firestore().doc(documentPath).delete();
-}
+};
+
+export const deleteCollection = (collectionPath: string) => {
+  const batchSize = 100;
+  const collectionRef = firebaseAdmin().firestore().collection(collectionPath);
+  const query = collectionRef.orderBy('__name__').limit(batchSize);
+  return deleteQueryBatch(collectionPath, query, batchSize);
+};
+
+const deleteQueryBatch = async (collectionPath: string, query: FirebaseFirestore.Query, batchSize: number) => {
+  try {
+    const snapshot = await query.get();
+
+    // When there are no documents left, we are done
+    if (snapshot.size === 0) {
+      return;
+    }
+
+    // Delete documents in a batch
+    const batch = firebaseAdmin().firestore().batch();
+
+    console.log(`Deleting ${snapshot.size} ${collectionPath} documents`);
+
+    snapshot.docs.forEach((doc) => {
+      batch.delete(doc.ref);
+    });
+
+    await batch.commit();
+
+    await new Promise((resolve) => process.nextTick(resolve));
+
+    await deleteQueryBatch(collectionPath, query, batchSize);
+  } catch (err) {
+    console.error(err);
+    logSentryError(err);
+  }
+
+  return;
+};

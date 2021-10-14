@@ -13,7 +13,7 @@ import { Router } from 'express';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { deleteRedisKey, getRedisKey, setRedisKey } from '~/lib/redis';
 import { catchErrors, getUserFromAuthHeader, requireSignedIn } from '~/utils/api';
-import { fetchDocument, findDocuments, updateDocument } from '~/utils/db';
+import { deleteCollection, fetchDocument, findDocuments, updateDocument } from '~/utils/db';
 import { capitalize } from '~/utils/misc';
 import { getPortfolioDailyHistory } from '~/utils/portfolios';
 import { calculatePortfolioQuotes, calculatePortfolioSummary } from '~/utils/positions';
@@ -22,6 +22,7 @@ const portfoliosRouter = Router();
 
 portfoliosRouter.get(
   '/:portfolioID/settings',
+  requireSignedIn,
   catchErrors(async (req, res) => {
     let userOwnsPortfolio = false;
 
@@ -49,6 +50,7 @@ portfoliosRouter.get(
 
 portfoliosRouter.put(
   '/:portfolioID/settings',
+  requireSignedIn,
   catchErrors(async (req, res) => {
     const { settings } = req.body as EditPortfolioSettingsRequest;
 
@@ -216,6 +218,31 @@ portfoliosRouter.get(
     await setRedisKey(redisKey, response, 12);
 
     res.status(200).json(response);
+  })
+);
+
+portfoliosRouter.delete(
+  '/:portfolioID',
+  requireSignedIn,
+  catchErrors(async (req, res) => {
+    let userOwnsPortfolio = false;
+
+    const portfolio = await fetchDocument<Portfolio>('portfolios', req.params.portfolioID);
+
+    const authUser = await getUserFromAuthHeader(req, false);
+
+    if (authUser && portfolio.userID === authUser.uid) {
+      userOwnsPortfolio = true;
+    }
+
+    if (!userOwnsPortfolio) {
+      // Private portfolio
+      return res.status(403).end();
+    }
+
+    await deleteCollection(`portfolios/${req.params.portfolioID}`);
+
+    res.status(200).json({ status: 'ok' });
   })
 );
 
