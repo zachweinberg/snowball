@@ -13,7 +13,7 @@ import { Router } from 'express';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { deleteRedisKey, getRedisKey, setRedisKey } from '~/lib/redis';
 import { catchErrors, getUserFromAuthHeader, requireSignedIn } from '~/utils/api';
-import { deleteCollection, fetchDocument, findDocuments, updateDocument } from '~/utils/db';
+import { deleteCollection, deleteDocument, fetchDocument, findDocuments, updateDocument } from '~/utils/db';
 import { capitalize } from '~/utils/misc';
 import { getPortfolioDailyHistory } from '~/utils/portfolios';
 import { calculatePortfolioQuotes, calculatePortfolioSummary } from '~/utils/positions';
@@ -240,7 +240,9 @@ portfoliosRouter.delete(
       return res.status(403).end();
     }
 
-    await deleteCollection(`portfolios/${req.params.portfolioID}`);
+    await deleteDocument(`portfolios/${req.params.portfolioID}`);
+    await deleteCollection(`portfolios/${req.params.portfolioID}/dailyBalances`);
+    await deleteCollection(`portfolios/${req.params.portfolioID}/positions`);
 
     res.status(200).json({ status: 'ok' });
   })
