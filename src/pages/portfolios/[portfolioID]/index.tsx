@@ -1,3 +1,4 @@
+import { ArrowCircleLeftIcon } from '@heroicons/react/outline';
 import {
   AssetColor,
   AssetType,
@@ -193,7 +194,12 @@ const PortfolioView: NextPage = () => {
 
           <div className="pb-16">
             <div className="flex items-center justify-between mb-7">
-              <h1 className="font-bold text-[1.75rem]">{portfolio.name}</h1>
+              <div className="flex items-center">
+                <Link href={`/portfolios`}>
+                  <ArrowCircleLeftIcon className="w-8 h-8 mr-3 cursor-pointer hover:opacity-70" />
+                </Link>
+                <h1 className="font-bold text-[1.75rem]">{portfolio.name}</h1>
+              </div>
               <div className="flex items-center">
                 <div className="mr-3 w-44">
                   <Button

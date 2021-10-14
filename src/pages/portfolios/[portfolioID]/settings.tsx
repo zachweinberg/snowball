@@ -1,4 +1,5 @@
 import { RadioGroup } from '@headlessui/react';
+import { ArrowCircleLeftIcon } from '@heroicons/react/outline';
 import { Portfolio, PortfolioSettings } from '@zachweinberg/obsidian-schema';
 import classNames from 'classnames';
 import type { NextPage } from 'next';
@@ -9,7 +10,6 @@ import Layout from '~/components/layout/Layout';
 import Button from '~/components/ui/Button';
 import Link from '~/components/ui/Link';
 import Spinner from '~/components/ui/Spinner';
-import TextInput from '~/components/ui/TextInput';
 import { API } from '~/lib/api';
 
 const PRIVACY_LEVELS = [
@@ -80,7 +80,10 @@ const PortfolioSettingsPage: NextPage = () => {
       <Layout title={`${portfolio?.name ?? 'Portfolio'} Settings - Obsidian Tracker`}>
         {portfolio && settings && (
           <>
-            <div className="flex items-center justify-between mb-7">
+            <div className="flex items-center mb-7">
+              <Link href={`/portfolios/${portfolio.id}`}>
+                <ArrowCircleLeftIcon className="w-8 h-8 mr-3 cursor-pointer hover:opacity-70" />
+              </Link>
               <h1 className="font-bold text-[1.75rem]">{portfolio.name}</h1>
             </div>
             <div>
@@ -102,9 +105,7 @@ const PortfolioSettingsPage: NextPage = () => {
                     >
                       Portfolio Name
                     </label>
-                    <div className="mt-1">
-                      <TextInput value={portfolio.name} />
-                    </div>
+                    <div className="mt-1">{/* <TextInput value={portfolio.name} /> */}</div>
                   </div>
 
                   <RadioGroup value={null} onChange={() => null}>

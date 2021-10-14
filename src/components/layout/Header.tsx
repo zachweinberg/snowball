@@ -56,7 +56,7 @@ const Header: React.FunctionComponent = () => {
                           'py-5 font-semibold text-[.95rem]',
                           router.pathname.includes(link.href)
                             ? 'border-lime text-dark border-b-4'
-                            : 'text-darkgray hover:text-dark'
+                            : 'text-darkgray hover:text-dark transition-colors'
                         )}
                       >
                         {link.label}
