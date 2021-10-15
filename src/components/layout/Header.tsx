@@ -2,8 +2,8 @@ import { ChevronDownIcon } from '@heroicons/react/outline';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
 import Cloud from '~/components/ui/Cloud';
-import Dropdown from '~/components/ui/Dropdown';
 import Link from '~/components/ui/Link';
+import Menu from '~/components/ui/Menu';
 import { useAuth } from '~/hooks/useAuth';
 import { API } from '~/lib/api';
 
@@ -66,7 +66,7 @@ const Header: React.FunctionComponent = () => {
                 ))}
               </ul>
 
-              <Dropdown
+              <Menu
                 options={[
                   { label: 'Settings', onClick: () => auth.logout() },
                   { label: 'Subscription', onClick: () => auth.logout() },

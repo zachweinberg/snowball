@@ -289,6 +289,7 @@ const PortfolioView: NextPage = () => {
                       AssetType.Crypto,
                       AssetType.RealEstate,
                       AssetType.Cash,
+                      AssetType.Custom,
                     ]}
                     selected={activeTab}
                   />

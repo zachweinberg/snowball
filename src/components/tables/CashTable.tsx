@@ -1,6 +1,6 @@
 import { CashPosition, Unit } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
-import Dropdown from '~/components/ui/Dropdown';
+import Menu from '~/components/ui/Menu';
 import { formatMoneyFromNumber } from '~/lib/money';
 import Button from '../ui/Button';
 import { BaseTable } from './BaseTable';
@@ -21,8 +21,8 @@ const CashTable: React.FunctionComponent<Props> = ({
 }: Props) => {
   if (cash.length === 0) {
     return (
-      <div className="text-center mx-auto py-16">
-        <p className="text-lg mb-3 font-semibold">Add some cash to your portfolio:</p>
+      <div className="py-16 mx-auto text-center">
+        <p className="mb-3 text-lg font-semibold">Add some cash to your portfolio:</p>
         <Button type="button" onClick={onAddAsset} className="w-64">
           + Add Cash
         </Button>
@@ -47,7 +47,7 @@ const CashTable: React.FunctionComponent<Props> = ({
         Header: '',
         accessor: 'arrow',
         Cell: () => (
-          <Dropdown
+          <Menu
             options={[
               { label: 'Edit', onClick: () => null },
               { label: 'Delete', onClick: () => null },

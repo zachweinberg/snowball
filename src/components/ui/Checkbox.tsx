@@ -28,7 +28,7 @@ const Checkbox: React.FunctionComponent<Props> = ({
         <label htmlFor={name} className="font-medium text-dark">
           {title}
         </label>
-        <p className="mt-1 text-sm text-dark">{description}</p>
+        <p className="mt-1 text-sm font-medium text-darkgray">{description}</p>
       </div>
     </div>
   );

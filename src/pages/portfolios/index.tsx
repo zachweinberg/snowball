@@ -82,7 +82,9 @@ const PortfolioListPage: NextPage = () => {
               fill="#00565B"
             />
           </svg>
-          <p className="mb-4 text-[1.75rem] font-bold text-dark">Welcome to Obsidian.</p>
+          <p className="mb-4 text-[1.75rem] font-bold text-dark">
+            Welcome to Obsidian Tracker.
+          </p>
           <p className="mb-5 font-medium text-center text-darkgray text-[1rem] leading-tight">
             You do not have any portfolios yet.
             <br />

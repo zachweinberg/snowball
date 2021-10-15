@@ -222,4 +222,7 @@ export const API = {
       false
     );
   },
+  deletePortfolio: (portfolioID: string) => {
+    return request(`/api/portfolios/${portfolioID}`, 'delete');
+  },
 };

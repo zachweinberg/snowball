@@ -1,6 +1,6 @@
 import { CustomPosition, Unit } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
-import Dropdown from '~/components/ui/Dropdown';
+import Menu from '~/components/ui/Menu';
 import { formatMoneyFromNumber } from '~/lib/money';
 import Button from '../ui/Button';
 import { BaseTable } from './BaseTable';
@@ -47,7 +47,7 @@ const CustomAssetTable: React.FunctionComponent<Props> = ({
         Header: '',
         accessor: 'arrow',
         Cell: () => (
-          <Dropdown
+          <Menu
             options={[
               { label: 'Edit', onClick: () => null },
               { label: 'Delete', onClick: () => null },

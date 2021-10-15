@@ -2,7 +2,7 @@ import { CryptoPositionWithQuote, Unit } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
 import { formatMoneyFromNumber, formatNumber, formatPercentageChange } from '~/lib/money';
 import Button from '../ui/Button';
-import Dropdown from '../ui/Dropdown';
+import Menu from '../ui/Menu';
 import { BaseTable } from './BaseTable';
 import { buildCryptoData, CryptoTableData } from './builders';
 
@@ -102,7 +102,7 @@ const CryptoTable: React.FunctionComponent<Props> = ({
         Header: '',
         accessor: 'id',
         Cell: ({ row, value }) => (
-          <Dropdown
+          <Menu
             options={[
               { label: 'Edit Cost Basis', onClick: () => null },
               { label: 'Edit Quantity', onClick: () => null },

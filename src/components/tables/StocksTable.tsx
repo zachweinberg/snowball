@@ -2,7 +2,7 @@ import { StockPositionWithQuote, Unit } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
 import { formatMoneyFromNumber, formatNumber, formatPercentageChange } from '~/lib/money';
 import Button from '../ui/Button';
-import Dropdown from '../ui/Dropdown';
+import Menu from '../ui/Menu';
 import { BaseTable } from './BaseTable';
 import { buildStockData, StocksTableData } from './builders';
 
@@ -89,7 +89,7 @@ const StocksTable: React.FunctionComponent<Props> = ({
         Header: '',
         accessor: 'id',
         Cell: ({ value, row }) => (
-          <Dropdown
+          <Menu
             options={[
               { label: 'Edit Cost Basis', onClick: () => null },
               { label: 'Edit Quantity', onClick: () => null },

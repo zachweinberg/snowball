@@ -11,7 +11,7 @@ const createPortfolioSchema = yup.object().shape({
     .min(3, 'Portfolio name is too short.')
     .max(25, 'Portfolio name is too long.')
     .required(),
-  privatePortfolio: yup.boolean().required('Privacy is required.'),
+  publicPortfolio: yup.boolean().required('Privacy level is required.'),
 });
 
 interface Props {
@@ -20,7 +20,7 @@ interface Props {
 
 const CreatePortfolioForm: React.FunctionComponent<Props> = ({ afterCreate }: Props) => {
   const [portfolioName, setPortfolioName] = useState('');
-  const [privatePortfolio, setPrivatePortfolio] = useState(true);
+  const [publicPortfolio, setPublicPortfolio] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -32,7 +32,7 @@ const CreatePortfolioForm: React.FunctionComponent<Props> = ({ afterCreate }: Pr
     try {
       await createPortfolioSchema.validate({
         portfolioName,
-        privatePortfolio,
+        publicPortfolio,
       });
       isValid = true;
     } catch (err) {
@@ -43,7 +43,7 @@ const CreatePortfolioForm: React.FunctionComponent<Props> = ({ afterCreate }: Pr
       setLoading(true);
       try {
         setError('');
-        await API.createPortfolio(portfolioName, false);
+        await API.createPortfolio(portfolioName, publicPortfolio);
         afterCreate();
       } catch (err) {
         if (err.response?.data?.error) {
@@ -77,11 +77,11 @@ const CreatePortfolioForm: React.FunctionComponent<Props> = ({ afterCreate }: Pr
 
       <div className="mb-9">
         <Checkbox
-          checked={privatePortfolio}
-          onChange={(checked) => setPrivatePortfolio(checked)}
+          checked={publicPortfolio}
+          onChange={(checked) => setPublicPortfolio(checked)}
           name="public"
-          title="Private portfolio"
-          description="Uncheck this box if you would like the portfolio to be public. Public portfolios are viewable by anyone with the link. Even if a portfolio is public, only you can modify it."
+          title="Make this a public portfolio"
+          description="Check this box if you would like the portfolio to be public. The portfolio will be viewable by anyone with the link, however only you can modify it."
         />
       </div>
 
