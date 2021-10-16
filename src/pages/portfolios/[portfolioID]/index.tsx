@@ -94,11 +94,14 @@ const PortfolioView: NextPage = () => {
         case AssetType.Cash:
           return (
             <CashTable
-              unit={unit}
               cash={portfolio.cash}
               onAddAsset={() => setAddingAsset(true)}
-              onDelete={(cashID, name) => {
-                setDeleteAsset({ id: cashID, type: AssetType.Cash, name });
+              onDelete={(cashID) => {
+                setDeleteAsset({
+                  id: cashID,
+                  type: AssetType.Cash,
+                  name: 'this cash account',
+                });
                 setIsDeleting(true);
               }}
             />
@@ -106,11 +109,14 @@ const PortfolioView: NextPage = () => {
         case AssetType.RealEstate:
           return (
             <RealEstateTable
-              unit={unit}
               realEstate={portfolio.realEstate}
               onAddAsset={() => setAddingAsset(true)}
-              onDelete={(realEstateID, name) => {
-                setDeleteAsset({ id: realEstateID, type: AssetType.RealEstate, name });
+              onDelete={(realEstateID) => {
+                setDeleteAsset({
+                  id: realEstateID,
+                  type: AssetType.RealEstate,
+                  name: 'this property',
+                });
                 setIsDeleting(true);
               }}
             />
@@ -118,11 +124,14 @@ const PortfolioView: NextPage = () => {
         case AssetType.Custom:
           return (
             <CustomAssetsTable
-              unit={unit}
               customs={portfolio.customs}
               onAddAsset={() => setAddingAsset(true)}
-              onDelete={(customID, name) => {
-                setDeleteAsset({ id: customID, type: AssetType.Custom, name });
+              onDelete={(customID) => {
+                setDeleteAsset({
+                  id: customID,
+                  type: AssetType.Custom,
+                  name: 'this custom asset',
+                });
                 setIsDeleting(true);
               }}
             />

@@ -1,4 +1,4 @@
-import { CashPosition, Unit } from '@zachweinberg/obsidian-schema';
+import { CashPosition } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
 import Menu from '~/components/ui/Menu';
 import { formatMoneyFromNumber } from '~/lib/money';
@@ -8,17 +8,11 @@ import { buildCashData, CashTableData } from './builders';
 
 interface Props {
   cash: CashPosition[];
-  unit: Unit;
   onAddAsset: () => void;
-  onDelete: (cashID: string, name: string) => void;
+  onDelete: (cashID: string) => void;
 }
 
-const CashTable: React.FunctionComponent<Props> = ({
-  cash,
-  unit,
-  onAddAsset,
-  onDelete,
-}: Props) => {
+const CashTable: React.FunctionComponent<Props> = ({ cash, onAddAsset, onDelete }: Props) => {
   if (cash.length === 0) {
     return (
       <div className="py-16 mx-auto text-center">
@@ -45,12 +39,12 @@ const CashTable: React.FunctionComponent<Props> = ({
       },
       {
         Header: '',
-        accessor: 'arrow',
-        Cell: () => (
+        accessor: 'id',
+        Cell: ({ value }) => (
           <Menu
             options={[
               { label: 'Edit', onClick: () => null },
-              { label: 'Delete', onClick: () => null },
+              { label: 'Delete', onClick: () => onDelete(value) },
             ]}
             button={() => (
               <svg

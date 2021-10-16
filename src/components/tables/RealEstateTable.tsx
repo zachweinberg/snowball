@@ -1,4 +1,4 @@
-import { RealEstatePosition, Unit } from '@zachweinberg/obsidian-schema';
+import { RealEstatePosition } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
 import Menu from '~/components/ui/Menu';
 import { formatMoneyFromNumber } from '~/lib/money';
@@ -8,15 +8,13 @@ import { buildRealEstateData, RealEstateTableData } from './builders';
 
 interface Props {
   realEstate: RealEstatePosition[];
-  unit: Unit;
   onAddAsset: () => void;
-  onDelete: (realEstateID: string, name: string) => void;
+  onDelete: (realEstateID: string) => void;
 }
 
 const RealEstateTable: React.FunctionComponent<Props> = ({
   realEstate,
   onAddAsset,
-  unit,
   onDelete,
 }: Props) => {
   if (realEstate.length === 0) {
@@ -50,12 +48,12 @@ const RealEstateTable: React.FunctionComponent<Props> = ({
       },
       {
         Header: '',
-        accessor: 'arrow',
-        Cell: () => (
+        accessor: 'id',
+        Cell: ({ value }) => (
           <Menu
             options={[
               { label: 'Edit', onClick: () => null },
-              { label: 'Delete', onClick: () => null },
+              { label: 'Delete', onClick: () => onDelete(value) },
             ]}
             button={() => (
               <svg
@@ -72,7 +70,7 @@ const RealEstateTable: React.FunctionComponent<Props> = ({
         ),
       },
     ],
-    [unit]
+    []
   );
 
   return <BaseTable columns={columns} data={data} />;

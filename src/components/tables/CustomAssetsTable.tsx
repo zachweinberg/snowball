@@ -1,4 +1,4 @@
-import { CustomPosition, Unit } from '@zachweinberg/obsidian-schema';
+import { CustomPosition } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
 import Menu from '~/components/ui/Menu';
 import { formatMoneyFromNumber } from '~/lib/money';
@@ -8,14 +8,12 @@ import { buildCustomAssetData, CustomAssetTableData } from './builders';
 
 interface Props {
   customs: CustomPosition[];
-  unit: Unit;
   onAddAsset: () => void;
-  onDelete: (customAssetID: string, name: string) => void;
+  onDelete: (customAssetID: string) => void;
 }
 
 const CustomAssetTable: React.FunctionComponent<Props> = ({
   customs,
-  unit,
   onAddAsset,
   onDelete,
 }: Props) => {
@@ -45,12 +43,12 @@ const CustomAssetTable: React.FunctionComponent<Props> = ({
       },
       {
         Header: '',
-        accessor: 'arrow',
-        Cell: () => (
+        accessor: 'id',
+        Cell: ({ value }) => (
           <Menu
             options={[
               { label: 'Edit', onClick: () => null },
-              { label: 'Delete', onClick: () => null },
+              { label: 'Delete', onClick: () => onDelete(value) },
             ]}
             button={() => (
               <svg
