@@ -64,7 +64,7 @@ const PortfolioView: NextPage = () => {
     loadPortfolioData();
   }, []);
 
-  const renderTable = () => {
+  const renderTable = useMemo(() => {
     if (portfolio) {
       switch (activeTab) {
         case AssetType.Stock:
@@ -142,7 +142,7 @@ const PortfolioView: NextPage = () => {
     } else {
       return null;
     }
-  };
+  }, [portfolio, activeTab, unit]);
 
   const portfolioTotal = useMemo(
     () =>
@@ -234,7 +234,7 @@ const PortfolioView: NextPage = () => {
             </div>
 
             <div className="grid grid-cols-1 grid-rows-2 gap-4 lg:grid-rows-1 lg:grid-cols-2 mb-7">
-              <div className="relative px-5 bg-dark rounded-3xl">
+              <div className="relative bg-dark rounded-3xl">
                 <BalanceHistoryChart
                   data={portfolio.dailyBalances.map((d) => ({
                     balance: d.totalValue,
@@ -320,7 +320,7 @@ const PortfolioView: NextPage = () => {
                 </div>
               </div>
 
-              {renderTable()}
+              {renderTable}
             </div>
           </div>
         </>

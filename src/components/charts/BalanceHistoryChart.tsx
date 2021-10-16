@@ -1,5 +1,5 @@
 import React from 'react';
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip } from 'recharts';
+import { Line, LineChart, ResponsiveContainer, Tooltip } from 'recharts';
 
 type Data = { date: Date; balance: number };
 
@@ -26,23 +26,14 @@ const BalanceHistoryChart: React.FunctionComponent<Props> = ({ data }: Props) =>
     </div>
   ) : (
     <ResponsiveContainer>
-      <LineChart data={data}>
-        <CartesianGrid
-          strokeDasharray="6"
-          vertical={false}
-          horizontal
-          stroke="#4F4F4F"
-          strokeWidth={1}
-        />
-
+      <LineChart data={data} margin={{ top: 0, left: 0, right: 0, bottom: 0 }}>
         <Tooltip content={<CustomTooltip />} position={{ x: 0 }} />
-
         <Line
           dot={<NoDot />}
           type="linear"
           dataKey="balance"
           stroke="#CEF33C"
-          strokeWidth={3}
+          strokeWidth={2}
           isAnimationActive={false}
         />
       </LineChart>
