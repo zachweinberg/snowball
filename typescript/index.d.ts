@@ -217,6 +217,7 @@ export interface EditPortfolioSettingsRequest {
 export interface WatchListItem {
     assetType: AssetType;
     symbol: string;
+    marketCap: number;
     latestPrice: number;
     changePercent: number;
     changeDollars: number;
