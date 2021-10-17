@@ -74,7 +74,7 @@ watchListRouter.post(
 
     await createDocument(`watchlists/${userID}/assets`, {
       ...body,
-      dateAdded: new Date(0),
+      dateAdded: new Date(),
     });
 
     const response = {
