@@ -66,25 +66,25 @@ const Header: React.FunctionComponent = () => {
                 ))}
               </ul>
 
-              <Menu
-                options={[
-                  { label: 'Settings', onClick: () => auth.logout() },
-                  { label: 'Subscription', onClick: () => auth.logout() },
-                  { label: 'Log Out', onClick: () => auth.logout() },
-                ]}
-                button={() => (
-                  <div className="flex items-center">
-                    <span className="inline-flex items-center justify-center w-10 h-10 mr-1 rounded-full bg-dark hover:opacity-90">
-                      <span className="text-lg font-medium leading-none text-white">
-                        {auth.user?.name?.[0]}
+              {auth.user && (
+                <Menu
+                  options={[
+                    { label: 'Settings', onClick: () => auth.logout() },
+                    { label: 'Subscription', onClick: () => auth.logout() },
+                    { label: 'Log Out', onClick: () => auth.logout() },
+                  ]}
+                  button={() => (
+                    <div className="flex items-center">
+                      <span className="inline-flex items-center justify-center w-10 h-10 mr-1 rounded-full bg-dark hover:opacity-90">
+                        <span className="text-lg font-medium leading-none text-white">
+                          {auth.user?.name?.[0].toUpperCase()}
+                        </span>
                       </span>
-                    </span>
-                    <ChevronDownIcon className="w-5 h-5 text-dark" />
-                  </div>
-                )}
-              />
-
-              {/*  */}
+                      <ChevronDownIcon className="w-5 h-5 text-dark" />
+                    </div>
+                  )}
+                />
+              )}
             </nav>
           </div>
         </div>
