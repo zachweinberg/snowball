@@ -5,6 +5,7 @@ import { Area, Bar, Line } from '@visx/shape';
 import { useTooltip } from '@visx/tooltip';
 import { bisector, extent, max } from 'd3-array';
 import React, { useCallback, useMemo, useState } from 'react';
+import { formatMoneyFromNumber } from '~/lib/money';
 
 interface ChartData {
   balance: number;
@@ -78,14 +79,29 @@ const SVGChart: React.FunctionComponent<SVGChartProps> = (props: SVGChartProps) 
   return (
     <div className="relative">
       <div className="absolute flex justify-between w-full px-3 py-2 text-white">
-        <p className="p-1 text-lg font-semibold bg-dark">Balance over time</p>
+        <div className="p-1">
+          <p className="mb-1 text-lg font-semibold bg-dark">Balance over time</p>
+          <p className="font-medium">{formatMoneyFromNumber(tooltipBalance)}</p>
+        </div>
         <div className="flex items-center space-x-2 text-sm font-medium bg-dark">
-          <div className="p-1 rounded-full hover:bg-lime hover:text-dark">1D</div>
-          <div className="p-1 rounded-full hover:bg-lime hover:text-dark">1W</div>
-          <div className="p-1 rounded-full hover:bg-lime hover:text-dark">1M</div>
-          <div className="p-1 rounded-full hover:bg-lime hover:text-dark">6M</div>
-          <div className="p-1 rounded-full hover:bg-lime hover:text-dark">1Y</div>
-          <div className="p-1 rounded-full hover:bg-lime hover:text-dark">All</div>
+          <div className="p-1 rounded-full cursor-pointer hover:bg-lime hover:text-dark">
+            1D
+          </div>
+          <div className="p-1 rounded-full cursor-pointer hover:bg-lime hover:text-dark">
+            1W
+          </div>
+          <div className="p-1 rounded-full cursor-pointer hover:bg-lime hover:text-dark">
+            1M
+          </div>
+          <div className="p-1 rounded-full cursor-pointer hover:bg-lime hover:text-dark">
+            6M
+          </div>
+          <div className="p-1 rounded-full cursor-pointer hover:bg-lime hover:text-dark">
+            1Y
+          </div>
+          <div className="p-1 rounded-full cursor-pointer hover:bg-lime hover:text-dark">
+            All
+          </div>
         </div>
       </div>
 

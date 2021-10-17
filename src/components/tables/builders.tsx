@@ -5,6 +5,7 @@ import {
   RealEstatePosition,
   RealEstatePropertyType,
   StockPositionWithQuote,
+  WatchListItem,
 } from '@zachweinberg/obsidian-schema';
 
 // Stocks
@@ -112,5 +113,23 @@ export const buildCustomAssetData = (custom: CustomPosition[]): CustomAssetTable
     id: c.id,
     assetName: c.assetName,
     value: c.value,
+  }));
+};
+
+export interface WatchlistTableData {
+  fullName: string;
+  last: number;
+  changePercent: number;
+  changeDollars: number;
+  marketCap: number;
+}
+
+export const buildWatchlistData = (items: WatchListItem[]): WatchlistTableData[] => {
+  return items.map((item) => ({
+    fullName: item.fullName,
+    last: item.latestPrice,
+    changePercent: item.changePercent,
+    changeDollars: item.changeDollars,
+    marketCap: item.marketCap,
   }));
 };

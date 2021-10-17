@@ -2,7 +2,9 @@ import { WatchListItem } from '@zachweinberg/obsidian-schema';
 import type { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import Layout from '~/components/layout/Layout';
+import WatchlistStockTable from '~/components/tables/WatchlistStockTable';
 import Button from '~/components/ui/Button';
+import Spinner from '~/components/ui/Spinner';
 import AddAlertModal from '~/components/watchlist/AddAlertModal';
 import AddToWatchlistModal from '~/components/watchlist/AddToWatchlistModal';
 import { API } from '~/lib/api';
@@ -56,18 +58,20 @@ const BellIcon = () => (
 );
 
 const WatchList: NextPage = () => {
+  const [loading, setLoading] = useState(true);
   const [addingToWatchList, setAddingToWatchlist] = useState(false);
   const [addingAlert, setAddingAlert] = useState(false);
-  const [watchListStocks, setWatchListStocks] = useState<WatchListItem[]>([]);
-  const [watchListCrypto, setWatchListCrypto] = useState<WatchListItem[]>([]);
+  const [watchListItems, setWatchListItems] = useState<WatchListItem[]>([]);
 
   const loadWatchList = async () => {
+    setLoading(true);
     try {
       const watchlistData = await API.getWatchlist();
-      setWatchListStocks(watchlistData.stocks);
-      setWatchListCrypto(watchlistData.crypto);
+      setWatchListItems([...watchlistData.stocks, ...watchlistData.crypto]);
     } catch (err) {
       alert('Could not load your watchlist. Please contact us if this persists.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -83,9 +87,11 @@ const WatchList: NextPage = () => {
           setAddingToWatchlist(false);
 
           if (reload) {
+            loadWatchList();
           }
         }}
       />
+
       <AddAlertModal open={addingAlert} onClose={() => setAddingAlert(false)} />
 
       <div className="flex items-center justify-between mb-7">
@@ -93,11 +99,18 @@ const WatchList: NextPage = () => {
       </div>
 
       <div className="flex flex-col lg:flex-row lg:justify-between">
-        <div className="flex-1 px-5 py-4 mb-4 bg-white border shadow-sm lg:mr-10 rounded-3xl border-bordergray lg:mb-0">
+        <div className="flex-1 px-5 py-4 mb-4 bg-white border shadow-sm lg:mr-7 rounded-3xl border-bordergray lg:mb-0">
           <div className="flex items-center justify-between">
             <p className="font-semibold text-[1rem]">Your Watchlist</p>
+            <Button type="button" onClick={() => setAddingToWatchlist(true)} className="w-24">
+              + Add
+            </Button>
           </div>
-          {watchListStocks.length === 0 && watchListCrypto.length === 0 ? (
+          {loading ? (
+            <div className="flex items-center justify-center mt-32">
+              <Spinner size={30} />
+            </div>
+          ) : watchListItems.length === 0 ? (
             <div className="flex flex-col items-center justify-center p-32 text-center">
               <WatchlistIcon />
               <p className="font-bold text-[1.25rem] mb-3">
@@ -114,10 +127,8 @@ const WatchList: NextPage = () => {
               </div>
             </div>
           ) : (
-            <div>
-              {watchListStocks.map((stock) => (
-                <div>{stock.symbol}</div>
-              ))}
+            <div className="mt-6">
+              <WatchlistStockTable items={watchListItems} />
             </div>
           )}
         </div>
