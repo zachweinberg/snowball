@@ -6,11 +6,11 @@ import { Area, Bar, Line } from '@visx/shape';
 import { defaultStyles, Tooltip, TooltipWithBounds, withTooltip } from '@visx/tooltip';
 import { WithTooltipProvidedProps } from '@visx/tooltip/lib/enhancers/withTooltip';
 import { bisector, extent, max } from 'd3-array';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 type TooltipData = AppleStock;
 
-const stock = appleStock.slice(1273);
+const stock = appleStock.slice(0);
 
 export const background = '#3b6978';
 export const background2 = '#204051';
@@ -70,6 +70,8 @@ const BalanceOverTime = withTooltip<AreaProps, TooltipData>(
       [margin.top, innerHeight]
     );
 
+    const [val, setVal] = useState(2000);
+
     // tooltip handler
     const handleTooltip = useCallback(
       (event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
@@ -90,6 +92,7 @@ const BalanceOverTime = withTooltip<AreaProps, TooltipData>(
           tooltipLeft: x,
           tooltipTop: stockValueScale(getStockValue(d)),
         });
+        setVal(getStockValue(d));
       },
       [showTooltip, stockValueScale, dateScale]
     );
@@ -118,6 +121,9 @@ const BalanceOverTime = withTooltip<AreaProps, TooltipData>(
             onMouseMove={handleTooltip}
             onMouseLeave={() => hideTooltip()}
           />
+          <text x="65" y="55" fill="#fff">
+            {val}
+          </text>
           {tooltipData && (
             <g>
               <Line
