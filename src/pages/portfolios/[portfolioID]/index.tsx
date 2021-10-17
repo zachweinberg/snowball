@@ -234,14 +234,14 @@ const PortfolioView: NextPage = () => {
             </div>
 
             <div className="grid grid-cols-1 grid-rows-2 gap-4 lg:grid-rows-1 lg:grid-cols-2 mb-7">
-              {/* <BalanceHistoryChart
+              <div className="max-h-64">
+                <BalanceOverTime
                   data={portfolio.dailyBalances.map((d) => ({
                     balance: d.totalValue,
                     date: d.date,
                   }))}
-                /> */}
-              <BalanceOverTime />
-
+                />
+              </div>
               <div className="grid grid-cols-3 gap-4">
                 <AssetPercentCard
                   amount={portfolio.stocksTotal}
