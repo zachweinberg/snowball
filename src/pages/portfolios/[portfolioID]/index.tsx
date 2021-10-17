@@ -9,7 +9,7 @@ import classNames from 'classnames';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import React, { useEffect, useMemo, useState } from 'react';
-import BalanceHistoryChart from '~/components/charts/BalanceHistoryChart';
+import BalanceOverTime from '~/components/charts/BalanceOverTime';
 import Layout from '~/components/layout/Layout';
 import AddAssetForm from '~/components/portfolio-view/AddAssetForm';
 import AssetPercentCard from '~/components/portfolio-view/AssetPercentCard';
@@ -234,14 +234,13 @@ const PortfolioView: NextPage = () => {
             </div>
 
             <div className="grid grid-cols-1 grid-rows-2 gap-4 lg:grid-rows-1 lg:grid-cols-2 mb-7">
-              <div className="relative bg-dark rounded-3xl">
-                <BalanceHistoryChart
+              {/* <BalanceHistoryChart
                   data={portfolio.dailyBalances.map((d) => ({
                     balance: d.totalValue,
                     date: d.date,
                   }))}
-                />
-              </div>
+                /> */}
+              <BalanceOverTime />
 
               <div className="grid grid-cols-3 gap-4">
                 <AssetPercentCard
