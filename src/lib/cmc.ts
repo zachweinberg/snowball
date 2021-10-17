@@ -38,6 +38,7 @@ export const getCryptoPrices = async (
   [symbol: string]: {
     latestPrice: number;
     changePercent: number;
+    marketCap: number;
   };
 }> => {
   const dedupedSymbols = [...new Set(coinSymbols)];
@@ -56,6 +57,7 @@ export const getCryptoPrices = async (
       [curr.toUpperCase()]: {
         latestPrice: response.data[curr]?.quote?.USD?.price ?? 0,
         changePercent: (response.data[curr]?.quote?.USD?.percent_change_24h ?? 0) / 100,
+        marketCap: response.data[curr]?.quote?.USD?.market_cap ?? 0,
       },
     }),
     {}

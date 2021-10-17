@@ -34,6 +34,7 @@ watchListRouter.get(
         changeDollars: stockPriceMap[stock.symbol]?.change ?? 0,
         dateAdded: stock.dateAdded,
         fullName: stock.fullName,
+        marketCap: stockPriceMap[stock.symbol]?.marketCap,
       });
     }
 
@@ -45,6 +46,7 @@ watchListRouter.get(
         changePercent: cryptoPriceMap[coin.symbol]?.changePercent ?? 0,
         dateAdded: coin.dateAdded,
         fullName: coin.fullName,
+        marketCap: cryptoPriceMap[coin.symbol]?.marketCap ?? 0,
         changeDollars: reversePercentage(
           cryptoPriceMap[coin.symbol]?.latestPrice ?? 0,
           cryptoPriceMap[coin.symbol]?.changePercent ?? 0

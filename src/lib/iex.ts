@@ -6,6 +6,7 @@ interface IEXStockResponse {
       latestPrice: number | undefined;
       change: number | undefined;
       changePercent: number | undefined;
+      marketCap: number | undefined;
     };
   };
 }
@@ -26,6 +27,7 @@ export const getStockPrices = async (
     latestPrice: number;
     change: number;
     changePercent: number;
+    marketCap: number;
   };
 }> => {
   const dedupedSymbols = [...new Set(symbols)];
@@ -35,7 +37,9 @@ export const getStockPrices = async (
   }
 
   const response = await requestIEX<IEXStockResponse>(
-    `/stock/market/batch?types=quote&filter=latestPrice,change,changePercent&symbols=${dedupedSymbols.join(',')}`
+    `/stock/market/batch?types=quote&filter=marketCap,latestPrice,change,changePercent&symbols=${dedupedSymbols.join(
+      ','
+    )}`
   );
 
   return Object.keys(response).reduce(
@@ -45,6 +49,7 @@ export const getStockPrices = async (
         latestPrice: response[curr]?.quote?.latestPrice ?? 0,
         change: response[curr]?.quote?.change ?? 0,
         changePercent: response[curr]?.quote?.changePercent ?? 0,
+        marketCap: response[curr]?.quote?.marketCap ?? 0,
       },
     }),
     {}
