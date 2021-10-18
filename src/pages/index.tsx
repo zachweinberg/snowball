@@ -1,20 +1,16 @@
 import { NextPage } from 'next';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-import Spinner from '~/components/ui/Spinner';
+import Features from '~/components/landing/Features';
+import Hero from '~/components/landing/Hero';
+import Header from '~/components/layout/Header';
 
-const Home: NextPage = () => {
-  const router = useRouter();
-
-  useEffect(() => {
-    router.push('/login');
-  });
-
+const HomePage: NextPage = () => {
   return (
-    <div className="flex items-center justify-center w-full mt-20">
-      <Spinner size={40} />
+    <div className="flex flex-col min-h-screen overflow-hidden">
+      <Header />
+      <Hero />
+      <Features />
     </div>
   );
 };
 
-export default Home;
+export default HomePage;
