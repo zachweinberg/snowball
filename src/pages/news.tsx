@@ -6,6 +6,7 @@ import debounce from 'lodash/debounce';
 import { DateTime } from 'luxon';
 import type { NextPage } from 'next';
 import { useCallback, useEffect, useState } from 'react';
+import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
 import Layout from '~/components/layout/Layout';
 import TextInput from '~/components/ui/TextInput';
 import { API } from '~/lib/api';
@@ -49,7 +50,7 @@ type NewsPage = { news: NewsItem[]; status: string };
 
 const MAX_NUM_PAGES = 12;
 
-const NewsPage: NextPage = () => {
+const NewsPageContent: React.FunctionComponent = () => {
   const [symbol, setSymbol] = useState<string>('');
   const [pageOfNews, setPageOfNews] = useState<NewsItem[]>([]);
   const [loadingNews, setLoadingNews] = useState<boolean>(true);
@@ -181,6 +182,14 @@ const NewsPage: NextPage = () => {
         </div>
       )}
     </Layout>
+  );
+};
+
+const NewsPage: NextPage = () => {
+  return (
+    <RequiredLoggedIn>
+      <NewsPageContent />
+    </RequiredLoggedIn>
   );
 };
 

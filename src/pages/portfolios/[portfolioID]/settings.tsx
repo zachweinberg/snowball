@@ -24,7 +24,7 @@ const PRIVACY_LEVELS = [
   },
 ];
 
-const PortfolioSettingsPage: NextPage = () => {
+const PortfolioSettingsPageContent: React.FunctionComponent = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [addingAsset, setAddingAsset] = useState(false);
@@ -200,6 +200,14 @@ const PortfolioSettingsPage: NextPage = () => {
   };
 
   return <RequiredLoggedIn>{renderContent()}</RequiredLoggedIn>;
+};
+
+const PortfolioSettingsPage: NextPage = () => {
+  return (
+    <RequiredLoggedIn>
+      <PortfolioSettingsPageContent />
+    </RequiredLoggedIn>
+  );
 };
 
 export default PortfolioSettingsPage;

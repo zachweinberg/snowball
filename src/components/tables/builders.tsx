@@ -1,4 +1,5 @@
 import {
+  AssetType,
   CashPosition,
   CryptoPositionWithQuote,
   CustomPosition,
@@ -118,7 +119,9 @@ export const buildCustomAssetData = (custom: CustomPosition[]): CustomAssetTable
 
 export interface WatchlistTableData {
   fullName: string;
+  symbol: string;
   last: number;
+  assetType: AssetType;
   changePercent: number;
   changeDollars: number;
   marketCap: number;
@@ -127,6 +130,8 @@ export interface WatchlistTableData {
 export const buildWatchlistData = (items: WatchListItem[]): WatchlistTableData[] => {
   return items.map((item) => ({
     fullName: item.fullName,
+    symbol: item.symbol,
+    assetType: item.assetType,
     last: item.latestPrice,
     changePercent: item.changePercent,
     changeDollars: item.changeDollars,

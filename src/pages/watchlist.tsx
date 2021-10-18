@@ -1,6 +1,7 @@
 import { WatchListItem } from '@zachweinberg/obsidian-schema';
 import type { NextPage } from 'next';
 import { useEffect, useState } from 'react';
+import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
 import Layout from '~/components/layout/Layout';
 import WatchlistStockTable from '~/components/tables/WatchlistStockTable';
 import Button from '~/components/ui/Button';
@@ -57,7 +58,7 @@ const BellIcon = () => (
   </svg>
 );
 
-const WatchList: NextPage = () => {
+const WatchListContent: React.FunctionComponent = () => {
   const [loading, setLoading] = useState(true);
   const [addingToWatchList, setAddingToWatchlist] = useState(false);
   const [addingAlert, setAddingAlert] = useState(false);
@@ -98,7 +99,7 @@ const WatchList: NextPage = () => {
         <h1 className="font-bold text-dark text-[1.75rem]">Watchlist & Alerts</h1>
       </div>
 
-      <div className="flex flex-col lg:flex-row lg:justify-between">
+      <div className="flex flex-col lg:flex-row lg:justify-between mb-12">
         <div className="flex-1 px-5 py-4 mb-4 bg-white border shadow-sm lg:mr-7 rounded-3xl border-bordergray lg:mb-0">
           <div className="flex items-center justify-between">
             <p className="font-semibold text-[1rem]">Your Watchlist</p>
@@ -155,4 +156,12 @@ const WatchList: NextPage = () => {
   );
 };
 
-export default WatchList;
+const WatchlistPage: NextPage = () => {
+  return (
+    <RequiredLoggedIn>
+      <WatchListContent />
+    </RequiredLoggedIn>
+  );
+};
+
+export default WatchlistPage;
