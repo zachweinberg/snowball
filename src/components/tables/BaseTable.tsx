@@ -5,6 +5,7 @@ import {
   CustomAssetTableData,
   RealEstateTableData,
   StocksTableData,
+  WatchlistTableData,
 } from './builders';
 
 interface Props {
@@ -14,7 +15,8 @@ interface Props {
     | CryptoTableData[]
     | CashTableData[]
     | RealEstateTableData[]
-    | CustomAssetTableData[];
+    | CustomAssetTableData[]
+    | WatchlistTableData[];
 }
 
 export const BaseTable: React.FunctionComponent<Props> = ({ columns, data }: Props) => {

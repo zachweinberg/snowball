@@ -76,7 +76,7 @@ const WatchListTable: React.FunctionComponent<Props> = ({ items }: Props) => {
           <Menu
             options={[
               { label: 'Edit', onClick: () => null },
-              { label: 'Delete', onClick: () => onDelete(value) },
+              // { label: 'Delete', onClick: () => onDelete(value) },
             ]}
             button={() => (
               <svg
