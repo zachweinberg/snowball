@@ -93,19 +93,25 @@ const WatchListContent: React.FunctionComponent = () => {
         }}
       />
 
-      <AddAlertModal open={addingAlert} onClose={() => setAddingAlert(false)} />
+      <AddAlertModal open={addingAlert} onClose={(reload) => setAddingAlert(false)} />
 
       <div className="flex items-center justify-between mb-7">
         <h1 className="font-bold text-dark text-[1.75rem]">Watchlist & Alerts</h1>
       </div>
 
-      <div className="flex flex-col lg:flex-row lg:justify-between mb-12">
-        <div className="flex-1 px-5 py-4 mb-4 bg-white border shadow-sm lg:mr-7 rounded-3xl border-bordergray lg:mb-0">
+      <div className="flex-col lg:flex-row lg:justify-between mb-12 grid grid-cols-3">
+        <div className="flex-1 px-5 py-4 mb-4 bg-white border shadow-sm lg:mr-7 rounded-3xl border-bordergray lg:mb-0 col-span-2">
           <div className="flex items-center justify-between">
             <p className="font-semibold text-[1rem]">Your Watchlist</p>
-            <Button type="button" onClick={() => setAddingToWatchlist(true)} className="w-24">
-              + Add
-            </Button>
+            <div className="w-24">
+              <Button
+                type="button"
+                onClick={() => setAddingToWatchlist(true)}
+                className="w-24"
+              >
+                + Add
+              </Button>
+            </div>
           </div>
           {loading ? (
             <div className="flex items-center justify-center mt-32">
@@ -134,7 +140,7 @@ const WatchListContent: React.FunctionComponent = () => {
           )}
         </div>
 
-        <div className="w-full px-5 py-4 bg-white border shadow-sm rounded-3xl lg:w-96 border-bordergray">
+        <div className="px-5 py-4 bg-white border shadow-sm rounded-3xl border-bordergray col-span-1 flex-grow">
           <div className="flex items-center justify-between">
             <p className="font-semibold text-[1rem]">Alerts</p>
           </div>

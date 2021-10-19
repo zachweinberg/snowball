@@ -1,9 +1,9 @@
 import classNames from 'classnames';
 import type { NextPage } from 'next';
-import Head from 'next/head';
 import React, { useState } from 'react';
 import * as yup from 'yup';
 import RequiredLoggedOut from '~/components/auth/RequireLoggedOut';
+import Layout from '~/components/layout/Layout';
 import Button from '~/components/ui/Button';
 import Cloud from '~/components/ui/Cloud';
 import Link from '~/components/ui/Link';
@@ -76,15 +76,12 @@ const SignUpPage: NextPage = () => {
   };
 
   return (
-    <>
-      <Head>
-        <title>Signup - Obsidian Tracker</title>
-      </Head>
-      <RequiredLoggedOut>
+    <RequiredLoggedOut>
+      <Layout title="Signup | Obsidian Tracker">
         <form
           onSubmit={onSubmit}
           className={classNames(
-            'max-w-lg border border-bordergray p-8 mx-auto mt-20 bg-white shadow-md rounded-2xl',
+            'max-w-lg border border-bordergray p-8 mx-auto mb-16 mt-10 bg-white shadow-md rounded-2xl',
             {
               'bg-opacity-70': loading,
             }
@@ -156,8 +153,8 @@ const SignUpPage: NextPage = () => {
             </Button>
           </div>
         </form>
-      </RequiredLoggedOut>
-    </>
+      </Layout>
+    </RequiredLoggedOut>
   );
 };
 
