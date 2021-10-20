@@ -54,31 +54,32 @@ const TextInputWithResults: React.FunctionComponent<Props> = ({
   };
 
   return (
-    <div className="relative mb-4">
-      <TextInput
-        placeholder={placeholder}
-        type="text"
-        name="symbol"
-        required
-        value={symbol}
-        backgroundColor={backgroundColor}
-        onChange={(e) => {
-          const query = e.target.value.toUpperCase();
-          setSymbol(query);
-          if (query === '') {
-            setSearchResults([]);
-          } else {
-            debouncedSearch(query);
-          }
-        }}
-      />
-
-      {floatingResults ? (
-        <FloatingSearchResults onSelect={onSelectResult} searchResults={searchResults} />
-      ) : (
-        <FlatSearchResults onSelect={onSelectResult} searchResults={searchResults} />
-      )}
-    </div>
+    <>
+      <div className="relative mb-4">
+        <TextInput
+          placeholder={placeholder}
+          type="text"
+          name="symbol"
+          required
+          value={symbol}
+          backgroundColor={backgroundColor}
+          onChange={(e) => {
+            const query = e.target.value.toUpperCase();
+            setSymbol(query);
+            if (query === '') {
+              setSearchResults([]);
+            } else {
+              debouncedSearch(query);
+            }
+          }}
+        />
+        {floatingResults ? (
+          <FloatingSearchResults onSelect={onSelectResult} searchResults={searchResults} />
+        ) : (
+          <FlatSearchResults onSelect={onSelectResult} searchResults={searchResults} />
+        )}
+      </div>
+    </>
   );
 };
 

@@ -27,9 +27,9 @@ const AddToWatchlistModal: React.FunctionComponent<Props> = ({ open, onClose }: 
 
   return (
     <Modal isOpen={open} onClose={() => onClose(false)}>
-      <div className="relative p-6" style={{ width: '430px' }}>
+      <div className="relative" style={{ width: '430px' }}>
         {assetType === null && (
-          <div className="w-full">
+          <div className="w-full p-6">
             <div className="flex justify-center mb-4">
               <EyeIcon className="w-10 h-10 text-evergreen" />
             </div>
@@ -51,7 +51,7 @@ const AddToWatchlistModal: React.FunctionComponent<Props> = ({ open, onClose }: 
 
         {assetType !== null && (
           <div className="w-full" style={{ height: '550px' }}>
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center justify-between px-6 pt-6 pb-4">
               <div
                 className="cursor-pointer text-gray text-[.95rem] font-semibold w-1/3"
                 onClick={() => setAssetType(null)}
@@ -68,14 +68,14 @@ const AddToWatchlistModal: React.FunctionComponent<Props> = ({ open, onClose }: 
                 </svg>
               </div>
               <p className="text-[1.1rem] font-bold text-center text-dark w-1/3">
-                Select {assetType}
+                Add {assetType}
               </p>
               <div className="w-1/3"></div>
             </div>
 
             <form autoComplete="off">
               <TextInputWithResults
-                placeholder="Enter symbol"
+                placeholder={`Enter ${assetType === AssetType.Stock ? 'ticker' : 'symbol'}`}
                 type={assetType}
                 onResult={(stock, fullName) => addToWatchList(stock, fullName, assetType)}
                 onError={(e) => alert(e)}

@@ -1,4 +1,4 @@
-import { ExclamationCircleIcon, EyeIcon } from '@heroicons/react/outline';
+import { BellIcon, ExclamationCircleIcon } from '@heroicons/react/outline';
 import { AssetType } from '@zachweinberg/obsidian-schema';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
@@ -24,11 +24,11 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
 
   return (
     <Modal isOpen={open} onClose={() => onClose(false)}>
-      <div className="mx-auto w-80 p-6">
+      <div className="mx-auto w-80 p-6" style={{ width: '430px' }}>
         {assetType === null && (
           <div className="w-full">
             <div className="flex justify-center mb-4">
-              <EyeIcon className="w-10 h-10 text-evergreen" />
+              <BellIcon className="w-10 h-10 text-evergreen" />
             </div>
 
             <p className="text-[1.15rem] font-bold text-center text-dark mb-8 leading-snug">
