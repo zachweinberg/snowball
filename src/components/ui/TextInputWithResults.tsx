@@ -1,4 +1,5 @@
 import { AssetType } from '@zachweinberg/obsidian-schema';
+import classNames from 'classnames';
 import { debounce } from 'lodash';
 import { useCallback, useState } from 'react';
 import { searchCrypto, SearchPositionsResult, searchStocks } from '~/lib/algolia';
@@ -11,14 +12,14 @@ interface Props {
   onError: (string) => void;
   onResult: (symbol: string, fullName: string, logoURL?: string) => void;
   backgroundColor?: string;
-  clearOnSelection?: boolean;
   floatingResults?: boolean;
+  withPadding?: boolean;
 }
 
 const TextInputWithResults: React.FunctionComponent<Props> = ({
   placeholder,
   type,
-  clearOnSelection,
+  withPadding,
   backgroundColor,
   floatingResults,
   onResult,
@@ -44,10 +45,8 @@ const TextInputWithResults: React.FunctionComponent<Props> = ({
       }
 
       onResult(symbol, fullName, logoURL ?? undefined);
-
-      if (clearOnSelection) {
-        setSymbol('');
-      }
+    } else {
+      setSymbol('');
     }
 
     setSearchResults([]);
@@ -56,23 +55,25 @@ const TextInputWithResults: React.FunctionComponent<Props> = ({
   return (
     <>
       <div className="relative mb-4">
-        <TextInput
-          placeholder={placeholder}
-          type="text"
-          name="symbol"
-          required
-          value={symbol}
-          backgroundColor={backgroundColor}
-          onChange={(e) => {
-            const query = e.target.value.toUpperCase();
-            setSymbol(query);
-            if (query === '') {
-              setSearchResults([]);
-            } else {
-              debouncedSearch(query);
-            }
-          }}
-        />
+        <div className={classNames({ 'px-6': withPadding })}>
+          <TextInput
+            placeholder={placeholder}
+            type="text"
+            name="symbol"
+            required
+            value={symbol}
+            backgroundColor={backgroundColor}
+            onChange={(e) => {
+              const query = e.target.value.toUpperCase();
+              setSymbol(query);
+              if (query === '') {
+                setSearchResults([]);
+              } else {
+                debouncedSearch(query);
+              }
+            }}
+          />
+        </div>
         {floatingResults ? (
           <FloatingSearchResults onSelect={onSelectResult} searchResults={searchResults} />
         ) : (

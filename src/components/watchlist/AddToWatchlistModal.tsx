@@ -75,6 +75,7 @@ const AddToWatchlistModal: React.FunctionComponent<Props> = ({ open, onClose }: 
 
             <form autoComplete="off">
               <TextInputWithResults
+                withPadding
                 placeholder={`Enter ${assetType === AssetType.Stock ? 'ticker' : 'symbol'}`}
                 type={assetType}
                 onResult={(stock, fullName) => addToWatchList(stock, fullName, assetType)}

@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import Image from 'next/image';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { SearchPositionsResult } from '~/lib/algolia';
 
 interface Props {
@@ -12,6 +12,25 @@ const FloatingSearchResults: React.FunctionComponent<Props> = ({
   onSelect,
   searchResults,
 }: Props) => {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const handleKeyDown = (e) => {
+    if (searchResults.length === 0) {
+      return;
+    }
+
+    if (e.keyCode === 40) {
+      // Down arrow
+      console.log(selectedIndex, length);
+      if (selectedIndex <= length) {
+        setSelectedIndex((currIndex) => currIndex + 1);
+      }
+    } else if (e.keyCode === 38) {
+      // Up arrow
+      setSelectedIndex((currIndex) => currIndex - 1);
+    }
+  };
+
   const containerRef = useRef<HTMLDivElement>(null);
 
   const detectClick = (e) => {
@@ -29,18 +48,24 @@ const FloatingSearchResults: React.FunctionComponent<Props> = ({
     return () => document.removeEventListener('click', detectClick);
   }, []);
 
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   return searchResults.length === 0 ? null : (
     <div
       ref={containerRef}
       className="absolute z-50 w-full mt-4 overflow-y-auto bg-white shadow-2xl rounded-xl no-scrollbar"
     >
-      {searchResults.map((result) => (
+      {searchResults.map((result, i) => (
         <div
           onClick={() => {
             onSelect(result.symbol, result.fullName, result.logoURL);
           }}
           className={classNames('flex items-center py-4 cursor-pointer hover:bg-lightlime', {
             'pl-4': result.logoURL,
+            'bg-lightlime': selectedIndex === i,
           })}
           key={result.providerID}
         >

@@ -10,11 +10,11 @@ type Props = {
   backgroundColor?: string;
   secondary?: boolean;
   className?: string;
+  paddingX?: number;
   onChange: (e) => void;
 };
 
 const TextInput: React.FunctionComponent<Props> = ({
-  label,
   className,
   name,
   type,

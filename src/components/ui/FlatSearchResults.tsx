@@ -1,4 +1,6 @@
+import classNames from 'classnames';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import { SearchPositionsResult } from '~/lib/algolia';
 
 interface Props {
@@ -10,15 +12,38 @@ const FlatSearchResults: React.FunctionComponent<Props> = ({
   searchResults,
   onSelect,
 }: Props) => {
-  return searchResults.length === 0
-    ? null
-    : searchResults.map((result) => (
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const handleKeyDown = (e) => {
+    if (e.keyCode === 40) {
+      // Down arrow
+      console.log(selectedIndex, length);
+      if (selectedIndex <= length) {
+        setSelectedIndex((currIndex) => currIndex + 1);
+      }
+    } else if (e.keyCode === 38) {
+      // Up arrow
+      setSelectedIndex((currIndex) => currIndex - 1);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  return searchResults.length === 0 ? null : (
+    <>
+      {searchResults.map((result, i) => (
         <div
           onClick={() => {
             onSelect(result.symbol, result.fullName, result.logoURL);
           }}
-          className="py-3 px-6 text-left cursor-pointer flex items-center hover:bg-lightlime"
-          key={result.providerID}
+          className={classNames(
+            'flex items-center px-6 py-3 text-left cursor-pointer hover:bg-lightlime',
+            { 'bg-lightlime': selectedIndex === i }
+          )}
+          key={i}
         >
           {result.logoURL && (
             <div className="mr-4">
@@ -40,7 +65,9 @@ const FlatSearchResults: React.FunctionComponent<Props> = ({
             </p>
           </div>
         </div>
-      ));
+      ))}
+    </>
+  );
 };
 
 export default FlatSearchResults;
