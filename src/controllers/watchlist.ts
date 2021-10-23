@@ -27,6 +27,7 @@ watchListRouter.get(
 
     for (const stock of _stocks) {
       stocks.push({
+        id: stock.id,
         assetType: AssetType.Stock,
         symbol: stock.symbol,
         latestPrice: stockPriceMap[stock.symbol]?.latestPrice ?? 0,
@@ -40,6 +41,7 @@ watchListRouter.get(
 
     for (const coin of _crypto) {
       crypto.push({
+        id: coin.id,
         assetType: AssetType.Crypto,
         symbol: coin.symbol,
         latestPrice: cryptoPriceMap[coin.symbol]?.latestPrice ?? 0,
