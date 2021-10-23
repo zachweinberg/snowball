@@ -286,18 +286,23 @@ export interface NewsItem {
   type: string;
 }
 
-export enum Destination {
+export enum AlertDestination {
   Email = "Email",
   SMS = "SMS",
 }
 
+export enum AlertCondition {
+  Above = "Above",
+  Below = "Below",
+}
 export interface Alert {
+  id: string;
   assetType: AssetType;
   symbol: string;
   fullName: string;
-  condition: "Above" | "Below";
+  condition: AlertCondition;
   price: number;
-  destination: Destination;
+  destination: AlertDestination;
   destinationValue: string;
 }
 
