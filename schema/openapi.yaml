@@ -211,7 +211,6 @@ paths:
             application/json:
               schema:
                 type: object
-
   /portfolios/{portfolioID}/stocks:
     get:
       summary: Fetch a portfolio's stocks
@@ -507,6 +506,21 @@ paths:
                   type: string
                 fullName:
                   type: string
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
+    delete:
+      summary: Delete watchlist item from watchlist
+      parameters:
+        - name: itemID
+          in: query
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Valid request

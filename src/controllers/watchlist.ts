@@ -3,7 +3,7 @@ import { Router } from 'express';
 import { getCryptoPrices } from '~/lib/cmc';
 import { getStockPrices } from '~/lib/iex';
 import { catchErrors, requireSignedIn } from '~/utils/api';
-import { createDocument, findDocuments } from '~/utils/db';
+import { createDocument, deleteDocument, findDocuments } from '~/utils/db';
 import { reversePercentage } from '~/utils/math';
 
 const watchListRouter = Router();
@@ -78,6 +78,28 @@ watchListRouter.post(
       ...body,
       dateAdded: new Date(),
     });
+
+    const response = {
+      status: 'ok',
+    };
+
+    res.status(200).json(response);
+  })
+);
+
+watchListRouter.delete(
+  '/',
+  requireSignedIn,
+  catchErrors(async (req, res) => {
+    const userID = req.authContext!.uid;
+
+    const { itemID } = req.query as { itemID: string };
+
+    if (!itemID) {
+      return res.status(400).end();
+    }
+
+    await deleteDocument(`watchlists/${userID}/assets/${itemID}`);
 
     const response = {
       status: 'ok',
