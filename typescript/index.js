@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Period = exports.Unit = exports.Destination = exports.RealEstatePropertyType = exports.AssetType = exports.AssetColor = void 0;
+exports.Period = exports.Unit = exports.AlertCondition = exports.AlertDestination = exports.RealEstatePropertyType = exports.AssetType = exports.AssetColor = void 0;
 var AssetColor;
 (function (AssetColor) {
     AssetColor["Stocks"] = "#CEF33C";
@@ -27,11 +27,16 @@ var RealEstatePropertyType;
     RealEstatePropertyType["Storage"] = "Storage facility";
     RealEstatePropertyType["Other"] = "Other";
 })(RealEstatePropertyType = exports.RealEstatePropertyType || (exports.RealEstatePropertyType = {}));
-var Destination;
-(function (Destination) {
-    Destination["Email"] = "Email";
-    Destination["SMS"] = "SMS";
-})(Destination = exports.Destination || (exports.Destination = {}));
+var AlertDestination;
+(function (AlertDestination) {
+    AlertDestination["Email"] = "Email";
+    AlertDestination["SMS"] = "SMS";
+})(AlertDestination = exports.AlertDestination || (exports.AlertDestination = {}));
+var AlertCondition;
+(function (AlertCondition) {
+    AlertCondition["Above"] = "Above";
+    AlertCondition["Below"] = "Below";
+})(AlertCondition = exports.AlertCondition || (exports.AlertCondition = {}));
 var Unit;
 (function (Unit) {
     Unit["Dollars"] = "Dollars";

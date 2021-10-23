@@ -248,17 +248,22 @@ export interface NewsItem {
     sentiment: string;
     type: string;
 }
-export declare enum Destination {
+export declare enum AlertDestination {
     Email = "Email",
     SMS = "SMS"
 }
+export declare enum AlertCondition {
+    Above = "Above",
+    Below = "Below"
+}
 export interface Alert {
+    id: string;
     assetType: AssetType;
     symbol: string;
     fullName: string;
-    condition: "Above" | "Below";
+    condition: AlertCondition;
     price: number;
-    destination: Destination;
+    destination: AlertDestination;
     destinationValue: string;
 }
 export declare enum Unit {
