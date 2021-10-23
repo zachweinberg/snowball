@@ -223,6 +223,7 @@ export interface WatchListItem {
     changeDollars: number;
     fullName: string;
     dateAdded: Date;
+    id: string;
 }
 export interface GetWatchListResponse extends BaseResponse {
     stocks: Array<WatchListItem>;
