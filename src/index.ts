@@ -257,7 +257,7 @@ export interface WatchListItem {
   changePercent: number;
   changeDollars: number;
   fullName: string;
-  dateAdded: Date;
+  createdAt: Date;
   id: string;
 }
 
@@ -317,6 +317,7 @@ export interface Alert {
   price: number;
   destination: AlertDestination;
   destinationValue: string;
+  createdAt: Date;
 }
 
 export enum Unit {
