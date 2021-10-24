@@ -30,8 +30,9 @@ alertsRouter.post(
 
     const body = req.body as AddAlertRequest;
 
-    await createDocument<Alert>(`alerts/${userID}/assets`, {
+    await createDocument<Alert>(`alerts`, {
       ...body,
+      userID,
       createdAt: new Date(),
     });
 
