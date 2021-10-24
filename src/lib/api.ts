@@ -1,4 +1,5 @@
 import {
+  AddAlertRequest,
   AddCashRequest,
   AddCryptoRequest,
   AddCustomAssetRequest,
@@ -13,6 +14,7 @@ import {
   CreateUserRequest,
   CreateUserResponse,
   EditPortfolioSettingsRequest,
+  GetAlertsResponse,
   GetNewsResponse,
   GetPortfolioResponse,
   GetPortfolioSettingsResponse,
@@ -100,12 +102,15 @@ export const request = async <T, K>(
 };
 
 export const API = {
+  // ACCOUNT
   getMe: () => {
     return request<undefined, MeResponse>(`/api/users/me`, 'get');
   },
+
   resendVerificationEmail: () => {
     return request<undefined, undefined>('/api/users/resend-email', 'post');
   },
+
   checkVerificationToken: (token: string, userID: string) => {
     return request<CheckVerificationTokenRequest, CheckVerificationTokenResponse>(
       '/api/users/check-verification-token',
@@ -114,6 +119,7 @@ export const API = {
       false
     );
   },
+
   createUser: (userData: CreateUserRequest) => {
     return request<CreateUserRequest, CreateUserResponse>(
       '/api/users',
@@ -122,6 +128,7 @@ export const API = {
       false
     );
   },
+
   checkEmailExists: (email: string) => {
     return request<VerifyEmailRequest, VerifyEmailResponse>(
       '/api/users/check',
@@ -130,90 +137,7 @@ export const API = {
       false
     );
   },
-  getPortfolios: () => {
-    return request<undefined, GetPortfoliosResponse>('/api/portfolios', 'get');
-  },
-  getPortfolio: (portfolioID: string) => {
-    return request<undefined, GetPortfolioResponse>(
-      `/api/portfolios/${portfolioID}`,
-      'get',
-      undefined,
-      false
-    );
-  },
-  getPortfolioSettings: (portfolioID: string) => {
-    return request<undefined, GetPortfolioSettingsResponse>(
-      `/api/portfolios/${portfolioID}/settings`,
-      'get'
-    );
-  },
-  editPortfolioSettings: (portfolioID: string, settings: PortfolioSettings) => {
-    return request<EditPortfolioSettingsRequest, undefined>(
-      `/api/portfolios/${portfolioID}/settings`,
-      'put',
-      { settings }
-    );
-  },
-  createPortfolio: (name: string, isPublic: boolean = false) => {
-    return request<CreatePortfolioRequest, CreatePortfolioResponse>(
-      '/api/portfolios',
-      'post',
-      { name, public: isPublic }
-    );
-  },
-  addStockToPortfolio: (stockData: AddStockRequest) => {
-    return request<AddStockRequest, undefined>('/api/positions/stock', 'post', stockData);
-  },
-  addCryptoToPortfolio: (coinData: AddCryptoRequest) => {
-    return request<AddCryptoRequest, undefined>('/api/positions/crypto', 'post', coinData);
-  },
-  addCashToPortfolio: (cashData: AddCashRequest) => {
-    return request<AddCashRequest, undefined>('/api/positions/cash', 'post', cashData);
-  },
-  addRealEstateToPortfolio: (realEstateData: AddRealEstateRequest) => {
-    return request<AddRealEstateRequest, undefined>(
-      '/api/positions/real-estate',
-      'post',
-      realEstateData
-    );
-  },
-  addCustomAssetToPortfolio: (customAssetData: AddCustomAssetRequest) => {
-    return request<AddCustomAssetRequest, undefined>(
-      '/api/positions/custom',
-      'post',
-      customAssetData
-    );
-  },
-  getQuote: (symbol: string, type: AssetType) => {
-    return request<{ symbol: string; type: AssetType }, GetQuoteResponse>(
-      `/api/quotes?symbol=${symbol}&type=${type}`,
-      'get'
-    );
-  },
-  getWatchlist: () => {
-    return request<undefined, GetWatchListResponse>('/api/watchlist', 'get');
-  },
-  addAssetToWatchList: (symbol: string, fullName: string, assetType: AssetType) => {
-    return request<AddWatchListItemRequest, undefined>('/api/watchlist', 'post', {
-      symbol,
-      fullName,
-      assetType,
-    });
-  },
-  deleteAssetFromPortfolio: (positionID: string, portfolioID: string) => {
-    return request<undefined, undefined>(
-      `/api/positions/${positionID}?portfolioID=${portfolioID}`,
-      'delete',
-      undefined,
-      false
-    );
-  },
-  getNewsBypage: (pageNumber: number, symbol?: string) => {
-    const url = symbol
-      ? `/api/news?page=${pageNumber}&symbol=${symbol}`
-      : `/api/news?page=${pageNumber}`;
-    return request<undefined, GetNewsResponse>(url, 'get');
-  },
+
   sendContactEmail: (name: string, message: string, email?: string) => {
     return request<SendContactEmailRequest, undefined>(
       '/api/users/contact',
@@ -222,7 +146,128 @@ export const API = {
       false
     );
   },
+
+  // PORTFOLIOS
+  getPortfolios: () => {
+    return request<undefined, GetPortfoliosResponse>('/api/portfolios', 'get');
+  },
+
+  getPortfolio: (portfolioID: string) => {
+    return request<undefined, GetPortfolioResponse>(
+      `/api/portfolios/${portfolioID}`,
+      'get',
+      undefined,
+      false
+    );
+  },
+
+  getPortfolioSettings: (portfolioID: string) => {
+    return request<undefined, GetPortfolioSettingsResponse>(
+      `/api/portfolios/${portfolioID}/settings`,
+      'get'
+    );
+  },
+
+  editPortfolioSettings: (portfolioID: string, settings: PortfolioSettings) => {
+    return request<EditPortfolioSettingsRequest, undefined>(
+      `/api/portfolios/${portfolioID}/settings`,
+      'put',
+      { settings }
+    );
+  },
+
+  createPortfolio: (name: string, isPublic: boolean = false) => {
+    return request<CreatePortfolioRequest, CreatePortfolioResponse>(
+      '/api/portfolios',
+      'post',
+      { name, public: isPublic }
+    );
+  },
+
   deletePortfolio: (portfolioID: string) => {
     return request(`/api/portfolios/${portfolioID}`, 'delete');
+  },
+
+  // ADD TO PORTFOLIO
+  addStockToPortfolio: (stockData: AddStockRequest) => {
+    return request<AddStockRequest, undefined>('/api/positions/stock', 'post', stockData);
+  },
+
+  addCryptoToPortfolio: (coinData: AddCryptoRequest) => {
+    return request<AddCryptoRequest, undefined>('/api/positions/crypto', 'post', coinData);
+  },
+
+  addCashToPortfolio: (cashData: AddCashRequest) => {
+    return request<AddCashRequest, undefined>('/api/positions/cash', 'post', cashData);
+  },
+
+  addRealEstateToPortfolio: (realEstateData: AddRealEstateRequest) => {
+    return request<AddRealEstateRequest, undefined>(
+      '/api/positions/real-estate',
+      'post',
+      realEstateData
+    );
+  },
+
+  addCustomAssetToPortfolio: (customAssetData: AddCustomAssetRequest) => {
+    return request<AddCustomAssetRequest, undefined>(
+      '/api/positions/custom',
+      'post',
+      customAssetData
+    );
+  },
+
+  deleteAssetFromPortfolio: (positionID: string, portfolioID: string) => {
+    return request<undefined, undefined>(
+      `/api/positions/${positionID}?portfolioID=${portfolioID}`,
+      'delete',
+      undefined,
+      false
+    );
+  },
+
+  getQuote: (symbol: string, type: AssetType) => {
+    return request<{ symbol: string; type: AssetType }, GetQuoteResponse>(
+      `/api/quotes?symbol=${symbol}&type=${type}`,
+      'get'
+    );
+  },
+
+  // WATCHLIST
+  getWatchlist: () => {
+    return request<undefined, GetWatchListResponse>('/api/watchlist', 'get');
+  },
+
+  addAssetToWatchList: (symbol: string, fullName: string, assetType: AssetType) => {
+    return request<AddWatchListItemRequest, undefined>('/api/watchlist', 'post', {
+      symbol,
+      fullName,
+      assetType,
+    });
+  },
+
+  removeAssetFromWatchList: (assetID: string) => {
+    return request<undefined, undefined>(`/api/watchlist?itemID=${assetID}`, 'delete');
+  },
+
+  // ALERTS
+  getAlerts: () => {
+    return request<undefined, GetAlertsResponse>('/api/alerts', 'get');
+  },
+
+  addAlert: (alertData: AddAlertRequest) => {
+    return request<AddAlertRequest, undefined>('/api/alerts', 'post', alertData);
+  },
+
+  removeAlert: (alertID: string) => {
+    return request<undefined, undefined>(`/api/watchlist?alertID=${alertID}`, 'delete');
+  },
+
+  // NEWS
+  getNewsBypage: (pageNumber: number, symbol?: string) => {
+    const url = symbol
+      ? `/api/news?page=${pageNumber}&symbol=${symbol}`
+      : `/api/news?page=${pageNumber}`;
+    return request<undefined, GetNewsResponse>(url, 'get');
   },
 };

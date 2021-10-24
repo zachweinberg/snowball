@@ -1,8 +1,9 @@
-import { WatchListItem } from '@zachweinberg/obsidian-schema';
+import { Alert, WatchListItem } from '@zachweinberg/obsidian-schema';
 import type { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
 import Layout from '~/components/layout/Layout';
+import AlertsTable from '~/components/tables/AlertsTable';
 import WatchlistStockTable from '~/components/tables/WatchlistStockTable';
 import Button from '~/components/ui/Button';
 import Spinner from '~/components/ui/Spinner';
@@ -59,25 +60,56 @@ const BellIcon = () => (
 );
 
 const WatchListContent: React.FunctionComponent = () => {
-  const [loading, setLoading] = useState(true);
+  const [loadingWatchlist, setLoadingWatchlist] = useState(true);
+  const [loadingAlerts, setLoadingAlerts] = useState(true);
+
   const [addingToWatchList, setAddingToWatchlist] = useState(false);
   const [addingAlert, setAddingAlert] = useState(false);
-  const [watchListItems, setWatchListItems] = useState<WatchListItem[]>([]);
 
-  const loadWatchList = async () => {
-    setLoading(true);
+  const [watchListItems, setWatchListItems] = useState<WatchListItem[]>([]);
+  const [alerts, setAlerts] = useState<Alert[]>([]);
+
+  const loadWatchlist = async () => {
+    setLoadingWatchlist(true);
     try {
       const watchlistData = await API.getWatchlist();
       setWatchListItems([...watchlistData.stocks, ...watchlistData.crypto]);
     } catch (err) {
       alert('Could not load your watchlist. Please contact us if this persists.');
     } finally {
-      setLoading(false);
+      setLoadingWatchlist(false);
+    }
+  };
+
+  const loadAlerts = async () => {
+    setLoadingAlerts(true);
+    try {
+      const alertsData = await API.getAlerts();
+      setAlerts(alertsData.alerts);
+    } catch (err) {
+      alert('Could not load your alerts. Please contact us if this persists.');
+    } finally {
+      setLoadingAlerts(false);
+    }
+  };
+
+  const onDeleteFromWatchlist = async (itemID: string) => {
+    if (window.confirm('Are you sure you want to remove this asset from your watchlist?')) {
+      await API.removeAssetFromWatchList(itemID);
+      loadWatchlist();
+    }
+  };
+
+  const onDeleteFromAlerts = async (alertID: string) => {
+    if (window.confirm('Are you sure you want to remove this alert?')) {
+      await API.removeAlert(alertID);
+      loadAlerts();
     }
   };
 
   useEffect(() => {
-    loadWatchList();
+    loadWatchlist();
+    loadAlerts();
   }, []);
 
   return (
@@ -86,46 +118,54 @@ const WatchListContent: React.FunctionComponent = () => {
         open={addingToWatchList}
         onClose={(reload) => {
           setAddingToWatchlist(false);
-
           if (reload) {
-            loadWatchList();
+            loadWatchlist();
           }
         }}
       />
 
-      <AddAlertModal open={addingAlert} onClose={(reload) => setAddingAlert(false)} />
+      <AddAlertModal
+        open={addingAlert}
+        onClose={(reload) => {
+          setAddingAlert(false);
+          if (reload) {
+            loadAlerts();
+          }
+        }}
+      />
 
       <div className="flex items-center justify-between mb-7">
-        <h1 className="font-bold text-dark text-[1.75rem]">Watchlist & Alerts</h1>
+        <h1 className="font-bold text-dark text-[1.75rem]">Watchlist and Alerts</h1>
       </div>
 
-      <div className="flex-col lg:flex-row lg:justify-between mb-12 grid grid-cols-3">
-        <div className="flex-1 px-5 py-4 mb-4 bg-white border shadow-sm lg:mr-7 rounded-3xl border-bordergray lg:mb-0 col-span-2">
+      <div className="flex flex-col grid-cols-3 mb-12 lg:grid lg:flex-row lg:justify-between">
+        <div className="flex-1 col-span-2 px-5 py-4 mb-4 bg-white border shadow-sm lg:mr-7 rounded-3xl border-bordergray lg:mb-0">
           <div className="flex items-center justify-between">
             <p className="font-semibold text-[1rem]">Your Watchlist</p>
-            <div className="w-24">
-              <Button
-                type="button"
-                onClick={() => setAddingToWatchlist(true)}
-                className="w-24"
-              >
-                + Add
-              </Button>
-            </div>
+            {watchListItems.length > 0 && (
+              <div className="w-24">
+                <Button
+                  type="button"
+                  onClick={() => setAddingToWatchlist(true)}
+                  className="w-24 py-3"
+                >
+                  + Add
+                </Button>
+              </div>
+            )}
           </div>
-          {loading ? (
+          {loadingWatchlist ? (
             <div className="flex items-center justify-center mt-32">
               <Spinner size={30} />
             </div>
           ) : watchListItems.length === 0 ? (
-            <div className="flex flex-col items-center justify-center p-32 text-center">
+            <div className="flex flex-col items-center justify-center my-32 text-center">
               <WatchlistIcon />
               <p className="font-bold text-[1.25rem] mb-3">
                 Keep track of your favorite assets.
               </p>
               <p className="font-medium text-[1rem] text-darkgray leading-tight mb-8">
                 Your watchlist can help you track the prices of stocks and cryptocurrencies.
-                Add one below:
               </p>
               <div className="w-56">
                 <Button type="button" onClick={() => setAddingToWatchlist(true)}>
@@ -135,27 +175,48 @@ const WatchListContent: React.FunctionComponent = () => {
             </div>
           ) : (
             <div className="mt-6">
-              <WatchlistStockTable items={watchListItems} />
+              <WatchlistStockTable items={watchListItems} onDelete={onDeleteFromWatchlist} />
             </div>
           )}
         </div>
 
-        <div className="px-5 py-4 bg-white border shadow-sm rounded-3xl border-bordergray col-span-1 flex-grow">
+        <div className="flex-1 col-span-1 px-5 py-4 mb-4 bg-white border shadow-sm lg:mr-7 rounded-3xl border-bordergray lg:mb-0">
           <div className="flex items-center justify-between">
             <p className="font-semibold text-[1rem]">Alerts</p>
+            {alerts.length > 0 && (
+              <div className="w-24">
+                <Button
+                  type="button"
+                  onClick={() => setAddingAlert(true)}
+                  className="w-24 py-3"
+                >
+                  + Add
+                </Button>
+              </div>
+            )}
           </div>
-          <div className="flex flex-col items-center justify-center px-10 pt-32 text-center">
-            <BellIcon />
-            <p className="font-bold text-[1.25rem] mb-3">No alerts yet.</p>
-            <p className="font-medium text-[1rem] text-darkgray leading-tight mb-8">
-              No alerts set. Set a price alert, and carry on with your day.
-            </p>
-            <div className="w-52">
-              <Button type="button" onClick={() => setAddingAlert(true)}>
-                + Create alert
-              </Button>
+          {loadingAlerts ? (
+            <div className="flex items-center justify-center mt-32">
+              <Spinner size={30} />
             </div>
-          </div>
+          ) : alerts.length === 0 ? (
+            <div className="flex flex-col items-center justify-center my-32 text-center">
+              <BellIcon />
+              <p className="font-bold text-[1.25rem] mb-3">Get notified.</p>
+              <p className="font-medium text-[1rem] text-darkgray leading-tight mb-8">
+                Alerts will notify you when an asset hits a certain price.
+              </p>
+              <div className="w-56">
+                <Button type="button" onClick={() => setAddingAlert(true)}>
+                  + Add alert
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="mt-6">
+              <AlertsTable alerts={alerts} onDelete={onDeleteFromAlerts} />
+            </div>
+          )}
         </div>
       </div>
     </Layout>

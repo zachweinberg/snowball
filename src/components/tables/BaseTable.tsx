@@ -1,5 +1,6 @@
 import { useTable } from 'react-table';
 import {
+  AlertsTableData,
   CashTableData,
   CryptoTableData,
   CustomAssetTableData,
@@ -16,7 +17,8 @@ interface Props {
     | CashTableData[]
     | RealEstateTableData[]
     | CustomAssetTableData[]
-    | WatchlistTableData[];
+    | WatchlistTableData[]
+    | AlertsTableData[];
 }
 
 export const BaseTable: React.FunctionComponent<Props> = ({ columns, data }: Props) => {

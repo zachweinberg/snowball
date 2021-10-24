@@ -5,8 +5,8 @@ import * as yup from 'yup';
 import RequiredLoggedOut from '~/components/auth/RequireLoggedOut';
 import Layout from '~/components/layout/Layout';
 import Button from '~/components/ui/Button';
-import Cloud from '~/components/ui/Cloud';
 import Link from '~/components/ui/Link';
+import Logo from '~/components/ui/Logo';
 import TextInput from '~/components/ui/TextInput';
 import { useAuth } from '~/hooks/useAuth';
 
@@ -60,7 +60,7 @@ const LoginPage: NextPage = () => {
           onSubmit={onSubmit}
         >
           <div className="flex justify-between mb-20">
-            <Cloud />
+            <Logo />
             <div className="flex font-semibold text-[1rem]">
               <p className="text-darkgray">Need an account?</p>
               <Link href="/signup">

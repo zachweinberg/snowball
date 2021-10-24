@@ -1,4 +1,7 @@
 import {
+  Alert,
+  AlertCondition,
+  AlertDestination,
   AssetType,
   CashPosition,
   CryptoPositionWithQuote,
@@ -129,6 +132,7 @@ export interface WatchlistTableData {
 
 export const buildWatchlistData = (items: WatchListItem[]): WatchlistTableData[] => {
   return items.map((item) => ({
+    id: item.id,
     fullName: item.fullName,
     symbol: item.symbol,
     assetType: item.assetType,
@@ -136,5 +140,23 @@ export const buildWatchlistData = (items: WatchListItem[]): WatchlistTableData[]
     changePercent: item.changePercent,
     changeDollars: item.changeDollars,
     marketCap: item.marketCap,
+  }));
+};
+
+export interface AlertsTableData {
+  id: string;
+  destination: AlertDestination;
+  symbol: string;
+  condition: AlertCondition;
+  price: number;
+}
+
+export const buildAlertsData = (alerts: Alert[]): AlertsTableData[] => {
+  return alerts.map((alert) => ({
+    id: alert.id,
+    destination: alert.destination,
+    symbol: alert.symbol,
+    condition: alert.condition,
+    price: alert.price,
   }));
 };

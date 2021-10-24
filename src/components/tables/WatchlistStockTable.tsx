@@ -7,9 +7,10 @@ import { buildWatchlistData, WatchlistTableData } from './builders';
 
 interface Props {
   items: WatchListItem[];
+  onDelete: (itemID: string) => void;
 }
 
-const WatchListTable: React.FunctionComponent<Props> = ({ items }: Props) => {
+const WatchListTable: React.FunctionComponent<Props> = ({ items, onDelete }: Props) => {
   if (items.length === 0) {
     return null;
   }
@@ -74,10 +75,7 @@ const WatchListTable: React.FunctionComponent<Props> = ({ items }: Props) => {
         accessor: 'id',
         Cell: ({ value }) => (
           <Menu
-            options={[
-              { label: 'Edit', onClick: () => null },
-              // { label: 'Delete', onClick: () => onDelete(value) },
-            ]}
+            options={[{ label: 'Delete', onClick: () => onDelete(value) }]}
             button={() => (
               <svg
                 viewBox="0 0 4 20"

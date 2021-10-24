@@ -1,8 +1,9 @@
 import { BellIcon, ExclamationCircleIcon } from '@heroicons/react/outline';
-import { AssetType } from '@zachweinberg/obsidian-schema';
+import { AlertCondition, AlertDestination, AssetType } from '@zachweinberg/obsidian-schema';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import Modal from '~/components/ui/Modal';
+import { API } from '~/lib/api';
 import Button from '../ui/Button';
 import MoneyInput from '../ui/MoneyInput';
 
@@ -12,9 +13,27 @@ interface Props {
 }
 
 const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props) => {
-  const [condition, setCondition] = useState<string>('Above');
+  const [condition, setCondition] = useState<AlertCondition>(AlertCondition.Above);
+  const [symbol, setSymbol] = useState<string>('');
   const [price, setPrice] = useState<number>(0);
   const [assetType, setAssetType] = useState<AssetType | null>(null);
+
+  const addAlert = async () => {
+    if (!assetType) {
+      return;
+    }
+
+    await API.addAlert({
+      assetType,
+      price,
+      symbol,
+      condition,
+      destination: AlertDestination.Email,
+      destinationValue: 'd',
+    });
+
+    onClose(true);
+  };
 
   useEffect(() => {
     if (open) {
@@ -24,7 +43,7 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
 
   return (
     <Modal isOpen={open} onClose={() => onClose(false)}>
-      <div className="mx-auto w-80 p-6" style={{ width: '430px' }}>
+      <div className="p-6 mx-auto w-80" style={{ width: '430px' }}>
         {assetType === null && (
           <div className="w-full">
             <div className="flex justify-center mb-4">
@@ -32,7 +51,7 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
             </div>
 
             <p className="text-[1.15rem] font-bold text-center text-dark mb-8 leading-snug">
-              Which asset type do you want to add to your watchlist?
+              Which asset type do you want to create an alert for?
             </p>
 
             <div className="grid grid-cols-2 gap-3">
@@ -55,13 +74,13 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
               Create a price alert
             </p>
             <div className="grid grid-cols-2 gap-3 mb-5">
-              {['Above', 'Below'].map((c) => (
+              {[AlertCondition.Above, AlertCondition.Below].map((_condition) => (
                 <button
-                  key={c}
-                  onClick={() => setCondition(c)}
+                  key={_condition}
+                  onClick={() => setCondition(_condition)}
                   className={classNames(
                     'p-4 border-2 cursor-pointer rounded-2xl font-medium focus:ring-evergreen focus:outline-none',
-                    condition === c
+                    condition === _condition
                       ? 'text-evergreen border-evergreen'
                       : 'text-darkgray border-gray hover:text-evergreen hover:border-evergreen transition-colors'
                   )}
@@ -97,7 +116,9 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
               <span className="text-dark">Repeat alert daily</span>
             </div>
 
-            <Button type="button">Create Alert</Button>
+            <Button type="button" onClick={addAlert}>
+              Create Alert
+            </Button>
           </>
         )}
       </div>
