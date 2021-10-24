@@ -47,7 +47,10 @@ const snapshotToType = <T extends object>(snapshot: FirebaseFirestore.DocumentSn
   };
 };
 
-export const fetchDocument = async <T extends object>(collection: string, documentID: string): Promise<WithID<T>> => {
+export const fetchDocumentByID = async <T extends object>(
+  collection: string,
+  documentID: string
+): Promise<WithID<T>> => {
   const doc = await fetchDocumentSnapshot(collection, documentID);
   return snapshotToType<T>(doc);
 };

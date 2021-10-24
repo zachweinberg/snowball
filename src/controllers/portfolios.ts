@@ -13,7 +13,7 @@ import { Router } from 'express';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { deleteRedisKey, getRedisKey, setRedisKey } from '~/lib/redis';
 import { catchErrors, getUserFromAuthHeader, requireSignedIn } from '~/utils/api';
-import { deleteCollection, deleteDocument, fetchDocument, findDocuments, updateDocument } from '~/utils/db';
+import { deleteCollection, deleteDocument, fetchDocumentByID, findDocuments, updateDocument } from '~/utils/db';
 import { capitalize } from '~/utils/misc';
 import { getPortfolioDailyHistory } from '~/utils/portfolios';
 import { calculatePortfolioQuotes, calculatePortfolioSummary } from '~/utils/positions';
@@ -26,7 +26,7 @@ portfoliosRouter.get(
   catchErrors(async (req, res) => {
     let userOwnsPortfolio = false;
 
-    const portfolio = await fetchDocument<Portfolio>('portfolios', req.params.portfolioID);
+    const portfolio = await fetchDocumentByID<Portfolio>('portfolios', req.params.portfolioID);
 
     const authUser = await getUserFromAuthHeader(req, false);
 
@@ -56,7 +56,7 @@ portfoliosRouter.put(
 
     let userOwnsPortfolio = false;
 
-    const portfolio = await fetchDocument<Portfolio>('portfolios', req.params.portfolioID);
+    const portfolio = await fetchDocumentByID<Portfolio>('portfolios', req.params.portfolioID);
 
     const authUser = await getUserFromAuthHeader(req, false);
 
@@ -183,7 +183,7 @@ portfoliosRouter.get(
 
     let userOwnsPortfolio = false;
 
-    const portfolio = await fetchDocument<Portfolio>('portfolios', req.params.portfolioID);
+    const portfolio = await fetchDocumentByID<Portfolio>('portfolios', req.params.portfolioID);
 
     const authUser = await getUserFromAuthHeader(req, false);
 
@@ -227,7 +227,7 @@ portfoliosRouter.delete(
   catchErrors(async (req, res) => {
     let userOwnsPortfolio = false;
 
-    const portfolio = await fetchDocument<Portfolio>('portfolios', req.params.portfolioID);
+    const portfolio = await fetchDocumentByID<Portfolio>('portfolios', req.params.portfolioID);
 
     const authUser = await getUserFromAuthHeader(req, false);
 

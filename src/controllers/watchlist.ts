@@ -33,7 +33,7 @@ watchListRouter.get(
         latestPrice: stockPriceMap[stock.symbol]?.latestPrice ?? 0,
         changePercent: stockPriceMap[stock.symbol]?.changePercent ?? 0,
         changeDollars: stockPriceMap[stock.symbol]?.change ?? 0,
-        dateAdded: stock.dateAdded,
+        createdAt: stock.createdAt,
         fullName: stock.fullName,
         marketCap: stockPriceMap[stock.symbol]?.marketCap,
       });
@@ -46,7 +46,7 @@ watchListRouter.get(
         symbol: coin.symbol,
         latestPrice: cryptoPriceMap[coin.symbol]?.latestPrice ?? 0,
         changePercent: cryptoPriceMap[coin.symbol]?.changePercent ?? 0,
-        dateAdded: coin.dateAdded,
+        createdAt: coin.createdAt,
         fullName: coin.fullName,
         marketCap: cryptoPriceMap[coin.symbol]?.marketCap ?? 0,
         changeDollars: reversePercentage(
@@ -76,7 +76,7 @@ watchListRouter.post(
 
     await createDocument(`watchlists/${userID}/assets`, {
       ...body,
-      dateAdded: new Date(),
+      createdAt: new Date(),
     });
 
     const response = {

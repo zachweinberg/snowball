@@ -7,6 +7,7 @@ import path from 'path';
 import portfoliosRouter from '~/controllers/portfolios';
 import usersRouter from '~/controllers/users';
 import { handleErrors, ignoreFavicon } from '~/utils/api';
+import alertsRouter from './controllers/alerts';
 import newsRouter from './controllers/news';
 import positionsRouter from './controllers/positions';
 import quotesRouter from './controllers/quotes';
@@ -40,6 +41,7 @@ const Server = {
       app.use('/api/quotes', quotesRouter);
       app.use('/api/news', newsRouter);
       app.use('/api/watchlist', watchListRouter);
+      app.use('/api/alerts', alertsRouter);
       app.use(handleErrors);
 
       server = app.listen(PORT, () => {

@@ -15,7 +15,7 @@ import { firestore } from 'firebase-admin';
 import { sendEmail, sendVerifyEmailEmail } from '~/lib/email';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { catchErrors, requireSignedIn } from '~/utils/api';
-import { createDocument, fetchDocument, findDocuments, updateDocument } from '~/utils/db';
+import { createDocument, fetchDocumentByID, findDocuments, updateDocument } from '~/utils/db';
 import { capitalize } from '~/utils/misc';
 
 const usersRouter = Router();
@@ -57,7 +57,7 @@ usersRouter.get(
   catchErrors(async (req, res) => {
     const userID = req.authContext!.uid;
 
-    const user = await fetchDocument<User>('users', userID);
+    const user = await fetchDocumentByID<User>('users', userID);
 
     const response: MeResponse = {
       status: 'ok',
@@ -155,7 +155,7 @@ usersRouter.post(
 
     const verificationCode = await generateVerificationToken();
 
-    const user = await fetchDocument<User>('users', userID);
+    const user = await fetchDocumentByID<User>('users', userID);
 
     await updateDocument('users', userID, { verificationCode });
 
@@ -170,7 +170,7 @@ usersRouter.post(
   catchErrors(async (req, res) => {
     const { token, userID } = req.body as CheckVerificationTokenRequest;
 
-    const user = await fetchDocument<User>('users', userID);
+    const user = await fetchDocumentByID<User>('users', userID);
 
     const response: CheckVerificationTokenResponse = { verified: false, status: 'ok' };
 

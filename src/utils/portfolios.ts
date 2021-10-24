@@ -1,11 +1,11 @@
 import { DailyBalance, Portfolio } from '@zachweinberg/obsidian-schema';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
-import { fetchDocument } from './db';
+import { fetchDocumentByID } from './db';
 
 export const userOwnsPortfolio = async (req, res, portfolioID) => {
   const userID = req.authContext!.uid;
 
-  const portfolio = await fetchDocument<Portfolio>('portfolios', portfolioID);
+  const portfolio = await fetchDocumentByID<Portfolio>('portfolios', portfolioID);
 
   if (portfolio.userID !== userID) {
     return false;

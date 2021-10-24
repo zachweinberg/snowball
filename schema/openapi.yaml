@@ -528,3 +528,62 @@ paths:
             application/json:
               schema:
                 type: object
+  /alerts:
+    get:
+      summary: Get users alerts
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      summary: Add alerts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              required:
+                - assetType
+                - condition
+                - price
+                - symbol
+                - destination
+                - destinationValue
+              properties:
+                assetType:
+                  type: string
+                condition:
+                  type: string
+                price:
+                  type: number
+                symbol:
+                  type: string
+                destination:
+                  type: string
+                destinationValue:
+                  type: string
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
+    delete:
+      summary: Delete alert
+      parameters:
+        - name: alertID
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object

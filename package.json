@@ -13,7 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@sentry/node": "^6.13.3",
-    "@zachweinberg/obsidian-schema": "^1.7.14",
+    "@zachweinberg/obsidian-schema": "^1.7.18",
     "algoliasearch": "^4.10.4",
     "axios": "^0.21.1",
     "chrono-node": "^2.3.2",
