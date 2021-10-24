@@ -272,6 +272,7 @@ export interface Alert {
     assetType: AssetType;
     symbol: string;
     fullName: string;
+    userID: string;
     condition: AlertCondition;
     price: number;
     destination: AlertDestination;
