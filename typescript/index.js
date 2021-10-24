@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Period = exports.Unit = exports.AlertCondition = exports.AlertDestination = exports.RealEstatePropertyType = exports.AssetType = exports.AssetColor = void 0;
+exports.Period = exports.Unit = exports.AlertMode = exports.AlertCondition = exports.AlertDestination = exports.RealEstatePropertyType = exports.AssetType = exports.AssetColor = void 0;
 var AssetColor;
 (function (AssetColor) {
     AssetColor["Stocks"] = "#CEF33C";
@@ -37,6 +37,11 @@ var AlertCondition;
     AlertCondition["Above"] = "Above";
     AlertCondition["Below"] = "Below";
 })(AlertCondition = exports.AlertCondition || (exports.AlertCondition = {}));
+var AlertMode;
+(function (AlertMode) {
+    AlertMode["FireAndDelete"] = "FireAndDelete";
+    AlertMode["Repeat"] = "Repeat";
+})(AlertMode = exports.AlertMode || (exports.AlertMode = {}));
 var Unit;
 (function (Unit) {
     Unit["Dollars"] = "Dollars";

@@ -267,12 +267,17 @@ export declare enum AlertCondition {
     Above = "Above",
     Below = "Below"
 }
+export declare enum AlertMode {
+    FireAndDelete = "FireAndDelete",
+    Repeat = "Repeat"
+}
 export interface Alert {
     id: string;
     assetType: AssetType;
     symbol: string;
     fullName: string;
     userID: string;
+    mode: AlertMode;
     condition: AlertCondition;
     price: number;
     destination: AlertDestination;
