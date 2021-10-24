@@ -1,7 +1,9 @@
-import { AddAlertRequest, Alert, GetAlertsResponse } from '@zachweinberg/obsidian-schema';
+import { AddAlertRequest, Alert, AlertDestination, GetAlertsResponse } from '@zachweinberg/obsidian-schema';
+import * as EmailValidator from 'email-validator';
 import { Router } from 'express';
 import { catchErrors, requireSignedIn } from '~/utils/api';
 import { createDocument, deleteDocument, fetchDocumentByID, findDocuments } from '~/utils/db';
+import { formatPhoneNumber } from '~/utils/phone';
 
 const alertsRouter = Router();
 
@@ -29,6 +31,14 @@ alertsRouter.post(
     const userID = req.authContext!.uid;
 
     const body = req.body as AddAlertRequest;
+
+    if (body.destination === AlertDestination.SMS) {
+      body.destinationValue = formatPhoneNumber(body.destinationValue);
+    } else if (body.destination === AlertDestination.Email) {
+      if (!EmailValidator.validate(body.destinationValue)) {
+        throw new Error('Invalid email format');
+      }
+    }
 
     await createDocument<Alert>(`alerts`, {
       ...body,
