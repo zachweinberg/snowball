@@ -138,8 +138,8 @@ const WatchListContent: React.FunctionComponent = () => {
         <h1 className="font-bold text-dark text-[1.75rem]">Watchlist and Alerts</h1>
       </div>
 
-      <div className="flex flex-col grid-cols-3 mb-12 lg:grid lg:flex-row lg:justify-between">
-        <div className="flex-1 col-span-2 px-5 py-4 mb-4 bg-white border shadow-sm lg:mr-7 rounded-3xl border-bordergray lg:mb-0">
+      <div className="flex flex-col grid-cols-3 gap-3 mb-12 xl:grid xl:flex-row xl:justify-between">
+        <div className="flex-1 col-span-2 px-5 py-4 mb-4 bg-white border shadow-sm rounded-3xl border-bordergray xl:mb-0">
           <div className="flex items-center justify-between">
             <p className="font-semibold text-[1rem]">Your Watchlist</p>
             {watchListItems.length > 0 && (
@@ -180,7 +180,7 @@ const WatchListContent: React.FunctionComponent = () => {
           )}
         </div>
 
-        <div className="flex-1 col-span-1 px-5 py-4 mb-4 bg-white border shadow-sm lg:mr-7 rounded-3xl border-bordergray lg:mb-0">
+        <div className="flex-1 col-span-1 px-5 py-4 mb-4 bg-white border shadow-sm rounded-3xl border-bordergray xl:mb-0">
           <div className="flex items-center justify-between">
             <p className="font-semibold text-[1rem]">Alerts</p>
             {alerts.length > 0 && (

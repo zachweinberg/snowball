@@ -3,7 +3,7 @@ import { SelectorIcon } from '@heroicons/react/outline';
 import React, { Fragment } from 'react';
 
 interface Props {
-  options: Array<string>;
+  options: Array<{ value: any; label: string }>;
   selected: string;
   onChange: (selected: string) => void;
 }
@@ -29,15 +29,15 @@ const Select: React.FunctionComponent<Props> = ({ onChange, selected, options }:
           leaveTo="-translate-y-2 opacity-0"
         >
           <Menu.Items className="absolute z-10 w-full mt-1 overflow-auto bg-white border rounded-md shadow-lg text-md border-bordergray max-h-60 ring-1 ring-bordergray ring-opacity-5 focus:outline-none">
-            {options.map((opt) => (
-              <Menu.Item key={opt}>
+            {options.map((opt, i) => (
+              <Menu.Item key={i}>
                 {({ active }) => (
                   <div
-                    onClick={() => onChange(opt)}
-                    key={opt}
+                    onClick={() => onChange(opt.value)}
+                    key={opt.value}
                     className="relative block py-3 pl-3 font-medium border-b select-none pr-9 text-dark border-bordergray hover:bg-lightlime"
                   >
-                    {opt}
+                    {opt.label}
                   </div>
                 )}
               </Menu.Item>
