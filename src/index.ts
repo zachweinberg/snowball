@@ -265,10 +265,22 @@ export interface GetWatchListResponse extends BaseResponse {
   stocks: Array<WatchListItem>;
   crypto: Array<WatchListItem>;
 }
+
+export interface GetAlertsResponse extends BaseResponse {
+  alerts: Array<Alert>;
+}
 export interface GetNewsResponse extends BaseResponse {
   news: NewsItem[];
 }
 
+export interface AddAlertRequest {
+  assetType: AssetType;
+  condition: AlertCondition;
+  price: number;
+  symbol: string;
+  destination: AlertDestination;
+  destinationValue: string;
+}
 export interface AddWatchListItemRequest {
   symbol: string;
   fullName: string;
