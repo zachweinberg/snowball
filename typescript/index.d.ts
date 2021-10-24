@@ -240,6 +240,7 @@ export interface AddAlertRequest {
     condition: AlertCondition;
     price: number;
     symbol: string;
+    mode: AlertMode;
     destination: AlertDestination;
     destinationValue: string;
 }
