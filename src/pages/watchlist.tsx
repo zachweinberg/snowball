@@ -108,8 +108,7 @@ const WatchListContent: React.FunctionComponent = () => {
   };
 
   useEffect(() => {
-    loadWatchlist();
-    loadAlerts();
+    Promise.allSettled([loadWatchlist(), loadAlerts()]);
   }, []);
 
   return (
