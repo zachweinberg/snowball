@@ -2,12 +2,12 @@ import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/outline';
 import { NewsItem } from '@zachweinberg/obsidian-schema';
 import classNames from 'classnames';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
-import debounce from 'lodash/debounce';
 import { DateTime } from 'luxon';
 import type { NextPage } from 'next';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
 import Layout from '~/components/layout/Layout';
+import Button from '~/components/ui/Button';
 import TextInput from '~/components/ui/TextInput';
 import { API } from '~/lib/api';
 
@@ -51,7 +51,7 @@ type NewsPage = { news: NewsItem[]; status: string };
 const MAX_NUM_PAGES = 12;
 
 const NewsPageContent: React.FunctionComponent = () => {
-  const [symbol, setSymbol] = useState<string>('');
+  const [query, setQuery] = useState<string>('');
   const [pageOfNews, setPageOfNews] = useState<NewsItem[]>([]);
   const [loadingNews, setLoadingNews] = useState<boolean>(true);
   const [hoveredNewsItem, setHoveredNewsItem] = useState<NewsItem | null>(null);
@@ -61,9 +61,11 @@ const NewsPageContent: React.FunctionComponent = () => {
     setLoadingNews(true);
 
     try {
-      const response = await API.getNewsBypage(page, symbol ? symbol : undefined);
-      setPageOfNews(response.news);
-      setHoveredNewsItem(response.news[0]);
+      const response = await API.getNewsBypage(page, query ? query : undefined);
+      if (response.news.length > 0) {
+        setPageOfNews(response.news);
+        setHoveredNewsItem(response.news[0]);
+      }
     } catch (err) {
       alert(
         `Something went wrong while trying to load news. Please contact support if this persists.`
@@ -77,18 +79,15 @@ const NewsPageContent: React.FunctionComponent = () => {
     loadNews();
   }, [page]);
 
-  const debouncedSearch = useCallback(
-    debounce((symbol) => setSymbol(symbol), 400),
-    []
-  );
-
   return (
     <Layout title="News - Obsidian Tracker">
       <div className="flex items-center mb-7">
         <h1 className="font-bold text-[1.75rem]">News</h1>
       </div>
 
-      {pageOfNews.length === 0 ? null : (
+      {pageOfNews.length === 0 ? (
+        <p>No news found</p>
+      ) : (
         <div className={classNames({ 'opacity-60': loadingNews })}>
           {hoveredNewsItem && (
             <div className="grid grid-cols-1 gap-5 mb-5 lg:grid-cols-3">
@@ -113,34 +112,42 @@ const NewsPageContent: React.FunctionComponent = () => {
                   <p className="mb-3 text-2xl font-semibold leading-tight text-dark truncate-news-card">
                     {hoveredNewsItem.title}
                   </p>
-                  <p className="mb-3 font-medium leading-tight text-dark truncate-news-card">
+                  <p className="mb-3 leading-tight text-dark truncate-news-card">
                     {hoveredNewsItem.text}
                   </p>
                 </div>
               </a>
               <div className="flex flex-col items-center justify-center col-span-1 p-6 text-center bg-white">
                 <p className="mb-2 text-lg font-bold leading-tight text-dark">Filter news</p>
-                <p className="mb-2 leading-snug">
-                  By stock symbol
-                  <br />
-                  or cryptocurrency
-                </p>
-                <TextInput
-                  name="symbol"
-                  placeholder="Filter..."
-                  backgroundColor="#F9FAFF"
-                  type="text"
-                  className="w-4/5"
-                  value={symbol}
-                  onChange={(e) => {
-                    debouncedSearch(e.target.value.toUpperCase());
+                <p className="mb-2 leading-snug">Enter any search term</p>
+                <form
+                  autoComplete="off"
+                  className="flex items-center w-4/5"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    loadNews();
                   }}
-                />
+                >
+                  <TextInput
+                    name="symbol"
+                    placeholder="Filter..."
+                    backgroundColor="#F9FAFF"
+                    type="text"
+                    className="mr-2"
+                    value={query}
+                    onChange={(e) => {
+                      setQuery(e.target.value);
+                    }}
+                  />
+                  <Button className="w-20" type="submit">
+                    Go
+                  </Button>
+                </form>
               </div>
             </div>
           )}
           {/* Main news grid */}
-          <div className="grid grid-cols-1 gap-5 mb-10 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-5 mb-7 lg:grid-cols-3">
             {pageOfNews.map((newsItem) => (
               <a
                 onMouseEnter={() => setHoveredNewsItem(newsItem)}
@@ -153,12 +160,12 @@ const NewsPageContent: React.FunctionComponent = () => {
             ))}
           </div>
 
-          <div className="flex items-center justify-center mb-10">
+          <div className="flex items-center justify-center mb-7">
             <button
               disabled={page <= 1}
               className="flex items-center p-3 mr-5 font-semibold bg-white border rounded-md cursor-pointer border-darkgray hover:bg-lightlime disabled:opacity-50"
               onClick={() => {
-                if (page > 1) {
+                if (page > 1 && !loadingNews) {
                   setPage(page - 1);
                 }
               }}
@@ -170,7 +177,7 @@ const NewsPageContent: React.FunctionComponent = () => {
               disabled={page >= MAX_NUM_PAGES}
               className="flex items-center p-3 font-semibold bg-white border rounded-md cursor-pointer mr-7 border-darkgray hover:bg-lightlime disabled:opacity-50"
               onClick={() => {
-                if (page < MAX_NUM_PAGES) {
+                if (page < MAX_NUM_PAGES && !loadingNews) {
                   setPage(page + 1);
                 }
               }}

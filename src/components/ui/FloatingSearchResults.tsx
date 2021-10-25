@@ -21,7 +21,6 @@ const FloatingSearchResults: React.FunctionComponent<Props> = ({
 
     if (e.keyCode === 40) {
       // Down arrow
-      console.log(selectedIndex, length);
       if (selectedIndex <= length) {
         setSelectedIndex((currIndex) => currIndex + 1);
       }

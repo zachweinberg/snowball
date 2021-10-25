@@ -263,9 +263,9 @@ export const API = {
   },
 
   // NEWS
-  getNewsBypage: (pageNumber: number, symbol?: string) => {
-    const url = symbol
-      ? `/api/news?page=${pageNumber}&symbol=${symbol}`
+  getNewsBypage: (pageNumber: number, query?: string) => {
+    const url = query
+      ? `/api/news?page=${pageNumber}&query=${query}`
       : `/api/news?page=${pageNumber}`;
     return request<undefined, GetNewsResponse>(url, 'get');
   },

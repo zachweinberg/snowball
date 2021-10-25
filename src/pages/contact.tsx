@@ -31,7 +31,7 @@ const Contact: NextPage = () => {
         <h1 className="mb-6 text-4xl font-bold text-center">Contact Us</h1>
 
         <p className="mb-6 text-lg text-left text-darkgray">
-          Obsidian Tracker is built by a small team and we're always looking for feedback or
+          Obsidian Tracker is built by a small team and we're always looking for feedback and
           suggestions! Please feel free to contact us and we'll get back to you ASAP!
         </p>
 

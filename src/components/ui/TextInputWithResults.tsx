@@ -1,7 +1,7 @@
 import { AssetType } from '@zachweinberg/obsidian-schema';
 import classNames from 'classnames';
 import { debounce } from 'lodash';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { searchCrypto, SearchPositionsResult, searchStocks } from '~/lib/algolia';
 import FlatSearchResults from './FlatSearchResults';
 import FloatingSearchResults from './FloatingSearchResults';
@@ -29,7 +29,6 @@ const TextInputWithResults: React.FunctionComponent<Props> = ({
 }: Props) => {
   const [searchResults, setSearchResults] = useState<SearchPositionsResult[]>([]);
   const [symbol, setSymbol] = useState('');
-  const inputRef = useRef();
 
   const debouncedSearch = useCallback(
     debounce(async (query) => {
