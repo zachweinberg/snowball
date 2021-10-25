@@ -464,7 +464,7 @@ paths:
     get:
       summary: Get news
       parameters:
-        - name: symbol
+        - name: query
           in: query
           required: false
           schema:
