@@ -191,19 +191,22 @@ paths:
             schema:
               additionalProperties: false
               required:
-                - private
-                - defaultAssetType
-                - reminderEmailPeriod
-                - summaryEmailPeriod
+                - name
+                - settings
               properties:
-                private:
-                  type: boolean
-                reminderEmailPeriod:
+                name:
                   type: string
-                summaryEmailPeriod:
-                  type: string
-                defaultAssetType:
-                  type: string
+                settings:
+                  type: object
+                  properties:
+                    private:
+                      type: boolean
+                    reminderEmailPeriod:
+                      type: string
+                    summaryEmailPeriod:
+                      type: string
+                    defaultAssetType:
+                      type: string
       responses:
         '200':
           description: Valid request

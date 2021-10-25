@@ -52,7 +52,8 @@ portfoliosRouter.put(
   '/:portfolioID/settings',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const { settings } = req.body as EditPortfolioSettingsRequest;
+    const { name, settings } = req.body as EditPortfolioSettingsRequest;
+    const { private: _private, defaultAssetType, reminderEmailPeriod, summaryEmailPeriod } = settings;
 
     let userOwnsPortfolio = false;
 
@@ -69,7 +70,17 @@ portfoliosRouter.put(
       return res.status(403).end();
     }
 
-    await updateDocument('portfolios', req.params.portfolioID, { settings });
+    const updateBody = {
+      name,
+      settings: {
+        private: _private,
+        defaultAssetType,
+        reminderEmailPeriod,
+        summaryEmailPeriod,
+      },
+    };
+
+    await updateDocument('portfolios', req.params.portfolioID, updateBody);
 
     const response = {
       status: 'ok',
