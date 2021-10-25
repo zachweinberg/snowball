@@ -117,7 +117,7 @@ const PortfolioSettingsPageContent: React.FunctionComponent = () => {
             </div>
             <div className="max-w-2xl mb-48">
               {success && (
-                <div className="p-3 mb-3 font-medium rounded-lg text-dark bg-lime">
+                <div className="p-3 mb-3 font-medium text-white rounded-lg bg-evergreen">
                   Portfolio settings successfully saved!
                 </div>
               )}
