@@ -173,11 +173,11 @@ export const calculatePortfolioQuotes = async (
   }
 
   return {
-    stocks: stockPositionsWithQuotes,
-    crypto: cryptoPositionsWithQuotes,
-    cash: cashPositions,
-    realEstate: realEstatePositions,
-    customs: customsPositions,
+    stocks: stockPositionsWithQuotes.sort((a, b) => b.marketValue - a.marketValue),
+    crypto: cryptoPositionsWithQuotes.sort((a, b) => b.marketValue - a.marketValue),
+    cash: cashPositions.sort((a, b) => b.amount - a.amount),
+    realEstate: realEstatePositions.sort((a, b) => b.propertyValue - a.propertyValue),
+    customs: customsPositions.sort((a, b) => b.value - a.value),
     stocksTotal: stocksTotal.value,
     cryptoTotal: cryptoTotal.value,
     realEstateTotal: realEstateTotal.value,
