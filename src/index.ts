@@ -340,7 +340,7 @@ export enum Period {
 }
 export interface PortfolioSettings {
   private: boolean;
-  defaultAssetType: AssetType;
+  assetType: AssetType;
   reminderEmailPeriod: Period;
   summaryEmailPeriod: Period;
 }
