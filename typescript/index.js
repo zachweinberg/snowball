@@ -52,4 +52,5 @@ var Period;
     Period["Daily"] = "Daily";
     Period["Weekly"] = "Weekly";
     Period["Monthly"] = "Monthly";
+    Period["Never"] = "Never";
 })(Period = exports.Period || (exports.Period = {}));

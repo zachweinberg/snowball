@@ -293,7 +293,8 @@ export declare enum Unit {
 export declare enum Period {
     Daily = "Daily",
     Weekly = "Weekly",
-    Monthly = "Monthly"
+    Monthly = "Monthly",
+    Never = "Never"
 }
 export interface PortfolioSettings {
     private: boolean;
