@@ -22,7 +22,6 @@ import {
   GetQuoteResponse,
   GetWatchListResponse,
   MeResponse,
-  PortfolioSettings,
   SendContactEmailRequest,
   VerifyEmailRequest,
   VerifyEmailResponse,
@@ -168,11 +167,11 @@ export const API = {
     );
   },
 
-  editPortfolioSettings: (portfolioID: string, settings: PortfolioSettings) => {
+  editPortfolioSettings: (portfolioID: string, data: EditPortfolioSettingsRequest) => {
     return request<EditPortfolioSettingsRequest, undefined>(
       `/api/portfolios/${portfolioID}/settings`,
       'put',
-      { settings }
+      data
     );
   },
 

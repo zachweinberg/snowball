@@ -24,9 +24,11 @@ import Link from '~/components/ui/Link';
 import Modal from '~/components/ui/Modal';
 import Select from '~/components/ui/Select';
 import Spinner from '~/components/ui/Spinner';
+import { useAuth } from '~/hooks/useAuth';
 import { API } from '~/lib/api';
 
 const PortfolioView: NextPage = () => {
+  const auth = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [addingAsset, setAddingAsset] = useState(false);
@@ -47,6 +49,10 @@ const PortfolioView: NextPage = () => {
     try {
       const portfolioData = await API.getPortfolio(router.query.portfolioID as string);
       setPortfolio(portfolioData.portfolio);
+
+      if (portfolioData.portfolio.settings.defaultAssetType) {
+        setActiveTab(portfolioData.portfolio.settings.defaultAssetType);
+      }
     } catch (err) {
       if (err.response.status === 404) {
         setError("Sorry, we couldn't find that portfolio.");
@@ -204,33 +210,41 @@ const PortfolioView: NextPage = () => {
           <div className="pb-16">
             <div className="flex items-center justify-between mb-7">
               <div className="flex items-center">
-                <Link href={`/portfolios`}>
-                  <ArrowCircleLeftIcon className="w-8 h-8 mr-3 cursor-pointer hover:opacity-70" />
-                </Link>
-                <h1 className="font-bold text-[1.75rem]">{portfolio.name}</h1>
+                {auth.user && (
+                  <Link href={`/portfolios`}>
+                    <ArrowCircleLeftIcon className="w-8 h-8 mr-3 cursor-pointer hover:opacity-70" />
+                  </Link>
+                )}
+                <h1 className="font-bold text-[1.75rem] mr-4">{portfolio.name}</h1>
+                {portfolio.settings.private === false && (
+                  <p className="p-2 font-medium rounded-full text-darkgray bg-gray">Public</p>
+                )}
               </div>
-              <div className="flex items-center">
-                <div className="mr-3 w-44">
-                  <Button
-                    type="button"
-                    onClick={() => setAddingAsset(true)}
-                    variant="secondary"
-                  >
-                    + Add Asset
-                  </Button>
-                </div>
-                <div className="w-44">
-                  <Link href={`/portfolios/${portfolio.id}/settings`}>
+              {auth.user && (
+                <div className="flex items-center">
+                  <div className="mr-3 w-44">
                     <Button
                       type="button"
+                      onClick={() => setAddingAsset(true)}
                       variant="secondary"
-                      className="flex items-center justify-center"
                     >
-                      Settings
+                      + Add Asset
                     </Button>
-                  </Link>
+                  </div>
+
+                  <div className="w-44">
+                    <Link href={`/portfolios/${portfolio.id}/settings`}>
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        className="flex items-center justify-center"
+                      >
+                        Settings
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             <div className="grid grid-cols-1 grid-rows-2 gap-4 lg:grid-rows-1 lg:grid-cols-2 mb-7">

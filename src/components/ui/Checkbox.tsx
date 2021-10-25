@@ -21,7 +21,7 @@ const Checkbox: React.FunctionComponent<Props> = ({
           onChange={(e) => onChange(e.target.checked)}
           name={name}
           type="checkbox"
-          className="w-5 h-5 rounded text-evergreen border-darkgray focus:ring-evergreen"
+          className="w-5 h-5 rounded cursor-pointer text-evergreen border-darkgray focus:ring-evergreen"
         />
       </div>
       <div className="ml-3">

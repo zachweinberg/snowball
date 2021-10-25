@@ -13,7 +13,15 @@ const PortfolioSummaryCard: React.FunctionComponent<Props> = ({ portfolio }: Pro
     <div className="transition-colors bg-white border shadow-sm hover:border-darkgray rounded-3xl p-7 border-bordergray">
       <div className="flex justify-between pb-8 border-b border-bordergray">
         <div className="flex flex-col justify-between">
-          <h2 className="mb-3 text-darkgray font-semibold text-[1.1rem]">{portfolio.name}</h2>
+          <div className="flex items-center mb-3">
+            <h2 className="text-darkgray font-semibold text-[1.1rem] mr-2">
+              {portfolio.name}
+            </h2>
+            {portfolio.settings.private === false && (
+              <p className="p-2 font-medium rounded-full text-darkgray bg-gray">Public</p>
+            )}
+          </div>
+
           <p className="mb-4 font-bold text-dark text-[1.75rem]">
             {formatMoneyFromNumber(portfolio.totalValue)}
           </p>
@@ -55,7 +63,7 @@ const PortfolioSummaryCard: React.FunctionComponent<Props> = ({ portfolio }: Pro
             }))}
           />
           {portfolio.dailyBalances.length > 2 && (
-            <p className="text-center text-xs text-darkgray">30 Day History</p>
+            <p className="text-xs text-center text-darkgray">30 Day History</p>
           )}
         </div>
       </div>

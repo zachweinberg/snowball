@@ -19,12 +19,12 @@ interface SVGChartProps {
 }
 
 const getDate = (d: ChartData) => new Date(d.date);
-const getBalance = (d: ChartData) => d.balance;
+const getBalance = (d: ChartData) => d?.balance ?? 0;
 const bisectDate = bisector<ChartData, Date>((d) => new Date(d.date)).left;
 
 const SVGChart: React.FunctionComponent<SVGChartProps> = (props: SVGChartProps) => {
   const { width, height, data } = props;
-  const [tooltipBalance, setTooltipBalance] = useState(data[data.length - 1].balance);
+  const [tooltipBalance, setTooltipBalance] = useState(data[data.length - 1]?.balance ?? 0);
   const { showTooltip, hideTooltip, tooltipData, tooltipLeft, tooltipOpen, tooltipTop } =
     useTooltip();
 
@@ -63,7 +63,7 @@ const SVGChart: React.FunctionComponent<SVGChartProps> = (props: SVGChartProps) 
             : d0;
       }
 
-      setTooltipBalance(d.balance);
+      setTooltipBalance(d?.balance ?? 0);
 
       showTooltip({
         tooltipData: d,
