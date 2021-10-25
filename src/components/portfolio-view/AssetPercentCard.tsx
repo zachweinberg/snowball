@@ -30,15 +30,15 @@ const AssetPercentCard: React.FunctionComponent<Props> = ({
         }
       )}
     >
-      <div className="grid items-center w-full h-full grid-cols-2 gap-2">
-        <div className="hidden max-w-full mx-auto w-28 md:block">
+      <div className="grid items-center w-full h-full grid-cols-2 gap-1">
+        <div className="hidden max-w-full mx-auto w-24 md:block">
           <PercentageCircle
             percentDecimal={isNaN(percentDecimal) ? 0 : percentDecimal}
             strokeColor={strokeColor}
           />
         </div>
         <div className="m-auto">
-          <p className="mb-2 font-bold text-[1.25rem]">{assetType}</p>
+          <p className="mb-2 font-bold text-xs md:text-[1.25rem]">{assetType}</p>
           <p className="text-darkgray font-semibold text-[1rem]">
             {formatMoneyFromNumber(amount ?? 0, true)}
           </p>
