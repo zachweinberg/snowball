@@ -212,6 +212,7 @@ export interface GetPortfolioSettingsResponse extends BaseResponse {
     portfolio: Portfolio;
 }
 export interface EditPortfolioSettingsRequest {
+    name: string;
     settings: PortfolioSettings;
 }
 export interface WatchListItem {
