@@ -44,13 +44,16 @@ export const sendVerifyEmailEmail = async (toEmail: string, token: string, userI
 const mjmlTemplate = `
 <mjml>
   <mj-body>
-    <mj-section>
+    <mj-section background-color="#141414">
       <mj-column>
-        <mj-image width="100px" src="https://mjml.io/assets/img/logo-small.png"></mj-image>
-        <mj-divider border-color="#F45E43"></mj-divider>
-        <mj-text font-size="20px" color="#F45E43" font-family="helvetica">Hello {{user}}</mj-text>
+        <mj-text font-family="Arial" align="center" font-size="23px" color="#fff"> Obsidian Tracker </mj-text>
       </mj-column>
+    </mj-section>
+
+    <mj-section background-color="#fff">
+      <mj-text font-family="Arial" font-size="16px" color="#000">Welcome to Obsidian Tracker!</mj-text>
     </mj-section>
   </mj-body>
 </mjml>
+
 `;
