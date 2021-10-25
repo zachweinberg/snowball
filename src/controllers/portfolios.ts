@@ -54,6 +54,7 @@ portfoliosRouter.put(
   catchErrors(async (req, res) => {
     const { name, settings } = req.body as EditPortfolioSettingsRequest;
     const { private: _private, defaultAssetType, reminderEmailPeriod, summaryEmailPeriod } = settings;
+    const redisKey = `portfolio-${req.params.portfolioID}`;
 
     let userOwnsPortfolio = false;
 
@@ -81,6 +82,9 @@ portfoliosRouter.put(
     };
 
     await updateDocument('portfolios', req.params.portfolioID, updateBody);
+
+    await deleteRedisKey(redisKey);
+    await deleteRedisKey(`portfoliolist-${authUser!.uid}`);
 
     const response = {
       status: 'ok',
@@ -236,6 +240,8 @@ portfoliosRouter.delete(
   '/:portfolioID',
   requireSignedIn,
   catchErrors(async (req, res) => {
+    const redisKey = `portfolio-${req.params.portfolioID}`;
+
     let userOwnsPortfolio = false;
 
     const portfolio = await fetchDocumentByID<Portfolio>('portfolios', req.params.portfolioID);
@@ -254,6 +260,9 @@ portfoliosRouter.delete(
     await deleteDocument(`portfolios/${req.params.portfolioID}`);
     await deleteCollection(`portfolios/${req.params.portfolioID}/dailyBalances`);
     await deleteCollection(`portfolios/${req.params.portfolioID}/positions`);
+
+    await deleteRedisKey(redisKey);
+    await deleteRedisKey(`portfoliolist-${authUser!.uid}`);
 
     res.status(200).json({ status: 'ok' });
   })
