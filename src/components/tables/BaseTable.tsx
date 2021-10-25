@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { useTable } from 'react-table';
 import {
   AlertsTableData,
@@ -48,7 +49,10 @@ export const BaseTable: React.FunctionComponent<Props> = ({ columns, data }: Pro
           {rows.map((row, i) => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()} className="border-b border-bordergray">
+              <tr
+                {...row.getRowProps()}
+                className={classNames({ 'border-b border-bordergray': i !== rows.length - 1 })}
+              >
                 {row.cells.map((cell) => {
                   return (
                     <td className="py-3 text-sm" {...cell.getCellProps()}>
