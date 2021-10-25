@@ -124,6 +124,7 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
         backgroundColor="#F9FAFF"
         type={AssetType.Crypto}
         floatingResults
+        autofocus
         onError={(e) => setError(e)}
         onResult={(symbol, fullName, logoURL) => {
           API.getQuote(symbol, AssetType.Crypto).then((quoteData) => {

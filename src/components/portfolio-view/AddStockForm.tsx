@@ -121,6 +121,7 @@ const AddStockForm: React.FunctionComponent<Props> = ({
         placeholder="Add stock"
         backgroundColor="#F9FAFF"
         type={AssetType.Stock}
+        autofocus
         floatingResults
         onError={(e) => setError(e)}
         onResult={(symbol, fullName) => {

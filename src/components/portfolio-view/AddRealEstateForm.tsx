@@ -132,13 +132,13 @@ const AddRealEstateForm: React.FunctionComponent<Props> = ({
         <Select
           onChange={(selected) => setPropertyType(selected as RealEstatePropertyType)}
           options={[
-            RealEstatePropertyType.SingleFamily,
-            RealEstatePropertyType.MultiFamily,
-            RealEstatePropertyType.Condo,
-            RealEstatePropertyType.Commercial,
-            RealEstatePropertyType.Apartment,
-            RealEstatePropertyType.Storage,
-            RealEstatePropertyType.Other,
+            { value: RealEstatePropertyType.SingleFamily, label: 'Single Family Home' },
+            { value: RealEstatePropertyType.MultiFamily, label: 'Multi Family Home' },
+            { value: RealEstatePropertyType.Condo, label: 'Condo' },
+            { value: RealEstatePropertyType.Apartment, label: 'Apartment' },
+            { value: RealEstatePropertyType.Commercial, label: 'Commercial' },
+            { value: RealEstatePropertyType.Storage, label: 'Storage Facility' },
+            { value: RealEstatePropertyType.Other, label: 'Other' },
           ]}
           selected={propertyType}
         />

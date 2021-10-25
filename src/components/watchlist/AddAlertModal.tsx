@@ -114,6 +114,7 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
             <form autoComplete="off">
               <TextInputWithResults
                 withPadding
+                autofocus
                 placeholder={`Enter ${assetType === AssetType.Stock ? 'ticker' : 'symbol'}`}
                 type={assetType!}
                 onResult={(symbol) => setSymbol(symbol)}

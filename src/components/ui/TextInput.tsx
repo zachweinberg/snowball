@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import { useEffect, useRef } from 'react';
 
 type Props = {
   type: 'text' | 'password' | 'email' | 'number';
@@ -12,6 +13,7 @@ type Props = {
   className?: string;
   paddingX?: number;
   onChange: (e) => void;
+  autofocus?: boolean;
 };
 
 const TextInput: React.FunctionComponent<Props> = ({
@@ -23,9 +25,19 @@ const TextInput: React.FunctionComponent<Props> = ({
   value,
   backgroundColor,
   required,
+  autofocus = false,
 }: Props) => {
+  const inputElement = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (inputElement.current && autofocus) {
+      inputElement.current.focus();
+    }
+  }, [inputElement.current]);
+
   return (
     <input
+      ref={inputElement}
       type={type}
       value={value !== null ? value : undefined}
       onChange={onChange}

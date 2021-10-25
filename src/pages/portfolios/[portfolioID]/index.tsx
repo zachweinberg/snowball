@@ -293,11 +293,11 @@ const PortfolioView: NextPage = () => {
                   <Select
                     onChange={(selected) => setActiveTab(selected as any)}
                     options={[
-                      AssetType.Stock,
-                      AssetType.Crypto,
-                      AssetType.RealEstate,
-                      AssetType.Cash,
-                      AssetType.Custom,
+                      { label: 'Stock', value: AssetType.Stock },
+                      { label: 'Crypto', value: AssetType.Crypto },
+                      { label: 'Real Estate', value: AssetType.RealEstate },
+                      { label: 'Cash', value: AssetType.Cash },
+                      { label: 'Custom Assets', value: AssetType.Custom },
                     ]}
                     selected={activeTab}
                   />

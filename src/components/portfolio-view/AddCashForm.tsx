@@ -111,6 +111,7 @@ const AddCashForm: React.FunctionComponent<Props> = ({
         type="text"
         className="mb-4"
         value={accountName}
+        autofocus
         name="accountName"
         onChange={(e) => setAccountName(e.target.value)}
       />

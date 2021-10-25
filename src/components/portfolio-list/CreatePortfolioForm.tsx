@@ -70,6 +70,7 @@ const CreatePortfolioForm: React.FunctionComponent<Props> = ({ afterCreate }: Pr
         className="mb-9"
         type="text"
         name="portfolioName"
+        autofocus
         required
         value={portfolioName}
         onChange={(e) => setPortfolioName(e.target.value)}

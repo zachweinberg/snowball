@@ -109,6 +109,7 @@ const AddCustomAssetForm: React.FunctionComponent<Props> = ({
         placeholder="Asset name"
         backgroundColor="#F9FAFF"
         type="text"
+        autofocus
         className="mb-4"
         value={assetName}
         name="assetName"

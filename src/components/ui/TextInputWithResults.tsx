@@ -1,7 +1,7 @@
 import { AssetType } from '@zachweinberg/obsidian-schema';
 import classNames from 'classnames';
 import { debounce } from 'lodash';
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { searchCrypto, SearchPositionsResult, searchStocks } from '~/lib/algolia';
 import FlatSearchResults from './FlatSearchResults';
 import FloatingSearchResults from './FloatingSearchResults';
@@ -14,6 +14,7 @@ interface Props {
   backgroundColor?: string;
   floatingResults?: boolean;
   withPadding?: boolean;
+  autofocus?: boolean;
 }
 
 const TextInputWithResults: React.FunctionComponent<Props> = ({
@@ -24,9 +25,11 @@ const TextInputWithResults: React.FunctionComponent<Props> = ({
   floatingResults,
   onResult,
   onError,
+  autofocus = false,
 }: Props) => {
   const [searchResults, setSearchResults] = useState<SearchPositionsResult[]>([]);
   const [symbol, setSymbol] = useState('');
+  const inputRef = useRef();
 
   const debouncedSearch = useCallback(
     debounce(async (query) => {
@@ -61,6 +64,7 @@ const TextInputWithResults: React.FunctionComponent<Props> = ({
             type="text"
             name="symbol"
             required
+            autofocus={autofocus}
             value={symbol}
             backgroundColor={backgroundColor}
             onChange={(e) => {
