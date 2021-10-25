@@ -85,9 +85,7 @@ const NewsPageContent: React.FunctionComponent = () => {
         <h1 className="font-bold text-[1.75rem]">News</h1>
       </div>
 
-      {pageOfNews.length === 0 ? (
-        <p>No news found</p>
-      ) : (
+      {pageOfNews.length === 0 ? null : (
         <div className={classNames({ 'opacity-60': loadingNews })}>
           {hoveredNewsItem && (
             <div className="grid grid-cols-1 gap-5 mb-5 lg:grid-cols-3">
