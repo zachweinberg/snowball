@@ -241,7 +241,6 @@ export interface AddAlertRequest {
     condition: AlertCondition;
     price: number;
     symbol: string;
-    mode: AlertMode;
     destination: AlertDestination;
     destinationValue: string;
 }
@@ -279,7 +278,6 @@ export interface Alert {
     symbol: string;
     fullName: string;
     userID: string;
-    mode: AlertMode;
     condition: AlertCondition;
     price: number;
     destination: AlertDestination;
