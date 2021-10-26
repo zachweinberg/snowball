@@ -18,7 +18,7 @@ alertsRouter.get(
 
     const response: GetAlertsResponse = {
       status: 'ok',
-      alerts: _.orderBy(alerts, [(alert) => alert.symbol], ['desc']),
+      alerts: _.orderBy(alerts, [(alert) => alert.symbol], ['asc']),
     };
 
     res.status(200).json(response);

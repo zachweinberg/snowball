@@ -57,8 +57,8 @@ watchListRouter.get(
 
     const response: GetWatchListResponse = {
       status: 'ok',
-      stocks: _.orderBy(stocks, [(stock) => stock.symbol], ['desc']),
-      crypto: _.orderBy(crypto, [(crypto) => crypto.symbol], ['desc']),
+      stocks: _.orderBy(stocks, [(stock) => stock.symbol], ['asc']),
+      crypto: _.orderBy(crypto, [(crypto) => crypto.symbol], ['asc']),
     };
 
     res.status(200).json(response);
