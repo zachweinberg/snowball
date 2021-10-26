@@ -130,7 +130,7 @@ export const calculatePortfolioQuotes = async (
   for (const coin of cryptoPositions) {
     if (cryptoPriceMap[coin.symbol]) {
       const dayChange =
-        (1 + (cryptoPriceMap[coin.symbol]?.changePercent ?? 0) / 100) *
+        (cryptoPriceMap[coin.symbol]?.changePercent ?? 0) *
         (cryptoPriceMap[coin.symbol]?.latestPrice ?? 0) *
         coin.quantity;
 
