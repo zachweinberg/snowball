@@ -1,6 +1,7 @@
 import { AddAlertRequest, Alert, AlertDestination, GetAlertsResponse } from '@zachweinberg/obsidian-schema';
 import * as EmailValidator from 'email-validator';
 import { Router } from 'express';
+import _ from 'lodash';
 import { formatPhoneNumber } from '~/lib/phone';
 import { catchErrors, requireSignedIn } from '~/utils/api';
 import { createDocument, deleteDocument, fetchDocumentByID, findDocuments } from '~/utils/db';
@@ -17,7 +18,7 @@ alertsRouter.get(
 
     const response: GetAlertsResponse = {
       status: 'ok',
-      alerts,
+      alerts: _.orderBy(alerts, [(alert) => alert.symbol], ['desc']),
     };
 
     res.status(200).json(response);

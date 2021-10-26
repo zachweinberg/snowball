@@ -1,5 +1,6 @@
 import { AddWatchListItemRequest, AssetType, GetWatchListResponse, WatchListItem } from '@zachweinberg/obsidian-schema';
 import { Router } from 'express';
+import _ from 'lodash';
 import { getCryptoPrices } from '~/lib/cmc';
 import { getStockPrices } from '~/lib/iex';
 import { catchErrors, requireSignedIn } from '~/utils/api';
@@ -56,8 +57,8 @@ watchListRouter.get(
 
     const response: GetWatchListResponse = {
       status: 'ok',
-      stocks,
-      crypto,
+      stocks: _.orderBy(stocks, [(stock) => stock.symbol], ['desc']),
+      crypto: _.orderBy(crypto, [(crypto) => crypto.symbol], ['desc']),
     };
 
     res.status(200).json(response);
