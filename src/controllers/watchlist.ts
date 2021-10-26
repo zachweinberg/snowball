@@ -48,7 +48,9 @@ watchListRouter.get(
         createdAt: coin.createdAt,
         fullName: coin.fullName,
         marketCap: cryptoPriceMap[coin.symbol]?.marketCap ?? 0,
-        changeDollars: cryptoPriceMap[coin.symbol].latestPrice / (1 + cryptoPriceMap[coin.symbol]?.changePercent),
+        changeDollars:
+          cryptoPriceMap[coin.symbol].latestPrice -
+          cryptoPriceMap[coin.symbol].latestPrice / (1 + cryptoPriceMap[coin.symbol]?.changePercent),
       });
     }
 
