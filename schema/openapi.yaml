@@ -555,7 +555,6 @@ paths:
                 - symbol
                 - destination
                 - destinationValue
-                - mode
               properties:
                 assetType:
                   type: string
@@ -568,8 +567,6 @@ paths:
                 destination:
                   type: string
                 destinationValue:
-                  type: string
-                mode:
                   type: string
       responses:
         '200':
