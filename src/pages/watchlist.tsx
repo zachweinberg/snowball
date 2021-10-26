@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
 import Layout from '~/components/layout/Layout';
 import AlertsTable from '~/components/tables/AlertsTable';
-import WatchlistStockTable from '~/components/tables/WatchlistStockTable';
+import WatchListTable from '~/components/tables/WatchListTable';
 import Button from '~/components/ui/Button';
 import Spinner from '~/components/ui/Spinner';
 import AddAlertModal from '~/components/watchlist/AddAlertModal';
@@ -154,7 +154,7 @@ const WatchListContent: React.FunctionComponent = () => {
             )}
           </div>
           {loadingWatchlist ? (
-            <div className="flex items-center justify-center mt-32">
+            <div className="flex items-center justify-center my-32">
               <Spinner size={30} />
             </div>
           ) : watchListItems.length === 0 ? (
@@ -174,7 +174,7 @@ const WatchListContent: React.FunctionComponent = () => {
             </div>
           ) : (
             <div className="mt-6">
-              <WatchlistStockTable items={watchListItems} onDelete={onDeleteFromWatchlist} />
+              <WatchListTable items={watchListItems} onDelete={onDeleteFromWatchlist} />
             </div>
           )}
         </div>
@@ -195,7 +195,7 @@ const WatchListContent: React.FunctionComponent = () => {
             )}
           </div>
           {loadingAlerts ? (
-            <div className="flex items-center justify-center mt-32">
+            <div className="flex items-center justify-center my-32">
               <Spinner size={30} />
             </div>
           ) : alerts.length === 0 ? (

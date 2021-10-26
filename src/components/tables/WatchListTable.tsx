@@ -73,6 +73,7 @@ const WatchListTable: React.FunctionComponent<Props> = ({ items, onDelete }: Pro
       {
         Header: '',
         accessor: 'id',
+        disableSortBy: true,
         Cell: ({ value }) => (
           <Menu
             options={[{ label: 'Delete', onClick: () => onDelete(value) }]}

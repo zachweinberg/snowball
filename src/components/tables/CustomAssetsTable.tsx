@@ -44,6 +44,7 @@ const CustomAssetTable: React.FunctionComponent<Props> = ({
       {
         Header: '',
         accessor: 'id',
+        disableSortBy: true,
         Cell: ({ value }) => (
           <Menu
             options={[

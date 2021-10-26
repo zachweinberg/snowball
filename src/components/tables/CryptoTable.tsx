@@ -101,6 +101,7 @@ const CryptoTable: React.FunctionComponent<Props> = ({
       {
         Header: '',
         accessor: 'id',
+        disableSortBy: true,
         Cell: ({ row, value }) => (
           <Menu
             options={[

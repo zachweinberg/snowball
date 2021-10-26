@@ -77,11 +77,11 @@ const FloatingSearchResults: React.FunctionComponent<Props> = ({
               className="rounded-lg"
             />
           )}
-          <div className="ml-4">
-            <p className="whitespace-nowrap text-evergreen font-semibold text-[1.2rem] mb-1">
+          <div className="w-full px-4 leading-tight">
+            <p className="truncate text-evergreen font-semibold text-[1.2rem] mb-1">
               {result.symbol}
             </p>
-            <p className="whitespace-nowrap text-darkgray text-[0.95rem] font-medium">
+            <p className=" text-darkgray text-[0.95rem] font-medium truncate">
               {result.fullName}
             </p>
           </div>

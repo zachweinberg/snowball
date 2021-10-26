@@ -1,10 +1,5 @@
 import { BellIcon, ExclamationCircleIcon } from '@heroicons/react/outline';
-import {
-  AlertCondition,
-  AlertDestination,
-  AlertMode,
-  AssetType,
-} from '@zachweinberg/obsidian-schema';
+import { AlertCondition, AlertDestination, AssetType } from '@zachweinberg/obsidian-schema';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import Modal from '~/components/ui/Modal';
@@ -12,7 +7,6 @@ import Select from '~/components/ui/Select';
 import TextInputWithResults from '~/components/ui/TextInputWithResults';
 import { API } from '~/lib/api';
 import Button from '../ui/Button';
-import Checkbox from '../ui/Checkbox';
 import MoneyInput from '../ui/MoneyInput';
 import PhoneInput from '../ui/PhoneInput';
 import TextInput from '../ui/TextInput';
@@ -29,7 +23,6 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
   const [symbol, setSymbol] = useState<string>('');
   const [price, setPrice] = useState<number>(0);
   const [assetType, setAssetType] = useState<AssetType | null>(null);
-  const [mode, setMode] = useState<AlertMode>(AlertMode.FireAndDelete);
 
   const STEP = !assetType ? 1 : assetType && !symbol ? 2 : assetType && symbol ? 3 : 1;
 
@@ -42,7 +35,6 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
       assetType,
       price,
       symbol,
-      mode,
       condition,
       destination,
       destinationValue,
@@ -194,26 +186,6 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
                 )}
               </div>
             </form>
-
-            <div className="flex items-center justify-start mb-5 text-left">
-              <Checkbox
-                onChange={() => setMode(AlertMode.FireAndDelete)}
-                name="fireAndDelete"
-                title="Fire alert, then delete"
-                description="After this alert is triggered, it will not run again"
-                checked={mode === AlertMode.FireAndDelete}
-              />
-            </div>
-
-            <div className="flex items-center justify-start text-left mb-11">
-              <Checkbox
-                onChange={() => setMode(AlertMode.Repeat)}
-                name="repeat"
-                title="Repeat this alert"
-                description="Every day, this alert will be checked and will continuously fire"
-                checked={mode === AlertMode.Repeat}
-              />
-            </div>
 
             <Button type="button" onClick={addAlert}>
               Create Alert

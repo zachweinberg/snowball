@@ -40,6 +40,7 @@ const CashTable: React.FunctionComponent<Props> = ({ cash, onAddAsset, onDelete 
       {
         Header: '',
         accessor: 'id',
+        disableSortBy: true,
         Cell: ({ value }) => (
           <Menu
             options={[

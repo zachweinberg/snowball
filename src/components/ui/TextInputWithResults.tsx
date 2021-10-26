@@ -80,7 +80,9 @@ const TextInputWithResults: React.FunctionComponent<Props> = ({
         {floatingResults ? (
           <FloatingSearchResults onSelect={onSelectResult} searchResults={searchResults} />
         ) : (
-          <FlatSearchResults onSelect={onSelectResult} searchResults={searchResults} />
+          <div className="mt-3">
+            <FlatSearchResults onSelect={onSelectResult} searchResults={searchResults} />
+          </div>
         )}
       </div>
     </>

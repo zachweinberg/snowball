@@ -259,7 +259,7 @@ export const API = {
   },
 
   removeAlert: (alertID: string) => {
-    return request<undefined, undefined>(`/api/watchlist?alertID=${alertID}`, 'delete');
+    return request<undefined, undefined>(`/api/alerts?alertID=${alertID}`, 'delete');
   },
 
   // NEWS

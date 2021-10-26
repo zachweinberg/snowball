@@ -49,10 +49,11 @@ const AlertsTable: React.FunctionComponent<Props> = ({ alerts, onDelete }: Props
       {
         Header: '',
         accessor: 'id',
+        disableSortBy: true,
         Cell: ({ value }) => (
           <Menu
             options={[
-              { label: 'Edit alert', onClick: () => onDelete(value) },
+              { label: 'Edit alert', onClick: () => null },
               { label: 'Delete', onClick: () => onDelete(value) },
             ]}
             button={() => (

@@ -56,11 +56,9 @@ const FlatSearchResults: React.FunctionComponent<Props> = ({
               />
             </div>
           )}
-          <div>
-            <p className="whitespace-nowrap text-evergreen font-semibold text-[1.2rem] mb-1">
-              {result.symbol}
-            </p>
-            <p className="whitespace-nowrap text-darkgray text-[0.95rem] font-medium truncate leading-tight">
+          <div className="w-full">
+            <p className="text-evergreen font-semibold text-[1.2rem] mb-1">{result.symbol}</p>
+            <p className="text-darkgray text-[0.95rem] font-medium truncate leading-tight">
               {result.fullName}
             </p>
           </div>

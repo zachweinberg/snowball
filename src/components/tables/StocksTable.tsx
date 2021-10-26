@@ -88,6 +88,7 @@ const StocksTable: React.FunctionComponent<Props> = ({
       {
         Header: '',
         accessor: 'id',
+        disableSortBy: true,
         Cell: ({ value, row }) => (
           <Menu
             options={[
