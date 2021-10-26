@@ -116,7 +116,7 @@ export const calculatePortfolioQuotes = async (
       stockPositionsWithQuotes.push({
         ...stock,
         dayChange: (stockPriceMap[stock.symbol]?.change ?? 0) * stock.quantity,
-        dayChangePercent: (stockPriceMap[stock.symbol]?.changePercent ?? 0) * stock.quantity,
+        dayChangePercent: (stockPriceMap[stock.symbol]?.changePercent ?? 0) * (stock.quantity * stock.costPerShare),
         gainLoss,
         gainLossPercent: gainLoss / (stock.costPerShare * stock.quantity),
         marketValue: (stockPriceMap[stock.symbol]?.latestPrice ?? 0) * stock.quantity,
