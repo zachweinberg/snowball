@@ -4,7 +4,6 @@ import { getCryptoPrices } from '~/lib/cmc';
 import { getStockPrices } from '~/lib/iex';
 import { catchErrors, requireSignedIn } from '~/utils/api';
 import { createDocument, deleteDocument, findDocuments } from '~/utils/db';
-import { reversePercentage } from '~/utils/math';
 
 const watchListRouter = Router();
 
@@ -49,10 +48,7 @@ watchListRouter.get(
         createdAt: coin.createdAt,
         fullName: coin.fullName,
         marketCap: cryptoPriceMap[coin.symbol]?.marketCap ?? 0,
-        changeDollars: reversePercentage(
-          cryptoPriceMap[coin.symbol]?.latestPrice ?? 0,
-          cryptoPriceMap[coin.symbol]?.changePercent ?? 0
-        ),
+        changeDollars: cryptoPriceMap[coin.symbol].latestPrice / (1 + cryptoPriceMap[coin.symbol]?.changePercent),
       });
     }
 
