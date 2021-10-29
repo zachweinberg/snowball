@@ -59,8 +59,8 @@ const LoginPage: NextPage = () => {
           )}
           onSubmit={onSubmit}
         >
-          <div className="flex justify-between mb-20">
-            <Logo width={30} />
+          <div className="flex items-center justify-between mb-20">
+            <Logo width={60} />
             <div className="flex font-semibold text-[1rem]">
               <p className="text-darkgray">Need an account?</p>
               <Link href="/signup">

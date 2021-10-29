@@ -67,8 +67,8 @@ const PasswordResetPage: NextPage = () => {
           )}
         >
           <div className="flex justify-between mb-20">
-            <Logo />
-            <div className="flex font-semibold text-[1rem]">
+            <Logo width={60} />
+            <div className="flex font-semibold text-[1rem] items-center">
               <p className="text-darkgray">Back to</p>
               <Link href="/login">
                 <span className="ml-1 underline text-evergreen hover:opacity-80">Login</span>

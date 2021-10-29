@@ -88,8 +88,8 @@ const SignUpPage: NextPage = () => {
           )}
         >
           <div className="flex justify-between mb-20">
-            <Logo />
-            <div className="flex font-semibold text-[1rem]">
+            <Logo width={60} />
+            <div className="flex items-center font-semibold text-[1rem]">
               <p className="text-darkgray">Already have an account?</p>
               <Link href="/login">
                 <span className="ml-2 underline text-evergreen hover:opacity-80">Login</span>

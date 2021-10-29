@@ -43,7 +43,7 @@ const Header: React.FunctionComponent = () => {
       <header className="bg-white border-b border-bordergray">
         <div className="flex items-center justify-between px-4 mx-auto max-w-7xl">
           <Link href="/portfolios">
-            <Logo width={35} className="hover:opacity-70" />
+            <Logo width={45} className="hover:opacity-70" />
           </Link>
           <div>
             <nav className="flex items-center">
