@@ -6,7 +6,6 @@ import RequiredLoggedOut from '~/components/auth/RequireLoggedOut';
 import Layout from '~/components/layout/Layout';
 import Button from '~/components/ui/Button';
 import Link from '~/components/ui/Link';
-import Logo from '~/components/ui/Logo';
 import TextInput from '~/components/ui/TextInput';
 import { useAuth } from '~/hooks/useAuth';
 
@@ -88,7 +87,6 @@ const SignUpPage: NextPage = () => {
           )}
         >
           <div className="flex justify-between mb-20">
-            <Logo width={60} />
             <div className="flex items-center font-semibold text-[1rem]">
               <p className="text-darkgray">Already have an account?</p>
               <Link href="/login">

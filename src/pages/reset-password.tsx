@@ -1,12 +1,11 @@
 import classNames from 'classnames';
 import type { NextPage } from 'next';
-import Head from 'next/head';
 import React, { useState } from 'react';
 import * as yup from 'yup';
 import RequiredLoggedOut from '~/components/auth/RequireLoggedOut';
+import Layout from '~/components/layout/Layout';
 import Button from '~/components/ui/Button';
 import Link from '~/components/ui/Link';
-import Logo from '~/components/ui/Logo';
 import TextInput from '~/components/ui/TextInput';
 import { useAuth } from '~/hooks/useAuth';
 
@@ -52,11 +51,8 @@ const PasswordResetPage: NextPage = () => {
   };
 
   return (
-    <>
-      <Head>
-        <title>Reset Password - Obsidian Tracker</title>
-      </Head>
-      <RequiredLoggedOut>
+    <RequiredLoggedOut>
+      <Layout title="Reset Password | Obsidian Tracker">
         <form
           onSubmit={onSubmit}
           className={classNames(
@@ -67,7 +63,6 @@ const PasswordResetPage: NextPage = () => {
           )}
         >
           <div className="flex justify-between mb-20">
-            <Logo width={60} />
             <div className="flex font-semibold text-[1rem] items-center">
               <p className="text-darkgray">Back to</p>
               <Link href="/login">
@@ -78,7 +73,7 @@ const PasswordResetPage: NextPage = () => {
 
           <div className="mb-6">
             <h1 className="text-dark font-bold text-[1.75rem] leading-tight mb-3">
-              Forget your password?
+              Forgot your password?
             </h1>
             <p className="font-medium text-[1.1rem] text-darkgray leading-tight">
               Enter your email below and we will send you an email to reset your password.
@@ -111,8 +106,8 @@ const PasswordResetPage: NextPage = () => {
             </Button>
           </div>
         </form>
-      </RequiredLoggedOut>
-    </>
+      </Layout>
+    </RequiredLoggedOut>
   );
 };
 
