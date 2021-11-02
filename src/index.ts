@@ -1,3 +1,12 @@
+export enum DailyBalancesPeriod {
+  OneDay,
+  OneWeek,
+  OneMonth,
+  SixMonths,
+  OneYear,
+  AllTime,
+}
+
 export interface User {
   id: string;
   email: string;
