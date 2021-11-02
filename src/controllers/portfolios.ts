@@ -219,14 +219,11 @@ portfoliosRouter.get(
 
     const positionsAndTotals = await calculatePortfolioQuotes(portfolio.id);
 
-    const dailyBalances = await getPortfolioDailyHistory(portfolio.id);
-
     const response: GetPortfolioResponse = {
       status: 'ok',
       portfolio: {
         ...portfolio,
         ...positionsAndTotals,
-        dailyBalances,
       },
     };
 
