@@ -1,6 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Period = exports.Unit = exports.AlertMode = exports.AlertCondition = exports.AlertDestination = exports.RealEstatePropertyType = exports.AssetType = exports.AssetColor = void 0;
+exports.Period = exports.Unit = exports.AlertMode = exports.AlertCondition = exports.AlertDestination = exports.RealEstatePropertyType = exports.AssetType = exports.AssetColor = exports.DailyBalancesPeriod = void 0;
+var DailyBalancesPeriod;
+(function (DailyBalancesPeriod) {
+    DailyBalancesPeriod[DailyBalancesPeriod["OneDay"] = 0] = "OneDay";
+    DailyBalancesPeriod[DailyBalancesPeriod["OneWeek"] = 1] = "OneWeek";
+    DailyBalancesPeriod[DailyBalancesPeriod["OneMonth"] = 2] = "OneMonth";
+    DailyBalancesPeriod[DailyBalancesPeriod["SixMonths"] = 3] = "SixMonths";
+    DailyBalancesPeriod[DailyBalancesPeriod["OneYear"] = 4] = "OneYear";
+    DailyBalancesPeriod[DailyBalancesPeriod["AllTime"] = 5] = "AllTime";
+})(DailyBalancesPeriod = exports.DailyBalancesPeriod || (exports.DailyBalancesPeriod = {}));
 var AssetColor;
 (function (AssetColor) {
     AssetColor["Stocks"] = "#CEF33C";
