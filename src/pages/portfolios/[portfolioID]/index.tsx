@@ -48,6 +48,7 @@ const PortfolioView: NextPage = () => {
 
     try {
       const portfolioData = await API.getPortfolio(router.query.portfolioID as string);
+
       setPortfolio(portfolioData.portfolio);
 
       if (portfolioData.portfolio.settings.defaultAssetType) {
@@ -215,7 +216,9 @@ const PortfolioView: NextPage = () => {
                     <ArrowCircleLeftIcon className="w-8 h-8 mr-3 cursor-pointer hover:opacity-70" />
                   </Link>
                 )}
+
                 <h1 className="font-bold text-[1.75rem] mr-4">{portfolio.name}</h1>
+
                 {portfolio.settings.private === false && (
                   <p className="p-2 font-medium rounded-full text-darkgray bg-gray">Public</p>
                 )}
@@ -248,14 +251,9 @@ const PortfolioView: NextPage = () => {
             </div>
 
             <div className="grid grid-cols-1 grid-rows-2 gap-4 lg:grid-rows-1 lg:grid-cols-2 mb-7">
-              <div className="max-h-64">
-                <BalanceOverTime
-                  data={portfolio.dailyBalances.map((d) => ({
-                    balance: d.totalValue,
-                    date: d.date,
-                  }))}
-                />
-              </div>
+              {/* Chart */}
+              <BalanceOverTime portfolioID={portfolio.id} />
+
               <div className="grid grid-cols-3 gap-2">
                 <AssetPercentCard
                   amount={portfolio.stocksTotal}

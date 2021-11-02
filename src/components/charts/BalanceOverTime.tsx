@@ -3,9 +3,12 @@ import { ParentSize } from '@visx/responsive';
 import { scaleLinear, scaleTime } from '@visx/scale';
 import { Area, Bar, Line } from '@visx/shape';
 import { useTooltip } from '@visx/tooltip';
+import { DailyBalance, DailyBalancesPeriod } from '@zachweinberg/obsidian-schema';
+import classNames from 'classnames';
 import { bisector, extent, max } from 'd3-array';
-import React, { useCallback, useMemo, useState } from 'react';
-import { formatMoneyFromNumber } from '~/lib/money';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { API } from '~/lib/api';
+import Spinner from '../ui/Spinner';
 
 interface ChartData {
   balance: number;
@@ -78,35 +81,7 @@ const SVGChart: React.FunctionComponent<SVGChartProps> = (props: SVGChartProps) 
 
   return (
     <div className="relative">
-      <div className="absolute flex justify-between w-full px-3 py-2 text-white">
-        <div className="p-1">
-          <p className="mb-1 text-lg font-semibold bg-dark">Balance over time</p>
-          <p className="font-medium">{formatMoneyFromNumber(tooltipBalance)}</p>
-        </div>
-        <div className="flex items-center space-x-2 text-sm font-medium bg-dark">
-          <div className="p-1 rounded-full cursor-pointer hover:bg-lime hover:text-dark">
-            1D
-          </div>
-          <div className="p-1 rounded-full cursor-pointer hover:bg-lime hover:text-dark">
-            1W
-          </div>
-          <div className="p-1 rounded-full cursor-pointer hover:bg-lime hover:text-dark">
-            1M
-          </div>
-          <div className="p-1 rounded-full cursor-pointer hover:bg-lime hover:text-dark">
-            6M
-          </div>
-          <div className="p-1 rounded-full cursor-pointer hover:bg-lime hover:text-dark">
-            1Y
-          </div>
-          <div className="p-1 rounded-full cursor-pointer hover:bg-lime hover:text-dark">
-            All
-          </div>
-        </div>
-      </div>
-
       <svg width={width} height={height}>
-        <rect x={0} y={0} width={width} height={height} fill="#141414" rx={15} />
         <Area<ChartData>
           data={data}
           x={(d) => dateScale(getDate(d)) ?? 0}
@@ -143,14 +118,115 @@ const SVGChart: React.FunctionComponent<SVGChartProps> = (props: SVGChartProps) 
   );
 };
 
-interface Props {
-  data: ChartData[];
-}
+const BalanceOverTime: React.FunctionComponent<{ portfolioID: string }> = ({
+  portfolioID,
+}: {
+  portfolioID: string;
+}) => {
+  const [period, setPeriod] = useState<DailyBalancesPeriod>(DailyBalancesPeriod.AllTime);
+  const [data, setData] = useState<DailyBalance[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-const BalanceOverTime: React.FunctionComponent<Props> = ({ data }: Props) => {
+  const loadDailyBalanceHistory = async () => {
+    setLoading(true);
+    try {
+      const response = await API.getPortfolioDailyBalances(portfolioID, period);
+      setData(response.dailyBalances);
+    } catch (err) {
+      //
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadDailyBalanceHistory();
+  }, [period]);
+
   return (
     <ParentSize>
-      {(parent) => <SVGChart data={data} width={parent.width} height={parent.height} />}
+      {(parent) => (
+        <div
+          className="flex flex-col justify-between rounded-xl bg-dark"
+          style={{ width: `${parent.width}px`, height: `${parent.height}px` }}
+        >
+          <div className="flex items-center justify-between w-full">
+            <h1 className="p-3 text-lg font-semibold text-white">Balance over time</h1>
+            <div className="px-3 py-2 text-white">
+              <div className="flex items-center space-x-1 text-sm font-medium bg-dark">
+                <div
+                  onClick={() => setPeriod(DailyBalancesPeriod.OneDay)}
+                  className={classNames(
+                    'rounded-full text-sm cursor-pointer hover:bg-lime hover:text-dark',
+                    { 'bg-lime text-dark': period === DailyBalancesPeriod.OneDay }
+                  )}
+                >
+                  1D
+                </div>
+                <div
+                  onClick={() => setPeriod(DailyBalancesPeriod.OneWeek)}
+                  className={classNames(
+                    'rounded-full text-sm cursor-pointer hover:bg-lime hover:text-dark',
+                    { 'bg-lime text-dark': period === DailyBalancesPeriod.OneWeek }
+                  )}
+                >
+                  1W
+                </div>
+                <div
+                  onClick={() => setPeriod(DailyBalancesPeriod.OneMonth)}
+                  className={classNames(
+                    'rounded-full text-sm cursor-pointer hover:bg-lime hover:text-dark',
+                    { 'bg-lime text-dark': period === DailyBalancesPeriod.OneMonth }
+                  )}
+                >
+                  1M
+                </div>
+                <div
+                  onClick={() => setPeriod(DailyBalancesPeriod.SixMonths)}
+                  className={classNames(
+                    'rounded-full text-sm cursor-pointer hover:bg-lime hover:text-dark',
+                    { 'bg-lime text-dark': period === DailyBalancesPeriod.SixMonths }
+                  )}
+                >
+                  6M
+                </div>
+                <div
+                  onClick={() => setPeriod(DailyBalancesPeriod.OneYear)}
+                  className={classNames(
+                    'rounded-full text-sm cursor-pointer hover:bg-lime hover:text-dark',
+                    { 'bg-lime text-dark': period === DailyBalancesPeriod.OneYear }
+                  )}
+                >
+                  1Y
+                </div>
+                <div
+                  onClick={() => setPeriod(DailyBalancesPeriod.AllTime)}
+                  className={classNames(
+                    'rounded-full cursor-pointer hover:bg-lime hover:text-dark',
+                    { 'bg-lime text-dark': period === DailyBalancesPeriod.AllTime }
+                  )}
+                >
+                  All
+                </div>
+              </div>
+            </div>
+          </div>
+          {loading ? (
+            <div className="mx-auto">
+              <Spinner size={34} color="#CEF33C" />
+            </div>
+          ) : (
+            <SVGChart
+              data={data.map((d) => ({ balance: d.totalValue, date: d.date }))}
+              width={parent.width}
+              height={parent.height - parent.height * 0.38}
+            />
+          )}
+          <div>
+            <p className="p-3 text-2xl font-bold text-white">$912,123.31</p>
+          </div>
+        </div>
+      )}
     </ParentSize>
   );
 };

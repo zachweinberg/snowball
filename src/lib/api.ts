@@ -13,9 +13,11 @@ import {
   CreatePortfolioResponse,
   CreateUserRequest,
   CreateUserResponse,
+  DailyBalancesPeriod,
   EditPortfolioSettingsRequest,
   GetAlertsResponse,
   GetNewsResponse,
+  GetPortfolioDailyBalancesResponse,
   GetPortfolioResponse,
   GetPortfolioSettingsResponse,
   GetPortfoliosResponse,
@@ -157,6 +159,13 @@ export const API = {
       'get',
       undefined,
       false
+    );
+  },
+
+  getPortfolioDailyBalances: (portfolioID: string, period: DailyBalancesPeriod) => {
+    return request<undefined, GetPortfolioDailyBalancesResponse>(
+      `/api/portfolios/${portfolioID}/daily-balances?period=${period}`,
+      'get'
     );
   },
 

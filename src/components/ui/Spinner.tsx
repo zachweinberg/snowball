@@ -3,12 +3,17 @@ const tailwindConfig = require('../../../tailwind.config');
 const { theme } = resolveConfig(tailwindConfig);
 
 interface Props {
-  size: number;
+  size?: number;
+  color?: string;
 }
 
-const Spinner: React.FunctionComponent<Props> = ({ size }: Props) => {
+const Spinner: React.FunctionComponent<Props> = ({ size, color }: Props) => {
   if (!size) {
     size = 30;
+  }
+
+  if (!color) {
+    color = theme.colors['white'];
   }
 
   return (
@@ -16,9 +21,9 @@ const Spinner: React.FunctionComponent<Props> = ({ size }: Props) => {
       style={{
         height: `${size}px`,
         width: `${size}px`,
-        borderTopColor: theme.colors['white'],
+        borderTopColor: color,
       }}
-      className={`ease-linear border-blue1 border-4 border-t-4 rounded-full spinner loader`}
+      className={`ease-linear border-4 border-t-4 rounded-full spinner loader`}
     ></div>
   );
 };
