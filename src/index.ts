@@ -1,10 +1,10 @@
 export enum DailyBalancesPeriod {
-  OneDay,
-  OneWeek,
-  OneMonth,
-  SixMonths,
-  OneYear,
-  AllTime,
+  OneDay = "OneDay",
+  OneWeek = "OneWeek",
+  OneMonth = "OneMonth",
+  SixMonths = "SixMonths",
+  OneYear = "OneYear",
+  AllTime = "AllTime",
 }
 
 export interface User {
