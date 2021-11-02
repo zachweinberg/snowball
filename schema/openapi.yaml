@@ -173,6 +173,22 @@ paths:
             application/json:
               schema:
                 type: object
+  /portfolios/{portfolioID}/daily-balances:
+    get:
+      summary: Fetch a portfolios balance history
+      parameters:
+        - name: period
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
   /portfolios/{portfolioID}/settings:
     get:
       summary: Fetch a portfolio's settings

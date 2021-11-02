@@ -2,7 +2,9 @@ import {
   AssetType,
   CreatePortfolioRequest,
   CreatePortfolioResponse,
+  DailyBalancesPeriod,
   EditPortfolioSettingsRequest,
+  GetPortfolioDailyBalancesResponse,
   GetPortfolioResponse,
   GetPortfolioSettingsResponse,
   GetPortfoliosResponse,
@@ -228,6 +230,63 @@ portfoliosRouter.get(
     };
 
     await setRedisKey(redisKey, response, 12);
+
+    res.status(200).json(response);
+  })
+);
+
+portfoliosRouter.get(
+  '/:portfolioID/daily-balances',
+  catchErrors(async (req, res) => {
+    const { period } = req.query as unknown as { period: DailyBalancesPeriod };
+
+    if (!period) {
+      return res.status(400).end();
+    }
+
+    let userOwnsPortfolio = false;
+
+    const portfolio = await fetchDocumentByID<Portfolio>('portfolios', req.params.portfolioID);
+
+    const authUser = await getUserFromAuthHeader(req, false);
+
+    if (authUser && portfolio.userID === authUser.uid) {
+      userOwnsPortfolio = true;
+    }
+
+    if (portfolio.settings.private && !userOwnsPortfolio) {
+      // Private portfolio
+      return res.status(404).json({ status: 'error', error: 'Portfolio does not exist.' });
+    }
+
+    let numDaysOfHistory: number | undefined = undefined;
+
+    switch (period) {
+      case DailyBalancesPeriod.OneDay:
+        numDaysOfHistory = 2;
+        break;
+      case DailyBalancesPeriod.OneWeek:
+        numDaysOfHistory = 8;
+        break;
+      case DailyBalancesPeriod.OneMonth:
+        numDaysOfHistory = 31;
+        break;
+      case DailyBalancesPeriod.SixMonths:
+        numDaysOfHistory = 182;
+        break;
+      case DailyBalancesPeriod.OneYear:
+        numDaysOfHistory = 366;
+        break;
+      default:
+        break;
+    }
+
+    const dailyBalances = await getPortfolioDailyHistory(portfolio.id, numDaysOfHistory);
+
+    const response: GetPortfolioDailyBalancesResponse = {
+      status: 'ok',
+      dailyBalances,
+    };
 
     res.status(200).json(response);
   })
