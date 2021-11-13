@@ -278,4 +278,19 @@ export const API = {
       : `/api/news?page=${pageNumber}`;
     return request<undefined, GetNewsResponse>(url, 'get');
   },
+
+  // PLAID
+  getPlaidLinkToken: () => {
+    return request<undefined, undefined>('/api/plaid/create-link-token', 'get');
+  },
+
+  exchangePlaidTokenAndFetchHoldings: (publicToken: string) => {
+    return request<any, undefined>(
+      '/api/plaid/exchange-public-token-and-fetch-holdings',
+      'post',
+      {
+        publicToken,
+      }
+    );
+  },
 };

@@ -72,8 +72,8 @@ const Header: React.FunctionComponent = () => {
               {auth.user && (
                 <Menu
                   options={[
-                    { label: 'Settings', onClick: () => auth.logout() },
-                    { label: 'Subscription', onClick: () => auth.logout() },
+                    { label: 'Settings', onClick: () => null },
+                    { label: 'Subscription', onClick: () => null },
                     { label: 'Log Out', onClick: () => auth.logout() },
                   ]}
                   button={() => (

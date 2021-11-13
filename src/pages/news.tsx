@@ -117,7 +117,7 @@ const NewsPageContent: React.FunctionComponent = () => {
               </a>
               <div className="flex flex-col items-center justify-center col-span-1 p-6 text-center bg-white">
                 <p className="mb-2 text-lg font-bold leading-tight text-dark">Filter news</p>
-                <p className="mb-2 leading-snug">Enter any search term</p>
+                <p className="mb-2 leading-snug">Search for anything</p>
                 <form
                   autoComplete="off"
                   className="flex items-center w-4/5"
@@ -131,13 +131,13 @@ const NewsPageContent: React.FunctionComponent = () => {
                     placeholder="Filter..."
                     backgroundColor="#F9FAFF"
                     type="text"
-                    className="mr-2"
+                    className="mr-2 w-2/3"
                     value={query}
                     onChange={(e) => {
                       setQuery(e.target.value);
                     }}
                   />
-                  <Button className="w-20" type="submit">
+                  <Button className="w-1/3" type="submit">
                     Go
                   </Button>
                 </form>

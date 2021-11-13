@@ -168,6 +168,7 @@ const BalanceOverTime: React.FunctionComponent<{ portfolioID: string }> = ({
               <div className="flex items-center space-x-1 text-sm font-medium bg-dark">
                 {Object.entries(PERIOD_MAP).map(([key, value]) => (
                   <div
+                    key={key}
                     onClick={() => setPeriod(value)}
                     className={classNames(
                       'rounded-full p-1 text-sm cursor-pointer hover:bg-lime hover:text-dark',

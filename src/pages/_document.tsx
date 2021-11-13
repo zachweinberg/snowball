@@ -6,11 +6,47 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          <meta name="theme-color" content="#000" />
+          <meta charSet="utf-8" />
+
           <meta
             name="description"
-            content="Obsidian Tracker - track your net worth. Assets include stocks, crypto, real estate, options, cash and more."
-          ></meta>
+            content="Track your stocks, crypto, real estate, cash and more in one place. Watch your entire net worth grow."
+          />
+
+          <meta name="robots" content="index, follow" />
+
+          <meta
+            property="og:title"
+            content="Obsidian Tracker - track your net worth in one place."
+          />
+
+          <meta
+            name="twitter:title"
+            content="Obsidian Tracker - track your net worth in one place."
+          />
+
+          <meta
+            property="og:image"
+            content="https://firebasestorage.googleapis.com/v0/b/lyra-ae77c.appspot.com/o/img%2Fog.jpg?alt=media"
+          />
+
+          <meta property="og:url" content="https://obsidiantracker.com" />
+
+          <meta
+            property="og:description"
+            content="Track your stocks, crypto, real estate, cash and more in one place. Watch your entire net worth grow."
+          />
+
+          <meta
+            name="twitter:description"
+            content="Track your stocks, crypto, real estate, cash and more in one place. Watch your entire net worth grow."
+          />
+
+          <meta name="twitter:card" content="summary_large_image" />
+
+          <meta name="theme-color" content="#000" />
+
+          <link rel="canonical" href="https://obsidiantracker.com/" />
         </Head>
         <body className="antialiased font-poppins bg-background">
           <Main />
