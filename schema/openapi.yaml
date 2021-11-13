@@ -616,3 +616,13 @@ paths:
             application/json:
               schema:
                 type: object
+  /plaid/exchange-public-token-and-fetch-holdings:
+    post:
+      summary: Exchange public token for item info
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object

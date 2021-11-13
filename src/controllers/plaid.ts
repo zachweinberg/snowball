@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { Configuration, CountryCode, PlaidApi, PlaidEnvironments, Products } from 'plaid';
 import { catchErrors, requireSignedIn } from '~/utils/api';
+import { createDocument } from '~/utils/db';
 
 const plaidRouter = Router();
 
@@ -36,6 +37,55 @@ plaidRouter.get(
     const createTokenResponse = await client.linkTokenCreate(plaidRequest);
 
     res.status(200).json({ status: 'ok', data: createTokenResponse.data });
+  })
+);
+
+plaidRouter.post(
+  '/exchange-public-token-and-fetch-holdings',
+  requireSignedIn,
+  catchErrors(async (req, res) => {
+    const userID = req.authContext?.uid!;
+    const publicToken = req.body.publicToken;
+
+    const tokenResponse = await client.itemPublicTokenExchange({
+      public_token: publicToken,
+    });
+
+    const accessToken = tokenResponse.data.access_token;
+    const itemID = tokenResponse.data.item_id;
+
+    await createDocument('plaid-items', {
+      createdAt: new Date(),
+      itemID,
+      accessToken,
+      userID,
+    });
+
+    const holdingsResponse = await client.investmentsHoldingsGet({
+      access_token: accessToken,
+    });
+
+    const holdings = holdingsResponse.data.holdings;
+    const securities = holdingsResponse.data.securities;
+
+    const mappedHoldings = holdings.reduce((accum, holding) => {
+      const theSecurity = securities.find((security) => security.security_id === holding.security_id);
+
+      if (!theSecurity) {
+        return accum;
+      }
+
+      // if (theSecurity.type === 'cash') {
+      //   accum.push({
+      //     name: theSecurity.name,
+      //     type: AssetType.Cash,
+      //   });
+      // }
+
+      return accum;
+    }, []);
+
+    res.status(200).json({ holdings, securities });
   })
 );
 
