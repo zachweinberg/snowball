@@ -31,10 +31,10 @@ function HeroHome() {
 
   return (
     <>
-      <section className="relative w-full bg-darkgray">
-        <div className="">
+      <section className="w-full">
+        <div>
           <div className="pt-32 pb-12 md:pt-40 md:pb-20">
-            <div className="pb-12 text-center md:pb-24 mb-64">
+            <div className="pb-12 text-center md:pb-24 mb-64 bg-red">
               <h1 className="mb-8 text-5xl font-extrabold tracking-tight md:text-6xl leading-tighter">
                 The net worth tracker for
                 <br />{' '}
@@ -63,11 +63,11 @@ function HeroHome() {
               </div>
             </div>
 
-            <div className="bg-evergreen">
-              <div className="relative flex justify-center mb-8 -top-52">
+            <div>
+              <div className="relative flex justify-center mb-8">
                 <div className="flex flex-col justify-center">
                   <img
-                    className="mx-auto border border-darkgray"
+                    className="mx-auto"
                     src="/img/1.png"
                     alt="Hero"
                     style={{ maxWidth: '1000px' }}
