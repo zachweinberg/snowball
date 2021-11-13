@@ -96,6 +96,16 @@ export interface CreateUserRequest {
     email: string;
     password: string;
 }
+export interface GetPlaidTokenResponse extends BaseResponse {
+    data: {
+        expiration: string;
+        link_token: string;
+        request_id: string;
+    };
+}
+export interface ExchangePlaidTokenRequest {
+    publicToken: string;
+}
 export interface SendContactEmailRequest {
     name: string;
     email?: string;
@@ -309,4 +319,10 @@ export interface PortfolioSettings {
     defaultAssetType: AssetType;
     reminderEmailPeriod: Period;
     summaryEmailPeriod: Period;
+}
+export interface PlaidItem {
+    itemID: string;
+    userID: string;
+    createdAt: Date;
+    accessToken: string;
 }
