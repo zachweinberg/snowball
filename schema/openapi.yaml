@@ -606,3 +606,13 @@ paths:
             application/json:
               schema:
                 type: object
+  /plaid/create-link-token:
+    get:
+      summary: Get plaid link token
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object

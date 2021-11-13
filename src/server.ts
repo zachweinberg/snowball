@@ -9,6 +9,7 @@ import usersRouter from '~/controllers/users';
 import { handleErrors, ignoreFavicon } from '~/utils/api';
 import alertsRouter from './controllers/alerts';
 import newsRouter from './controllers/news';
+import plaidRouter from './controllers/plaid';
 import positionsRouter from './controllers/positions';
 import quotesRouter from './controllers/quotes';
 import watchListRouter from './controllers/watchlist';
@@ -42,6 +43,7 @@ const Server = {
       app.use('/api/news', newsRouter);
       app.use('/api/watchlist', watchListRouter);
       app.use('/api/alerts', alertsRouter);
+      app.use('/api/plaid', plaidRouter);
       app.use(handleErrors);
 
       server = app.listen(PORT, () => {

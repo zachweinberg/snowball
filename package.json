@@ -31,6 +31,7 @@
     "mjml": "^4.10.4",
     "morgan": "^1.10.0",
     "mustache": "^4.2.0",
+    "plaid": "^9.7.0",
     "postmark": "^2.7.8",
     "redis": "^3.1.2",
     "twilio": "^3.70.0"
@@ -48,6 +49,7 @@
     "@typescript-eslint/parser": "^4.29.1",
     "eslint": "7.32.0",
     "eslint-config-next": "11.1.0",
+    "nodemon": "^2.0.15",
     "prettier": "^2.3.2",
     "rimraf": "^3.0.2",
     "ts-loader": "^9.2.5",
