@@ -21,14 +21,11 @@ const Home: React.FunctionComponent = () => {
       <div className="landing">
         <div className="flex flex-col min-h-screen overflow-hidden">
           <Header />
-          <main className="flex-grow curved-bg">
-            <div className="z-50 bg-gray">
-              <HeroHome />
-              <FeaturesHome />
-              <FeaturesBlocks />
-              {/* <Testimonials /> */}
-              <Newsletter />
-            </div>
+          <main className="flex-grow">
+            <HeroHome />
+            <FeaturesHome />
+            <FeaturesBlocks />
+            <Newsletter />
           </main>
 
           <Footer />

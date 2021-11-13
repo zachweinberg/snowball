@@ -30,52 +30,50 @@ function HeroHome() {
   }, []);
 
   return (
-    <section className="relative w-full">
-      <div className="px-4 mx-auto zmax-w-6xl sm:px-6">
-        {/* Hero content */}
-        <div className="pt-32 pb-12 md:pt-40 md:pb-20">
-          {/* Section header */}
-          <div className="pb-12 text-center md:pb-24">
-            <h1 className="mb-8 text-5xl font-extrabold tracking-tight md:text-6xl leading-tighter">
-              The net worth tracker for
-              <br />{' '}
-              <div className="type-wrap">
-                <span
-                  className="text-transparent bg-clip-text bg-gradient-to-r from-lime to-evergreen"
-                  style={{ whiteSpace: 'pre' }}
-                  ref={typingEl}
-                />
-              </div>
-            </h1>
-            <div className="max-w-3xl mx-auto">
-              <p className="mb-8 text-lg text-dark">
-                Track all of your assets in one place with an easy-to-use platform.
-              </p>
-              <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center">
-                <div>
-                  <a
-                    className="w-full mb-4 text-white bg-black btn hover:bg-blue-700 sm:w-auto sm:mb-0"
-                    href="https://app.obsidiantracker.com/signup"
-                  >
-                    Get started
-                  </a>
+    <>
+      <section className="relative w-full bg-darkgray">
+        <div className="">
+          <div className="pt-32 pb-12 md:pt-40 md:pb-20">
+            <div className="pb-12 text-center md:pb-24 mb-64">
+              <h1 className="mb-8 text-5xl font-extrabold tracking-tight md:text-6xl leading-tighter">
+                The net worth tracker for
+                <br />{' '}
+                <div className="type-wrap">
+                  <span
+                    className="text-transparent bg-clip-text bg-gradient-to-r from-lime to-evergreen"
+                    style={{ whiteSpace: 'pre' }}
+                    ref={typingEl}
+                  />
+                </div>
+              </h1>
+              <div className="max-w-3xl mx-auto">
+                <p className="mb-8 text-lg text-dark">
+                  Track all of your assets in one place with an easy-to-use platform.
+                </p>
+                <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center">
+                  <div>
+                    <a
+                      className="w-full mb-4 text-white p-3 font-semibold shadow-md text-md bg-black btn hover:bg-blue-700 sm:w-auto sm:mb-0"
+                      href="https://app.obsidiantracker.com/signup"
+                    >
+                      Get started
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Hero image */}
-          <div>
-            <div className="relative flex justify-center mb-8">
-              <div className="flex flex-col justify-center">
-                <img
-                  className="mx-auto"
-                  src="/img/1.png"
-                  alt="Hero"
-                  style={{ maxWidth: '1000px' }}
-                />
-              </div>
-              {/* <button
+            <div className="bg-evergreen">
+              <div className="relative flex justify-center mb-8 -top-52">
+                <div className="flex flex-col justify-center">
+                  <img
+                    className="mx-auto border border-darkgray"
+                    src="/img/1.png"
+                    alt="Hero"
+                    style={{ maxWidth: '1000px' }}
+                  />
+                </div>
+                {/* <button
                 className="absolute flex items-center p-4 font-medium transform -translate-y-1/2 bg-white rounded-full shadow-lg top-full group"
                 onClick={(e) => {
                   e.preventDefault();
@@ -94,11 +92,12 @@ function HeroHome() {
                 </svg>
                 <span className="ml-3">Watch the full video (2 min)</span>
               </button> */}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
 
