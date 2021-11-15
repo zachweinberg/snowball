@@ -33,14 +33,14 @@ function HeroHome() {
     <>
       <section className="w-full">
         <div>
-          <div className="pt-32 pb-12 md:pt-40 md:pb-20">
-            <div className="pb-12 text-center md:pb-24 mb-64 bg-red">
+          <div className="pt-32 pb-12 md:pt-40 md:pb-20 bg-lightlime">
+            <div className="pb-12 text-center md:pb-24">
               <h1 className="mb-8 text-5xl font-extrabold tracking-tight md:text-6xl leading-tighter">
                 The net worth tracker for
                 <br />{' '}
                 <div className="type-wrap">
                   <span
-                    className="text-transparent bg-clip-text bg-gradient-to-r from-lime to-evergreen"
+                    className="text-transparent bg-clip-text bg-gradient-to-r from-evergreen to-darkgray"
                     style={{ whiteSpace: 'pre' }}
                     ref={typingEl}
                   />
@@ -53,8 +53,8 @@ function HeroHome() {
                 <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center">
                   <div>
                     <a
-                      className="w-full mb-4 text-white p-3 font-semibold shadow-md text-md bg-black btn hover:bg-blue-700 sm:w-auto sm:mb-0"
-                      href="https://app.obsidiantracker.com/signup"
+                      className="flex font-semibold text-md items-center py-4 px-3 text-white transition-colors rounded-lg bg-dark hover:bg-evergreen"
+                      href="/signup"
                     >
                       Get started
                     </a>

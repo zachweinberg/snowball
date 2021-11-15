@@ -7,8 +7,9 @@ import { DailyBalance, DailyBalancesPeriod } from '@zachweinberg/obsidian-schema
 import classNames from 'classnames';
 import { bisector, extent, max } from 'd3-array';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import Spinner from '~/components/ui/Spinner';
 import { API } from '~/lib/api';
-import Spinner from '../ui/Spinner';
+import { formatMoneyFromNumber } from '~/lib/money';
 
 interface ChartData {
   balance: number;
@@ -19,6 +20,7 @@ interface SVGChartProps {
   data: ChartData[];
   width: number;
   height: number;
+  onHoverPoint: (balance: number) => void;
 }
 
 const getDate = (d: ChartData) => new Date(d.date);
@@ -26,11 +28,10 @@ const getBalance = (d: ChartData) => d?.balance ?? 0;
 const bisectDate = bisector<ChartData, Date>((d) => new Date(d.date)).left;
 
 const SVGChart: React.FunctionComponent<SVGChartProps> = (props: SVGChartProps) => {
-  const { width, height, data } = props;
-  const [tooltipBalance, setTooltipBalance] = useState(data[data.length - 1]?.balance ?? 0);
+  const { width, height, data, onHoverPoint } = props;
   const { showTooltip, hideTooltip, tooltipData, tooltipLeft, tooltipOpen, tooltipTop } =
     useTooltip();
-
+  console.log('render svg');
   const dateScale = useMemo(
     () =>
       scaleTime({
@@ -66,7 +67,7 @@ const SVGChart: React.FunctionComponent<SVGChartProps> = (props: SVGChartProps) 
             : d0;
       }
 
-      setTooltipBalance(d?.balance ?? 0);
+      onHoverPoint(d.balance ?? 0);
 
       showTooltip({
         tooltipData: d,
@@ -135,12 +136,14 @@ const BalanceOverTime: React.FunctionComponent<{ portfolioID: string }> = ({
   const [period, setPeriod] = useState<DailyBalancesPeriod>(DailyBalancesPeriod.AllTime);
   const [data, setData] = useState<DailyBalance[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [displayedBalance, setDisplayedBalance] = useState<number>(0);
 
   const loadDailyBalanceHistory = async () => {
     setLoading(true);
     try {
       const response = await API.getPortfolioDailyBalances(portfolioID, period);
       setData(response.dailyBalances);
+      setDisplayedBalance(response.dailyBalances[0].totalValue);
     } catch (err) {
       //
     } finally {
@@ -188,6 +191,7 @@ const BalanceOverTime: React.FunctionComponent<{ portfolioID: string }> = ({
             </div>
           ) : (
             <SVGChart
+              onHoverPoint={(bal) => setDisplayedBalance(bal)}
               data={data.map((d) => ({ balance: d.totalValue, date: d.date }))}
               width={parent.width}
               height={parent.height * 0.65}
@@ -195,7 +199,9 @@ const BalanceOverTime: React.FunctionComponent<{ portfolioID: string }> = ({
           )}
 
           <div style={{ height: parent.height * 0.2 }} className="px-3">
-            <p className="text-lg font-bold text-white">$912,123.31</p>
+            <p className="text-lg font-bold text-white">
+              {formatMoneyFromNumber(displayedBalance)}
+            </p>
             <p className="text-sm font-bold text-white">May 7th, 2021</p>
           </div>
         </div>

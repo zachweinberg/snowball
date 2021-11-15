@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 
 function Header() {
@@ -14,9 +15,12 @@ function Header() {
 
   return (
     <header
-      className={`fixed w-full z-30 md:bg-opacity-90 transition duration-300 ease-in-out ${
-        !top && 'bg-white shadow-lg'
-      }`}
+      className={classNames(
+        'fixed w-full z-30 md:bg-opacity-90 transition duration-300 ease-in-out',
+        {
+          'shadow-lg bg-white': !top,
+        }
+      )}
     >
       <div className="max-w-6xl px-5 mx-auto sm:px-6">
         <div className="flex items-center justify-between h-10 my-3 md:h-16 md:my-0">
@@ -27,7 +31,7 @@ function Header() {
               <li className="flex items-center">
                 <a
                   href="/login"
-                  className="mr-8 font-medium transition-colors duration-150 ease-in-out text-dark hover:text-darkgray"
+                  className="mr-8 font-medium transition-colors duration-150 ease-in-out text-dark hover:text-evergreen"
                 >
                   Login
                 </a>

@@ -18,7 +18,9 @@ const PortfolioSummaryCard: React.FunctionComponent<Props> = ({ portfolio }: Pro
               {portfolio.name}
             </h2>
             {portfolio.settings.private === false && (
-              <p className="p-2 font-medium rounded-full text-darkgray bg-gray">Public</p>
+              <p className="px-2 py-1 text-xs font-medium rounded-full text-darkgray bg-gray">
+                Public
+              </p>
             )}
           </div>
 

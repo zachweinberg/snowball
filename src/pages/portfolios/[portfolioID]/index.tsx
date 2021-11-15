@@ -213,14 +213,16 @@ const PortfolioView: NextPage = () => {
               <div className="flex items-center">
                 {auth.user && (
                   <Link href={`/portfolios`}>
-                    <ArrowCircleLeftIcon className="w-8 h-8 mr-3 cursor-pointer hover:opacity-70" />
+                    <ArrowCircleLeftIcon className="w-6 h-6 mr-3 cursor-pointer hover:opacity-70" />
                   </Link>
                 )}
 
                 <h1 className="font-bold text-[1.75rem] mr-4">{portfolio.name}</h1>
 
                 {portfolio.settings.private === false && (
-                  <p className="p-2 font-medium rounded-full text-darkgray bg-gray">Public</p>
+                  <p className="py-1 px-2 text-xs font-medium rounded-full text-darkgray bg-gray">
+                    Public
+                  </p>
                 )}
               </div>
               {auth.user && (
@@ -250,11 +252,10 @@ const PortfolioView: NextPage = () => {
               )}
             </div>
 
-            <div className="grid grid-cols-1 grid-rows-2 gap-4 lg:grid-rows-1 lg:grid-cols-2 mb-7">
-              {/* Chart */}
+            <div className="grid grid-cols-1 grid-rows-2 gap-4 lg:grid-rows-1 lg:grid-cols-2 mb-7 h-72">
               <BalanceOverTime portfolioID={portfolio.id} />
 
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-3 gap-6">
                 <AssetPercentCard
                   amount={portfolio.stocksTotal}
                   percentDecimal={portfolio.stocksTotal / portfolioTotal}
