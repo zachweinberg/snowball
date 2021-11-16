@@ -8,18 +8,10 @@ function HeroHome() {
 
   useEffect(() => {
     const options: TypedOptions = {
-      strings: [
-        'Stocks',
-        'Crypto',
-        'Real estate',
-        'Bogleheads',
-        'Long term',
-        'Traders',
-        'Gold bugs',
-      ],
+      strings: ['Stocks', 'Crypto', 'Real estate', 'Cash', 'Custom assets'],
       loop: true,
-      typeSpeed: 50,
-      backSpeed: 25,
+      typeSpeed: 48,
+      backSpeed: 48,
     };
 
     typed.current = new Typed(typingEl.current!, options);
@@ -47,8 +39,8 @@ function HeroHome() {
                 </div>
               </h1>
               <div className="max-w-3xl mx-auto">
-                <p className="mb-8 text-lg text-dark">
-                  Track all of your assets in one place with an easy-to-use platform.
+                <p className="mb-8 text-lg text-dark font-medium">
+                  Track all of your assets in one place on an easy-to-use platform.
                 </p>
                 <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center">
                   <div>

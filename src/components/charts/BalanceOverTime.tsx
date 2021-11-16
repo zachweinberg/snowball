@@ -1,11 +1,13 @@
+import { Axis } from '@visx/axis';
 import { localPoint } from '@visx/event';
 import { ParentSize } from '@visx/responsive';
 import { scaleLinear, scaleTime } from '@visx/scale';
-import { Area, Bar, Line } from '@visx/shape';
+import { Bar, Line, LinePath } from '@visx/shape';
 import { useTooltip } from '@visx/tooltip';
 import { DailyBalance, DailyBalancesPeriod } from '@zachweinberg/obsidian-schema';
 import classNames from 'classnames';
-import { bisector, extent, max } from 'd3-array';
+import { bisector, extent, max, min } from 'd3-array';
+import { DateTime } from 'luxon';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Spinner from '~/components/ui/Spinner';
 import { API } from '~/lib/api';
@@ -20,7 +22,8 @@ interface SVGChartProps {
   data: ChartData[];
   width: number;
   height: number;
-  onHoverPoint: (balance: number) => void;
+  onHoverPoint: (data: ChartData) => void;
+  reset: () => void;
 }
 
 const getDate = (d: ChartData) => new Date(d.date);
@@ -28,10 +31,9 @@ const getBalance = (d: ChartData) => d?.balance ?? 0;
 const bisectDate = bisector<ChartData, Date>((d) => new Date(d.date)).left;
 
 const SVGChart: React.FunctionComponent<SVGChartProps> = (props: SVGChartProps) => {
-  const { width, height, data, onHoverPoint } = props;
-  const { showTooltip, hideTooltip, tooltipData, tooltipLeft, tooltipOpen, tooltipTop } =
-    useTooltip();
-  console.log('render svg');
+  const { width, height, data, onHoverPoint, reset } = props;
+  const { showTooltip, hideTooltip, tooltipData, tooltipLeft } = useTooltip();
+
   const dateScale = useMemo(
     () =>
       scaleTime({
@@ -45,8 +47,7 @@ const SVGChart: React.FunctionComponent<SVGChartProps> = (props: SVGChartProps) 
     () =>
       scaleLinear({
         range: [height, 0],
-        domain: [0, (max(data, getBalance) || 0) + height / 3],
-        nice: true,
+        domain: [min(data, getBalance) || 0, max(data, getBalance) || 0],
       }),
     [height]
   );
@@ -67,7 +68,7 @@ const SVGChart: React.FunctionComponent<SVGChartProps> = (props: SVGChartProps) 
             : d0;
       }
 
-      onHoverPoint(d.balance ?? 0);
+      onHoverPoint(d);
 
       showTooltip({
         tooltipData: d,
@@ -83,12 +84,12 @@ const SVGChart: React.FunctionComponent<SVGChartProps> = (props: SVGChartProps) 
   return (
     <div className="relative">
       <svg width={width} height={height}>
-        <Area<ChartData>
+        <LinePath
           data={data}
           x={(d) => dateScale(getDate(d)) ?? 0}
           y={(d) => stockValueScale(getBalance(d)) ?? 0}
-          strokeWidth={2}
           stroke="#CEF33C"
+          strokeWidth={2}
         />
         <Bar
           width={width}
@@ -98,9 +99,25 @@ const SVGChart: React.FunctionComponent<SVGChartProps> = (props: SVGChartProps) 
           onTouchStart={handleTooltip}
           onTouchMove={handleTooltip}
           onMouseMove={handleTooltip}
-          onMouseLeave={() => hideTooltip()}
+          onMouseLeave={() => {
+            reset();
+            hideTooltip();
+          }}
         />
-
+        <Axis
+          scale={dateScale}
+          top={height}
+          orientation="top"
+          stroke={'#ccc'}
+          strokeWidth={0}
+          tickStroke={'#ccc'}
+          tickLabelProps={() => ({
+            fill: 'yellow',
+            textAnchor: 'middle',
+            verticalAnchor: 'middle',
+            fontSize: ' .65rem',
+          })}
+        />
         {tooltipData && (
           <g>
             <Line
@@ -136,14 +153,13 @@ const BalanceOverTime: React.FunctionComponent<{ portfolioID: string }> = ({
   const [period, setPeriod] = useState<DailyBalancesPeriod>(DailyBalancesPeriod.AllTime);
   const [data, setData] = useState<DailyBalance[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [displayedBalance, setDisplayedBalance] = useState<number>(0);
+  const [point, setPoint] = useState<ChartData | null>(null);
 
   const loadDailyBalanceHistory = async () => {
     setLoading(true);
     try {
       const response = await API.getPortfolioDailyBalances(portfolioID, period);
       setData(response.dailyBalances);
-      setDisplayedBalance(response.dailyBalances[0].totalValue);
     } catch (err) {
       //
     } finally {
@@ -191,18 +207,28 @@ const BalanceOverTime: React.FunctionComponent<{ portfolioID: string }> = ({
             </div>
           ) : (
             <SVGChart
-              onHoverPoint={(bal) => setDisplayedBalance(bal)}
+              reset={() =>
+                setPoint({
+                  balance: data[data.length - 1].totalValue,
+                  date: data[data.length - 1].date,
+                })
+              }
+              onHoverPoint={(d) => setPoint(d)}
               data={data.map((d) => ({ balance: d.totalValue, date: d.date }))}
               width={parent.width}
               height={parent.height * 0.65}
             />
           )}
 
-          <div style={{ height: parent.height * 0.2 }} className="px-3">
-            <p className="text-lg font-bold text-white">
-              {formatMoneyFromNumber(displayedBalance)}
+          <div style={{ height: parent.height * 0.2 }} className="px-3 flex items-center">
+            <p className="text-2xl font-bold text-white mr-4">
+              {formatMoneyFromNumber(point?.balance ?? 0)}
             </p>
-            <p className="text-sm font-bold text-white">May 7th, 2021</p>
+            {point && (
+              <p className="text-md font-medium text-lime">
+                {DateTime.fromJSDate(point.date).toLocaleString(DateTime.DATE_MED)}
+              </p>
+            )}
           </div>
         </div>
       )}
