@@ -168,18 +168,9 @@ function Features() {
                   <div className="relative inline-flex flex-col">
                     <img
                       className="mx-auto rounded md:max-w-none"
-                      src="/images/features-bg.png"
-                      width="500"
-                      height="462"
+                      src="/img/landing/watchlist.png"
+                      width="650"
                       alt="Features bg"
-                    />
-                    <img
-                      className="absolute left-0 w-full transform md:max-w-none animate-float"
-                      src="/images/features-element.png"
-                      width="500"
-                      height="44"
-                      alt="Element"
-                      style={{ top: '30%' }}
                     />
                   </div>
                 </Transition>
