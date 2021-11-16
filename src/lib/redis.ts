@@ -1,7 +1,7 @@
-import redis from 'redis';
+import Redis from 'ioredis';
 import { logSentryError } from './sentry';
 
-const redisClient = redis.createClient(process.env.REDIS_URL!, { tls: { rejectUnauthorized: false } });
+const redisClient = new Redis(process.env.REDIS_URL!, { tls: { rejectUnauthorized: false } });
 
 redisClient.on('error', (err) => {
   logSentryError(err);

@@ -1,9 +1,12 @@
 import cors from 'cors';
 import express from 'express';
 import * as OpenApiValidator from 'express-openapi-validator';
+import RateLimit from 'express-rate-limit';
 import http from 'http';
+import Redis from 'ioredis';
 import morgan from 'morgan';
 import path from 'path';
+import RedisStore from 'rate-limit-redis';
 import portfoliosRouter from '~/controllers/portfolios';
 import usersRouter from '~/controllers/users';
 import { handleErrors, ignoreFavicon } from '~/utils/api';
@@ -18,6 +21,17 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 let server: http.Server | null = null;
 
+const limiter = RateLimit({
+  windowMs: 15000,
+  store: new RedisStore({
+    expiry: 15,
+    prefix: 'ratelimiter',
+    client: new Redis(process.env.REDIS_URL!, { tls: { rejectUnauthorized: false } }),
+  }),
+  max: 20,
+});
+
+app.use(limiter);
 app.use(express.json({ limit: '5mb' }));
 app.use(cors());
 app.use(ignoreFavicon);
