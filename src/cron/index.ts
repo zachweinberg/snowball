@@ -176,6 +176,7 @@ const runCron = async () => {
         console.error('Invalid job. Did you supply the job name as a param?');
         break;
     }
+
     process.exit(0);
   } catch (err) {
     console.error(err);

@@ -1,10 +1,16 @@
 import { Alert, AlertCondition, AlertDestination, AssetType } from '@zachweinberg/obsidian-schema';
 import _ from 'lodash';
+import { DateTime } from 'luxon';
 import { getCryptoPrices } from '~/lib/cmc';
 import { sendEmail } from '~/lib/email';
 import { getStockPrices } from '~/lib/iex';
 import { findDocuments } from '~/utils/db';
+import { formatMoneyFromNumber } from '~/utils/money';
 
+const MARKET_OPEN_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+const MARKET_OPEN_HOURS = [];
+
+DateTime.local().hour;
 export const processAlerts = async () => {
   const alerts = await findDocuments<Alert>('alerts');
 
@@ -53,12 +59,4 @@ const sendAlertNotification = async (alert: Alert) => {
     );
   } else if (alert.destination === AlertDestination.SMS) {
   }
-};
-
-const formatMoneyFromNumber = (value: number): string => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    maximumFractionDigits: value.toString().includes('.00') ? 8 : 2, // For numbers that are below a penny, show 8 decimals
-    currency: 'USD',
-  }).format(value);
 };
