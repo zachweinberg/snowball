@@ -28,7 +28,7 @@ const limiter = RateLimit({
     prefix: 'ratelimiter',
     client: new Redis(process.env.REDIS_URL!, { tls: { rejectUnauthorized: false } }),
   }),
-  max: 20,
+  max: 27,
 });
 
 app.use(limiter);
