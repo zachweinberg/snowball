@@ -209,8 +209,8 @@ const BalanceOverTime: React.FunctionComponent<{ portfolioID: string }> = ({
             <SVGChart
               reset={() =>
                 setPoint({
-                  balance: data[data.length - 1].totalValue,
-                  date: data[data.length - 1].date,
+                  balance: data[data.length - 1]?.totalValue ?? 0,
+                  date: data[data.length - 1]?.date ?? new Date(),
                 })
               }
               onHoverPoint={(d) => setPoint(d)}

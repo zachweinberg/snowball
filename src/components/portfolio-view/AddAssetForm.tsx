@@ -1,7 +1,6 @@
 import { Transition } from '@headlessui/react';
 import { AssetType } from '@zachweinberg/obsidian-schema';
 import { useState } from 'react';
-import PlaidLink from '~/components/plaid/PlaidLink';
 import AddCashForm from './AddCashForm';
 import AddCryptoForm from './AddCryptoForm';
 import AddCustomAssetForm from './AddCustomAssetForm';
@@ -152,7 +151,7 @@ const AddAssetForm: React.FunctionComponent<AddAssetFormProps> = ({
           Add an asset to {portfolioName}
         </h2>
 
-        <PlaidLink />
+        {/* <PlaidLink /> */}
 
         <p className="mb-16 font-medium text-darkgray text-[1rem] text-center">
           Select the asset type you would like to add
