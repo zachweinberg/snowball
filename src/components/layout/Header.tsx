@@ -1,6 +1,7 @@
 import { ChevronDownIcon } from '@heroicons/react/outline';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 import Link from '~/components/ui/Link';
 import Menu from '~/components/ui/Menu';
 import { useAuth } from '~/hooks/useAuth';
@@ -14,6 +15,7 @@ const profileLinks = [
 const Header: React.FunctionComponent = () => {
   const auth = useAuth();
   const router = useRouter();
+  const [resentEmail, setResentEmail] = useState(false);
 
   const links: Array<{ label: string; href: string }> = auth.user
     ? [
@@ -31,15 +33,29 @@ const Header: React.FunctionComponent = () => {
     <>
       {auth.user && !auth.user.verified && (
         <div className="w-full p-2 text-sm text-center bg-lime text-dark opacity-70">
-          Please verify your email address by clicking the link in the email we've sent you.{' '}
-          <span
-            onClick={API.resendVerificationEmail}
-            className="ml-2 font-semibold underline cursor-pointer hover:text-darkgray"
-          >
-            Resend email
-          </span>
+          {resentEmail ? (
+            <p>Sent!</p>
+          ) : (
+            <>
+              <span>
+                Please verify your email address by clicking the link in the email we've sent
+                you.
+              </span>
+
+              <span
+                onClick={async () => {
+                  await API.resendVerificationEmail;
+                  setResentEmail(true);
+                }}
+                className="ml-2 font-semibold underline cursor-pointer hover:opacity-75"
+              >
+                Resend email
+              </span>
+            </>
+          )}
         </div>
       )}
+
       <header className="bg-white border-b border-bordergray">
         <div className="flex items-center justify-between px-4 mx-auto max-w-7xl">
           <Link href="/portfolios">
