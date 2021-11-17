@@ -1,4 +1,3 @@
-import { Axis } from '@visx/axis';
 import { localPoint } from '@visx/event';
 import { ParentSize } from '@visx/responsive';
 import { scaleLinear, scaleTime } from '@visx/scale';
@@ -104,7 +103,7 @@ const SVGChart: React.FunctionComponent<SVGChartProps> = (props: SVGChartProps) 
             hideTooltip();
           }}
         />
-        <Axis
+        {/* <Axis
           scale={dateScale}
           top={height}
           orientation="top"
@@ -117,7 +116,7 @@ const SVGChart: React.FunctionComponent<SVGChartProps> = (props: SVGChartProps) 
             verticalAnchor: 'middle',
             fontSize: ' .65rem',
           })}
-        />
+        /> */}
         {tooltipData && (
           <g>
             <Line

@@ -165,7 +165,9 @@ export const API = {
   getPortfolioDailyBalances: (portfolioID: string, period: DailyBalancesPeriod) => {
     return request<undefined, GetPortfolioDailyBalancesResponse>(
       `/api/portfolios/${portfolioID}/daily-balances?period=${period}`,
-      'get'
+      'get',
+      undefined,
+      false
     );
   },
 

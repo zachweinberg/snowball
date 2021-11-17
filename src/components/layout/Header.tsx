@@ -61,7 +61,7 @@ const Header: React.FunctionComponent = () => {
           <Link href="/portfolios">
             <img
               src="/img/logo.png"
-              className="h-4 transition-opacity cursor-pointer hover:opacity-70"
+              className="h-4 hidden md:block transition-opacity cursor-pointer hover:opacity-70"
             />
           </Link>
           <div>
