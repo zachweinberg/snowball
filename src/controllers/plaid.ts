@@ -28,9 +28,9 @@ plaidRouter.get(
         client_user_id: userID,
       },
       client_name: 'Obsidian Tracker',
-      products: [Products.Auth],
+      products: [Products.Investments],
       language: 'en',
-      webhook: 'https://webhook.example.com',
+      webhook: 'https://api.obsidiantracker.com/plaid/webhooks',
       country_codes: [CountryCode.Us],
     };
 
@@ -85,7 +85,26 @@ plaidRouter.post(
       return accum;
     }, []);
 
+    console.log(holdings);
+    console.log('----------------');
+    console.log(securities);
     res.status(200).json({ holdings, securities });
+  })
+);
+
+plaidRouter.get(
+  '/webhooks',
+  catchErrors(async (req, res) => {
+    console.log(JSON.stringify(req.query));
+    res.status(200).end();
+  })
+);
+
+plaidRouter.post(
+  '/webhooks',
+  catchErrors(async (req, res) => {
+    console.log(JSON.stringify(req.body));
+    res.status(200).end();
   })
 );
 
