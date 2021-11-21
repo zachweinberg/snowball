@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
+import Logo from '~/components/ui/Logo';
 
 function Header() {
   const [top, setTop] = useState(true);
@@ -24,7 +25,7 @@ function Header() {
     >
       <div className="max-w-6xl px-5 mx-auto sm:px-6">
         <div className="flex items-center justify-between h-10 my-3 md:h-16 md:my-0">
-          <img src="/img/logo.png" className="h-4 cursor-pointer hover:opacity-70" />
+          <Logo width={150} />
 
           <nav>
             <ul className="flex items-center">

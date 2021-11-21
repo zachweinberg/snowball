@@ -6,6 +6,7 @@ import Link from '~/components/ui/Link';
 import Menu from '~/components/ui/Menu';
 import { useAuth } from '~/hooks/useAuth';
 import { API } from '~/lib/api';
+import Logo from '../ui/Logo';
 
 const profileLinks = [
   { label: 'Account', href: '/account' },
@@ -63,6 +64,7 @@ const Header: React.FunctionComponent = () => {
               src="/img/logo.png"
               className="h-4 hidden md:block transition-opacity cursor-pointer hover:opacity-70"
             />
+            <Logo width={150} />
           </Link>
           <div>
             <nav className="flex items-center">

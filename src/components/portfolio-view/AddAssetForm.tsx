@@ -1,6 +1,7 @@
 import { Transition } from '@headlessui/react';
 import { AssetType } from '@zachweinberg/obsidian-schema';
 import { useState } from 'react';
+import PlaidLink from '~/components/plaid/PlaidLink';
 import AddCashForm from './AddCashForm';
 import AddCryptoForm from './AddCryptoForm';
 import AddCustomAssetForm from './AddCustomAssetForm';
@@ -147,15 +148,20 @@ const AddAssetForm: React.FunctionComponent<AddAssetFormProps> = ({
         leaveFrom="translate-x-0 opacity-100"
         leaveTo="-translate-x-24 opacity-0"
       >
-        <h2 className="mb-3 font-bold text-[1.75rem] text-center">
-          Add an asset to {portfolioName}
+        <h2 className="mb-10 font-bold text-[1.75rem] text-center">
+          Add assets to {portfolioName}
         </h2>
 
-        {/* <PlaidLink /> */}
+        <div className="flex justify-center w-full mb-10">
+          <PlaidLink />
+        </div>
 
-        <p className="mb-16 font-medium text-darkgray text-[1rem] text-center">
-          Select the asset type you would like to add
+        <div className="font-semibold text-darkgray text-sm text-center mb-10">- OR -</div>
+
+        <p className="mb-10 font-medium text-darkgray text-[1.1rem] text-center">
+          Manually add an asset:
         </p>
+
         <div className="grid grid-cols-1 grid-rows-1 md:grid-cols-5 gap-7">
           {availableTypes.map((option) => (
             <AssetTypeCard
