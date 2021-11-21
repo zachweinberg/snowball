@@ -28,7 +28,7 @@ plaidRouter.get(
         client_user_id: userID,
       },
       client_name: 'Obsidian Tracker',
-      products: [Products.Investments],
+      products: [Products.Investments, Products.Transactions],
       language: 'en',
       webhook: 'https://api.obsidiantracker.com/plaid/webhooks',
       country_codes: [CountryCode.Us],
