@@ -60,10 +60,6 @@ const Header: React.FunctionComponent = () => {
       <header className="bg-white border-b border-bordergray">
         <div className="flex items-center justify-between px-4 mx-auto max-w-7xl">
           <Link href="/portfolios">
-            <img
-              src="/img/logo.png"
-              className="h-4 hidden md:block transition-opacity cursor-pointer hover:opacity-70"
-            />
             <Logo width={150} />
           </Link>
           <div>
