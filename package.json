@@ -45,10 +45,12 @@
     "react-scrollspy": "^3.4.3",
     "react-table": "^7.7.0",
     "react-tabs": "^3.2.3",
+    "react-typing-effect": "^2.0.5",
+    "react-typist": "^2.0.5",
     "recharts": "^2.1.4",
     "sass": "^1.43.4",
     "tailwindcss": "^2.2.7",
-    "typed.js": "^2.0.12",
+    "typewriter-effect": "^2.18.2",
     "yup": "^0.32.9"
   },
   "devDependencies": {

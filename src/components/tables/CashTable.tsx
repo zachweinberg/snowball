@@ -1,6 +1,7 @@
 import { CashPosition } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
 import Menu from '~/components/ui/Menu';
+import { useAuth } from '~/hooks/useAuth';
 import { formatMoneyFromNumber } from '~/lib/money';
 import Button from '../ui/Button';
 import { BaseTable } from './BaseTable';
@@ -10,16 +11,30 @@ interface Props {
   cash: CashPosition[];
   onAddAsset: () => void;
   onDelete: (cashID: string) => void;
+  belongsTo: string;
 }
 
-const CashTable: React.FunctionComponent<Props> = ({ cash, onAddAsset, onDelete }: Props) => {
+const CashTable: React.FunctionComponent<Props> = ({
+  cash,
+  onAddAsset,
+  onDelete,
+  belongsTo,
+}: Props) => {
+  const auth = useAuth();
+
   if (cash.length === 0) {
     return (
       <div className="py-16 mx-auto text-center">
-        <p className="mb-3 text-lg font-semibold">Add some cash to your portfolio:</p>
-        <Button type="button" onClick={onAddAsset} className="w-64">
-          + Add Cash
-        </Button>
+        {auth.user?.id === belongsTo ? (
+          <>
+            <p className="mb-3 text-lg font-semibold">Add some cash to your portfolio:</p>
+            <Button type="button" onClick={onAddAsset} className="w-64">
+              + Add Cash
+            </Button>
+          </>
+        ) : (
+          <p className="mb-3 text-lg font-semibold">This portfolio has no cash.</p>
+        )}
       </div>
     );
   }

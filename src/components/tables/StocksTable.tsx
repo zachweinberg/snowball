@@ -1,5 +1,6 @@
 import { StockPositionWithQuote, Unit } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
+import { useAuth } from '~/hooks/useAuth';
 import { formatMoneyFromNumber, formatNumber, formatPercentageChange } from '~/lib/money';
 import Button from '../ui/Button';
 import Menu from '../ui/Menu';
@@ -11,6 +12,7 @@ interface Props {
   unit: Unit;
   onAddAsset: () => void;
   onDelete: (stockID: string, name: string) => void;
+  belongsTo: string;
 }
 
 const StocksTable: React.FunctionComponent<Props> = ({
@@ -18,14 +20,23 @@ const StocksTable: React.FunctionComponent<Props> = ({
   unit,
   onDelete,
   onAddAsset,
+  belongsTo,
 }: Props) => {
+  const auth = useAuth();
+
   if (stocks.length === 0) {
     return (
       <div className="py-16 mx-auto text-center">
-        <p className="mb-3 text-lg font-semibold">Add some stocks to your portfolio:</p>
-        <Button type="button" onClick={onAddAsset} className="w-64">
-          + Add Stocks
-        </Button>
+        {auth.user?.id === belongsTo ? (
+          <>
+            <p className="mb-3 text-lg font-semibold">Add some stocks to your portfolio:</p>
+            <Button type="button" onClick={onAddAsset} className="w-64">
+              + Add Stock
+            </Button>
+          </>
+        ) : (
+          <p className="mb-3 text-lg font-semibold">This portfolio has no stocks.</p>
+        )}
       </div>
     );
   }

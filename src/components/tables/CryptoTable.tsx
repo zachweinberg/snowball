@@ -1,5 +1,6 @@
 import { CryptoPositionWithQuote, Unit } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
+import { useAuth } from '~/hooks/useAuth';
 import { formatMoneyFromNumber, formatNumber, formatPercentageChange } from '~/lib/money';
 import Button from '../ui/Button';
 import Menu from '../ui/Menu';
@@ -11,6 +12,7 @@ interface Props {
   unit: Unit;
   onAddAsset: () => void;
   onDelete: (cryptoID: string, name: string) => void;
+  belongsTo: string;
 }
 
 const CryptoTable: React.FunctionComponent<Props> = ({
@@ -18,14 +20,23 @@ const CryptoTable: React.FunctionComponent<Props> = ({
   unit,
   onDelete,
   onAddAsset,
+  belongsTo,
 }: Props) => {
+  const auth = useAuth();
+
   if (crypto.length === 0) {
     return (
       <div className="py-16 mx-auto text-center">
-        <p className="mb-3 text-lg font-semibold">Add some crypto to your portfolio:</p>
-        <Button type="button" onClick={onAddAsset} className="w-64">
-          + Add Crypto
-        </Button>
+        {auth.user?.id === belongsTo ? (
+          <>
+            <p className="mb-3 text-lg font-semibold">Add some crypto to your portfolio:</p>
+            <Button type="button" onClick={onAddAsset} className="w-64">
+              + Add Crypto
+            </Button>
+          </>
+        ) : (
+          <p className="mb-3 text-lg font-semibold">This portfolio has no crypto.</p>
+        )}
       </div>
     );
   }

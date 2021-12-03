@@ -1,6 +1,7 @@
 import { RealEstatePosition } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
 import Menu from '~/components/ui/Menu';
+import { useAuth } from '~/hooks/useAuth';
 import { formatMoneyFromNumber } from '~/lib/money';
 import Button from '../ui/Button';
 import { BaseTable } from './BaseTable';
@@ -10,20 +11,32 @@ interface Props {
   realEstate: RealEstatePosition[];
   onAddAsset: () => void;
   onDelete: (realEstateID: string) => void;
+  belongsTo: string;
 }
 
 const RealEstateTable: React.FunctionComponent<Props> = ({
   realEstate,
   onAddAsset,
   onDelete,
+  belongsTo,
 }: Props) => {
+  const auth = useAuth();
+
   if (realEstate.length === 0) {
     return (
       <div className="py-16 mx-auto text-center">
-        <p className="mb-3 text-lg font-semibold">Add some real estate to your portfolio:</p>
-        <Button type="button" onClick={onAddAsset} className="w-64">
-          + Add Real Estate
-        </Button>
+        {auth.user?.id === belongsTo ? (
+          <>
+            <p className="mb-3 text-lg font-semibold">
+              Add some real estate to your portfolio:
+            </p>
+            <Button type="button" onClick={onAddAsset} className="w-64">
+              + Add Real Estate
+            </Button>
+          </>
+        ) : (
+          <p className="mb-3 text-lg font-semibold">This portfolio has no real estate.</p>
+        )}
       </div>
     );
   }

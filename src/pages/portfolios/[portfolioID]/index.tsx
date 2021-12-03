@@ -77,6 +77,7 @@ const PortfolioView: NextPage = () => {
         case AssetType.Stock:
           return (
             <StocksTable
+              belongsTo={portfolio.userID}
               stocks={portfolio.stocks}
               unit={unit}
               onAddAsset={() => setAddingAsset(true)}
@@ -89,6 +90,7 @@ const PortfolioView: NextPage = () => {
         case AssetType.Crypto:
           return (
             <CryptoTable
+              belongsTo={portfolio.userID}
               crypto={portfolio.crypto}
               unit={unit}
               onAddAsset={() => setAddingAsset(true)}
@@ -101,6 +103,7 @@ const PortfolioView: NextPage = () => {
         case AssetType.Cash:
           return (
             <CashTable
+              belongsTo={portfolio.userID}
               cash={portfolio.cash}
               onAddAsset={() => setAddingAsset(true)}
               onDelete={(cashID) => {
@@ -116,6 +119,7 @@ const PortfolioView: NextPage = () => {
         case AssetType.RealEstate:
           return (
             <RealEstateTable
+              belongsTo={portfolio.userID}
               realEstate={portfolio.realEstate}
               onAddAsset={() => setAddingAsset(true)}
               onDelete={(realEstateID) => {
@@ -131,6 +135,7 @@ const PortfolioView: NextPage = () => {
         case AssetType.Custom:
           return (
             <CustomAssetsTable
+              belongsTo={portfolio.userID}
               customs={portfolio.customs}
               onAddAsset={() => setAddingAsset(true)}
               onDelete={(customID) => {
