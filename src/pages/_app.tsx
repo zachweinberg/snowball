@@ -4,7 +4,6 @@ import { hotjar } from 'react-hotjar';
 import WaitForAuth from '~/components/auth/WaitForAuth';
 import { AuthProvider } from '~/context/AuthContext';
 import '~/styles/globals.scss';
-import '~/styles/landing.scss';
 
 const HJID = 2659232;
 const HSJV = 6;

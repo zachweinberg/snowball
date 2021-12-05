@@ -13,7 +13,11 @@ const profileLinks = [
   { label: 'Settings', href: '/settings' },
 ];
 
-const Header: React.FunctionComponent = () => {
+interface Props {
+  noBorder?: boolean;
+}
+
+const Header: React.FunctionComponent<Props> = ({ noBorder }: Props) => {
   const auth = useAuth();
   const router = useRouter();
   const [resentEmail, setResentEmail] = useState(false);
@@ -57,7 +61,9 @@ const Header: React.FunctionComponent = () => {
         </div>
       )}
 
-      <header className="bg-white border-b border-bordergray">
+      <header
+        className={classNames('bg-white p-2', { 'border-b border-bordergray': !noBorder })}
+      >
         <div className="flex items-center justify-between px-4 mx-auto max-w-7xl">
           <Link href="/portfolios">
             <Logo width={150} />
