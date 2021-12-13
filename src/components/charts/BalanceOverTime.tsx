@@ -219,12 +219,12 @@ const BalanceOverTime: React.FunctionComponent<{ portfolioID: string }> = ({
             />
           )}
 
-          <div style={{ height: parent.height * 0.2 }} className="px-3 flex items-center">
-            <p className="text-2xl font-bold text-white mr-4">
+          <div style={{ height: parent.height * 0.2 }} className="flex items-center px-3">
+            <p className="mr-4 text-2xl font-bold text-white">
               {formatMoneyFromNumber(point?.balance ?? 0)}
             </p>
             {point && (
-              <p className="text-md font-medium text-lime">
+              <p className="font-medium text-md text-lime">
                 {DateTime.fromJSDate(point.date).toLocaleString(DateTime.DATE_MED)}
               </p>
             )}

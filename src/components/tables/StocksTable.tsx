@@ -1,7 +1,7 @@
 import { StockPositionWithQuote, Unit } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
 import { useAuth } from '~/hooks/useAuth';
-import { formatMoneyFromNumber, formatNumber, formatPercentageChange } from '~/lib/money';
+import { formatMoneyFromNumber, formatPercentageChange } from '~/lib/money';
 import Button from '../ui/Button';
 import Menu from '../ui/Menu';
 import { BaseTable } from './BaseTable';
@@ -43,6 +43,13 @@ const StocksTable: React.FunctionComponent<Props> = ({
 
   const data = useMemo<StocksTableData[]>(() => buildStockData(stocks), []);
 
+  const sortType = useMemo(
+    () => (rowA, rowB) =>
+      rowA.original.quantity * rowA.original.costPerShare -
+      rowB.original.quantity * rowB.original.costPerShare,
+    []
+  );
+
   const columns = useMemo(
     () => [
       {
@@ -62,7 +69,7 @@ const StocksTable: React.FunctionComponent<Props> = ({
       {
         Header: 'Last',
         accessor: 'last',
-        Cell: ({ value }) => formatNumber(value),
+        Cell: ({ value }) => formatMoneyFromNumber(value),
       },
       {
         Header: 'Market Value',
@@ -84,6 +91,7 @@ const StocksTable: React.FunctionComponent<Props> = ({
         Header: 'Cost Basis',
         accessor: 'costPerShare',
         Cell: ({ row, value }) => formatMoneyFromNumber(value * row.original.quantity),
+        sortType,
       },
       {
         Header: 'Gain / Loss',

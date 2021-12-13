@@ -86,7 +86,7 @@ const WatchListContent: React.FunctionComponent = () => {
       </div>
 
       <div className="flex flex-col mb-12 xl:grid xl:flex-row xl:justify-between">
-        <div className="flex-1 col-span-2 px-4 pt-4 mb-4 bg-white border shadow-sm rounded-3xl border-bordergray xl:mb-0">
+        <div className="flex-1 col-span-2 px-4 pt-4 mb-4 bg-white border shadow-sm rounded-2xl border-bordergray xl:mb-0">
           <div className="flex items-center justify-between">
             <p className="font-semibold text-[1rem]">Alerts</p>
             {alerts.length > 0 && (
@@ -102,11 +102,11 @@ const WatchListContent: React.FunctionComponent = () => {
             )}
           </div>
           {loadingAlerts ? (
-            <div className="flex items-center justify-center my-32">
+            <div className="flex items-center justify-center my-24">
               <Spinner size={30} />
             </div>
           ) : alerts.length === 0 ? (
-            <div className="flex flex-col items-center justify-center my-32 text-center">
+            <div className="flex flex-col items-center justify-center my-24 text-center">
               <BellIcon />
               <p className="font-bold text-[1.25rem] mb-3">Get notified.</p>
               <p className="font-medium text-[1rem] text-darkgray leading-tight mb-8">

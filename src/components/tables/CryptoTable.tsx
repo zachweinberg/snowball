@@ -43,6 +43,13 @@ const CryptoTable: React.FunctionComponent<Props> = ({
 
   const data = useMemo<CryptoTableData[]>(() => buildCryptoData(crypto), []);
 
+  const sortType = useMemo(
+    () => (rowA, rowB) =>
+      rowA.original.quantity * rowA.original.costPerCoin -
+      rowB.original.quantity * rowB.original.costPerCoin,
+    []
+  );
+
   const columns = useMemo(
     () => [
       {
@@ -97,6 +104,7 @@ const CryptoTable: React.FunctionComponent<Props> = ({
         Header: 'Cost Basis',
         accessor: 'costPerCoin',
         Cell: ({ row, value }) => formatMoneyFromNumber(value * row.original.quantity),
+        sortType,
       },
       {
         Header: 'Gain / Loss',

@@ -225,7 +225,7 @@ const PortfolioView: NextPage = () => {
                 <h1 className="font-bold text-[1.75rem] mr-4">{portfolio.name}</h1>
 
                 {portfolio.settings.private === false && (
-                  <p className="py-1 px-2 text-xs font-medium rounded-full text-darkgray bg-gray">
+                  <p className="px-2 py-1 text-xs font-medium rounded-full text-darkgray bg-gray">
                     Public
                   </p>
                 )}
@@ -305,7 +305,7 @@ const PortfolioView: NextPage = () => {
               </div>
             </div>
 
-            <div className="px-5 py-4 bg-white border rounded-3xl border-bordergray">
+            <div className="px-5 py-4 mb-32 bg-white border rounded-3xl border-bordergray">
               <div className="flex mb-7">
                 <div className="mr-5 w-44">
                   <Select

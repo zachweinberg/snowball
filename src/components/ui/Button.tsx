@@ -7,7 +7,7 @@ interface Props {
   onClick?: () => void;
   className?: string;
   secondary?: boolean;
-  variant?: 'primary' | 'secondary' | 'danger';
+  variant?: 'primary' | 'secondary' | 'white' | 'danger';
   children: ReactNode;
 }
 
@@ -23,12 +23,14 @@ const Button: React.FunctionComponent<Props> = ({
     <button
       type={type}
       className={classNames(
-        'w-full rounded-xl p-5 font-semibold hover:opacity-90',
+        'w-full rounded-xl p-5 font-semibold hover:opacity-90 transition-colors ',
         { 'opacity-70 cursor-not-allowed': disabled },
         variant === 'secondary'
           ? 'bg-background text-dark border-2 border-dark hover:bg-black hover:text-white'
           : variant === 'danger'
           ? 'bg-red text-white'
+          : variant === 'white'
+          ? 'bg-white text-dark hover:bg-lime'
           : 'bg-dark text-white',
         className
       )}

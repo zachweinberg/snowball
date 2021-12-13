@@ -61,12 +61,10 @@ const Header: React.FunctionComponent<Props> = ({ noBorder }: Props) => {
         </div>
       )}
 
-      <header
-        className={classNames('bg-white p-2', { 'border-b border-bordergray': !noBorder })}
-      >
+      <header className={classNames('bg-white', { 'border-b border-bordergray': !noBorder })}>
         <div className="flex items-center justify-between px-4 mx-auto max-w-7xl">
           <Link href="/portfolios">
-            <Logo width={150} />
+            <Logo width={150} dark />
           </Link>
           <div>
             <nav className="flex items-center">

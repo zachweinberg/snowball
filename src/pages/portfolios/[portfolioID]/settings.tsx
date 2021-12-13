@@ -79,10 +79,8 @@ const PortfolioSettingsPageContent: React.FunctionComponent = () => {
 
     await API.editPortfolioSettings(router.query.portfolioID as string, updateBody);
     setSuccess(true);
-
     loadPortfolioSettings(false);
-
-    setTimeout(() => setSuccess(false), 5000);
+    window.scrollTo({ top: 0 });
   };
 
   useEffect(() => {
