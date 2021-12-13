@@ -23,6 +23,7 @@ positionsRouter.post(
   '/stock',
   requireSignedIn,
   catchErrors(async (req, res) => {
+    const userID = req.authContext!.uid;
     const { portfolioID, symbol, companyName, quantity, costPerShare, note } = req.body as AddStockRequest;
     const redisKey = `portfolio-${portfolioID}`;
 
@@ -41,6 +42,7 @@ positionsRouter.post(
     });
 
     await deleteRedisKey(redisKey);
+    await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
 
     const response = {
       status: 'ok',
@@ -54,6 +56,7 @@ positionsRouter.post(
   '/crypto',
   requireSignedIn,
   catchErrors(async (req, res) => {
+    const userID = req.authContext!.uid;
     const { portfolioID, symbol, coinName, quantity, costPerCoin, note, logoURL } = req.body as AddCryptoRequest;
     const redisKey = `portfolio-${portfolioID}`;
 
@@ -73,6 +76,7 @@ positionsRouter.post(
     });
 
     await deleteRedisKey(redisKey);
+    await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
 
     const response = {
       status: 'ok',
@@ -86,6 +90,7 @@ positionsRouter.post(
   '/real-estate',
   requireSignedIn,
   catchErrors(async (req, res) => {
+    const userID = req.authContext!.uid;
     const { portfolioID, address, propertyType, propertyValue, note } = req.body as AddRealEstateRequest;
     const redisKey = `portfolio-${portfolioID}`;
 
@@ -103,6 +108,7 @@ positionsRouter.post(
     });
 
     await deleteRedisKey(redisKey);
+    await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
 
     const response = {
       status: 'ok',
@@ -116,6 +122,7 @@ positionsRouter.post(
   '/cash',
   requireSignedIn,
   catchErrors(async (req, res) => {
+    const userID = req.authContext!.uid;
     const { portfolioID, amount, accountName, note } = req.body as AddCashRequest;
     const redisKey = `portfolio-${portfolioID}`;
 
@@ -132,6 +139,7 @@ positionsRouter.post(
     });
 
     await deleteRedisKey(redisKey);
+    await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
 
     const response = {
       status: 'ok',
@@ -145,6 +153,7 @@ positionsRouter.post(
   '/custom',
   requireSignedIn,
   catchErrors(async (req, res) => {
+    const userID = req.authContext!.uid;
     const { portfolioID, value, assetName, note } = req.body as AddCustomAssetRequest;
     const redisKey = `portfolio-${portfolioID}`;
 
@@ -161,6 +170,7 @@ positionsRouter.post(
     });
 
     await deleteRedisKey(redisKey);
+    await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
 
     const response = {
       status: 'ok',
