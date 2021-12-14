@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import CashIcon from '~/components/icons/CashIcon';
 import CryptoIcon from '~/components/icons/CryptoIcon';
 import CustomAssetIcon from '~/components/icons/CustomAssetIcon';
@@ -15,6 +16,9 @@ import Link from '~/components/ui/Link';
 const Landing: React.FunctionComponent = () => {
   return (
     <>
+      <Head>
+        <title>Obsidian Tracker - Keep a pulse on your financial assets</title>
+      </Head>
       <LandingHeader dark />
 
       <main>
