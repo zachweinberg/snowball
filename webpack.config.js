@@ -8,6 +8,7 @@ module.exports = {
   entry: {
     server: './src/server.ts',
     cron: './src/cron/index.ts',
+    worker: './src/queue/consumer.ts',
   },
   module: {
     rules: [

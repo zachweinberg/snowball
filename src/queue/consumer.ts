@@ -1,0 +1,55 @@
+import { Alert, AlertCondition, AlertDestination, AssetType } from '@zachweinberg/obsidian-schema';
+import { getCryptoPrices } from '~/lib/cmc';
+import { getStockPrices } from '~/lib/iex';
+import { assetAlertsQueue, JobNames } from '.';
+import { createCryptoAlertsJob } from './producer';
+
+const processStocksAssetAlerts = async ({ data }: { data: Alert[] }) => {
+  const stockPrices = await getStockPrices(data.map((alert) => alert.symbol));
+  for (const alert of data) {
+    await sendAlertIfHit(alert, stockPrices[alert.symbol].latestPrice);
+  }
+};
+
+const processCryptoAssetAlerts = async ({ data }: { data: Alert[] }) => {
+  const stockPrices = await getCryptoPrices(data.map((alert) => alert.symbol));
+  for (const alert of data) {
+    await sendAlertIfHit(alert, stockPrices[alert.symbol].latestPrice);
+  }
+};
+
+const sendAlertIfHit = async (alert: Alert, currPrice: number) => {
+  if (alert.condition === AlertCondition.Above && currPrice > alert.price) {
+    await sendAlertNotification(alert);
+  } else if (alert.condition === AlertCondition.Below && currPrice < alert.price) {
+    await sendAlertNotification(alert);
+  }
+};
+
+const sendAlertNotification = async (alert: Alert) => {
+  console.log('WOOO!!!');
+};
+
+const startWorker = (): void => {
+  console.log('> Starting worker');
+  assetAlertsQueue.process(JobNames.AssetAlertsStocks, processStocksAssetAlerts);
+  assetAlertsQueue.process(JobNames.AssetAlertsCrypto, processCryptoAssetAlerts);
+  console.log('- WORKER LIVE - ');
+
+  createCryptoAlertsJob([
+    {
+      assetType: AssetType.Crypto,
+      symbol: 'BTC',
+      condition: AlertCondition.Above,
+      price: 80382,
+      id: 'a',
+      createdAt: new Date(),
+      userID: '',
+      destination: AlertDestination.Email,
+      destinationValue: 'asoidkf@aol.com',
+      fullName: 'BITCON',
+    },
+  ]);
+};
+
+startWorker();
