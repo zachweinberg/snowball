@@ -1,59 +1,39 @@
-import mjml from 'mjml';
-import mustache from 'mustache';
 import * as postmark from 'postmark';
 
 const emailClient = new postmark.ServerClient(process.env.POSTMARK_API_KEY!);
 
-export const sendEmail = async (
-  toEmail: string,
-  subject: string,
-  htmlBody: string,
-  textBody: string,
-  messageStreamID: string
-): Promise<void> => {
-  await emailClient.sendEmail({
+const Emails = {
+  welcomeVerify: {
+    templateAlias: 'welcome-verify-email',
+    messageStreamID: 'verify-email',
+  },
+  contactRequest: {
+    templateAlias: 'contact-request-email',
+    messageStreamID: 'contact-submissions',
+  },
+};
+
+export const sendVerifyEmailEmail = async (toEmail: string, fullName: string, verifyEmailURL: string) => {
+  await emailClient.sendEmailWithTemplate({
     From: 'support@obsidiantracker.com',
     To: toEmail,
-    Subject: subject,
-    HtmlBody: htmlBody,
-    TextBody: textBody,
-    MessageStream: messageStreamID,
+    MessageStream: Emails.welcomeVerify.messageStreamID,
+    TemplateAlias: Emails.welcomeVerify.templateAlias,
+    TemplateModel: {
+      fullName,
+      verifyEmailURL,
+    },
   });
 };
 
-export const sendVerifyEmailEmail = async (toEmail: string, token: string, userID: string) => {
-  const renderedMJML = mustache.render(mjmlTemplate, { user: 'Zach' });
-  const html = mjml(renderedMJML).html;
-
-  // const html = `
-  //   <h1>Welcome to Obsidian Tracker.</h1>
-  //   <p>We can't wait to help you track your net worth.</p>
-  //   <a href="https://obsidiantracker.com/verify?t=${token}&u=${userID}">Click here to verify your email address</a>
-  // `;
-
-  const text = `
-  Welcome to Obsidian Tracker.\n
-  We can't wait to help you track your net worth.\n
-  Click here to verify your email address:
-  https://obsidiantracker.com/verify?t=${token}&u=${userID}
-`;
-
-  await sendEmail(toEmail, 'Please verify your email address', html, text, 'verify-email');
+export const sendContactRequestEmail = async (body: string) => {
+  await emailClient.sendEmailWithTemplate({
+    From: 'support@obsidiantracker.com',
+    To: 'zach@obsidiantracker.com',
+    MessageStream: Emails.contactRequest.messageStreamID,
+    TemplateAlias: Emails.contactRequest.templateAlias,
+    TemplateModel: {
+      body,
+    },
+  });
 };
-
-const mjmlTemplate = `
-<mjml>
-  <mj-body>
-    <mj-section background-color="#141414">
-      <mj-column>
-        <mj-text font-family="Arial" align="center" font-size="23px" color="#fff"> Obsidian Tracker </mj-text>
-      </mj-column>
-    </mj-section>
-
-    <mj-section background-color="#fff">
-      <mj-text font-family="Arial" font-size="16px" color="#000">Welcome to Obsidian Tracker!</mj-text>
-    </mj-section>
-  </mj-body>
-</mjml>
-
-`;

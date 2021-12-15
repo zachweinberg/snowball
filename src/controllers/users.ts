@@ -12,7 +12,7 @@ import {
 import crypto from 'crypto';
 import { Router } from 'express';
 import { firestore } from 'firebase-admin';
-import { sendEmail, sendVerifyEmailEmail } from '~/lib/email';
+import { sendContactRequestEmail, sendVerifyEmailEmail } from '~/lib/email';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { catchErrors, requireSignedIn } from '~/utils/api';
 import { createDocument, fetchDocumentByID, findDocuments, updateDocument } from '~/utils/db';
@@ -41,7 +41,8 @@ usersRouter.post(
       Return email: ${email ? email : 'None'}
       Message: ${message}
     `;
-    await sendEmail('zach@obsidiantracker.com', 'Contact request', `<p>${body}</p>`, body, 'contact-requests');
+
+    await sendContactRequestEmail(body);
 
     const response = {
       status: 'ok',
@@ -106,7 +107,11 @@ usersRouter.post(
 
       await createDocument<User>('users', userDataToSet, newUser.uid);
 
-      await sendVerifyEmailEmail(email, verificationCode, newUser.uid);
+      await sendVerifyEmailEmail(
+        email,
+        name,
+        `https://staging.obsidiantracker.com/verify?t=${userDataToSet.verificationCode}&u=${userDataToSet.id}`
+      );
 
       const response: CreateUserResponse = {
         status: 'ok',

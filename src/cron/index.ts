@@ -5,7 +5,7 @@ import * as csv from 'fast-csv';
 import { getAllActiveCoins } from '~/lib/cmc';
 import { createDocument, findDocuments } from '~/utils/db';
 import { calculatePortfolioSummary } from '~/utils/positions';
-import { processAlerts } from './alerts';
+import { triggerPriceAlertsJobs } from './alerts';
 interface CMCCoin {
   id: number;
   name: string;
@@ -169,7 +169,7 @@ const runCron = async () => {
         await addDailyBalancesToPortfolio();
         break;
       case 'process-alerts':
-        await processAlerts();
+        await triggerPriceAlertsJobs();
         break;
 
       default:

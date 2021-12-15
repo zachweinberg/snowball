@@ -6,7 +6,7 @@ import { findDocuments } from '~/utils/db';
 
 const MARKET_OPEN_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
-export const processAlerts = async () => {
+export const triggerPriceAlertsJobs = async () => {
   const dow = DateTime.local().setZone('America/New_York').weekdayLong;
 
   if (!MARKET_OPEN_DAYS.includes(dow)) {

@@ -1,8 +1,13 @@
-import { Alert, AlertCondition, AlertDestination, AssetType } from '@zachweinberg/obsidian-schema';
+import { Alert, AlertCondition, AlertDestination } from '@zachweinberg/obsidian-schema';
 import { getCryptoPrices } from '~/lib/cmc';
 import { getStockPrices } from '~/lib/iex';
 import { assetAlertsQueue, JobNames } from '.';
-import { createCryptoAlertsJob } from './producer';
+
+const startWorker = (): void => {
+  console.log('> Starting worker');
+  assetAlertsQueue.process(JobNames.AssetAlertsStocks, processStocksAssetAlerts);
+  assetAlertsQueue.process(JobNames.AssetAlertsCrypto, processCryptoAssetAlerts);
+};
 
 const processStocksAssetAlerts = async ({ data }: { data: Alert[] }) => {
   const stockPrices = await getStockPrices(data.map((alert) => alert.symbol));
@@ -27,29 +32,9 @@ const sendAlertIfHit = async (alert: Alert, currPrice: number) => {
 };
 
 const sendAlertNotification = async (alert: Alert) => {
-  console.log('WOOO!!!');
-};
-
-const startWorker = (): void => {
-  console.log('> Starting worker');
-  assetAlertsQueue.process(JobNames.AssetAlertsStocks, processStocksAssetAlerts);
-  assetAlertsQueue.process(JobNames.AssetAlertsCrypto, processCryptoAssetAlerts);
-  console.log('- WORKER LIVE - ');
-
-  createCryptoAlertsJob([
-    {
-      assetType: AssetType.Crypto,
-      symbol: 'BTC',
-      condition: AlertCondition.Above,
-      price: 80382,
-      id: 'a',
-      createdAt: new Date(),
-      userID: '',
-      destination: AlertDestination.Email,
-      destinationValue: 'asoidkf@aol.com',
-      fullName: 'BITCON',
-    },
-  ]);
+  if (alert.destination === AlertDestination.Email) {
+    // await sendEmail();
+  }
 };
 
 startWorker();
