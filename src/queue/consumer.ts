@@ -42,11 +42,11 @@ const sendAlertNotification = async (alert: Alert) => {
   } else if (alert.destination === AlertDestination.SMS) {
     await sendText(
       alert.destinationValue,
-      `Obsidian Tracker alert:\nThis is an automated message to let you know that your asset alert for ${
+      `Obsidian Tracker alert:\n\nYour asset alert for ${
         alert.symbol
-      } is ${alert.destination.toLowerCase()} your price target of ${formatMoneyFromNumber(
+      } is ${alert.condition.toLowerCase()} your price target of ${formatMoneyFromNumber(
         alert.price
-      )}.\nThis alert has been removed from your alerts on https://obsidiantracker.com`
+      )}.\n\nThis alert has been removed from your alerts on https://obsidiantracker.com`
     );
     await deleteAlert(alert.id);
   }
