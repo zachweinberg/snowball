@@ -49,15 +49,19 @@ export const sendAssetAlertEmail = async (alert: Alert) => {
     return;
   }
 
-  await emailClient.sendEmailWithTemplate({
-    From: 'alerts@obsidiantracker.com',
-    To: alert.destinationValue,
-    MessageStream: Emails.assetAlert.messageStreamID,
-    TemplateAlias: Emails.assetAlert.templateAlias,
-    TemplateModel: {
-      symbol: alert.symbol,
-      direction: alert.condition.toLowerCase(),
-      priceStr: formatMoneyFromNumber(alert.price),
-    },
-  });
+  try {
+    await emailClient.sendEmailWithTemplate({
+      From: 'alerts@obsidiantracker.com',
+      To: alert.destinationValue,
+      MessageStream: Emails.assetAlert.messageStreamID,
+      TemplateAlias: Emails.assetAlert.templateAlias,
+      TemplateModel: {
+        symbol: alert.symbol,
+        direction: alert.condition.toLowerCase(),
+        priceStr: formatMoneyFromNumber(alert.price),
+      },
+    });
+  } catch (err) {
+    console.error('Could not send email to', alert.destinationValue, err);
+  }
 };

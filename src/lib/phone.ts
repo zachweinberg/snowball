@@ -33,7 +33,6 @@ export const sendText = async (toNumber: string | string[], body: string): Promi
       });
     }
   } catch (err) {
-    console.error(err, 'Could not text', toNumber);
-    throw err;
+    console.error('Could not text', toNumber, err);
   }
 };

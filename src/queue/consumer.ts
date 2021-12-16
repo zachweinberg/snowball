@@ -38,6 +38,7 @@ const sendAlertIfHit = async (alert: Alert, currPrice: number) => {
 const sendAlertNotification = async (alert: Alert) => {
   if (alert.destination === AlertDestination.Email) {
     await sendAssetAlertEmail(alert);
+    await deleteAlert(alert.id);
   } else if (alert.destination === AlertDestination.SMS) {
     await sendText(
       alert.destinationValue,
@@ -47,6 +48,7 @@ const sendAlertNotification = async (alert: Alert) => {
         alert.price
       )}.\nThis alert has been removed from your alerts on https://obsidiantracker.com`
     );
+    await deleteAlert(alert.id);
   }
 };
 
