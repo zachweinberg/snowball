@@ -21,6 +21,9 @@ export const triggerPriceAlertsJobs = async () => {
     const stockAlerts = alerts.filter((alert) => alert.assetType === AssetType.Stock);
     const cryptoAlerts = alerts.filter((alert) => alert.assetType === AssetType.Crypto);
 
+    console.log(`> Found ${stockAlerts.length} stock alerts to process...`);
+    console.log(`> Found ${cryptoAlerts.length} crypto alerts to process...`);
+
     const stockChunks = _.chunk(stockAlerts, 5);
     const cryptoChunks = _.chunk(cryptoAlerts, 5);
 

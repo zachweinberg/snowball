@@ -34,7 +34,7 @@ export const sendVerifyEmailEmail = async (toEmail: string, fullName: string, ve
 
 export const sendContactRequestEmail = async (body: string) => {
   await emailClient.sendEmailWithTemplate({
-    From: 'support@obsidiantracker.com',
+    From: 'Obsidian Tracker <support@obsidiantracker.com>',
     To: 'zach@obsidiantracker.com',
     MessageStream: Emails.contactRequest.messageStreamID,
     TemplateAlias: Emails.contactRequest.templateAlias,
@@ -51,7 +51,7 @@ export const sendAssetAlertEmail = async (alert: Alert) => {
 
   try {
     await emailClient.sendEmailWithTemplate({
-      From: 'alerts@obsidiantracker.com',
+      From: 'Obsidian Tracker <alerts@obsidiantracker.com>',
       To: alert.destinationValue,
       MessageStream: Emails.assetAlert.messageStreamID,
       TemplateAlias: Emails.assetAlert.templateAlias,

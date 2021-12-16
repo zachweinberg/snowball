@@ -8,12 +8,14 @@ import { formatMoneyFromNumber } from '~/utils/money';
 import { assetAlertsQueue, JobNames } from '.';
 
 const startWorker = (): void => {
-  console.log('> Starting worker');
   assetAlertsQueue.process(JobNames.AssetAlertsStocks, processStocksAssetAlerts);
   assetAlertsQueue.process(JobNames.AssetAlertsCrypto, processCryptoAssetAlerts);
+  console.log('> [Consumer] Worker online');
 };
 
 const processStocksAssetAlerts = async ({ data }: { data: Alert[] }) => {
+  console.log(`> [Consumer] Received ${data.length} stock alerts`);
+
   const stockPrices = await getStockPrices(data.map((alert) => alert.symbol));
   for (const alert of data) {
     await sendAlertIfHit(alert, stockPrices[alert.symbol].latestPrice);
@@ -21,6 +23,8 @@ const processStocksAssetAlerts = async ({ data }: { data: Alert[] }) => {
 };
 
 const processCryptoAssetAlerts = async ({ data }: { data: Alert[] }) => {
+  console.log(`> [Consumer] Received ${data.length} crypto alerts`);
+
   const stockPrices = await getCryptoPrices(data.map((alert) => alert.symbol));
   for (const alert of data) {
     await sendAlertIfHit(alert, stockPrices[alert.symbol].latestPrice);
@@ -37,16 +41,18 @@ const sendAlertIfHit = async (alert: Alert, currPrice: number) => {
 
 const sendAlertNotification = async (alert: Alert) => {
   if (alert.destination === AlertDestination.Email) {
+    console.log(`> [Consumer] Sending Email...`);
     await sendAssetAlertEmail(alert);
     await deleteAlert(alert.id);
   } else if (alert.destination === AlertDestination.SMS) {
+    console.log(`> [Consumer] Sending SMS...`);
     await sendText(
       alert.destinationValue,
       `Obsidian Tracker alert:\n\nYour asset alert for ${
         alert.symbol
       } is ${alert.condition.toLowerCase()} your price target of ${formatMoneyFromNumber(
         alert.price
-      )}.\n\nThis alert has been removed from your alerts on https://obsidiantracker.com`
+      )}.\n\nThis alert has been removed from your alerts on obsidiantracker.com`
     );
     await deleteAlert(alert.id);
   }
