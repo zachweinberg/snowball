@@ -1,6 +1,10 @@
 import { Alert, AlertCondition, AlertDestination } from '@zachweinberg/obsidian-schema';
 import { getCryptoPrices } from '~/lib/cmc';
+import { sendAssetAlertEmail } from '~/lib/email';
 import { getStockPrices } from '~/lib/iex';
+import { sendText } from '~/lib/phone';
+import { deleteDocument } from '~/utils/db';
+import { formatMoneyFromNumber } from '~/utils/money';
 import { assetAlertsQueue, JobNames } from '.';
 
 const startWorker = (): void => {
@@ -33,8 +37,21 @@ const sendAlertIfHit = async (alert: Alert, currPrice: number) => {
 
 const sendAlertNotification = async (alert: Alert) => {
   if (alert.destination === AlertDestination.Email) {
-    // await sendEmail();
+    await sendAssetAlertEmail(alert);
+  } else if (alert.destination === AlertDestination.SMS) {
+    await sendText(
+      alert.destinationValue,
+      `Obsidian Tracker alert:\nThis is an automated message to let you know that your asset alert for ${
+        alert.symbol
+      } is ${alert.destination.toLowerCase()} your price target of ${formatMoneyFromNumber(
+        alert.price
+      )}.\nThis alert has been removed from your alerts on https://obsidiantracker.com`
+    );
   }
+};
+
+const deleteAlert = async (alertID: string) => {
+  await deleteDocument(`alerts/${alertID}`);
 };
 
 startWorker();

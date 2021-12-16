@@ -14,25 +14,26 @@ export const formatPhoneNumber = (phoneNumber: string): string => {
 };
 
 export const sendText = async (toNumber: string | string[], body: string): Promise<void> => {
-  if (Array.isArray(toNumber)) {
-    await Promise.allSettled(
-      toNumber.map((number) =>
-        twilioClient.messages.create({
-          body,
-          to: formatPhoneNumber(number),
-          from: process.env.TWILIO_NUMBER,
-        })
-      )
-    );
-  } else {
-    try {
+  try {
+    if (Array.isArray(toNumber)) {
+      await Promise.allSettled(
+        toNumber.map((number) =>
+          twilioClient.messages.create({
+            body,
+            to: formatPhoneNumber(number),
+            from: process.env.TWILIO_NUMBER,
+          })
+        )
+      );
+    } else {
       await twilioClient.messages.create({
         body,
         to: formatPhoneNumber(toNumber),
         from: process.env.TWILIO_NUMBER,
       });
-    } catch (err) {
-      console.error(err, 'Could not text', toNumber);
     }
+  } catch (err) {
+    console.error(err, 'Could not text', toNumber);
+    throw err;
   }
 };
