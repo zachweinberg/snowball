@@ -14,7 +14,7 @@ import {
 import { Router } from 'express';
 import { deleteRedisKey } from '~/lib/redis';
 import { catchErrors, requireSignedIn } from '~/utils/api';
-import { createDocument, deleteDocument } from '~/utils/db';
+import { createDocument, deleteDocument, findDocuments, updateDocument } from '~/utils/db';
 import { userOwnsPortfolio } from '~/utils/portfolios';
 
 const positionsRouter = Router();
@@ -29,6 +29,18 @@ positionsRouter.post(
 
     if (!(await userOwnsPortfolio(req, res, portfolioID))) {
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
+    }
+
+    const stockExisting = await findDocuments<StockPosition>(`portfolios/${portfolioID}/positions`, [
+      { property: 'assetType', condition: '==', value: AssetType.Stock },
+      { property: 'symbol', condition: '==', value: symbol.toUpperCase() },
+    ]);
+
+    if (stockExisting.length > 0) {
+      return res.status(400).json({
+        status: 'error',
+        error: 'You already have that stock in your portfolio. Please edit the position instead.',
+      });
     }
 
     await createDocument<StockPosition>(`portfolios/${portfolioID}/positions`, {
@@ -62,6 +74,18 @@ positionsRouter.post(
 
     if (!(await userOwnsPortfolio(req, res, portfolioID))) {
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
+    }
+
+    const cryptoExisting = await findDocuments<CryptoPosition>(`portfolios/${portfolioID}/positions`, [
+      { property: 'assetType', condition: '==', value: AssetType.Crypto },
+      { property: 'symbol', condition: '==', value: symbol.toUpperCase() },
+    ]);
+
+    if (cryptoExisting.length > 0) {
+      return res.status(400).json({
+        status: 'error',
+        error: 'You already have that cryptocurrency in your portfolio. Please edit the position instead.',
+      });
     }
 
     await createDocument<CryptoPosition>(`portfolios/${portfolioID}/positions`, {
@@ -180,6 +204,103 @@ positionsRouter.post(
   })
 );
 
+// UPDATE
+positionsRouter.put(
+  '/real-estate',
+  requireSignedIn,
+  catchErrors(async (req, res) => {
+    const userID = req.authContext!.uid;
+    const { portfolioID, address, propertyType, propertyValue, note, positionID } = req.body as AddRealEstateRequest & {
+      positionID: string;
+    };
+
+    const redisKey = `portfolio-${portfolioID}`;
+
+    if (!(await userOwnsPortfolio(req, res, portfolioID))) {
+      return res.status(401).json({ status: 'error', error: 'Invalid.' });
+    }
+
+    await updateDocument(`portfolios/${portfolioID}/positions`, positionID, {
+      propertyType,
+      propertyValue,
+      note: note ? note : '',
+      address: address ? address : '',
+    });
+
+    await deleteRedisKey(redisKey);
+    await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
+
+    const response = {
+      status: 'ok',
+    };
+
+    res.status(200).json(response);
+  })
+);
+
+// UPDATE
+positionsRouter.put(
+  '/cash',
+  requireSignedIn,
+  catchErrors(async (req, res) => {
+    const userID = req.authContext!.uid;
+    const { portfolioID, amount, accountName, note, positionID } = req.body as AddCashRequest & { positionID: string };
+    const redisKey = `portfolio-${portfolioID}`;
+
+    if (!(await userOwnsPortfolio(req, res, portfolioID))) {
+      return res.status(401).json({ status: 'error', error: 'Invalid.' });
+    }
+
+    await updateDocument(`portfolios/${portfolioID}/positions`, positionID, {
+      accountName,
+      amount,
+      note: note ? note : '',
+    });
+
+    await deleteRedisKey(redisKey);
+    await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
+
+    const response = {
+      status: 'ok',
+    };
+
+    res.status(200).json(response);
+  })
+);
+
+// UPDATE
+positionsRouter.put(
+  '/custom',
+  requireSignedIn,
+  catchErrors(async (req, res) => {
+    const userID = req.authContext!.uid;
+    const { portfolioID, value, assetName, note, positionID } = req.body as AddCustomAssetRequest & {
+      positionID: string;
+    };
+    const redisKey = `portfolio-${portfolioID}`;
+
+    if (!(await userOwnsPortfolio(req, res, portfolioID))) {
+      return res.status(401).json({ status: 'error', error: 'Invalid.' });
+    }
+
+    await updateDocument(`portfolios/${portfolioID}/positions`, positionID, {
+      value,
+      assetName,
+      note: note ? note : '',
+    });
+
+    await deleteRedisKey(redisKey);
+    await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
+
+    const response = {
+      status: 'ok',
+    };
+
+    res.status(200).json(response);
+  })
+);
+
+// DELETE
 positionsRouter.delete(
   '/:positionID',
   requireSignedIn,
