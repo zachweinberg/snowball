@@ -362,12 +362,9 @@ paths:
                 - portfolioID
                 - propertyValue
                 - propertyType
-                - thirdPartyData
               properties:
                 portfolioID:
                   type: string
-                thirdPartyData:
-                  type: boolean
                 propertyValue:
                   type: number
                 propertyType:
@@ -375,6 +372,38 @@ paths:
                 address:
                   type: string
                 note:
+                  type: string
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      summary: Update real estate position
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              required:
+                - portfolioID
+                - propertyValue
+                - propertyType
+                - positionID
+              properties:
+                portfolioID:
+                  type: string
+                propertyValue:
+                  type: number
+                propertyType:
+                  type: string
+                address:
+                  type: string
+                note:
+                  type: string
+                positionID:
                   type: string
       responses:
         '200':
@@ -411,6 +440,36 @@ paths:
             application/json:
               schema:
                 type: object
+    put:
+      summary: Update a cash position
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              required:
+                - portfolioID
+                - accountName
+                - amount
+                - positionID
+              properties:
+                portfolioID:
+                  type: string
+                accountName:
+                  type: string
+                amount:
+                  type: number
+                note:
+                  type: string
+                positionID:
+                  type: string
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
   /positions/custom:
     post:
       summary: Add custom asset to a portfolio
@@ -431,6 +490,36 @@ paths:
                 value:
                   type: number
                 note:
+                  type: string
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      summary: Update a custom position
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              required:
+                - portfolioID
+                - accountName
+                - amount
+                - positionID
+              properties:
+                portfolioID:
+                  type: string
+                accountName:
+                  type: string
+                amount:
+                  type: number
+                note:
+                  type: string
+                positionID:
                   type: string
       responses:
         '200':
