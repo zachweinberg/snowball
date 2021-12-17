@@ -84,7 +84,6 @@ export enum RealEstatePropertyType {
 }
 export interface RealEstatePosition extends Position {
   address?: string;
-  thirdPartyData: boolean;
   propertyValue: number;
   propertyType: RealEstatePropertyType;
 }
@@ -196,7 +195,6 @@ export interface AddRealEstateRequest {
   propertyValue: number;
   propertyType: RealEstatePropertyType;
   address?: string;
-  thirdPartyData: boolean;
   note?: string;
 }
 
