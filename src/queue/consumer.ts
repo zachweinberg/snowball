@@ -1,37 +1,49 @@
-import { Alert, AlertCondition, AlertDestination } from '@zachweinberg/obsidian-schema';
+import { Alert, AlertCondition, AlertDestination, AssetType } from '@zachweinberg/obsidian-schema';
 import { getCryptoPrices } from '~/lib/cmc';
 import { sendAssetAlertEmail } from '~/lib/email';
 import { getStockPrices } from '~/lib/iex';
 import { sendText } from '~/lib/phone';
-import { deleteDocument } from '~/utils/db';
+import { deleteDocument, fetchDocumentByID } from '~/utils/db';
 import { formatMoneyFromNumber } from '~/utils/money';
 import { assetAlertsQueue, JobNames } from '.';
 
 const startWorker = (): void => {
-  assetAlertsQueue.process(JobNames.AssetAlertsStocks, processStocksAssetAlerts);
-  assetAlertsQueue.process(JobNames.AssetAlertsCrypto, processCryptoAssetAlerts);
+  assetAlertsQueue.process(JobNames.AssetAlertsStocks, processAssetAlerts);
+  assetAlertsQueue.process(JobNames.AssetAlertsCrypto, processAssetAlerts);
   console.log('> [Consumer] Worker online');
 };
 
-const processStocksAssetAlerts = async ({ data }: { data: Alert[] }) => {
-  console.log(`> [Consumer] Received ${data.length} stock alerts`);
+const processAssetAlerts = async (data) => {
+  const alerts = data.alerts as Alert[];
+  const type = data.type as AssetType;
 
-  const stockPrices = await getStockPrices(data.map((alert) => alert.symbol));
-  for (const alert of data) {
-    await sendAlertIfHit(alert, stockPrices[alert.symbol].latestPrice);
+  console.log(`> [Consumer] Received ${alerts.length} ${type} alerts`);
+
+  // Ensure docs exist
+  for (let i = 0; i < alerts.length; i++) {
+    try {
+      await fetchDocumentByID('alerts', alerts[i].id);
+    } catch (err) {
+      alerts.splice(i, 1);
+    }
+  }
+
+  let prices = {};
+
+  if (type === AssetType.Stock) {
+    prices = await getStockPrices(alerts.map((alert) => alert.symbol));
+  } else if (type === AssetType.Crypto) {
+    prices = await getCryptoPrices(alerts.map((alert) => alert.symbol));
+  }
+
+  for (const alert of alerts) {
+    await sendAlertIfHit(alert, prices[alert.symbol]?.latestPrice);
   }
 };
 
-const processCryptoAssetAlerts = async ({ data }: { data: Alert[] }) => {
-  console.log(`> [Consumer] Received ${data.length} crypto alerts`);
+const sendAlertIfHit = async (alert: Alert, currPrice?: number) => {
+  if (!currPrice) return;
 
-  const stockPrices = await getCryptoPrices(data.map((alert) => alert.symbol));
-  for (const alert of data) {
-    await sendAlertIfHit(alert, stockPrices[alert.symbol].latestPrice);
-  }
-};
-
-const sendAlertIfHit = async (alert: Alert, currPrice: number) => {
   if (alert.condition === AlertCondition.Above && currPrice > alert.price) {
     await sendAlertNotification(alert);
   } else if (alert.condition === AlertCondition.Below && currPrice < alert.price) {

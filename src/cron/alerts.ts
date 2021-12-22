@@ -1,38 +1,49 @@
 import { Alert, AssetType } from '@zachweinberg/obsidian-schema';
 import _ from 'lodash';
 import { DateTime } from 'luxon';
-import { createCryptoAlertsJob, createStockAlertsJob } from '~/queue/producer';
+import { assetAlertsQueue, JobNames } from '~/queue';
 import { findDocuments } from '~/utils/db';
 
-const MARKET_OPEN_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+const STOCK_MARKET_OPEN_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
 export const triggerPriceAlertsJobs = async () => {
-  const dow = DateTime.local().setZone('America/New_York').weekdayLong;
+  // Crypto alerts
+  const cryptoAlerts = await findDocuments<Alert>('alerts', [
+    { property: 'assetType', condition: '==', value: AssetType.Crypto },
+  ]);
 
-  if (!MARKET_OPEN_DAYS.includes(dow)) {
-    return;
+  console.log(`> Found ${cryptoAlerts.length} crypto alerts to process...`);
+
+  const cryptoChunks = _.chunk(cryptoAlerts, 5);
+
+  for (const cryptoChunk of cryptoChunks) {
+    await assetAlertsQueue.add(JobNames.AssetAlertsCrypto, cryptoChunk, {
+      attempts: 3,
+      removeOnComplete: true,
+      removeOnFail: true,
+    });
   }
 
+  // Stock alerts
+  // Only do stocks if market is open
+  const dow = DateTime.local().setZone('America/New_York').weekdayLong;
   const hour = DateTime.local().setZone('America/New_York').hour;
 
-  if (hour >= 9 && hour <= 16) {
-    const alerts = await findDocuments<Alert>('alerts');
-
-    const stockAlerts = alerts.filter((alert) => alert.assetType === AssetType.Stock);
-    const cryptoAlerts = alerts.filter((alert) => alert.assetType === AssetType.Crypto);
+  if (STOCK_MARKET_OPEN_DAYS.includes(dow) && hour >= 9 && hour <= 16) {
+    const stockAlerts = await findDocuments<Alert>('alerts', [
+      { property: 'assetType', condition: '==', value: AssetType.Stock },
+    ]);
 
     console.log(`> Found ${stockAlerts.length} stock alerts to process...`);
-    console.log(`> Found ${cryptoAlerts.length} crypto alerts to process...`);
 
     const stockChunks = _.chunk(stockAlerts, 5);
-    const cryptoChunks = _.chunk(cryptoAlerts, 5);
 
     for (const stockChunk of stockChunks) {
-      await createStockAlertsJob(stockChunk);
-    }
-
-    for (const cryptoChunk of cryptoChunks) {
-      await createCryptoAlertsJob(cryptoChunk);
+      await assetAlertsQueue.add(JobNames.AssetAlertsStocks, stockChunk, {
+        attempts: 3,
+        removeOnComplete: true,
+        removeOnFail: true,
+      });
     }
   }
 };

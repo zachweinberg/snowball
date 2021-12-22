@@ -1,11 +1,68 @@
-import { DailyBalance, Portfolio } from '@zachweinberg/obsidian-schema';
+import { Alert, AssetType, DailyBalance, Portfolio } from '@zachweinberg/obsidian-schema';
 import algoliasearch from 'algoliasearch';
 import axios from 'axios';
 import * as csv from 'fast-csv';
 import { getAllActiveCoins } from '~/lib/cmc';
+import { assetAlertsQueue, JobNames } from '~/queue';
 import { createDocument, findDocuments } from '~/utils/db';
 import { calculatePortfolioSummary } from '~/utils/positions';
 import { triggerPriceAlertsJobs } from './alerts';
+
+export const createStockAlertsJob = (alerts: Alert[]) => {
+  return assetAlertsQueue.add(
+    JobNames.AssetAlertsStocks,
+    { alerts, type: AssetType.Stock },
+    {
+      attempts: 3,
+      removeOnComplete: true,
+      removeOnFail: true,
+    }
+  );
+};
+
+export const createCryptoAlertsJob = (alerts: Alert[]) => {
+  return assetAlertsQueue.add(
+    JobNames.AssetAlertsCrypto,
+    { alerts, type: AssetType.Crypto },
+    {
+      attempts: 3,
+      removeOnComplete: true,
+      removeOnFail: true,
+    }
+  );
+};
+
+const runCron = async () => {
+  try {
+    switch (process.argv[2]) {
+      case 'index-stocks':
+        await indexAllStocksInAlgolia();
+        break;
+      case 'index-crypto':
+        await indexAllCryptocurrenciesInAlgolia();
+        break;
+      case 'daily-balances':
+        await addDailyBalancesToPortfolio();
+        break;
+      case 'process-alerts':
+        await triggerPriceAlertsJobs();
+        break;
+
+      default:
+        console.error('Invalid job. Did you supply the job name as a param?');
+        break;
+    }
+
+    process.exit(0);
+  } catch (err) {
+    console.error(err);
+    process.exit(1);
+  }
+};
+
+// Entry
+runCron();
+
 interface CMCCoin {
   id: number;
   name: string;
@@ -155,33 +212,3 @@ const addDailyBalancesToPortfolio = async () => {
     });
   }
 };
-
-const runCron = async () => {
-  try {
-    switch (process.argv[2]) {
-      case 'index-stocks':
-        await indexAllStocksInAlgolia();
-        break;
-      case 'index-crypto':
-        await indexAllCryptocurrenciesInAlgolia();
-        break;
-      case 'daily-balances':
-        await addDailyBalancesToPortfolio();
-        break;
-      case 'process-alerts':
-        await triggerPriceAlertsJobs();
-        break;
-
-      default:
-        console.error('Invalid job. Did you supply the job name as a param?');
-        break;
-    }
-
-    process.exit(0);
-  } catch (err) {
-    console.error(err);
-    process.exit(1);
-  }
-};
-
-runCron();
