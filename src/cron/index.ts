@@ -7,37 +7,6 @@ import { createDocument, findDocuments } from '~/utils/db';
 import { calculatePortfolioSummary } from '~/utils/positions';
 import { triggerPriceAlertsJobs } from './alerts';
 
-const runCron = async () => {
-  try {
-    switch (process.argv[2]) {
-      case 'index-stocks':
-        await indexAllStocksInAlgolia();
-        break;
-      case 'index-crypto':
-        await indexAllCryptocurrenciesInAlgolia();
-        break;
-      case 'daily-balances':
-        await addDailyBalancesToPortfolio();
-        break;
-      case 'process-alerts':
-        await triggerPriceAlertsJobs();
-        break;
-
-      default:
-        console.error('Invalid job. Did you supply the job name as a param?');
-        break;
-    }
-
-    process.exit(0);
-  } catch (err) {
-    console.error(err);
-    process.exit(1);
-  }
-};
-
-// Entry
-runCron();
-
 interface CMCCoin {
   id: number;
   name: string;
@@ -187,3 +156,34 @@ const addDailyBalancesToPortfolio = async () => {
     });
   }
 };
+
+const runCron = async () => {
+  try {
+    switch (process.argv[2]) {
+      case 'index-stocks':
+        await indexAllStocksInAlgolia();
+        break;
+      case 'index-crypto':
+        await indexAllCryptocurrenciesInAlgolia();
+        break;
+      case 'daily-balances':
+        await addDailyBalancesToPortfolio();
+        break;
+      case 'process-alerts':
+        await triggerPriceAlertsJobs();
+        break;
+
+      default:
+        console.error('Invalid job. Did you supply the job name as a param?');
+        break;
+    }
+
+    process.exit(0);
+  } catch (err) {
+    console.error(err);
+    process.exit(1);
+  }
+};
+
+// Entry
+runCron();
