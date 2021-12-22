@@ -16,12 +16,16 @@ export const triggerPriceAlertsJobs = async () => {
 
   const cryptoChunks = _.chunk(cryptoAlerts, 5);
 
-  for (const cryptoChunk of cryptoChunks) {
-    await assetAlertsQueue.add(JobNames.AssetAlertsCrypto, cryptoChunk, {
-      attempts: 3,
-      removeOnComplete: true,
-      removeOnFail: true,
-    });
+  for (const alerts of cryptoChunks) {
+    await assetAlertsQueue.add(
+      JobNames.AssetAlertsCrypto,
+      { alerts, type: AssetType.Crypto },
+      {
+        attempts: 3,
+        removeOnComplete: true,
+        removeOnFail: true,
+      }
+    );
   }
 
   // Stock alerts
@@ -38,12 +42,16 @@ export const triggerPriceAlertsJobs = async () => {
 
     const stockChunks = _.chunk(stockAlerts, 5);
 
-    for (const stockChunk of stockChunks) {
-      await assetAlertsQueue.add(JobNames.AssetAlertsStocks, stockChunk, {
-        attempts: 3,
-        removeOnComplete: true,
-        removeOnFail: true,
-      });
+    for (const alerts of stockChunks) {
+      await assetAlertsQueue.add(
+        JobNames.AssetAlertsStocks,
+        { alerts, type: AssetType.Stock },
+        {
+          attempts: 3,
+          removeOnComplete: true,
+          removeOnFail: true,
+        }
+      );
     }
   }
 };
