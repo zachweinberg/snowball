@@ -13,7 +13,8 @@ const startWorker = (): void => {
   console.log('> [Consumer] Worker online');
 };
 
-const processAssetAlerts = async (data) => {
+const processAssetAlerts = async (job) => {
+  const data = job.data;
   const alerts = data.alerts as Alert[];
   const type = data.type as AssetType;
 
