@@ -131,7 +131,7 @@ const NewsPageContent: React.FunctionComponent = () => {
                     placeholder="Filter..."
                     backgroundColor="#F9FAFF"
                     type="text"
-                    className="mr-2 w-2/3"
+                    className="w-2/3 mr-2"
                     value={query}
                     onChange={(e) => {
                       setQuery(e.target.value);

@@ -43,6 +43,7 @@ const TextInput: React.FunctionComponent<Props> = ({
       onChange={onChange}
       name={name}
       placeholder={placeholder}
+      spellCheck={false}
       required={required}
       style={{ backgroundColor }}
       className={classNames(

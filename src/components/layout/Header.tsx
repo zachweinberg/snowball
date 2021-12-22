@@ -8,11 +8,6 @@ import { useAuth } from '~/hooks/useAuth';
 import { API } from '~/lib/api';
 import Logo from '../ui/Logo';
 
-const profileLinks = [
-  { label: 'Account', href: '/account' },
-  { label: 'Settings', href: '/settings' },
-];
-
 interface Props {
   noBorder?: boolean;
 }
@@ -21,18 +16,6 @@ const Header: React.FunctionComponent<Props> = ({ noBorder }: Props) => {
   const auth = useAuth();
   const router = useRouter();
   const [resentEmail, setResentEmail] = useState(false);
-
-  const links: Array<{ label: string; href: string }> = auth.user
-    ? [
-        { label: 'Portfolios', href: '/portfolios' },
-        { label: 'Watchlist', href: '/watchlist' },
-        { label: 'Alerts', href: '/alerts' },
-        { label: 'News', href: '/news' },
-      ]
-    : [
-        { label: 'Login', href: '/login' },
-        { label: 'Sign up', href: '/signup' },
-      ];
 
   return (
     <>
@@ -63,28 +46,99 @@ const Header: React.FunctionComponent<Props> = ({ noBorder }: Props) => {
 
       <header className={classNames('bg-white', { 'border-b border-bordergray': !noBorder })}>
         <div className="flex items-center justify-between px-4 mx-auto max-w-7xl">
-          <Link href="/portfolios">
+          <Link href={auth.user ? '/portfolios' : '/signup'}>
             <Logo width={150} dark />
           </Link>
           <div>
             <nav className="flex items-center">
               <ul className="flex space-x-9 mr-9">
-                {links.map((link) => (
-                  <li key={link.href}>
-                    <Link href={link.href}>
-                      <div
-                        className={classNames(
-                          'py-5 font-semibold text-[.95rem]',
-                          router.pathname.includes(link.href)
-                            ? 'border-lime text-dark border-b-4'
-                            : 'text-darkgray hover:text-dark transition-colors'
-                        )}
-                      >
-                        {link.label}
-                      </div>
-                    </Link>
-                  </li>
-                ))}
+                {auth.user ? (
+                  <>
+                    <li>
+                      <Link href="/portfolios">
+                        <div
+                          className={classNames(
+                            'py-5 font-semibold text-[.95rem]',
+                            router.pathname.includes('portfolios')
+                              ? 'border-lime text-dark border-b-4'
+                              : 'text-darkgray hover:text-dark transition-colors'
+                          )}
+                        >
+                          Portfolios
+                        </div>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/alerts">
+                        <div
+                          className={classNames(
+                            'py-5 font-semibold text-[.95rem]',
+                            router.pathname.includes('alerts')
+                              ? 'border-lime text-dark border-b-4'
+                              : 'text-darkgray hover:text-dark transition-colors'
+                          )}
+                        >
+                          Alerts
+                        </div>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/watchlist">
+                        <div
+                          className={classNames(
+                            'py-5 font-semibold text-[.95rem]',
+                            router.pathname.includes('watchlist')
+                              ? 'border-lime text-dark border-b-4'
+                              : 'text-darkgray hover:text-dark transition-colors'
+                          )}
+                        >
+                          Watchlist
+                        </div>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/news">
+                        <div
+                          className={classNames(
+                            'py-5 font-semibold text-[.95rem]',
+                            router.pathname.includes('news')
+                              ? 'border-lime text-dark border-b-4'
+                              : 'text-darkgray hover:text-dark transition-colors'
+                          )}
+                        >
+                          News
+                        </div>
+                      </Link>
+                    </li>
+                  </>
+                ) : (
+                  <>
+                    <li>
+                      <Link href="/login">
+                        <div
+                          className={classNames(
+                            'py-5 font-semibold text-[.95rem] border-b-4',
+                            router.pathname.includes('login')
+                              ? 'border-lime text-dark'
+                              : 'text-darkgray hover:text-dark transition-colors border-transparent'
+                          )}
+                        >
+                          Login
+                        </div>
+                      </Link>
+                    </li>
+                    <li className="flex items-center">
+                      <Link href="/signup">
+                        <button
+                          type="button"
+                          className="p-3 rounded-lg font-semibold text-[.95rem] text-white bg-dark hover:text-gray"
+                        >
+                          Get Started
+                        </button>
+                      </Link>
+                    </li>
+                  </>
+                )}
               </ul>
 
               {auth.user && (

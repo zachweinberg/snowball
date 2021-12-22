@@ -158,5 +158,6 @@ export const buildAlertsData = (alerts: Alert[]): AlertsTableData[] => {
     symbol: alert.symbol,
     condition: alert.condition,
     price: alert.price,
+    destinationValue: alert.destinationValue,
   }));
 };

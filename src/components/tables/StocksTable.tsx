@@ -108,26 +108,27 @@ const StocksTable: React.FunctionComponent<Props> = ({
         Header: '',
         accessor: 'id',
         disableSortBy: true,
-        Cell: ({ value, row }) => (
-          <Menu
-            options={[
-              { label: 'Edit Cost Basis', onClick: () => null },
-              { label: 'Edit Quantity', onClick: () => null },
-              { label: 'Delete', onClick: () => onDelete(value, row.original.symbol) },
-            ]}
-            button={() => (
-              <svg
-                viewBox="0 0 4 20"
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 cursor-pointer fill-current text-darkgray"
-              >
-                <circle cx="2" cy="18" r="2" fill="#757784" />
-                <circle cx="2" cy="10" r="2" fill="#757784" />
-                <circle cx="2" cy="2" r="2" fill="#757784" />
-              </svg>
-            )}
-          />
-        ),
+        Cell: ({ value, row }) =>
+          !auth.user ? null : (
+            <Menu
+              options={[
+                { label: 'Edit Cost Basis', onClick: () => null },
+                { label: 'Edit Quantity', onClick: () => null },
+                { label: 'Delete', onClick: () => onDelete(value, row.original.symbol) },
+              ]}
+              button={() => (
+                <svg
+                  viewBox="0 0 4 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 cursor-pointer fill-current text-darkgray"
+                >
+                  <circle cx="2" cy="18" r="2" fill="#757784" />
+                  <circle cx="2" cy="10" r="2" fill="#757784" />
+                  <circle cx="2" cy="2" r="2" fill="#757784" />
+                </svg>
+              )}
+            />
+          ),
       },
     ],
     [unit]

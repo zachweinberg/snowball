@@ -213,7 +213,7 @@ const PortfolioView: NextPage = () => {
             </div>
           </Modal>
 
-          <div className="pb-16">
+          <div>
             <div className="flex items-center justify-between mb-7">
               <div className="flex items-center">
                 {auth.user && (

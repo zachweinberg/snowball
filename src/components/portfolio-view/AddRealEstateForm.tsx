@@ -77,7 +77,6 @@ const AddRealEstateForm: React.FunctionComponent<Props> = ({
           portfolioID,
           address,
           propertyType,
-          thirdPartyData: false,
           propertyValue: propertyValue as number,
           note: note ?? '',
         });

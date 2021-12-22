@@ -63,10 +63,10 @@ const RealEstateTable: React.FunctionComponent<Props> = ({
         Header: '',
         accessor: 'id',
         disableSortBy: true,
-        Cell: ({ value }) => (
+        Cell: ({ value, row }) => (
           <Menu
             options={[
-              { label: 'Edit', onClick: () => null },
+              { label: 'Edit', onClick: () => console.log(row.original) },
               { label: 'Delete', onClick: () => onDelete(value) },
             ]}
             button={() => (

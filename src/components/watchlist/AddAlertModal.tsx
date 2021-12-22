@@ -1,6 +1,8 @@
 import { BellIcon, ExclamationCircleIcon } from '@heroicons/react/outline';
 import { AlertCondition, AlertDestination, AssetType } from '@zachweinberg/obsidian-schema';
 import classNames from 'classnames';
+import IsEmail from 'isemail';
+import parsePhoneNumber from 'libphonenumber-js';
 import { useEffect, useState } from 'react';
 import Modal from '~/components/ui/Modal';
 import Select from '~/components/ui/Select';
@@ -29,6 +31,25 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
   const addAlert = async () => {
     if (!assetType) {
       return;
+    }
+
+    if (price < 0) {
+      alert('Please input a valid price.');
+      return;
+    }
+
+    if (destination === AlertDestination.Email && !IsEmail.validate(destinationValue)) {
+      alert('Please use a valid email.');
+      return;
+    }
+
+    if (destination === AlertDestination.SMS) {
+      const formattedNumber = parsePhoneNumber(destinationValue, 'US');
+
+      if (!formattedNumber || !formattedNumber.isValid()) {
+        alert('Please use a valid phone number');
+        return;
+      }
     }
 
     await API.addAlert({
