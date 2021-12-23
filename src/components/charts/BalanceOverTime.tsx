@@ -22,7 +22,7 @@ interface SVGChartProps {
   width: number;
   height: number;
   onHoverPoint: (data: ChartData) => void;
-  reset: () => void;
+  onReset: () => void;
 }
 
 const getDate = (d: ChartData) => new Date(d.date);
@@ -30,7 +30,7 @@ const getBalance = (d: ChartData) => d?.balance ?? 0;
 const bisectDate = bisector<ChartData, Date>((d) => new Date(d.date)).left;
 
 const SVGChart: React.FunctionComponent<SVGChartProps> = (props: SVGChartProps) => {
-  const { width, height, data, onHoverPoint, reset } = props;
+  const { width, height, data, onHoverPoint, onReset } = props;
   const { showTooltip, hideTooltip, tooltipData, tooltipLeft } = useTooltip();
 
   const dateScale = useMemo(
@@ -99,7 +99,7 @@ const SVGChart: React.FunctionComponent<SVGChartProps> = (props: SVGChartProps) 
           onTouchMove={handleTooltip}
           onMouseMove={handleTooltip}
           onMouseLeave={() => {
-            reset();
+            onReset();
             hideTooltip();
           }}
         />
@@ -206,7 +206,7 @@ const BalanceOverTime: React.FunctionComponent<{ portfolioID: string }> = ({
             </div>
           ) : (
             <SVGChart
-              reset={() =>
+              onReset={() =>
                 setPoint({
                   balance: data[data.length - 1]?.totalValue ?? 0,
                   date: data[data.length - 1]?.date ?? new Date(),

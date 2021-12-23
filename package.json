@@ -47,6 +47,7 @@
     "react-scrollspy": "^3.4.3",
     "react-table": "^7.7.0",
     "react-tabs": "^3.2.3",
+    "react-tooltip": "^4.2.21",
     "react-typing-effect": "^2.0.5",
     "react-typist": "^2.0.5",
     "recharts": "^2.1.4",

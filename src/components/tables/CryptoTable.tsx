@@ -1,5 +1,6 @@
 import { CryptoPositionWithQuote, Unit } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
+import ReactTooltip from 'react-tooltip';
 import { useAuth } from '~/hooks/useAuth';
 import { formatMoneyFromNumber, formatNumber, formatPercentageChange } from '~/lib/money';
 import Button from '../ui/Button';
@@ -85,11 +86,6 @@ const CryptoTable: React.FunctionComponent<Props> = ({
         Cell: ({ value }) => formatMoneyFromNumber(value),
       },
       {
-        Header: 'Market Value',
-        accessor: 'marketValue',
-        Cell: ({ value }) => formatMoneyFromNumber(value),
-      },
-      {
         Header: 'Day Change',
         accessor: 'dayChange',
         Cell: ({ row, value }) => (
@@ -101,9 +97,23 @@ const CryptoTable: React.FunctionComponent<Props> = ({
         ),
       },
       {
+        Header: 'Market Value',
+        accessor: 'marketValue',
+        Cell: ({ value }) => formatMoneyFromNumber(value),
+      },
+
+      {
         Header: 'Cost Basis',
         accessor: 'costPerCoin',
-        Cell: ({ row, value }) => formatMoneyFromNumber(value * row.original.quantity),
+        Cell: ({ row, value }) => (
+          <>
+            <ReactTooltip />
+
+            <div data-tip={`Cost per coin: ${formatMoneyFromNumber(value)}`}>
+              {formatMoneyFromNumber(value * row.original.quantity)}
+            </div>
+          </>
+        ),
         sortType,
       },
       {
