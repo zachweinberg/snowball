@@ -10,24 +10,24 @@ export default class MyDocument extends Document {
 
           <meta
             name="description"
-            content="Track your stocks, crypto, real estate, cash and more in one place. Watch your entire net worth grow."
+            content="Track your stocks, crypto, real estate, cash and more in one place - watch your net worth grow."
           />
 
           <meta name="robots" content="index, follow" />
 
           <meta
             property="og:title"
-            content="Obsidian Tracker - track your net worth in one place."
+            content="Obsidian Tracker - all of your assets in one place."
           />
 
           <meta
             name="twitter:title"
-            content="Obsidian Tracker - track your net worth in one place."
+            content="Obsidian Tracker - all of your assets in one place."
           />
 
           <meta
             property="og:image"
-            content="https://firebasestorage.googleapis.com/v0/b/lyra-ae77c.appspot.com/o/img%2Fog.jpg?alt=media"
+            content="https://firebasestorage.googleapis.com/v0/b/lyra-ae77c.appspot.com/o/img%2Fobsidian.jpeg?alt=media"
           />
 
           <meta property="og:url" content="https://obsidiantracker.com" />
