@@ -17,17 +17,17 @@ export default class MyDocument extends Document {
 
           <meta
             property="og:title"
-            content="Obsidian Tracker - all of your assets in one place."
+            content="Obsidian Tracker - track all of your assets in one place."
           />
 
           <meta
             name="twitter:title"
-            content="Obsidian Tracker - all of your assets in one place."
+            content="Obsidian Tracker - track all of your assets in one place."
           />
 
           <meta
             property="og:image"
-            content="https://firebasestorage.googleapis.com/v0/b/lyra-ae77c.appspot.com/o/img%2Fobsidian.jpeg?alt=media"
+            content="https://firebasestorage.googleapis.com/v0/b/lyra-ae77c.appspot.com/o/img%2Fobsidian-dark.jpeg?alt=media"
           />
 
           <meta property="og:url" content="https://obsidiantracker.com" />
