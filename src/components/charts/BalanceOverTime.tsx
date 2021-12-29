@@ -159,6 +159,10 @@ const BalanceOverTime: React.FunctionComponent<{ portfolioID: string }> = ({
     try {
       const response = await API.getPortfolioDailyBalances(portfolioID, period);
       setData(response.dailyBalances);
+      setPoint({
+        balance: response.dailyBalances[response.dailyBalances.length - 1].totalValue,
+        date: response.dailyBalances[response.dailyBalances.length - 1].date,
+      });
     } catch (err) {
       //
     } finally {

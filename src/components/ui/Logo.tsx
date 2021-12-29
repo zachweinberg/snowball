@@ -1,11 +1,14 @@
 interface Props {
-  width: number;
   dark?: boolean;
 }
 
-const Logo: React.FunctionComponent<Props> = ({ width, dark }: Props) => {
+const Logo: React.FunctionComponent<Props> = ({ dark }: Props) => {
   return (
-    <svg viewBox="40 40 980 140" width={`${width}px`} fill={dark ? '#000' : '#fff'}>
+    <svg
+      viewBox="40 40 980 140"
+      fill={dark ? '#000' : '#fff'}
+      className="w-20 md:w-36 hover:opacity-70"
+    >
       <rect x="694.22" y="47.75" width="26.67" height="121.25" />
       <polygon points="878.22,169 849.9,169 810.48,79.17 771.05,169 742.72,169 795.94,47.75 825.01,47.75 " />
       <polygon

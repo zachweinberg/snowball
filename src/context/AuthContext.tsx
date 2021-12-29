@@ -8,7 +8,7 @@ interface AuthContext {
   user: Partial<User> | null;
   loading: boolean;
   signup: (userData: CreateUserRequest) => Promise<void>;
-  logout: () => Promise<void>;
+  logout: () => void;
   login: (email: string, password: string) => Promise<void>;
   sendPasswordResetEmail: (email: string) => Promise<void>;
 }
@@ -17,7 +17,7 @@ export const authContext = createContext<AuthContext>({
   user: null,
   loading: true,
   signup: async () => {},
-  logout: async () => {},
+  logout: () => {},
   login: async () => {},
   sendPasswordResetEmail: async () => {},
 });

@@ -148,6 +148,14 @@ export const API = {
     );
   },
 
+  updateEmail: (newEmail: string) => {
+    return request('/api/users/update-email', 'put', { newEmail });
+  },
+
+  updatePassword: (newPassword: string, confirmNewPassword: string) => {
+    return request('/api/users/change-password', 'put', { newPassword, confirmNewPassword });
+  },
+
   // PORTFOLIOS
   getPortfolios: () => {
     return request<undefined, GetPortfoliosResponse>('/api/portfolios', 'get');

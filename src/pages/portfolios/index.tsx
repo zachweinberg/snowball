@@ -23,7 +23,7 @@ const PortfolioListPage: NextPage = () => {
     try {
       const portfoliosData = await API.getPortfolios();
       if (portfoliosData.portfolios) {
-        setPortfolios(portfoliosData.portfolios);
+        setPortfolios(portfoliosData.portfolios.reverse());
       }
     } catch (err) {
       setError(

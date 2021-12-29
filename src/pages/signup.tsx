@@ -64,6 +64,8 @@ const SignUpPage: NextPage = () => {
           setError(err.response.data.error);
         } else if (err.code === 'auth/weak-password') {
           setError('Please use a stronger password.');
+        } else if (err.code === 'auth/invalid-password') {
+          setError('Please use a stronger password.');
         } else if (err.code === 'auth/email-already-in-use') {
           setError('An account already exists with this email address.');
         } else {

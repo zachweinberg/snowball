@@ -18,21 +18,22 @@ const Landing: React.FunctionComponent = () => {
   return (
     <RequiredLoggedOut>
       <Head>
-        <title>Obsidian Tracker - Keep a pulse on your financial assets</title>
+        <title>Obsidian Tracker - Track your financial assets in one place</title>
       </Head>
+
       <LandingHeader dark />
 
       <main>
         <div className="pt-16 pb-32 bg-dark">
           <Container>
             <div className="max-w-3xl mx-auto text-center">
-              <h1 className="text-4xl font-semibold leading-tight text-white lg:text-5xl mb-7">
-                Track your assets and watch your portfolio grow
+              <h1 className="text-4xl font-semibold leading-tight text-white lg:leading-tight lg:text-5xl mb-7">
+                Track all of your assets and watch your portfolio grow
               </h1>
 
-              <p className="text-xl font-medium md:text-2xl text-darkgray mb-7">
+              <p className="text-xl font-medium text-darkgray mb-7">
                 Obsidian Tracker is a net worth tracker that allows you to view all of your
-                financial assets in one place.
+                financial assets in one place. Say goodbye to your spreadsheet.
               </p>
 
               <div className="w-56 mx-auto mb-10">

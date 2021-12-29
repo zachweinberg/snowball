@@ -283,6 +283,7 @@ const PortfolioSettingsPageContent: React.FunctionComponent = () => {
                 <div className="flex justify-start py-16">
                   <Button
                     type="button"
+                    variant="danger"
                     onClick={async () => {
                       if (
                         window.confirm(
@@ -294,7 +295,7 @@ const PortfolioSettingsPageContent: React.FunctionComponent = () => {
                         window.location.href = '/portfolios';
                       }
                     }}
-                    className="w-48 text-white border rounded-md shadow-sm border-gray bg-red hover:opacity-80"
+                    className="w-48"
                   >
                     Delete Portfolio
                   </Button>

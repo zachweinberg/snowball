@@ -32,7 +32,7 @@ const LandingHeader: React.FunctionComponent<Props> = ({ dark }: Props) => {
         <Container>
           <div className="flex items-center justify-between py-5">
             <Link href="/">
-              <Logo width={150} dark={!dark} />
+              <Logo dark={!dark} />
             </Link>
 
             <div>

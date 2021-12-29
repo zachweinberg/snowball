@@ -62,6 +62,7 @@ const NewsPageContent: React.FunctionComponent = () => {
 
     try {
       const response = await API.getNewsBypage(page, query ? query : undefined);
+
       if (response.news.length > 0) {
         setPageOfNews(response.news);
         setHoveredNewsItem(response.news[0]);
@@ -117,7 +118,7 @@ const NewsPageContent: React.FunctionComponent = () => {
               </a>
               <div className="flex flex-col items-center justify-center col-span-1 p-6 text-center bg-white">
                 <p className="mb-2 text-lg font-bold leading-tight text-dark">Filter news</p>
-                <p className="mb-2 leading-snug">Search for anything</p>
+                <p className="mb-2 leading-snug">Search for stocks or crypto</p>
                 <form
                   autoComplete="off"
                   className="flex items-center w-4/5"

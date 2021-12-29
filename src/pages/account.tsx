@@ -1,0 +1,213 @@
+import { NextPage } from 'next';
+import { useState } from 'react';
+import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
+import Layout from '~/components/layout/Layout';
+import TextInput from '~/components/ui/TextInput';
+import { useAuth } from '~/hooks/useAuth';
+import { API } from '~/lib/api';
+
+const Btn = (props) => {
+  return (
+    <button
+      type="submit"
+      className="px-4 py-2 font-semibold text-white transition-colors duration-150 rounded-md bg-evergreen hover:bg-opacity-90 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-evergreen focus:outline-none"
+    >
+      {props.children}
+    </button>
+  );
+};
+
+const Account: NextPage = () => {
+  const auth = useAuth();
+  const [email, setEmail] = useState(auth.user?.email ?? '');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+
+  const handleFirebaseError = (errorCode: string) => {
+    if (errorCode === 'auth/weak-password') {
+      alert('Please use a stronger password.');
+    } else if (errorCode === 'auth/email-already-in-use') {
+      alert('An account already exists with this email address.');
+    } else if (errorCode === 'auth/invalid-password') {
+      alert('Please use a stronger password.');
+    } else {
+      alert('Something went wrong.');
+    }
+  };
+
+  const updateEmail = async (e) => {
+    e.preventDefault();
+
+    if (window.confirm('You will have to login again after changing your email. Continue?')) {
+      try {
+        await API.updateEmail(email);
+        auth.logout();
+      } catch (err) {
+        if (err.response.data.code) {
+          handleFirebaseError(err.response.data.code);
+        } else if (err.response.data.error) {
+          alert(err.response.data.error);
+        } else if (err.code) {
+          handleFirebaseError(err.code);
+        } else {
+          alert('Something went wrong.');
+        }
+      }
+    }
+  };
+
+  const updatePassword = async (e) => {
+    e.preventDefault();
+
+    if (
+      window.confirm('You will have to login again after changing your password. Continue?')
+    ) {
+      try {
+        await API.updatePassword(newPassword, confirmNewPassword);
+        auth.logout();
+      } catch (err) {
+        if (err.response.data.code) {
+          handleFirebaseError(err.response.data.code);
+        } else if (err.response.data.error) {
+          alert(err.response.data.error);
+        } else if (err.code) {
+          handleFirebaseError(err.code);
+        } else {
+          alert('Something went wrong.');
+        }
+      }
+    }
+  };
+
+  return (
+    <RequiredLoggedIn>
+      <Layout title="Account | Obsidian Tracker">
+        <div className="flex items-center mb-7">
+          <h1 className="font-bold text-[1.75rem]">Your Account</h1>
+        </div>
+
+        <div className="mx-auto text-sm divide-y divide-gray lg:py-8">
+          {/* Update email */}
+          <section className="grid gap-6 py-10 lg:grid-cols-3 lg:gap-8 sm:py-12">
+            <div>
+              <h2 className="mb-2 text-base font-semibold text-dark">Email address</h2>
+              <p className="mb-4 text-darkgray">
+                Update your email address associated with your account.
+              </p>
+            </div>
+
+            <form onSubmit={updateEmail} className="lg:col-span-2">
+              <div className="mb-6">
+                <label htmlFor="email" className="block mb-2 font-medium text-darkgray">
+                  Email address
+                </label>
+                <div className="relative max-w-sm">
+                  <TextInput
+                    name="email"
+                    value={email}
+                    required
+                    placeholder="Email"
+                    type="email"
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="sm:flex sm:items-center sm:space-x-4 sm:space-x-reverse">
+                <Btn>Update Email</Btn>
+              </div>
+            </form>
+          </section>
+
+          {/* Update password */}
+          <section className="grid gap-6 py-10 lg:grid-cols-3 lg:gap-8 sm:py-12">
+            <div>
+              <h2 className="mb-2 text-base font-semibold text-dark">Password</h2>
+              <p className="mb-4 text-darkgray">
+                Update your password associated with your account.
+              </p>
+            </div>
+
+            <form onSubmit={updatePassword} className="lg:col-span-2">
+              <div className="mb-6">
+                <label htmlFor="email" className="block mb-2 font-medium text-darkgray">
+                  New password
+                </label>
+                <div className="relative max-w-sm">
+                  <TextInput
+                    name="newPassword"
+                    value={newPassword}
+                    required
+                    placeholder="New password"
+                    type="password"
+                    onChange={(e) => setNewPassword(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="mb-6">
+                <label htmlFor="email" className="block mb-2 font-medium text-darkgray">
+                  Confirm new password
+                </label>
+                <div className="relative max-w-sm">
+                  <TextInput
+                    name="confirmNewPassword"
+                    required
+                    value={confirmNewPassword}
+                    placeholder="Confirm new password"
+                    type="password"
+                    onChange={(e) => setConfirmNewPassword(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="sm:flex sm:items-center sm:space-x-4 sm:space-x-reverse">
+                <Btn>Update Password</Btn>
+              </div>
+            </form>
+          </section>
+
+          <section className="grid gap-6 py-10 lg:grid-cols-3 lg:gap-8 sm:py-12">
+            <div>
+              <h2 className="mb-2 text-base font-semibold text-dark">Subscription</h2>
+              <p>
+                Obsidian Tracker Premium is a monthly subscription that gives you access to
+                more alerts, more portfolios and more assets.
+              </p>
+            </div>
+
+            <div className="relative flex p-4 pr-0 -m-4 overflow-auto lg:col-span-2 sm:overflow-visible sm:block sm:m-0 sm:p-0">
+              <div className="pr-4 sm:pr-0">
+                <table className="w-full bg-white rounded-lg shadow min-w-screen-sm sm:min-w-0">
+                  <caption className="sr-only">Subscription</caption>
+                  <thead className="text-left border-b text-darkgray border-gray">
+                    <tr>
+                      <th className="w-full px-4 py-3 font-medium">Current Plan</th>
+                      <th className="px-4 py-3 font-medium">Price</th>
+                      <th className="px-4 py-3">
+                        <span className="sr-only">Receipt</span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 whitespace-nowrap">
+                    <tr>
+                      <td className="p-4 font-medium text-dark">Premium</td>
+                      <td className="p-4 font-medium text-dark">$4.99/mo</td>
+                      <td className="py-4 pl-8 pr-4 font-medium xl:pr-7">
+                        <a
+                          href="/purchases/24771/receipt"
+                          className="px-4 py-2 font-semibold text-white transition-colors duration-150 rounded-md bg-evergreen hover:bg-opacity-90 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-evergreen focus:outline-none"
+                        >
+                          Manage Subscription
+                        </a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        </div>
+      </Layout>
+    </RequiredLoggedIn>
+  );
+};
+
+export default Account;

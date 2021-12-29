@@ -47,7 +47,7 @@ const Header: React.FunctionComponent<Props> = ({ noBorder }: Props) => {
       <header className={classNames('bg-white', { 'border-b border-bordergray': !noBorder })}>
         <div className="flex items-center justify-between px-4 mx-auto max-w-7xl">
           <Link href={auth.user ? '/portfolios' : '/'}>
-            <Logo width={150} dark />
+            <Logo dark />
           </Link>
           <div>
             <nav className="flex items-center">
@@ -58,10 +58,10 @@ const Header: React.FunctionComponent<Props> = ({ noBorder }: Props) => {
                       <Link href="/portfolios">
                         <div
                           className={classNames(
-                            'py-5 font-semibold text-[.95rem]',
+                            'py-5 font-semibold text-[.95rem] border-b-4',
                             router.pathname.includes('portfolios')
-                              ? 'border-lime text-dark border-b-4'
-                              : 'text-darkgray hover:text-dark transition-colors'
+                              ? 'border-lime text-dark'
+                              : 'text-darkgray border-white hover:text-dark transition-colors'
                           )}
                         >
                           Portfolios
@@ -72,10 +72,10 @@ const Header: React.FunctionComponent<Props> = ({ noBorder }: Props) => {
                       <Link href="/alerts">
                         <div
                           className={classNames(
-                            'py-5 font-semibold text-[.95rem]',
+                            'py-5 font-semibold text-[.95rem] border-b-4',
                             router.pathname.includes('alerts')
-                              ? 'border-lime text-dark border-b-4'
-                              : 'text-darkgray hover:text-dark transition-colors'
+                              ? 'border-lime text-dark'
+                              : 'text-darkgray border-white hover:text-dark transition-colors'
                           )}
                         >
                           Alerts
@@ -86,10 +86,10 @@ const Header: React.FunctionComponent<Props> = ({ noBorder }: Props) => {
                       <Link href="/watchlist">
                         <div
                           className={classNames(
-                            'py-5 font-semibold text-[.95rem]',
+                            'py-5 font-semibold text-[.95rem] border-b-4',
                             router.pathname.includes('watchlist')
-                              ? 'border-lime text-dark border-b-4'
-                              : 'text-darkgray hover:text-dark transition-colors'
+                              ? 'border-lime text-dark'
+                              : 'text-darkgray hover:text-dark border-white transition-colors'
                           )}
                         >
                           Watchlist
@@ -100,13 +100,13 @@ const Header: React.FunctionComponent<Props> = ({ noBorder }: Props) => {
                       <Link href="/news">
                         <div
                           className={classNames(
-                            'py-5 font-semibold text-[.95rem]',
+                            'py-5 font-semibold text-[.95rem] border-b-4',
                             router.pathname.includes('news')
-                              ? 'border-lime text-dark border-b-4'
-                              : 'text-darkgray hover:text-dark transition-colors'
+                              ? 'border-lime text-dark'
+                              : 'text-darkgray border-white hover:text-dark transition-colors'
                           )}
                         >
-                          News
+                          Market News
                         </div>
                       </Link>
                     </li>
@@ -144,8 +144,7 @@ const Header: React.FunctionComponent<Props> = ({ noBorder }: Props) => {
               {auth.user && (
                 <Menu
                   options={[
-                    { label: 'Settings', onClick: () => null },
-                    { label: 'Subscription', onClick: () => null },
+                    { label: 'Account', onClick: () => router.push('/account') },
                     { label: 'Log Out', onClick: () => auth.logout() },
                   ]}
                   button={() => (
