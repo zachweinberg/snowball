@@ -1,5 +1,6 @@
 import cors from 'cors';
 import express from 'express';
+import * as OpenApiValidator from 'express-openapi-validator';
 import RateLimit from 'express-rate-limit';
 import http from 'http';
 import Redis from 'ioredis';
@@ -42,13 +43,13 @@ const apiSpec = path.join(__dirname, '..', 'schema', 'openapi.yaml');
 const Server = {
   start: async () => {
     try {
-      // app.use(
-      //   OpenApiValidator.middleware({
-      //     apiSpec,
-      //     validateRequests: true,
-      //     validateResponses: false,
-      //   })
-      // );
+      app.use(
+        OpenApiValidator.middleware({
+          apiSpec,
+          validateRequests: true,
+          validateResponses: false,
+        })
+      );
 
       app.use('/api/users', usersRouter);
       app.use('/api/portfolios', portfoliosRouter);
