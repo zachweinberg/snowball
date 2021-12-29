@@ -197,4 +197,40 @@ usersRouter.post(
   })
 );
 
+usersRouter.put(
+  '/update-email',
+  requireSignedIn,
+  catchErrors(async (req, res) => {
+    const userID = req.authContext!.uid;
+
+    const email = req.body.newEmail;
+
+    await firebaseAdmin().auth().updateUser(userID, {
+      email,
+    });
+
+    await updateDocument('users', userID, { email });
+
+    res.status(200).json({ status: 'ok' });
+  })
+);
+
+usersRouter.put(
+  '/change-password',
+  requireSignedIn,
+  catchErrors(async (req, res) => {
+    const userID = req.authContext!.uid;
+
+    const { newPassword, confirmNewPassword } = req.body;
+
+    if (newPassword !== confirmNewPassword) {
+      return res.status(400).json({ status: 'error', error: 'Passwords do not match.' });
+    }
+
+    await firebaseAdmin().auth().updateUser(userID, { password: confirmNewPassword });
+
+    res.status(200).json({ status: 'ok' });
+  })
+);
+
 export default usersRouter;

@@ -1,6 +1,5 @@
 import cors from 'cors';
 import express from 'express';
-import * as OpenApiValidator from 'express-openapi-validator';
 import RateLimit from 'express-rate-limit';
 import http from 'http';
 import Redis from 'ioredis';
@@ -15,6 +14,7 @@ import newsRouter from './controllers/news';
 import plaidRouter from './controllers/plaid';
 import positionsRouter from './controllers/positions';
 import quotesRouter from './controllers/quotes';
+import subscriptionsRouter from './controllers/subscriptions';
 import watchListRouter from './controllers/watchlist';
 
 const app = express();
@@ -42,13 +42,13 @@ const apiSpec = path.join(__dirname, '..', 'schema', 'openapi.yaml');
 const Server = {
   start: async () => {
     try {
-      app.use(
-        OpenApiValidator.middleware({
-          apiSpec,
-          validateRequests: true,
-          validateResponses: false,
-        })
-      );
+      // app.use(
+      //   OpenApiValidator.middleware({
+      //     apiSpec,
+      //     validateRequests: true,
+      //     validateResponses: false,
+      //   })
+      // );
 
       app.use('/api/users', usersRouter);
       app.use('/api/portfolios', portfoliosRouter);
@@ -58,6 +58,7 @@ const Server = {
       app.use('/api/watchlist', watchListRouter);
       app.use('/api/alerts', alertsRouter);
       app.use('/api/plaid', plaidRouter);
+      app.use('/api/subscriptions', subscriptionsRouter);
       app.use(handleErrors);
 
       server = app.listen(PORT, () => {

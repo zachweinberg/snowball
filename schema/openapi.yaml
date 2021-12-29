@@ -104,7 +104,49 @@ paths:
   /users/resend-email:
     post:
       summary: Resend email verification
-
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
+  /users/update-email:
+    put:
+      summary: Update email address
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              required:
+                - newEmail
+              properties:
+                newEmail:
+                  type: string
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
+  /users/change-password:
+    put:
+      summary: Update user password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              required:
+                - newPassword
+                - confirmNewPassword
+              properties:
+                newPassword:
+                  type: string
+                confirmNewPassword:
+                  type: string
       responses:
         '200':
           description: Valid request
@@ -708,6 +750,26 @@ paths:
   /plaid/exchange-public-token-and-fetch-holdings:
     post:
       summary: Exchange public token for item info
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
+  /subscriptions/create-checkout-session:
+    post:
+      summary: Create session for Stripe and redirect user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              required:
+                - lookupKey
+              properties:
+                lookupKey:
+                  type: string
       responses:
         '200':
           description: Valid request
