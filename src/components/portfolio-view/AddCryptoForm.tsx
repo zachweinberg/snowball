@@ -1,4 +1,5 @@
 import { AssetType } from '@zachweinberg/obsidian-schema';
+import { trackGoal } from 'fathom-client';
 import { useState } from 'react';
 import * as Yup from 'yup';
 import * as yup from 'yup';
@@ -81,6 +82,7 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
           logoURL: logoURL ?? '',
         });
 
+        trackGoal('GPBSSAEK', 0);
         afterAdd();
       } catch (err) {
         if (err.response?.data?.error) {

@@ -1,5 +1,6 @@
 import { EyeIcon } from '@heroicons/react/outline';
 import { AssetType } from '@zachweinberg/obsidian-schema';
+import { trackGoal } from 'fathom-client';
 import { useEffect, useState } from 'react';
 import Modal from '~/components/ui/Modal';
 import TextInputWithResults from '~/components/ui/TextInputWithResults';
@@ -22,6 +23,7 @@ const AddToWatchlistModal: React.FunctionComponent<Props> = ({ open, onClose }: 
 
   const addToWatchList = async (symbol: string, fullName: string, assetType: AssetType) => {
     await API.addAssetToWatchList(symbol, fullName, assetType);
+    trackGoal('A75R6CGA', 0);
     onClose(true);
   };
 

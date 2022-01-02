@@ -1,3 +1,4 @@
+import { trackGoal } from 'fathom-client';
 import { useState } from 'react';
 import * as Yup from 'yup';
 import * as yup from 'yup';
@@ -66,6 +67,8 @@ const AddCustomAssetForm: React.FunctionComponent<Props> = ({
           portfolioID,
           note: note ?? '',
         });
+
+        trackGoal('H0SJYJGY', 0);
 
         afterAdd();
       } catch (err) {

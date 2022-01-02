@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import { trackGoal } from 'fathom-client';
 import type { NextPage } from 'next';
 import React, { useState } from 'react';
 import * as yup from 'yup';
@@ -24,6 +25,8 @@ const LoginPage: NextPage = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
 
+    trackGoal('DC185KX6', 0);
+
     const isValid = await loginSchema.isValid({
       email,
       password,
@@ -34,6 +37,7 @@ const LoginPage: NextPage = () => {
       try {
         await auth.login(email, password);
       } catch (err) {
+        trackGoal('BRCO10IY', 0);
         if (err.code === 'auth/user-not-found') {
           setError('An account with that email and password could not be found.');
         } else if (err.code === 'auth/wrong-password') {

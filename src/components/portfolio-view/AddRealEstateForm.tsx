@@ -1,4 +1,5 @@
 import { RealEstatePropertyType } from '@zachweinberg/obsidian-schema';
+import { trackGoal } from 'fathom-client';
 import { useState } from 'react';
 import * as Yup from 'yup';
 import { API } from '~/lib/api';
@@ -80,6 +81,8 @@ const AddRealEstateForm: React.FunctionComponent<Props> = ({
           propertyValue: propertyValue as number,
           note: note ?? '',
         });
+
+        trackGoal('GQQC3TA8', 0);
 
         afterAdd();
       } catch (err) {

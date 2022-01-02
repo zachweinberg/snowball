@@ -1,3 +1,4 @@
+import { trackGoal } from 'fathom-client';
 import { NextPage } from 'next';
 import { useState } from 'react';
 import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
@@ -41,6 +42,7 @@ const Account: NextPage = () => {
     if (window.confirm('You will have to login again after changing your email. Continue?')) {
       try {
         await API.updateEmail(email);
+        trackGoal('Y0RW35HC', 0);
         auth.logout();
       } catch (err) {
         if (err.response.data.code) {
@@ -64,6 +66,7 @@ const Account: NextPage = () => {
     ) {
       try {
         await API.updatePassword(newPassword, confirmNewPassword);
+        trackGoal('PK6V5J22', 0);
         auth.logout();
       } catch (err) {
         if (err.response.data.code) {

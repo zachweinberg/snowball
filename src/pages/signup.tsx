@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import { trackGoal } from 'fathom-client';
 import type { NextPage } from 'next';
 import React, { useState } from 'react';
 import * as yup from 'yup';
@@ -32,6 +33,8 @@ const SignUpPage: NextPage = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
 
+    trackGoal('CW2O7VSW', 0);
+
     if (passwordConfirm !== password) {
       setError('Passwords must match.');
       return;
@@ -60,6 +63,8 @@ const SignUpPage: NextPage = () => {
           password,
         });
       } catch (err) {
+        trackGoal('1K36SQU3', 0);
+
         if (err.response.data.error) {
           setError(err.response.data.error);
         } else if (err.code === 'auth/weak-password') {

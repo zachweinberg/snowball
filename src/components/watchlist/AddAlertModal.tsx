@@ -1,6 +1,7 @@
 import { BellIcon, ExclamationCircleIcon } from '@heroicons/react/outline';
 import { AlertCondition, AlertDestination, AssetType } from '@zachweinberg/obsidian-schema';
 import classNames from 'classnames';
+import { trackGoal } from 'fathom-client';
 import IsEmail from 'isemail';
 import parsePhoneNumber from 'libphonenumber-js';
 import { useEffect, useState } from 'react';
@@ -60,6 +61,8 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
       destination,
       destinationValue,
     });
+
+    trackGoal(assetType === AssetType.Crypto ? 'VMARZXKT' : 'PG4GL82T', 0);
 
     onClose(true);
   };

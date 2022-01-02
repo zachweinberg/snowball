@@ -1,3 +1,4 @@
+import { trackGoal } from 'fathom-client';
 import Head from 'next/head';
 import RequiredLoggedOut from '~/components/auth/RequireLoggedOut';
 import CashIcon from '~/components/icons/CashIcon';
@@ -38,7 +39,12 @@ const Landing: React.FunctionComponent = () => {
 
               <div className="w-56 mx-auto mb-10">
                 <Link href="/signup">
-                  <Button type="button" variant="white" className="mt-6">
+                  <Button
+                    type="button"
+                    variant="white"
+                    className="mt-6"
+                    onClick={() => trackGoal('ISXTDA9H', 0)}
+                  >
                     Get Started
                   </Button>
                 </Link>

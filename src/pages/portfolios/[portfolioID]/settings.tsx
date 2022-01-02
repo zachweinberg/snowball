@@ -6,6 +6,7 @@ import {
   Portfolio,
   PortfolioSettings,
 } from '@zachweinberg/obsidian-schema';
+import { trackGoal } from 'fathom-client';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -79,6 +80,7 @@ const PortfolioSettingsPageContent: React.FunctionComponent = () => {
 
     await API.editPortfolioSettings(router.query.portfolioID as string, updateBody);
     setSuccess(true);
+    trackGoal('2WJZ8YC2', 0);
     loadPortfolioSettings(false);
     window.scrollTo({ top: 0 });
   };

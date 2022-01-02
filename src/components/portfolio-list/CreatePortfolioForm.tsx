@@ -1,3 +1,4 @@
+import { trackGoal } from 'fathom-client';
 import React, { useState } from 'react';
 import * as yup from 'yup';
 import { API } from '~/lib/api';
@@ -44,6 +45,7 @@ const CreatePortfolioForm: React.FunctionComponent<Props> = ({ afterCreate }: Pr
       try {
         setError('');
         await API.createPortfolio(portfolioName, publicPortfolio);
+        trackGoal('YXIP2PHW', 0);
         afterCreate();
       } catch (err) {
         if (err.response?.data?.error) {

@@ -2,6 +2,7 @@ import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/outline';
 import { NewsItem } from '@zachweinberg/obsidian-schema';
 import classNames from 'classnames';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+import { trackGoal } from 'fathom-client';
 import { DateTime } from 'luxon';
 import type { NextPage } from 'next';
 import { useEffect, useState } from 'react';
@@ -124,6 +125,7 @@ const NewsPageContent: React.FunctionComponent = () => {
                   className="flex items-center w-4/5"
                   onSubmit={(e) => {
                     e.preventDefault();
+                    trackGoal('58JLKQ2V', 0);
                     loadNews();
                   }}
                 >
