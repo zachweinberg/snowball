@@ -54,11 +54,12 @@ const Landing: React.FunctionComponent = () => {
 
         <div className="py-20 text-center border-b border-gray">
           <Container>
-            <H2>Obsidian Tracker is the best place to track all of your assets</H2>
+            <H2>Obsidian Tracker lets you track</H2>
 
             <p className="mt-10 leading-6 text-md md:text-lg">
-              Add a variety of asset classes to your portfolios and track them over time. Throw
-              those spreadsheets away, you'll no longer need them!
+              Add a variety of asset classes to your portfolios and track them over time.
+              <br />
+              Throw those spreadsheets away, you'll no longer need them.
             </p>
 
             <div className="grid h-full grid-cols-2 gap-12 mt-10 md:grid-cols-5">
