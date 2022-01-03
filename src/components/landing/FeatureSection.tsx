@@ -13,7 +13,7 @@ const FeatureSection: React.FunctionComponent<FeatureSectionProps> = ({
   imgURL,
 }: FeatureSectionProps) => {
   return (
-    <div className="py-12 text-center text-white border-b bg-dark">
+    <div className="py-12 text-center text-white bg-dark">
       <Container>
         <div>
           <H2 dark>{heading}</H2>

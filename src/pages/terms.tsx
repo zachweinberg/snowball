@@ -3,7 +3,7 @@ import Layout from '~/components/layout/Layout';
 
 const PrivacyPolicy: NextPage = () => {
   return (
-    <Layout title="Privacy Policy | Obsidian Tracker">
+    <Layout title="Terms | Obsidian Tracker">
       <p>Legal coming soon</p>
     </Layout>
   );

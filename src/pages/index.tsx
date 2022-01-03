@@ -61,15 +61,15 @@ const Landing: React.FunctionComponent = () => {
 
         <div className="py-20 text-center border-b border-gray">
           <Container>
-            <H2>Obsidian Tracker lets you track</H2>
+            <H2>Obsidian Tracker tracks everything in one place.</H2>
 
-            <p className="mt-10 leading-6 text-md md:text-lg">
+            <p className="mt-12 leading-6 text-md md:text-lg">
               Add a variety of asset classes to your portfolios and track them over time.
               <br />
               Throw those spreadsheets away, you'll no longer need them.
             </p>
 
-            <div className="grid h-full grid-cols-2 gap-12 mt-10 md:grid-cols-5">
+            <div className="grid h-full grid-cols-2 gap-12 mt-12 md:grid-cols-5">
               <div className="flex flex-col items-center justify-center">
                 <StockIcon width={75} />
                 <p className="mt-2 text-lg">Stocks</p>
@@ -95,10 +95,16 @@ const Landing: React.FunctionComponent = () => {
         </div>
 
         <FeatureSection
-          heading="Create multiple portfolios"
-          subtitle="Create public or private portfolios and add your assets. Obsidian will track the portfolio over time."
-          imgURL="/img/landing/ui.png"
+          heading="Set price alerts for stocks and crypto"
+          subtitle="Never miss a trade. Set an alert and we will notify you via email or SMS when an asset hits your target."
         />
+
+        <div className="py-12 text-center text-white bg-dark">
+          <div className="flex justify-center max-w-5xl mx-auto">
+            <img src="/img/landing/alerts.png" className="-mx-5 shadow-lg rounded-xl h-96" />
+            <img src="/img/landing/sol.png" className="shadow-lg rounded-xl h-96" />
+          </div>
+        </div>
 
         <div className="py-20">
           <Container>
@@ -107,13 +113,13 @@ const Landing: React.FunctionComponent = () => {
                 Pricing
               </h1>
 
-              <p className="text-lg mb-7">
-                Flexible pricing and deployment options make using Browserless inexpensive and
-                easy. Try it free!
+              <p className="mb-3 text-lg">
+                Unlock premium features with a monthly subscription if you want access to more
+                portfolio tracking and alerting.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 grid-rows-2 gap-20 mx-auto md:grid-cols-2 md:gap-x-8 xl:gap-x-7">
+            <div className="grid grid-cols-1 grid-rows-2 gap-20 mx-auto md:grid-cols-2 md:grid-rows-1 md:gap-x-8 xl:gap-x-7">
               <PricingLight />
               <PricingDark />
             </div>
