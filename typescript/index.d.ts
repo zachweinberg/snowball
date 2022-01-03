@@ -320,5 +320,5 @@ export interface PlaidItem {
 }
 export interface PortfolioLogItem {
     portfolioID: string;
-    descriptio: string;
+    description: string;
 }
