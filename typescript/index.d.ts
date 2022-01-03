@@ -50,7 +50,6 @@ export interface Position {
     id: string;
     assetType: AssetType;
     createdAt: Date;
-    note?: string;
 }
 export interface StockPosition extends Position {
     symbol: string;
@@ -151,7 +150,6 @@ export interface AddStockRequest {
     costPerShare: number;
     companyName: string;
     quantity: number;
-    note?: string;
 }
 export interface AddCryptoRequest {
     portfolioID: string;
@@ -159,7 +157,6 @@ export interface AddCryptoRequest {
     costPerCoin: number;
     coinName: string;
     quantity: number;
-    note?: string;
     logoURL?: string;
 }
 export interface AddRealEstateRequest {
@@ -167,19 +164,16 @@ export interface AddRealEstateRequest {
     propertyValue: number;
     propertyType: RealEstatePropertyType;
     address?: string;
-    note?: string;
 }
 export interface AddCashRequest {
     portfolioID: string;
     amount: number;
     accountName: string;
-    note?: string;
 }
 export interface AddCustomAssetRequest {
     portfolioID: string;
     value: number;
     assetName: string;
-    note?: string;
 }
 export interface PortfolioValues {
     cashValue: number;
