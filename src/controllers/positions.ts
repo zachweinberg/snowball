@@ -24,7 +24,7 @@ positionsRouter.post(
   requireSignedIn,
   catchErrors(async (req, res) => {
     const userID = req.authContext!.uid;
-    const { portfolioID, symbol, companyName, quantity, costPerShare, note } = req.body as AddStockRequest;
+    const { portfolioID, symbol, companyName, quantity, costPerShare } = req.body as AddStockRequest;
     const redisKey = `portfolio-${portfolioID}`;
 
     if (!(await userOwnsPortfolio(req, res, portfolioID))) {
@@ -50,7 +50,6 @@ positionsRouter.post(
       quantity,
       symbol: symbol.toUpperCase(),
       createdAt: new Date(),
-      note: note ? note : '',
     });
 
     await deleteRedisKey(redisKey);
@@ -69,7 +68,7 @@ positionsRouter.post(
   requireSignedIn,
   catchErrors(async (req, res) => {
     const userID = req.authContext!.uid;
-    const { portfolioID, symbol, coinName, quantity, costPerCoin, note, logoURL } = req.body as AddCryptoRequest;
+    const { portfolioID, symbol, coinName, quantity, costPerCoin, logoURL } = req.body as AddCryptoRequest;
     const redisKey = `portfolio-${portfolioID}`;
 
     if (!(await userOwnsPortfolio(req, res, portfolioID))) {
@@ -96,7 +95,6 @@ positionsRouter.post(
       quantity,
       symbol: symbol.toUpperCase(),
       createdAt: new Date(),
-      note: note ? note : '',
     });
 
     await deleteRedisKey(redisKey);
@@ -115,7 +113,7 @@ positionsRouter.post(
   requireSignedIn,
   catchErrors(async (req, res) => {
     const userID = req.authContext!.uid;
-    const { portfolioID, address, propertyType, propertyValue, note } = req.body as AddRealEstateRequest;
+    const { portfolioID, address, propertyType, propertyValue } = req.body as AddRealEstateRequest;
     const redisKey = `portfolio-${portfolioID}`;
 
     if (!(await userOwnsPortfolio(req, res, portfolioID))) {
@@ -127,7 +125,6 @@ positionsRouter.post(
       propertyType,
       propertyValue,
       createdAt: new Date(),
-      note: note ? note : '',
       address: address ? address : '',
     });
 
@@ -147,7 +144,7 @@ positionsRouter.post(
   requireSignedIn,
   catchErrors(async (req, res) => {
     const userID = req.authContext!.uid;
-    const { portfolioID, amount, accountName, note } = req.body as AddCashRequest;
+    const { portfolioID, amount, accountName } = req.body as AddCashRequest;
     const redisKey = `portfolio-${portfolioID}`;
 
     if (!(await userOwnsPortfolio(req, res, portfolioID))) {
@@ -159,7 +156,6 @@ positionsRouter.post(
       accountName,
       amount,
       createdAt: new Date(),
-      note: note ? note : '',
     });
 
     await deleteRedisKey(redisKey);
@@ -178,7 +174,7 @@ positionsRouter.post(
   requireSignedIn,
   catchErrors(async (req, res) => {
     const userID = req.authContext!.uid;
-    const { portfolioID, value, assetName, note } = req.body as AddCustomAssetRequest;
+    const { portfolioID, value, assetName } = req.body as AddCustomAssetRequest;
     const redisKey = `portfolio-${portfolioID}`;
 
     if (!(await userOwnsPortfolio(req, res, portfolioID))) {
@@ -190,7 +186,6 @@ positionsRouter.post(
       value,
       assetName,
       createdAt: new Date(),
-      note: note ? note : '',
     });
 
     await deleteRedisKey(redisKey);
@@ -210,7 +205,7 @@ positionsRouter.put(
   requireSignedIn,
   catchErrors(async (req, res) => {
     const userID = req.authContext!.uid;
-    const { portfolioID, address, propertyType, propertyValue, note, positionID } = req.body as AddRealEstateRequest & {
+    const { portfolioID, address, propertyType, propertyValue, positionID } = req.body as AddRealEstateRequest & {
       positionID: string;
     };
 
@@ -223,7 +218,6 @@ positionsRouter.put(
     await updateDocument(`portfolios/${portfolioID}/positions`, positionID, {
       propertyType,
       propertyValue,
-      note: note ? note : '',
       address: address ? address : '',
     });
 
@@ -244,7 +238,7 @@ positionsRouter.put(
   requireSignedIn,
   catchErrors(async (req, res) => {
     const userID = req.authContext!.uid;
-    const { portfolioID, amount, accountName, note, positionID } = req.body as AddCashRequest & { positionID: string };
+    const { portfolioID, amount, accountName, positionID } = req.body as AddCashRequest & { positionID: string };
     const redisKey = `portfolio-${portfolioID}`;
 
     if (!(await userOwnsPortfolio(req, res, portfolioID))) {
@@ -254,7 +248,6 @@ positionsRouter.put(
     await updateDocument(`portfolios/${portfolioID}/positions`, positionID, {
       accountName,
       amount,
-      note: note ? note : '',
     });
 
     await deleteRedisKey(redisKey);
@@ -274,7 +267,7 @@ positionsRouter.put(
   requireSignedIn,
   catchErrors(async (req, res) => {
     const userID = req.authContext!.uid;
-    const { portfolioID, value, assetName, note, positionID } = req.body as AddCustomAssetRequest & {
+    const { portfolioID, value, assetName, positionID } = req.body as AddCustomAssetRequest & {
       positionID: string;
     };
     const redisKey = `portfolio-${portfolioID}`;
@@ -286,7 +279,6 @@ positionsRouter.put(
     await updateDocument(`portfolios/${portfolioID}/positions`, positionID, {
       value,
       assetName,
-      note: note ? note : '',
     });
 
     await deleteRedisKey(redisKey);

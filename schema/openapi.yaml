@@ -347,8 +347,6 @@ paths:
                   type: number
                 costPerShare:
                   type: number
-                note:
-                  type: string
       responses:
         '200':
           description: Valid request
@@ -381,8 +379,6 @@ paths:
                   type: number
                 costPerCoin:
                   type: number
-                note:
-                  type: string
                 logoURL:
                   type: string
       responses:
@@ -413,8 +409,6 @@ paths:
                   type: string
                 address:
                   type: string
-                note:
-                  type: string
       responses:
         '200':
           description: Valid request
@@ -442,8 +436,6 @@ paths:
                 propertyType:
                   type: string
                 address:
-                  type: string
-                note:
                   type: string
                 positionID:
                   type: string
@@ -473,8 +465,6 @@ paths:
                   type: string
                 amount:
                   type: number
-                note:
-                  type: string
       responses:
         '200':
           description: Valid request
@@ -501,8 +491,6 @@ paths:
                   type: string
                 amount:
                   type: number
-                note:
-                  type: string
                 positionID:
                   type: string
       responses:
@@ -531,8 +519,6 @@ paths:
                   type: string
                 value:
                   type: number
-                note:
-                  type: string
       responses:
         '200':
           description: Valid request
@@ -559,8 +545,6 @@ paths:
                   type: string
                 amount:
                   type: number
-                note:
-                  type: string
                 positionID:
                   type: string
       responses:
