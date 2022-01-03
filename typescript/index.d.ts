@@ -321,4 +321,5 @@ export interface PlaidItem {
 export interface PortfolioLogItem {
     portfolioID: string;
     description: string;
+    createdAt: number;
 }
