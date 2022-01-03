@@ -21,7 +21,7 @@ export default class MyDocument extends Document {
 
           <meta
             property="og:title"
-            content="Obsidian Tracker - track all of your assets in one place."
+            content="Obsidian Tracker - Track all of your assets in one place."
           />
 
           <meta property="og:type" content="website" />
@@ -40,7 +40,7 @@ export default class MyDocument extends Document {
 
           <meta
             name="twitter:title"
-            content="Obsidian Tracker - track all of your assets in one place."
+            content="Obsidian Tracker - Track all of your assets in one place."
           />
 
           <meta
