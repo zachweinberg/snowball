@@ -318,3 +318,7 @@ export interface PlaidItem {
     createdAt: Date;
     accessToken: string;
 }
+export interface PortfolioLogItem {
+    portfolioID: string;
+    descriptio: string;
+}
