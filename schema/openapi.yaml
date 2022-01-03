@@ -322,6 +322,16 @@ paths:
             application/json:
               schema:
                 type: object
+  /portfolios/logs/{portfolioID}:
+    get:
+      summary: Get portfolio log items
+      response:
+        '200':
+          descrtipion: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
   /positions/stock:
     post:
       summary: Add a stock to a portfolio

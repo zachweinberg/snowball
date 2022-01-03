@@ -16,6 +16,7 @@ import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { deleteRedisKey, getRedisKey, setRedisKey } from '~/lib/redis';
 import { catchErrors, getUserFromAuthHeader, requireSignedIn } from '~/utils/api';
 import { deleteCollection, deleteDocument, fetchDocumentByID, findDocuments, updateDocument } from '~/utils/db';
+import { getPortfolioLogItems } from '~/utils/logs';
 import { capitalize } from '~/utils/misc';
 import { getPortfolioDailyHistory } from '~/utils/portfolios';
 import { calculatePortfolioQuotes, calculatePortfolioSummary } from '~/utils/positions';
@@ -321,6 +322,29 @@ portfoliosRouter.delete(
     await deleteRedisKey(`portfoliolist-${authUser!.uid}`);
 
     res.status(200).json({ status: 'ok' });
+  })
+);
+
+portfoliosRouter.get(
+  '/logs/:portfolioID',
+  catchErrors(async (req, res) => {
+    let userOwnsPortfolio = false;
+
+    const portfolio = await fetchDocumentByID<Portfolio>('portfolios', req.params.portfolioID);
+
+    const authUser = await getUserFromAuthHeader(req, false);
+
+    if (authUser && portfolio.userID === authUser.uid) {
+      userOwnsPortfolio = true;
+    }
+
+    if (portfolio.settings.private && !userOwnsPortfolio) {
+      return res.status(404).json({ status: 'error', error: 'Portfolio does not exist.' });
+    }
+
+    const logItems = await getPortfolioLogItems(req.params.portfolioID);
+
+    res.status(200).json({ status: 'ok', logItems });
   })
 );
 
