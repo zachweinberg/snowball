@@ -325,9 +325,9 @@ paths:
   /portfolios/logs/{portfolioID}:
     get:
       summary: Get portfolio log items
-      response:
+      responses:
         '200':
-          descrtipion: Valid request
+          description: Valid request
           content:
             application/json:
               schema:
