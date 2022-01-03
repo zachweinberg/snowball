@@ -1,8 +1,9 @@
-import { StockPositionWithQuote, Unit } from '@zachweinberg/obsidian-schema';
+import { StockPosition, StockPositionWithQuote, Unit } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
 import ReactTooltip from 'react-tooltip';
 import { useAuth } from '~/hooks/useAuth';
 import { formatMoneyFromNumber, formatPercentageChange } from '~/lib/money';
+import { VerticalDots } from '../icons/VerticalDots';
 import Button from '../ui/Button';
 import Menu from '../ui/Menu';
 import { BaseTable } from './BaseTable';
@@ -13,6 +14,7 @@ interface Props {
   unit: Unit;
   onAddAsset: () => void;
   onDelete: (stockID: string, name: string) => void;
+  onEdit: (position: StockPosition) => void;
   belongsTo: string;
 }
 
@@ -21,6 +23,7 @@ const StocksTable: React.FunctionComponent<Props> = ({
   unit,
   onDelete,
   onAddAsset,
+  onEdit,
   belongsTo,
 }: Props) => {
   const auth = useAuth();
@@ -93,12 +96,9 @@ const StocksTable: React.FunctionComponent<Props> = ({
         Header: 'Cost Basis',
         accessor: 'costPerShare',
         Cell: ({ row, value }) => (
-          <>
-            <ReactTooltip />
-            <div data-tip={`Cost per share: ${formatMoneyFromNumber(value)}`}>
-              {formatMoneyFromNumber(value * row.original.quantity)}
-            </div>
-          </>
+          <div data-tip={`Cost per share: ${formatMoneyFromNumber(value)}`}>
+            {formatMoneyFromNumber(value * row.original.quantity)}
+          </div>
         ),
         sortType,
       },
@@ -121,21 +121,10 @@ const StocksTable: React.FunctionComponent<Props> = ({
           !auth.user ? null : (
             <Menu
               options={[
-                { label: 'Edit Cost Basis', onClick: () => null },
-                { label: 'Edit Quantity', onClick: () => null },
+                { label: 'Edit position', onClick: () => onEdit(row.original) },
                 { label: 'Delete', onClick: () => onDelete(value, row.original.symbol) },
               ]}
-              button={() => (
-                <svg
-                  viewBox="0 0 4 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 cursor-pointer fill-current text-darkgray"
-                >
-                  <circle cx="2" cy="18" r="2" fill="#757784" />
-                  <circle cx="2" cy="10" r="2" fill="#757784" />
-                  <circle cx="2" cy="2" r="2" fill="#757784" />
-                </svg>
-              )}
+              button={() => <VerticalDots />}
             />
           ),
       },

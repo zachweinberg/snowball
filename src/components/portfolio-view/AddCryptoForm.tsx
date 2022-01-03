@@ -8,7 +8,6 @@ import { formatMoneyFromNumber } from '~/lib/money';
 import Button from '../ui/Button';
 import MoneyInput from '../ui/MoneyInput';
 import QuantityInput from '../ui/QuantityInput';
-import TextArea from '../ui/TextArea';
 import TextInputWithResults from '../ui/TextInputWithResults';
 
 const addCryptoSchema = yup.object().shape({
@@ -25,7 +24,6 @@ const addCryptoSchema = yup.object().shape({
     .min(0.000000001, 'Cost basis must be greater than 0.')
     .required('Cost basis is required.'),
   coinName: Yup.string().required('Please select a coin symbol.'),
-  note: Yup.string(),
 });
 
 interface Props {
@@ -44,7 +42,6 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
   const [coinName, setCoinName] = useState('');
   const [quantity, setQuantity] = useState<number | null>(null);
   const [costPerCoin, setCostPerCoin] = useState<number | null>(null);
-  const [note, setNote] = useState('');
   const [logoURL, setLogoURL] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -61,7 +58,6 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
         symbol,
         coinName,
         quantity,
-        note,
       });
       isValid = true;
     } catch (err) {
@@ -78,7 +74,6 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
           costPerCoin: costPerCoin as number,
           coinName,
           quantity: quantity as number,
-          note: note ?? '',
           logoURL: logoURL ?? '',
         });
 
@@ -164,14 +159,6 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
           onChange={(val) => setCostPerCoin(val)}
         />
       </div>
-
-      <TextArea
-        name="note"
-        placeholder="Note (optional)"
-        value={note}
-        onChange={(e) => setNote(e.target.value)}
-        className="mb-7"
-      />
 
       {error && <p className="mb-6 font-semibold text-center text-red">{error}</p>}
 

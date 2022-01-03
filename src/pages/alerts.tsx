@@ -3,10 +3,10 @@ import type { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
 import Layout from '~/components/layout/Layout';
+import AddAlertModal from '~/components/modals/AddAlertModal';
 import AlertsTable from '~/components/tables/AlertsTable';
 import Button from '~/components/ui/Button';
 import Spinner from '~/components/ui/Spinner';
-import AddAlertModal from '~/components/watchlist/AddAlertModal';
 import { API } from '~/lib/api';
 
 const BellIcon = () => (

@@ -6,7 +6,6 @@ import { API } from '~/lib/api';
 import { formatMoneyFromNumber } from '~/lib/money';
 import Button from '../ui/Button';
 import MoneyInput from '../ui/MoneyInput';
-import TextArea from '../ui/TextArea';
 import TextInput from '../ui/TextInput';
 
 const addCustomAssetSchema = yup.object().shape({
@@ -19,7 +18,6 @@ const addCustomAssetSchema = yup.object().shape({
     .min(0.01, 'Value too low.')
     .max(1000000000, 'Are you sure your asset is worth that much?')
     .required('Value amount is required.'),
-  note: Yup.string(),
 });
 
 interface Props {
@@ -36,7 +34,6 @@ const AddCustomAssetForm: React.FunctionComponent<Props> = ({
   const [error, setError] = useState<string>('');
   const [assetName, setAssetName] = useState('');
   const [value, setValue] = useState<number | null>(null);
-  const [note, setNote] = useState('');
   const [loading, setLoading] = useState(false);
 
   const canAdd = value && value > 0 && assetName;
@@ -50,7 +47,6 @@ const AddCustomAssetForm: React.FunctionComponent<Props> = ({
       await addCustomAssetSchema.validate({
         assetName,
         value,
-        note,
       });
       isValid = true;
     } catch (err) {
@@ -65,7 +61,6 @@ const AddCustomAssetForm: React.FunctionComponent<Props> = ({
           value: value as number,
           assetName,
           portfolioID,
-          note: note ?? '',
         });
 
         trackGoal('H0SJYJGY', 0);
@@ -127,14 +122,6 @@ const AddCustomAssetForm: React.FunctionComponent<Props> = ({
         className="mb-4"
         numDecimals={2}
         onChange={(val) => setValue(val)}
-      />
-
-      <TextArea
-        name="note"
-        placeholder="Note (optional)"
-        value={note}
-        onChange={(e) => setNote(e.target.value)}
-        className="mb-7"
       />
 
       {error && <p className="mb-6 font-semibold text-center text-red">{error}</p>}

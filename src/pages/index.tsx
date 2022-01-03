@@ -32,9 +32,10 @@ const Landing: React.FunctionComponent = () => {
                 Track all of your assets and watch your portfolio grow
               </h1>
 
-              <p className="text-xl font-medium text-darkgray mb-7">
-                Obsidian Tracker is a net worth tracker that allows you to view all of your
-                financial assets in one place. Say goodbye to your spreadsheet.
+              <p className="text-lg text-darkgray mb-7">
+                Say goodbye to your spreadsheets. Obsidian Tracker is a net worth tracker that
+                allows you to view all of your financial assets in one place. Track your
+                portfolio, get price alerts and keep a pulse on the market.
               </p>
 
               <div className="w-56 mx-auto mb-10">

@@ -20,6 +20,7 @@ export interface StocksTableData {
   quantity: number;
   marketValue: number;
   dayChange: number;
+  assetType: AssetType;
   costPerShare: number;
   gainLoss: number;
   last: number;
@@ -27,6 +28,7 @@ export interface StocksTableData {
 
 export const buildStockData = (stocks: StockPositionWithQuote[]): StocksTableData[] => {
   return stocks.map((stock) => ({
+    assetType: AssetType.Stock,
     id: stock.id,
     companyName: stock.companyName,
     symbol: stock.symbol,
@@ -47,6 +49,7 @@ export interface CryptoTableData {
   symbol: string;
   quantity: number;
   marketValue: number;
+  assetType: AssetType;
   id: string;
   dayChange: number;
   costPerCoin: number;
@@ -59,6 +62,7 @@ export const buildCryptoData = (crypto: CryptoPositionWithQuote[]): CryptoTableD
     coinName: crypto.coinName,
     symbol: crypto.symbol,
     id: crypto.id,
+    assetType: AssetType.Crypto,
     quantity: crypto.quantity,
     marketValue: crypto.marketValue,
     dayChangePercent: crypto.dayChangePercent,
@@ -75,12 +79,14 @@ export const buildCryptoData = (crypto: CryptoPositionWithQuote[]): CryptoTableD
 export interface CashTableData {
   accountName: string;
   value: number;
+  assetType: AssetType;
   id: string;
 }
 
 export const buildCashData = (cash: CashPosition[]): CashTableData[] => {
   return cash.map((cash) => ({
     id: cash.id,
+    assetType: AssetType.Cash,
     accountName: cash.accountName ?? 'Cash account',
     value: cash.amount,
   }));
@@ -90,6 +96,7 @@ export const buildCashData = (cash: CashPosition[]): CashTableData[] => {
 export interface RealEstateTableData {
   address: string;
   propertyValue: number;
+  assetType: AssetType;
   id: string;
   propertyType: RealEstatePropertyType;
 }
@@ -99,6 +106,7 @@ export const buildRealEstateData = (
 ): RealEstateTableData[] => {
   return realEstate.map((realEstate) => ({
     id: realEstate.id,
+    assetType: AssetType.RealEstate,
     address: realEstate.address ?? '-',
     propertyValue: realEstate.propertyValue,
     propertyType: realEstate.propertyType,
@@ -109,12 +117,14 @@ export const buildRealEstateData = (
 export interface CustomAssetTableData {
   assetName: string;
   id: string;
+  assetType: AssetType;
   value: number;
 }
 
 export const buildCustomAssetData = (custom: CustomPosition[]): CustomAssetTableData[] => {
   return custom.map((c) => ({
     id: c.id,
+    assetType: AssetType.Custom,
     assetName: c.assetName,
     value: c.value,
   }));

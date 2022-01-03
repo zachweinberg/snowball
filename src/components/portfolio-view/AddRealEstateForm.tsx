@@ -34,7 +34,6 @@ const addRealEstateSchema = Yup.object({
     .required('Property type is required.'),
   // thirdPartyData: Yup.boolean().required(),
   address: Yup.string().max(100),
-  note: Yup.string(),
 });
 
 const AddRealEstateForm: React.FunctionComponent<Props> = ({
@@ -48,7 +47,6 @@ const AddRealEstateForm: React.FunctionComponent<Props> = ({
     RealEstatePropertyType.SingleFamily
   );
   const [address, setAddress] = useState<string>('');
-  const [note, setNote] = useState<string>('');
   const [loading, setLoading] = useState(false);
 
   const canAdd = propertyValue && propertyType && propertyValue > 0;
@@ -63,7 +61,6 @@ const AddRealEstateForm: React.FunctionComponent<Props> = ({
         address,
         propertyType,
         propertyValue,
-        note,
       });
       isValid = true;
     } catch (err) {
@@ -79,7 +76,6 @@ const AddRealEstateForm: React.FunctionComponent<Props> = ({
           address,
           propertyType,
           propertyValue: propertyValue as number,
-          note: note ?? '',
         });
 
         trackGoal('GQQC3TA8', 0);

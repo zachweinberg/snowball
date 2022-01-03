@@ -2,7 +2,12 @@ import { ArrowCircleLeftIcon } from '@heroicons/react/outline';
 import {
   AssetColor,
   AssetType,
+  CashPosition,
+  CryptoPosition,
+  CustomPosition,
   PortfolioWithQuotes,
+  RealEstatePosition,
+  StockPosition,
   Unit,
 } from '@zachweinberg/obsidian-schema';
 import classNames from 'classnames';
@@ -11,6 +16,8 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useMemo, useState } from 'react';
 import BalanceOverTime from '~/components/charts/BalanceOverTime';
 import Layout from '~/components/layout/Layout';
+import { DeletePositionModal } from '~/components/modals/DeletePositionModal';
+import { EditPositionModal } from '~/components/modals/EditPositionModal';
 import AddAssetForm from '~/components/portfolio-view/AddAssetForm';
 import AssetPercentCard from '~/components/portfolio-view/AssetPercentCard';
 import CashTable from '~/components/tables/CashTable';
@@ -31,17 +38,34 @@ const PortfolioView: NextPage = () => {
   const auth = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+
   const [addingAsset, setAddingAsset] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+
   const [portfolio, setPortfolio] = useState<PortfolioWithQuotes | null>(null);
   const [activeTab, setActiveTab] = useState<AssetType>(AssetType.Stock);
   const [unit, setUnit] = useState<Unit>(Unit.Dollars);
   const [error, setError] = useState('');
-  const [isDeleting, setIsDeleting] = useState(false);
+
   const [deleteAsset, setDeleteAsset] = useState<{
     type: AssetType;
     id: string;
     name: string;
   } | null>(null);
+
+  const [editPosition, setEditPosition] = useState<
+    StockPosition | CryptoPosition | RealEstatePosition | CashPosition | CustomPosition | null
+  >(null);
+
+  const portfolioTotal = useMemo(
+    () =>
+      (portfolio?.cashTotal ?? 0) +
+      (portfolio?.cryptoTotal ?? 0) +
+      (portfolio?.stocksTotal ?? 0) +
+      (portfolio?.customsTotal ?? 0) +
+      (portfolio?.realEstateTotal ?? 0),
+    [portfolio]
+  );
 
   const loadPortfolioData = async () => {
     setLoading(true);
@@ -81,9 +105,9 @@ const PortfolioView: NextPage = () => {
               stocks={portfolio.stocks}
               unit={unit}
               onAddAsset={() => setAddingAsset(true)}
+              onEdit={(position) => setEditPosition(position)}
               onDelete={(stockID, name) => {
                 setDeleteAsset({ id: stockID, type: AssetType.Stock, name });
-                setIsDeleting(true);
               }}
             />
           );
@@ -94,9 +118,9 @@ const PortfolioView: NextPage = () => {
               crypto={portfolio.crypto}
               unit={unit}
               onAddAsset={() => setAddingAsset(true)}
+              onEdit={(position) => setEditPosition(position)}
               onDelete={(cryptoID, name) => {
                 setDeleteAsset({ id: cryptoID, type: AssetType.Crypto, name });
-                setIsDeleting(true);
               }}
             />
           );
@@ -106,13 +130,13 @@ const PortfolioView: NextPage = () => {
               belongsTo={portfolio.userID}
               cash={portfolio.cash}
               onAddAsset={() => setAddingAsset(true)}
+              onEdit={(position) => setEditPosition(position)}
               onDelete={(cashID) => {
                 setDeleteAsset({
                   id: cashID,
                   type: AssetType.Cash,
                   name: 'this cash account',
                 });
-                setIsDeleting(true);
               }}
             />
           );
@@ -122,13 +146,13 @@ const PortfolioView: NextPage = () => {
               belongsTo={portfolio.userID}
               realEstate={portfolio.realEstate}
               onAddAsset={() => setAddingAsset(true)}
+              onEdit={(position) => setEditPosition(position)}
               onDelete={(realEstateID) => {
                 setDeleteAsset({
                   id: realEstateID,
                   type: AssetType.RealEstate,
                   name: 'this property',
                 });
-                setIsDeleting(true);
               }}
             />
           );
@@ -144,7 +168,6 @@ const PortfolioView: NextPage = () => {
                   type: AssetType.Custom,
                   name: 'this custom asset',
                 });
-                setIsDeleting(true);
               }}
             />
           );
@@ -156,20 +179,10 @@ const PortfolioView: NextPage = () => {
     }
   }, [portfolio, activeTab, unit]);
 
-  const portfolioTotal = useMemo(
-    () =>
-      (portfolio?.cashTotal ?? 0) +
-      (portfolio?.cryptoTotal ?? 0) +
-      (portfolio?.stocksTotal ?? 0) +
-      (portfolio?.customsTotal ?? 0) +
-      (portfolio?.realEstateTotal ?? 0),
-    [portfolio]
-  );
-
   const onDeleteAsset = async () => {
     if (deleteAsset && portfolio) {
       await API.deleteAssetFromPortfolio(deleteAsset.id, portfolio.id);
-      setIsDeleting(false);
+      setDeleteAsset(null);
       loadPortfolioData();
     }
   };
@@ -197,13 +210,13 @@ const PortfolioView: NextPage = () => {
     if (portfolio) {
       return (
         <>
-          <Modal isOpen={isDeleting} onClose={() => setIsDeleting(false)}>
+          <Modal isOpen={deleteAsset !== null} onClose={() => setDeleteAsset(null)}>
             <div className="p-7">
               <p className="mb-4 text-lg font-bold">
                 Remove {deleteAsset?.name} from this portfolio?
               </p>
               <div className="flex items-center">
-                <Button type="button" className="mr-2" onClick={() => setIsDeleting(false)}>
+                <Button type="button" className="mr-2" onClick={() => setDeleteAsset(null)}>
                   Cancel
                 </Button>
                 <Button type="button" variant="danger" onClick={onDeleteAsset}>
@@ -212,6 +225,20 @@ const PortfolioView: NextPage = () => {
               </div>
             </div>
           </Modal>
+
+          <DeletePositionModal
+            open={deleteAsset !== null}
+            onClose={() => setDeleteAsset(null)}
+            onDelete={onDeleteAsset}
+            assetName={deleteAsset?.name ?? ''}
+          />
+
+          <EditPositionModal
+            open={editPosition !== null}
+            onEdit={() => null}
+            position={editPosition}
+            onClose={() => setEditPosition(null)}
+          />
 
           <div>
             <div className="flex items-center justify-between mb-7">

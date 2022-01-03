@@ -1,8 +1,9 @@
-import { CryptoPositionWithQuote, Unit } from '@zachweinberg/obsidian-schema';
+import { CryptoPosition, CryptoPositionWithQuote, Unit } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
 import ReactTooltip from 'react-tooltip';
 import { useAuth } from '~/hooks/useAuth';
 import { formatMoneyFromNumber, formatNumber, formatPercentageChange } from '~/lib/money';
+import { VerticalDots } from '../icons/VerticalDots';
 import Button from '../ui/Button';
 import Menu from '../ui/Menu';
 import { BaseTable } from './BaseTable';
@@ -12,6 +13,7 @@ interface Props {
   crypto: CryptoPositionWithQuote[];
   unit: Unit;
   onAddAsset: () => void;
+  onEdit: (position: CryptoPosition) => void;
   onDelete: (cryptoID: string, name: string) => void;
   belongsTo: string;
 }
@@ -21,6 +23,7 @@ const CryptoTable: React.FunctionComponent<Props> = ({
   unit,
   onDelete,
   onAddAsset,
+  onEdit,
   belongsTo,
 }: Props) => {
   const auth = useAuth();
@@ -106,13 +109,9 @@ const CryptoTable: React.FunctionComponent<Props> = ({
         Header: 'Cost Basis',
         accessor: 'costPerCoin',
         Cell: ({ row, value }) => (
-          <>
-            <ReactTooltip />
-
-            <div data-tip={`Cost per coin: ${formatMoneyFromNumber(value)}`}>
-              {formatMoneyFromNumber(value * row.original.quantity)}
-            </div>
-          </>
+          <div data-tip={`Cost per coin: ${formatMoneyFromNumber(value)}`}>
+            {formatMoneyFromNumber(value * row.original.quantity)}
+          </div>
         ),
         sortType,
       },
@@ -134,23 +133,10 @@ const CryptoTable: React.FunctionComponent<Props> = ({
         Cell: ({ row, value }) => (
           <Menu
             options={[
-              { label: 'Edit Cost Basis', onClick: () => null },
-              { label: 'Edit Quantity', onClick: () => null },
+              { label: 'Edit position', onClick: () => onEdit(row.original) },
               { label: 'Delete', onClick: () => onDelete(value, row.original.symbol) },
             ]}
-            button={() => (
-              <div className="w-10 cursor-pointer">
-                <svg
-                  viewBox="0 0 4 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 fill-current text-darkgray"
-                >
-                  <circle cx="2" cy="18" r="2" fill="#757784" />
-                  <circle cx="2" cy="10" r="2" fill="#757784" />
-                  <circle cx="2" cy="2" r="2" fill="#757784" />
-                </svg>
-              </div>
-            )}
+            button={() => <VerticalDots />}
           />
         ),
       },
@@ -158,7 +144,12 @@ const CryptoTable: React.FunctionComponent<Props> = ({
     [unit]
   );
 
-  return <BaseTable columns={columns} data={data} />;
+  return (
+    <>
+      <ReactTooltip />
+      <BaseTable columns={columns} data={data} />
+    </>
+  );
 };
 
 export default CryptoTable;

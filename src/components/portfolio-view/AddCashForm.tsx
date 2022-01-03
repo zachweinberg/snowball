@@ -6,7 +6,6 @@ import { API } from '~/lib/api';
 import { formatMoneyFromNumber } from '~/lib/money';
 import Button from '../ui/Button';
 import MoneyInput from '../ui/MoneyInput';
-import TextArea from '../ui/TextArea';
 import TextInput from '../ui/TextInput';
 
 const addCashSchema = yup.object().shape({
@@ -19,7 +18,6 @@ const addCashSchema = yup.object().shape({
     .min(0.01, 'You must have more cash than that.')
     .max(1000000000, 'Are you sure you have that much cash?')
     .required('Cash amount is required.'),
-  note: Yup.string(),
 });
 
 interface Props {
@@ -36,7 +34,6 @@ const AddCashForm: React.FunctionComponent<Props> = ({
   const [error, setError] = useState<string>('');
   const [accountName, setAccountName] = useState('');
   const [amount, setAmount] = useState<number | null>(null);
-  const [note, setNote] = useState('');
   const [loading, setLoading] = useState(false);
 
   const canAdd = amount && amount > 0 && accountName;
@@ -50,7 +47,6 @@ const AddCashForm: React.FunctionComponent<Props> = ({
       await addCashSchema.validate({
         accountName,
         amount,
-        note,
       });
       isValid = true;
     } catch (err) {
@@ -65,7 +61,6 @@ const AddCashForm: React.FunctionComponent<Props> = ({
           amount: amount as number,
           accountName,
           portfolioID,
-          note: note ?? '',
         });
 
         trackGoal('OCOIOYIL', 0);
@@ -127,14 +122,6 @@ const AddCashForm: React.FunctionComponent<Props> = ({
         className="mb-4"
         numDecimals={2}
         onChange={(val) => setAmount(val)}
-      />
-
-      <TextArea
-        name="note"
-        placeholder="Note (optional)"
-        value={note}
-        onChange={(e) => setNote(e.target.value)}
-        className="mb-7"
       />
 
       {error && <p className="mb-6 font-semibold text-center text-red">{error}</p>}

@@ -3,10 +3,10 @@ import type { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
 import Layout from '~/components/layout/Layout';
+import AddToWatchlistModal from '~/components/modals/AddToWatchlistModal';
 import WatchListTable from '~/components/tables/WatchListTable';
 import Button from '~/components/ui/Button';
 import Spinner from '~/components/ui/Spinner';
-import AddToWatchlistModal from '~/components/watchlist/AddToWatchlistModal';
 import { API } from '~/lib/api';
 
 const WatchlistIcon = () => (

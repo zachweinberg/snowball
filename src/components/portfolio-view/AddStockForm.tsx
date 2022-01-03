@@ -8,7 +8,6 @@ import { formatMoneyFromNumber } from '~/lib/money';
 import Button from '../ui/Button';
 import MoneyInput from '../ui/MoneyInput';
 import QuantityInput from '../ui/QuantityInput';
-import TextArea from '../ui/TextArea';
 import TextInputWithResults from '../ui/TextInputWithResults';
 
 const addStockSchema = yup.object().shape({
@@ -25,7 +24,6 @@ const addStockSchema = yup.object().shape({
     .min(0.01, 'Cost basis must be greater than 0.')
     .required('Cost basis is required.'),
   companyName: Yup.string().required('Please select a ticker symbol.'),
-  note: Yup.string(),
 });
 
 interface Props {
@@ -44,7 +42,6 @@ const AddStockForm: React.FunctionComponent<Props> = ({
   const [companyName, setCompanyName] = useState('');
   const [quantity, setQuantity] = useState<number | null>(null);
   const [costPerShare, setCostPerShare] = useState<number | null>(null);
-  const [note, setNote] = useState('');
   const [loading, setLoading] = useState(false);
 
   const canAdd = symbol && costPerShare && costPerShare > 0 && quantity && quantity > 0;
@@ -60,7 +57,6 @@ const AddStockForm: React.FunctionComponent<Props> = ({
         symbol,
         companyName,
         quantity,
-        note,
       });
       isValid = true;
     } catch (err) {
@@ -77,7 +73,6 @@ const AddStockForm: React.FunctionComponent<Props> = ({
           costPerShare: costPerShare as number,
           companyName,
           quantity: quantity as number,
-          note: note ?? '',
         });
 
         trackGoal('GQJWAT79', 0);
@@ -156,14 +151,6 @@ const AddStockForm: React.FunctionComponent<Props> = ({
           onChange={(val) => setCostPerShare(val)}
         />
       </div>
-
-      <TextArea
-        name="note"
-        placeholder="Note (optional)"
-        value={note}
-        onChange={(e) => setNote(e.target.value)}
-        className="mb-7"
-      />
 
       {error && <p className="mb-6 font-semibold text-center text-red">{error}</p>}
 
