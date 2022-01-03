@@ -15,6 +15,8 @@ import { Router } from 'express';
 import { deleteRedisKey } from '~/lib/redis';
 import { catchErrors, requireSignedIn } from '~/utils/api';
 import { createDocument, deleteDocument, findDocuments, updateDocument } from '~/utils/db';
+import { trackPortfolioLogItem } from '~/utils/logs';
+import { formatMoneyFromNumber } from '~/utils/money';
 import { userOwnsPortfolio } from '~/utils/portfolios';
 
 const positionsRouter = Router();
@@ -54,6 +56,11 @@ positionsRouter.post(
 
     await deleteRedisKey(redisKey);
     await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
+
+    await trackPortfolioLogItem(
+      portfolioID,
+      `Added ${quantity} shares of ${symbol} @ ${formatMoneyFromNumber(costPerShare)} each`
+    );
 
     const response = {
       status: 'ok',
@@ -100,6 +107,11 @@ positionsRouter.post(
     await deleteRedisKey(redisKey);
     await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
 
+    await trackPortfolioLogItem(
+      portfolioID,
+      `Added ${quantity} shares of ${symbol} @ ${formatMoneyFromNumber(costPerCoin)} each`
+    );
+
     const response = {
       status: 'ok',
     };
@@ -135,6 +147,11 @@ positionsRouter.post(
       status: 'ok',
     };
 
+    await trackPortfolioLogItem(
+      portfolioID,
+      `Added ${address ?? 'a property'} worth ${formatMoneyFromNumber(propertyValue)}`
+    );
+
     res.status(200).json(response);
   })
 );
@@ -160,6 +177,8 @@ positionsRouter.post(
 
     await deleteRedisKey(redisKey);
     await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
+
+    await trackPortfolioLogItem(portfolioID, `Added ${accountName ?? 'cash'} worth ${formatMoneyFromNumber(amount)}`);
 
     const response = {
       status: 'ok',
@@ -190,6 +209,11 @@ positionsRouter.post(
 
     await deleteRedisKey(redisKey);
     await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
+
+    await trackPortfolioLogItem(
+      portfolioID,
+      `Added ${assetName ?? 'a custom asset'} worth ${formatMoneyFromNumber(value)}`
+    );
 
     const response = {
       status: 'ok',
@@ -224,6 +248,11 @@ positionsRouter.put(
     await deleteRedisKey(redisKey);
     await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
 
+    await trackPortfolioLogItem(
+      portfolioID,
+      `Updated ${address ?? 'a property'} to new value ${formatMoneyFromNumber(propertyValue)}`
+    );
+
     const response = {
       status: 'ok',
     };
@@ -252,6 +281,11 @@ positionsRouter.put(
 
     await deleteRedisKey(redisKey);
     await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
+
+    await trackPortfolioLogItem(
+      portfolioID,
+      `Updated ${accountName ?? 'cash'} to new value ${formatMoneyFromNumber(amount)}`
+    );
 
     const response = {
       status: 'ok',
@@ -284,6 +318,11 @@ positionsRouter.put(
     await deleteRedisKey(redisKey);
     await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
 
+    await trackPortfolioLogItem(
+      portfolioID,
+      `Updated ${assetName ?? 'custom assett'} to new value ${formatMoneyFromNumber(value)}`
+    );
+
     const response = {
       status: 'ok',
     };
@@ -314,6 +353,8 @@ positionsRouter.delete(
 
     await deleteRedisKey(redisKey);
     await deleteRedisKey(`portfoliolist-${userID}`);
+
+    await trackPortfolioLogItem(portfolioID, `Deleted an assset`);
 
     res.status(200).end();
   })

@@ -16,7 +16,7 @@ import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { deleteRedisKey, getRedisKey, setRedisKey } from '~/lib/redis';
 import { catchErrors, getUserFromAuthHeader, requireSignedIn } from '~/utils/api';
 import { deleteCollection, deleteDocument, fetchDocumentByID, findDocuments, updateDocument } from '~/utils/db';
-import { getPortfolioLogItems } from '~/utils/logs';
+import { getPortfolioLogItems, trackPortfolioLogItem } from '~/utils/logs';
 import { capitalize } from '~/utils/misc';
 import { getPortfolioDailyHistory } from '~/utils/portfolios';
 import { calculatePortfolioQuotes, calculatePortfolioSummary } from '~/utils/positions';
@@ -189,6 +189,8 @@ portfoliosRouter.post(
     };
 
     await deleteRedisKey(redisKey);
+
+    await trackPortfolioLogItem(portfolioDataToSet.id, 'Portfolio created');
 
     res.status(200).json(response);
   })
