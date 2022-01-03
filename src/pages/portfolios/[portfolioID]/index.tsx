@@ -28,7 +28,6 @@ import StocksTable from '~/components/tables/StocksTable';
 import Button from '~/components/ui/Button';
 import FullScreenModal from '~/components/ui/FullScreenModal';
 import Link from '~/components/ui/Link';
-import Modal from '~/components/ui/Modal';
 import Select from '~/components/ui/Select';
 import Spinner from '~/components/ui/Spinner';
 import { useAuth } from '~/hooks/useAuth';
@@ -38,10 +37,7 @@ const PortfolioView: NextPage = () => {
   const auth = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-
   const [addingAsset, setAddingAsset] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-
   const [portfolio, setPortfolio] = useState<PortfolioWithQuotes | null>(null);
   const [activeTab, setActiveTab] = useState<AssetType>(AssetType.Stock);
   const [unit, setUnit] = useState<Unit>(Unit.Dollars);
@@ -187,6 +183,12 @@ const PortfolioView: NextPage = () => {
     }
   };
 
+  const onEditPosition = async () => {
+    if (editPosition && portfolio) {
+      // await API.
+    }
+  };
+
   const renderContent = () => {
     if (error) {
       return (
@@ -210,22 +212,6 @@ const PortfolioView: NextPage = () => {
     if (portfolio) {
       return (
         <>
-          <Modal isOpen={deleteAsset !== null} onClose={() => setDeleteAsset(null)}>
-            <div className="p-7">
-              <p className="mb-4 text-lg font-bold">
-                Remove {deleteAsset?.name} from this portfolio?
-              </p>
-              <div className="flex items-center">
-                <Button type="button" className="mr-2" onClick={() => setDeleteAsset(null)}>
-                  Cancel
-                </Button>
-                <Button type="button" variant="danger" onClick={onDeleteAsset}>
-                  Delete
-                </Button>
-              </div>
-            </div>
-          </Modal>
-
           <DeletePositionModal
             open={deleteAsset !== null}
             onClose={() => setDeleteAsset(null)}
@@ -285,7 +271,7 @@ const PortfolioView: NextPage = () => {
             </div>
 
             <div className="grid grid-cols-1 grid-rows-2 gap-4 lg:grid-rows-1 lg:grid-cols-2 mb-7 h-72">
-              <BalanceOverTime portfolioID={portfolio.id} />
+              <BalanceOverTime portfolioID={portfolio.id} portfolioTotal={portfolioTotal} />
 
               <div className="grid grid-cols-3 gap-6">
                 <AssetPercentCard
@@ -331,6 +317,12 @@ const PortfolioView: NextPage = () => {
                 />
               </div>
             </div>
+
+            <Link href={`/portfolios/${router.query.portfolioID}/history`}>
+              <p className="mb-2 text-sm font-medium text-right text-evergreen hover:opacity-75">
+                View History
+              </p>
+            </Link>
 
             <div className="px-5 py-4 mb-32 bg-white border rounded-3xl border-bordergray">
               <div className="flex mb-7">

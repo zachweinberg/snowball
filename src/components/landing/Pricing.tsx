@@ -42,7 +42,7 @@ const PricingDark: React.FunctionComponent = () => {
         <span className="absolute text-2xl font-semibold top-2 -left-5 md:text-xl md:top-1 md:-left-4">
           $
         </span>
-        <span className="font-bold leading-none text-8xl md:text-5xl">3.99</span>
+        <span className="font-bold leading-none text-8xl md:text-5xl">9.99</span>
       </div>
       <p className="mt-4 text-lg font-bold leading-none sm:mt-2 xl:text-base">
         <strong>per month</strong>

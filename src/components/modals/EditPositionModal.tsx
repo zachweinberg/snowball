@@ -193,6 +193,46 @@ const EditCashForm = ({ position }: { position: CashPosition }) => {
   );
 };
 
+const EditCustomAssetForm = ({ position }: { position: CustomPosition }) => {
+  const [assetName, setAssetName] = useState(position.assetName ?? '');
+  const [value, setValue] = useState(position.value);
+
+  return (
+    <form className="mb-6">
+      <div className="flex flex-col justify-start mb-6">
+        <label className="mb-2 font-medium text-left text-dark" htmlFor="accountName">
+          Asset name
+        </label>
+        <TextInput
+          placeholder="Asset name"
+          backgroundColor="#F9FAFF"
+          type="text"
+          className="mb-4"
+          value={assetName}
+          autofocus
+          name="assetName"
+          onChange={(e) => setAssetName(e.target.value)}
+        />
+      </div>
+
+      <div className="flex flex-col justify-start">
+        <label className="mb-2 font-medium text-left text-dark" htmlFor="amount">
+          Value
+        </label>
+        <MoneyInput
+          placeholder="Value"
+          required
+          value={value}
+          name="value"
+          className="mb-4"
+          numDecimals={2}
+          onChange={(val) => setValue(val)}
+        />
+      </div>
+    </form>
+  );
+};
+
 export const EditPositionModal: React.FunctionComponent<
   Props<StockPosition | CryptoPosition | RealEstatePosition | CashPosition | CustomPosition>
 > = ({ open, onClose, onEdit, position }) => {
@@ -216,11 +256,15 @@ export const EditPositionModal: React.FunctionComponent<
     if (position.assetType === AssetType.Cash) {
       return <EditCashForm position={position as CashPosition} />;
     }
+
+    if (position.assetType === AssetType.Custom) {
+      return <EditCustomAssetForm position={position as CustomPosition} />;
+    }
   };
 
   return (
     <Modal isOpen={open} onClose={onClose}>
-      <div className="p-7">
+      <div className="p-7 w-96">
         {renderForm()}
         <div className="flex items-center">
           <Button type="button" className="mr-2" variant="secondary" onClick={onClose}>

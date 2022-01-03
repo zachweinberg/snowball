@@ -24,6 +24,7 @@ import {
   GetQuoteResponse,
   GetWatchListResponse,
   MeResponse,
+  PortfolioLogItem,
   SendContactEmailRequest,
   VerifyEmailRequest,
   VerifyEmailResponse,
@@ -159,6 +160,15 @@ export const API = {
   // PORTFOLIOS
   getPortfolios: () => {
     return request<undefined, GetPortfoliosResponse>('/api/portfolios', 'get');
+  },
+
+  getPortfolioLogs: (portfolioID: string) => {
+    return request<undefined, { status: 'ok'; logItems: PortfolioLogItem[] }>(
+      `/api/portfolios/logs/${portfolioID}`,
+      'get',
+      undefined,
+      false
+    );
   },
 
   getPortfolio: (portfolioID: string) => {

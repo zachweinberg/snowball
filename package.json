@@ -22,7 +22,7 @@
     "@visx/scale": "^2.1.2",
     "@visx/shape": "^2.1.2",
     "@visx/tooltip": "^2.2.0",
-    "@zachweinberg/obsidian-schema": "^1.9.0",
+    "@zachweinberg/obsidian-schema": "^1.9.3",
     "algoliasearch": "^4.10.4",
     "autoprefixer": "^10.3.1",
     "axios": "^0.21.1",

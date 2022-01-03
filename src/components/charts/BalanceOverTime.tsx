@@ -144,11 +144,10 @@ const PERIOD_MAP = {
   All: DailyBalancesPeriod.AllTime,
 };
 
-const BalanceOverTime: React.FunctionComponent<{ portfolioID: string }> = ({
-  portfolioID,
-}: {
+const BalanceOverTime: React.FunctionComponent<{
   portfolioID: string;
-}) => {
+  portfolioTotal: number;
+}> = ({ portfolioID, portfolioTotal }: { portfolioID: string; portfolioTotal: number }) => {
   const [period, setPeriod] = useState<DailyBalancesPeriod>(DailyBalancesPeriod.AllTime);
   const [data, setData] = useState<DailyBalance[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -160,8 +159,8 @@ const BalanceOverTime: React.FunctionComponent<{ portfolioID: string }> = ({
       const response = await API.getPortfolioDailyBalances(portfolioID, period);
       setData(response.dailyBalances);
       setPoint({
-        balance: response.dailyBalances[response.dailyBalances.length - 1].totalValue,
-        date: response.dailyBalances[response.dailyBalances.length - 1].date,
+        balance: portfolioTotal,
+        date: new Date(),
       });
     } catch (err) {
       //
@@ -187,14 +186,14 @@ const BalanceOverTime: React.FunctionComponent<{ portfolioID: string }> = ({
           >
             <h1 className="text-lg font-semibold text-white">Balance over time</h1>
             <div className="text-white">
-              <div className="flex items-center space-x-1 text-sm font-medium bg-dark">
+              <div className="flex items-center space-x-2 text-sm font-medium bg-dark">
                 {Object.entries(PERIOD_MAP).map(([key, value]) => (
                   <div
                     key={key}
                     onClick={() => setPeriod(value)}
                     className={classNames(
-                      'rounded-full p-1 text-sm cursor-pointer hover:bg-lime hover:text-dark',
-                      { 'bg-lime text-dark': period === value }
+                      'text-sm cursor-pointer hover:text-lime block text-center font-semibold',
+                      { 'text-lime': period === value }
                     )}
                   >
                     {key}
@@ -212,8 +211,8 @@ const BalanceOverTime: React.FunctionComponent<{ portfolioID: string }> = ({
             <SVGChart
               onReset={() =>
                 setPoint({
-                  balance: data[data.length - 1]?.totalValue ?? 0,
-                  date: data[data.length - 1]?.date ?? new Date(),
+                  balance: portfolioTotal,
+                  date: new Date(),
                 })
               }
               onHoverPoint={(d) => setPoint(d)}
