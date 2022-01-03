@@ -8,7 +8,7 @@ const CryptoIcon: React.FunctionComponent<Props> = ({ width }: Props) => {
       x="0px"
       y="0px"
       viewBox="0 0 345 270"
-      enable-background="new 0 0 345 270"
+      enableBackground="new 0 0 345 270"
       width={`${width}px`}
       height={`${width}px`}
     >
@@ -16,8 +16,8 @@ const CryptoIcon: React.FunctionComponent<Props> = ({ width }: Props) => {
         <ellipse
           fill="#FFFFFF"
           stroke="#343434"
-          stroke-width="6"
-          stroke-miterlimit="10"
+          strokeWidth="6"
+          strokeMiterlimit="10"
           cx="263.4"
           cy="187.2"
           rx="78.5"
@@ -26,22 +26,22 @@ const CryptoIcon: React.FunctionComponent<Props> = ({ width }: Props) => {
         <path
           fill="#FFFFFF"
           stroke="#343434"
-          stroke-width="6"
-          stroke-miterlimit="10"
+          strokeWidth="6"
+          strokeMiterlimit="10"
           d="M80.2,135"
         />
         <path
           fill="#FFFFFF"
           stroke="#343434"
-          stroke-width="6"
-          stroke-miterlimit="10"
+          strokeWidth="6"
+          strokeMiterlimit="10"
           d="M263.4,251.5"
         />
         <path
           fill="#FFFFFF"
           stroke="#343434"
-          stroke-width="6"
-          stroke-miterlimit="10"
+          strokeWidth="6"
+          strokeMiterlimit="10"
           d="M281.4,126.7c18.5,5.8,33.4,19.8,40.5,37.7
 c1.3,3.4,2.4,6.9,3.2,10.6"
         />
@@ -55,8 +55,8 @@ c1.3,3.4,2.4,6.9,3.2,10.6"
         <circle
           fill="#FFFFFF"
           stroke="#343434"
-          stroke-width="6"
-          stroke-miterlimit="10"
+          strokeWidth="6"
+          strokeMiterlimit="10"
           cx="82.5"
           cy="82.5"
           r="78.5"
@@ -64,22 +64,22 @@ c1.3,3.4,2.4,6.9,3.2,10.6"
         <path
           fill="#FFFFFF"
           stroke="#343434"
-          stroke-width="6"
-          stroke-miterlimit="10"
+          strokeWidth="6"
+          strokeMiterlimit="10"
           d="M18.4,82.5"
         />
         <path
           fill="#FFFFFF"
           stroke="#343434"
-          stroke-width="6"
-          stroke-miterlimit="10"
+          strokeWidth="6"
+          strokeMiterlimit="10"
           d="M82.5,146.5"
         />
         <path
           fill="#FFFFFF"
           stroke="#343434"
-          stroke-width="6"
-          stroke-miterlimit="10"
+          strokeWidth="6"
+          strokeMiterlimit="10"
           d="M100.5,22.3C119,28,133.9,42,141,59.8
 c1.3,3.4,2.4,6.9,3.2,10.5"
         />

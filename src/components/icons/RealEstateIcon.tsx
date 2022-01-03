@@ -8,7 +8,7 @@ const RealEstateIcon: React.FunctionComponent<Props> = ({ width }: Props) => {
       x="0px"
       y="0px"
       viewBox="0 0 259 249"
-      enable-background="new 0 0 259 249"
+      enableBackground="new 0 0 259 249"
       width={`${width}px`}
       height={`${width}px`}
     >

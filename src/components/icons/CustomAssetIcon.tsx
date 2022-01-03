@@ -8,7 +8,7 @@ const CustomAssetIcon: React.FunctionComponent<Props> = ({ width }: Props) => {
       x="0px"
       y="0px"
       viewBox="0 0 232 230"
-      enable-background="new 0 0 232 230"
+      enableBackground="new 0 0 232 230"
       width={`${width}px`}
       height={`${width}px`}
     >

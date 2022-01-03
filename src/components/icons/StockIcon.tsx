@@ -8,7 +8,7 @@ const StockIcon: React.FunctionComponent<Props> = ({ width }: Props) => {
       x="0px"
       y="0px"
       viewBox="0 0 251 203"
-      enable-background="new 0 0 251 203"
+      enableBackground="new 0 0 251 203"
       width={`${width}px`}
       height={`${width}px`}
     >
@@ -18,8 +18,8 @@ const StockIcon: React.FunctionComponent<Props> = ({ width }: Props) => {
           y="3.4"
           fill="#FFFFFF"
           stroke="#343434"
-          stroke-width="6"
-          stroke-miterlimit="10"
+          strokeWidth="6"
+          strokeMiterlimit="10"
           width="243.9"
           height="169.5"
         />

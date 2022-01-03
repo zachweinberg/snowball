@@ -97,14 +97,8 @@ const Landing: React.FunctionComponent = () => {
         <FeatureSection
           heading="Set price alerts for stocks and crypto"
           subtitle="Never miss a trade. Set an alert and we will notify you via email or SMS when an asset hits your target."
+          imgURL="/img/landing/alerts.png"
         />
-
-        <div className="py-12 text-center text-white bg-dark">
-          <div className="flex justify-center max-w-5xl mx-auto">
-            <img src="/img/landing/alerts.png" className="-mx-5 shadow-lg rounded-xl h-96" />
-            <img src="/img/landing/sol.png" className="shadow-lg rounded-xl h-96" />
-          </div>
-        </div>
 
         <div className="py-20">
           <Container>
