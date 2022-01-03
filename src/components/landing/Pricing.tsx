@@ -64,9 +64,7 @@ const PricingDark: React.FunctionComponent = () => {
         <li className="relative pl-4 before:absolute leading-6 before:top-2 before:left-0 before:w-1.5 before:h-1.5 before:rounded before:bg-lime">
           Create up to 20 price alerts at a time
         </li>
-        <li className="relative pl-4 before:absolute leading-6 before:top-2 before:left-0 before:w-1.5 before:h-1.5 before:rounded before:bg-lime">
-          Billed by the second, prepaid
-        </li>
+
         <li className="relative pl-4 before:absolute leading-6 before:top-2 before:left-0 before:w-1.5 before:h-1.5 before:rounded before:bg-lime">
           Stock and crypto market news portal
         </li>
