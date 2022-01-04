@@ -85,6 +85,8 @@ export interface RealEstatePosition extends Position {
   address?: string;
   propertyValue: number;
   propertyType: RealEstatePropertyType;
+  obsidianEstimate: number | null;
+  fetchObsidianEstimate: boolean;
 }
 
 export interface CashPosition extends Position {
@@ -192,6 +194,7 @@ export interface AddRealEstateRequest {
   propertyValue: number;
   propertyType: RealEstatePropertyType;
   address?: string;
+  fetchObsidianEstimate: boolean;
 }
 
 export interface AddCashRequest {
