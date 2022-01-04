@@ -94,7 +94,7 @@ usersRouter.post(
           disabled: false,
         });
 
-      const verificationCode = await generateVerificationToken();
+      // const verificationCode = await generateVerificationToken();
 
       const userDataToSet: User = {
         id: newUser.uid,
@@ -102,16 +102,15 @@ usersRouter.post(
         name: capitalize(name).trim(),
         createdAt: new Date(),
         verified: false,
-        verificationCode,
       };
 
       await createDocument<User>('users', userDataToSet, newUser.uid);
 
-      await sendVerifyEmailEmail(
-        email,
-        name,
-        `https://staging.obsidiantracker.com/verify?t=${userDataToSet.verificationCode}&u=${userDataToSet.id}`
-      );
+      // await sendVerifyEmailEmail(
+      //   email,
+      //   name,
+      //   `https://staging.obsidiantracker.com/verify?t=${userDataToSet.verificationCode}&u=${userDataToSet.id}`
+      // );
 
       const response: CreateUserResponse = {
         status: 'ok',
