@@ -74,7 +74,7 @@ export declare enum RealEstatePropertyType {
     Other = "Other"
 }
 export interface RealEstatePosition extends Position {
-    address?: string;
+    address?: Address;
     propertyValue: number;
     propertyType: RealEstatePropertyType;
     obsidianEstimate: number | null;
@@ -165,7 +165,7 @@ export interface AddRealEstateRequest {
     portfolioID: string;
     propertyValue: number;
     propertyType: RealEstatePropertyType;
-    address?: string;
+    address?: Address;
     fetchObsidianEstimate: boolean;
 }
 export interface AddCashRequest {
@@ -325,4 +325,11 @@ export interface PortfolioLogItem {
     portfolioID: string;
     description: string;
     createdAt: number;
+}
+export interface Address {
+    state: string;
+    street: string;
+    zip: string;
+    city: string;
+    apt?: string;
 }
