@@ -1,6 +1,7 @@
 import { WatchListItem } from '@zachweinberg/obsidian-schema';
 import type { NextPage } from 'next';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
 import Layout from '~/components/layout/Layout';
 import AddToWatchlistModal from '~/components/modals/AddToWatchlistModal';
@@ -40,7 +41,7 @@ const WatchListContent: React.FunctionComponent = () => {
       const watchlistData = await API.getWatchlist();
       setWatchListItems([...watchlistData.stocks, ...watchlistData.crypto]);
     } catch (err) {
-      alert('Could not load your watchlist. Please contact us if this persists.');
+      toast('Could not load your watchlist. Please contact us if this persists.');
     } finally {
       setLoadingWatchlist(false);
     }

@@ -1,6 +1,7 @@
 import { MailIcon } from '@heroicons/react/outline';
 import { NextPage } from 'next';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import Layout from '~/components/layout/Layout';
 import Button from '~/components/ui/Button';
 import TextArea from '~/components/ui/TextArea';
@@ -19,7 +20,7 @@ const Contact: NextPage = () => {
       await API.sendContactEmail(name, message, email);
       setSubmitted(true);
     } catch (err) {
-      alert(
+      toast(
         'Oops! Something went wrong while trying to submit your message. Please try again.'
       );
     }

@@ -6,6 +6,7 @@ import { trackGoal } from 'fathom-client';
 import { DateTime } from 'luxon';
 import type { NextPage } from 'next';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
 import Layout from '~/components/layout/Layout';
 import Button from '~/components/ui/Button';
@@ -69,7 +70,7 @@ const NewsPageContent: React.FunctionComponent = () => {
         setHoveredNewsItem(response.news[0]);
       }
     } catch (err) {
-      alert(
+      toast(
         `Something went wrong while trying to load news. Please contact support if this persists.`
       );
     } finally {

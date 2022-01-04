@@ -1,6 +1,7 @@
 import { Alert } from '@zachweinberg/obsidian-schema';
 import type { NextPage } from 'next';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
 import Layout from '~/components/layout/Layout';
 import AddAlertModal from '~/components/modals/AddAlertModal';
@@ -52,7 +53,7 @@ const WatchListContent: React.FunctionComponent = () => {
       const alertsData = await API.getAlerts();
       setAlerts(alertsData.alerts);
     } catch (err) {
-      alert('Could not load your alerts. Please contact us if this persists.');
+      toast('Could not load your alerts. Please contact us if this persists.');
     } finally {
       setLoadingAlerts(false);
     }

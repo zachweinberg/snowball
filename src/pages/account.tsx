@@ -1,6 +1,7 @@
 import { trackGoal } from 'fathom-client';
 import { NextPage } from 'next';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
 import Layout from '~/components/layout/Layout';
 import TextInput from '~/components/ui/TextInput';
@@ -26,13 +27,13 @@ const Account: NextPage = () => {
 
   const handleFirebaseError = (errorCode: string) => {
     if (errorCode === 'auth/weak-password') {
-      alert('Please use a stronger password.');
+      toast('Please use a stronger password.');
     } else if (errorCode === 'auth/email-already-in-use') {
-      alert('An account already exists with this email address.');
+      toast('An account already exists with this email address.');
     } else if (errorCode === 'auth/invalid-password') {
-      alert('Please use a stronger password.');
+      toast('Please use a stronger password.');
     } else {
-      alert('Something went wrong.');
+      toast('Something went wrong.');
     }
   };
 
@@ -48,11 +49,11 @@ const Account: NextPage = () => {
         if (err.response.data.code) {
           handleFirebaseError(err.response.data.code);
         } else if (err.response.data.error) {
-          alert(err.response.data.error);
+          toast(err.response.data.error);
         } else if (err.code) {
           handleFirebaseError(err.code);
         } else {
-          alert('Something went wrong.');
+          toast('Something went wrong.');
         }
       }
     }
@@ -72,11 +73,11 @@ const Account: NextPage = () => {
         if (err.response.data.code) {
           handleFirebaseError(err.response.data.code);
         } else if (err.response.data.error) {
-          alert(err.response.data.error);
+          toast(err.response.data.error);
         } else if (err.code) {
           handleFirebaseError(err.code);
         } else {
-          alert('Something went wrong.');
+          toast('Something went wrong.');
         }
       }
     }

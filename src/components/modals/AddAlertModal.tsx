@@ -5,6 +5,7 @@ import { trackGoal } from 'fathom-client';
 import IsEmail from 'isemail';
 import parsePhoneNumber from 'libphonenumber-js';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import Modal from '~/components/ui/Modal';
 import Select from '~/components/ui/Select';
 import TextInputWithResults from '~/components/ui/TextInputWithResults';
@@ -35,12 +36,12 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
     }
 
     if (price < 0) {
-      alert('Please input a valid price.');
+      toast('Please input a valid price.');
       return;
     }
 
     if (destination === AlertDestination.Email && !IsEmail.validate(destinationValue)) {
-      alert('Please use a valid email.');
+      toast('Please use a valid email.');
       return;
     }
 
@@ -48,7 +49,7 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
       const formattedNumber = parsePhoneNumber(destinationValue, 'US');
 
       if (!formattedNumber || !formattedNumber.isValid()) {
-        alert('Please use a valid phone number');
+        toast('Please use a valid phone number');
         return;
       }
     }
@@ -134,7 +135,7 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
                 placeholder={`Enter ${assetType === AssetType.Stock ? 'ticker' : 'symbol'}`}
                 type={assetType!}
                 onResult={(symbol) => setSymbol(symbol)}
-                onError={(e) => alert(e)}
+                onError={(e) => toast(e)}
               />
             </form>
           </div>

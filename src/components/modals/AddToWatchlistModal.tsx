@@ -2,6 +2,7 @@ import { EyeIcon } from '@heroicons/react/outline';
 import { AssetType } from '@zachweinberg/obsidian-schema';
 import { trackGoal } from 'fathom-client';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import Modal from '~/components/ui/Modal';
 import TextInputWithResults from '~/components/ui/TextInputWithResults';
 import { API } from '~/lib/api';
@@ -82,7 +83,7 @@ const AddToWatchlistModal: React.FunctionComponent<Props> = ({ open, onClose }: 
                 placeholder={`Enter ${assetType === AssetType.Stock ? 'ticker' : 'symbol'}`}
                 type={assetType}
                 onResult={(stock, fullName) => addToWatchList(stock, fullName, assetType)}
-                onError={(e) => alert(e)}
+                onError={(e) => toast(e)}
               />
             </form>
           </div>

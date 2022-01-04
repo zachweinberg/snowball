@@ -38,6 +38,10 @@
   src: url(/fonts/manrope.ttf) format('ttf');
 }
 
+:root {
+  --toastify-color-progress-dark: #cef33c;
+}
+
 html {
   height: 100vh;
   scroll-behavior: smooth;
