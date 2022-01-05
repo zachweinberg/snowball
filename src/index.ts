@@ -82,11 +82,12 @@ export enum RealEstatePropertyType {
   Other = "Other",
 }
 export interface RealEstatePosition extends Position {
-  address?: Address;
+  name: string;
+  address: Address | null;
   propertyValue: number;
   propertyType: RealEstatePropertyType;
-  obsidianEstimate: number | null;
-  fetchObsidianEstimate: boolean;
+  automaticValuation: boolean;
+  googlePlaceID: string | null;
 }
 
 export interface CashPosition extends Position {
@@ -115,6 +116,10 @@ export interface GetPlaidTokenResponse extends BaseResponse {
     link_token: string;
     request_id: string;
   };
+}
+
+export interface GetPortfolioLogItemsResponse extends BaseResponse {
+  logItems: PortfolioLogItem[];
 }
 
 export interface ExchangePlaidTokenRequest {
@@ -381,4 +386,8 @@ export interface Address {
   zip: string;
   city: string;
   apt?: string;
+}
+
+export interface GetGooglePlaceAddressResponse extends BaseResponse {
+  address: Address | null;
 }
