@@ -772,7 +772,7 @@ paths:
               schema:
                 type: object
   /google/places:
-    post:
+    get:
       summary: Get place data by ID
       parameters:
         - name: placeID
