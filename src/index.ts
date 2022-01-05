@@ -195,11 +195,12 @@ export interface AddCryptoRequest {
 }
 
 export interface AddRealEstateRequest {
+  name: string;
+  automaticValuation: boolean;
   portfolioID: string;
-  propertyValue: number;
+  propertyValue: number | null;
   propertyType: RealEstatePropertyType;
-  address?: Address;
-  fetchObsidianEstimate: boolean;
+  placeID: string | null;
 }
 
 export interface AddCashRequest {
