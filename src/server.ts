@@ -11,7 +11,6 @@ import portfoliosRouter from '~/controllers/portfolios';
 import usersRouter from '~/controllers/users';
 import { handleErrors, ignoreFavicon } from '~/utils/api';
 import alertsRouter from './controllers/alerts';
-import googleRouter from './controllers/google';
 import newsRouter from './controllers/news';
 import plaidRouter from './controllers/plaid';
 import positionsRouter from './controllers/positions';
@@ -61,7 +60,6 @@ const Server = {
       app.use('/api/alerts', alertsRouter);
       app.use('/api/plaid', plaidRouter);
       app.use('/api/subscriptions', subscriptionsRouter);
-      app.use('/api/google', googleRouter);
       app.use(handleErrors);
 
       server = app.listen(PORT, () => {

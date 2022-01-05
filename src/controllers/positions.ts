@@ -13,6 +13,7 @@ import {
 } from '@zachweinberg/obsidian-schema';
 import { Router } from 'express';
 import { deleteRedisKey } from '~/lib/redis';
+import { getPropertyValueEstimateByGooglePlaceID } from '~/lib/valuations';
 import { catchErrors, requireSignedIn } from '~/utils/api';
 import { createDocument, deleteDocument, findDocuments, updateDocument } from '~/utils/db';
 import { trackPortfolioLogItem } from '~/utils/logs';
@@ -124,30 +125,52 @@ positionsRouter.post(
   '/real-estate',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const userID = req.authContext!.uid;
-    const { portfolioID, address, propertyType, propertyValue, fetchObsidianEstimate } =
+    const userID = req.authContext?.uid!;
+
+    const { portfolioID, propertyType, propertyValue, placeID, apt, name, automaticValuation } =
       req.body as AddRealEstateRequest;
+
     const redisKey = `portfolio-${portfolioID}`;
 
     if (!(await userOwnsPortfolio(req, res, portfolioID))) {
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
     }
 
-    const position: Partial<RealEstatePosition> = {
+    let position: Partial<RealEstatePosition> = {
+      name,
       assetType: AssetType.RealEstate,
       propertyType,
-      propertyValue,
       createdAt: new Date(),
-      fetchObsidianEstimate,
+      automaticValuation: false,
+      googlePlaceID: null,
+      address: null,
     };
 
-    if (address) {
+    if (automaticValuation) {
+      if (!placeID) {
+        return res.status(400).end();
+      }
+
+      const { address, estimate } = await getPropertyValueEstimateByGooglePlaceID(placeID, apt);
+
+      if (!estimate || !address) {
+        return res.status(404).json({
+          status: 'error',
+          error:
+            "It looks like we don't have any estimates for that property. Please uncheck the automatic valuation box.",
+        });
+      }
+
+      position.automaticValuation = true;
+      position.propertyValue = estimate;
       position.address = address;
+    } else {
+      position.propertyValue = propertyValue as number;
     }
 
     await createDocument<RealEstatePosition>(`portfolios/${portfolioID}/positions`, position);
     await deleteRedisKey(redisKey);
-    await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
+    await deleteRedisKey(`portfoliolist-${userID}`);
 
     const response = {
       status: 'ok',
@@ -155,7 +178,7 @@ positionsRouter.post(
 
     await trackPortfolioLogItem(
       portfolioID,
-      `Added ${address ?? 'a property'} worth ${formatMoneyFromNumber(propertyValue)}`
+      `Added ${name ?? 'a property'} worth ${formatMoneyFromNumber(position.propertyValue)}`
     );
 
     res.status(200).json(response);
@@ -235,9 +258,10 @@ positionsRouter.put(
   requireSignedIn,
   catchErrors(async (req, res) => {
     const userID = req.authContext!.uid;
-    const { portfolioID, address, propertyType, propertyValue, positionID } = req.body as AddRealEstateRequest & {
-      positionID: string;
-    };
+    const { portfolioID, name, propertyType, propertyValue, positionID, automaticValuation } =
+      req.body as AddRealEstateRequest & {
+        positionID: string;
+      };
 
     const redisKey = `portfolio-${portfolioID}`;
 
@@ -248,16 +272,14 @@ positionsRouter.put(
     await updateDocument(`portfolios/${portfolioID}/positions`, positionID, {
       propertyType,
       propertyValue,
-      address: address ? address : '',
+      automaticValuation,
+      name,
     });
 
     await deleteRedisKey(redisKey);
-    await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
+    await deleteRedisKey(`portfoliolist-${userID}`);
 
-    await trackPortfolioLogItem(
-      portfolioID,
-      `Updated ${address ?? 'a property'} to new value ${formatMoneyFromNumber(propertyValue)}`
-    );
+    await trackPortfolioLogItem(portfolioID, `Updated ${name ?? 'a property'}`);
 
     const response = {
       status: 'ok',
