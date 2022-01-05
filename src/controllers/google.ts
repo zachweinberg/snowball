@@ -34,7 +34,7 @@ googleRouter.get(
 
     const address: Address = {
       state: state?.short_name ?? '',
-      street: `${streetNum} ${street}`,
+      street: `${streetNum.short_name ?? ''} ${street.short_name ?? ''}`,
       zip: zip?.short_name ?? '',
       city: city?.short_name ?? '',
     };
