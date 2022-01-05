@@ -169,6 +169,7 @@ export interface AddRealEstateRequest {
     name: string;
     automaticValuation: boolean;
     portfolioID: string;
+    apt: string | null;
     propertyValue: number | null;
     propertyType: RealEstatePropertyType;
     placeID: string | null;
