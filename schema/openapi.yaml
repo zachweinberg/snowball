@@ -771,3 +771,24 @@ paths:
             application/json:
               schema:
                 type: object
+  /google/places:
+    post:
+      summary: Get place data by ID
+      parameters:
+        - name: placeID
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: unit
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object

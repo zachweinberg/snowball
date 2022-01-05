@@ -125,21 +125,27 @@ positionsRouter.post(
   requireSignedIn,
   catchErrors(async (req, res) => {
     const userID = req.authContext!.uid;
-    const { portfolioID, address, propertyType, propertyValue } = req.body as AddRealEstateRequest;
+    const { portfolioID, address, propertyType, propertyValue, fetchObsidianEstimate } =
+      req.body as AddRealEstateRequest;
     const redisKey = `portfolio-${portfolioID}`;
 
     if (!(await userOwnsPortfolio(req, res, portfolioID))) {
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
     }
 
-    await createDocument<RealEstatePosition>(`portfolios/${portfolioID}/positions`, {
+    const position: Partial<RealEstatePosition> = {
       assetType: AssetType.RealEstate,
       propertyType,
       propertyValue,
       createdAt: new Date(),
-      address: address ? address : '',
-    });
+      fetchObsidianEstimate,
+    };
 
+    if (address) {
+      position.address = address;
+    }
+
+    await createDocument<RealEstatePosition>(`portfolios/${portfolioID}/positions`, position);
     await deleteRedisKey(redisKey);
     await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
 
