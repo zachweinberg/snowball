@@ -48,7 +48,7 @@ const TextInput: React.FunctionComponent<Props> = ({
       required={required}
       style={{ backgroundColor }}
       className={classNames(
-        'p-3 border-2 rounded-xl border-gray placeholder-darkgray w-full focus:outline-none focus:ring-evergreen focus:border-evergreen',
+        'p-3 border-2 rounded-xl border-bordergray placeholder-darkgray w-full focus:outline-none focus:ring-evergreen focus:border-evergreen',
         className
       )}
     />

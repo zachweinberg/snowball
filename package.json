@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@googlemaps/google-maps-services-js": "^3.3.5",
     "@headlessui/react": "^1.4.0",
     "@heroicons/react": "^1.0.3",
     "@tailwindcss/forms": "^0.3.3",
@@ -22,7 +23,7 @@
     "@visx/scale": "^2.1.2",
     "@visx/shape": "^2.1.2",
     "@visx/tooltip": "^2.2.0",
-    "@zachweinberg/obsidian-schema": "^1.9.3",
+    "@zachweinberg/obsidian-schema": "^1.9.8",
     "algoliasearch": "^4.10.4",
     "autoprefixer": "^10.3.1",
     "axios": "^0.21.1",
@@ -40,6 +41,7 @@
     "postcss": "^8.3.6",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-google-places-autocomplete": "^3.3.2",
     "react-hotjar": "^4.0.0",
     "react-modal": "^3.14.3",
     "react-numeric": "^1.0.0",

@@ -1,9 +1,12 @@
+import cs from 'classnames';
+
 interface Props {
   name: string;
   title: string;
   description: string;
   checked: boolean;
   onChange: (checked: boolean) => void;
+  className?: string;
 }
 
 const Checkbox: React.FunctionComponent<Props> = ({
@@ -11,10 +14,11 @@ const Checkbox: React.FunctionComponent<Props> = ({
   title,
   description,
   checked,
+  className,
   onChange,
 }: Props) => {
   return (
-    <div className="relative flex items-start">
+    <div className={cs('relative flex items-start', className)}>
       <div className="flex items-center h-5">
         <input
           checked={checked}

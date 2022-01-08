@@ -18,13 +18,13 @@ import {
   GetAlertsResponse,
   GetNewsResponse,
   GetPortfolioDailyBalancesResponse,
+  GetPortfolioLogItemsResponse,
   GetPortfolioResponse,
   GetPortfolioSettingsResponse,
   GetPortfoliosResponse,
   GetQuoteResponse,
   GetWatchListResponse,
   MeResponse,
-  PortfolioLogItem,
   SendContactEmailRequest,
   VerifyEmailRequest,
   VerifyEmailResponse,
@@ -163,7 +163,7 @@ export const API = {
   },
 
   getPortfolioLogs: (portfolioID: string) => {
-    return request<undefined, { status: 'ok'; logItems: PortfolioLogItem[] }>(
+    return request<undefined, GetPortfolioLogItemsResponse>(
       `/api/portfolios/logs/${portfolioID}`,
       'get',
       undefined,

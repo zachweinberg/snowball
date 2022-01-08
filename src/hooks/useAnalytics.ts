@@ -8,11 +8,7 @@ export const useAnalytics = () => {
   useEffect(() => {
     if (process.env.NODE_ENV === 'production') {
       Fathom.load(process.env.NEXT_PUBLIC_FATHOM_SITE_ID!, {
-        includedDomains: [
-          'obsidiantracker.com',
-          'www.obsidiantracker.com',
-          'staging.obsidiantracker.com',
-        ],
+        includedDomains: ['obsidiantracker.com', 'www.obsidiantracker.com'],
       });
     }
 
@@ -25,5 +21,5 @@ export const useAnalytics = () => {
     return () => {
       router.events.off('routeChangeComplete', onRouteChangeComplete);
     };
-  }, [router.events]);
+  }, []);
 };

@@ -1,10 +1,9 @@
 import { RealEstatePropertyType } from '@zachweinberg/obsidian-schema';
 import { trackGoal } from 'fathom-client';
-import { useState } from 'react';
-import * as Yup from 'yup';
-import { API } from '~/lib/api';
-import { formatMoneyFromNumber } from '~/lib/money';
+import { useEffect, useState } from 'react';
+import AddressSearch from '../ui/AddressSearch';
 import Button from '../ui/Button';
+import Checkbox from '../ui/Checkbox';
 import MoneyInput from '../ui/MoneyInput';
 import Select from '../ui/Select';
 import TextInput from '../ui/TextInput';
@@ -15,83 +14,73 @@ interface Props {
   portfolioID: string;
 }
 
-const addRealEstateSchema = Yup.object({
-  propertyValue: Yup.number()
-    .typeError('Please enter a valid property value.')
-    .min(0.01, 'Please enter a larger amount.')
-    .max(1000000000, "That's a pretty big number!")
-    .required('Property value is required'),
-  propertyType: Yup.string()
-    .oneOf([
-      RealEstatePropertyType.Apartment,
-      RealEstatePropertyType.Commercial,
-      RealEstatePropertyType.MultiFamily,
-      RealEstatePropertyType.SingleFamily,
-      RealEstatePropertyType.Storage,
-      RealEstatePropertyType.Condo,
-      RealEstatePropertyType.Other,
-    ])
-    .required('Property type is required.'),
-  // thirdPartyData: Yup.boolean().required(),
-  address: Yup.string().max(100),
-});
-
 const AddRealEstateForm: React.FunctionComponent<Props> = ({
   afterAdd,
   portfolioID,
   goBack,
 }: Props) => {
-  const [error, setError] = useState<string>('');
-  const [propertyValue, setPropertyValue] = useState<number | null>(null);
   const [propertyType, setPropertyType] = useState<RealEstatePropertyType>(
     RealEstatePropertyType.SingleFamily
   );
-  const [address, setAddress] = useState<string>('');
-  const [loading, setLoading] = useState(false);
+  const [name, setName] = useState<string>('');
+  const [propertyValue, setPropertyValue] = useState<number | null>(null);
+  const [automaticValuation, setAutomaticValuation] = useState<boolean>(true);
+  const [placeID, setPlaceID] = useState<string | null>('');
+  const [apt, setApt] = useState<string | null>('');
 
-  const canAdd = propertyValue && propertyType && propertyValue > 0;
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string>('');
 
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    let isValid = false;
+    if (!name) {
+      setError('Name is required.');
+      return;
+    }
+
+    if (automaticValuation && !placeID) {
+      setError('Please select an address.');
+      return;
+    }
+
+    if (!automaticValuation && !propertyValue) {
+      setError('Please enter a manual property value.');
+      return;
+    }
+
+    setLoading(true);
 
     try {
-      await addRealEstateSchema.validate({
-        address,
-        propertyType,
-        propertyValue,
-      });
-      isValid = true;
+      // await API.addRealEstateToPortfolio({
+      //   name,
+      //   automaticValuation,
+      //   apt,
+      //   placeID,
+      //   portfolioID,
+      //   propertyType,
+      //   propertyValue,
+      // });
+
+      trackGoal('GQQC3TA8', 0);
+
+      afterAdd();
     } catch (err) {
-      setError(err.errors?.[0] ?? '');
-    }
-
-    if (isValid) {
-      setLoading(true);
-
-      try {
-        await API.addRealEstateToPortfolio({
-          portfolioID,
-          address,
-          propertyType,
-          propertyValue: propertyValue as number,
-        });
-
-        trackGoal('GQQC3TA8', 0);
-
-        afterAdd();
-      } catch (err) {
-        if (err.response?.data?.error) {
-          setError(err.response.data.error);
-        } else {
-          setError('Could not add property.');
-        }
-
-        setLoading(false);
+      if (err.response?.data?.error) {
+        setError(err.response.data.error);
+      } else {
+        setError('Could not add property.');
       }
+
+      setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!automaticValuation) {
+      setPropertyValue(null);
+    }
+  }, [automaticValuation]);
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col max-w-lg mx-auto" autoComplete="off">
@@ -114,19 +103,20 @@ const AddRealEstateForm: React.FunctionComponent<Props> = ({
 
       <h2 className="mb-3 text-center text-[1.75rem] font-bold">Add Real Estate</h2>
 
-      <p className="text-center mb-7 text-darkgray text-[1rem] font-medium">
+      <p className="text-center mb-10 text-darkgray text-[1rem] font-medium">
         Add a property to your portfolio.
       </p>
 
-      <div className="grid grid-cols-2 gap-6 mb-4">
-        <MoneyInput
-          placeholder="Property value"
-          required
-          value={propertyValue}
-          backgroundColor="#F9FAFF"
-          name="propertyValue"
-          onChange={(val) => setPropertyValue(Number(val))}
-        />
+      <TextInput
+        name="name"
+        placeholder="Name"
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        className="mb-4"
+      />
+
+      <div className="mb-4">
         <Select
           onChange={(selected) => setPropertyType(selected as RealEstatePropertyType)}
           options={[
@@ -142,21 +132,44 @@ const AddRealEstateForm: React.FunctionComponent<Props> = ({
         />
       </div>
 
-      <TextInput
-        className="mb-4"
-        name="address"
-        placeholder="Address (optional)"
-        type="text"
-        value={address}
-        onChange={(e) => setAddress(e.target.value)}
+      <Checkbox
+        name="automaticEstimate"
+        title="Enable Automatic Estimate"
+        className="mb-6"
+        onChange={(checked) => setAutomaticValuation(checked)}
+        checked={automaticValuation}
+        description="Every two weeks we will update this property value with our own estimate. Uncheck this to enter your own manual property value."
       />
+
+      {!automaticValuation ? (
+        <div className="mb-4">
+          <MoneyInput
+            placeholder="Property value"
+            required
+            value={propertyValue}
+            disabled={automaticValuation}
+            backgroundColor="#fff"
+            name="propertyValue"
+            onChange={(val) => setPropertyValue(Number(val))}
+          />
+        </div>
+      ) : (
+        <div className="mb-4">
+          <AddressSearch onSubmit={(placeID) => setPlaceID(placeID)} />
+          <TextInput
+            type="text"
+            placeholder="Unit (optional)"
+            value={apt}
+            onChange={(e) => setApt(e.target.value)}
+            name="apt"
+          />
+        </div>
+      )}
 
       {error && <p className="mb-6 font-semibold text-center text-red">{error}</p>}
 
       <Button type="submit" disabled={loading}>
-        {canAdd
-          ? `Add ${propertyType} for ${formatMoneyFromNumber(propertyValue)}`
-          : 'Add Real Estate'}
+        Add Real Estate
       </Button>
     </form>
   );

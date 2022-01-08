@@ -8,6 +8,11 @@ export default class MyDocument extends Document {
         <Head>
           <link rel="preconnect" href="https://cdn.usefathom.com" crossOrigin="" />
 
+          <script
+            async
+            src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places,geometry&language=en`}
+          ></script>
+
           <meta charSet="utf-8" />
 
           <meta name="title" content="Obsidian Tracker - watch your net worth grow." />
@@ -58,8 +63,6 @@ export default class MyDocument extends Document {
           />
 
           <meta name="theme-color" content="#000" />
-
-          <link rel="canonical" href="https://obsidiantracker.com/" />
         </Head>
         <body className="antialiased font-poppins bg-background">
           <Main />

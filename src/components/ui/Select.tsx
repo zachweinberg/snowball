@@ -12,7 +12,7 @@ const Select: React.FunctionComponent<Props> = ({ onChange, selected, options }:
   return (
     <Menu>
       <div className="relative w-full cursor-pointer">
-        <Menu.Button className="relative w-full py-3 pl-3 pr-10 leading-normal text-left bg-white border rounded-md shadow-sm cursor-pointer border-bordergray focus:outline-none hover:bg-light">
+        <Menu.Button className="relative w-full py-3 pl-3 pr-10 leading-normal text-left bg-white border-2 rounded-md shadow-sm cursor-pointer border-bordergray focus:outline-none hover:bg-light">
           <span className="block font-medium truncate">
             {options.find((opt) => opt.value === selected)?.label ?? ''}
           </span>
