@@ -5,12 +5,12 @@ import Layout from '~/components/layout/Layout';
 const PrivacyPolicy: NextPage = () => {
   return (
     <>
-      <Script src="/js/privacy-policy.js" />
-      <Layout title="Privacy Policy | Obsidian Tracker">
+      <Script src="/js/terms-of-use.js" />
+      <Layout title="Terms | Obsidian Tracker">
         <div
           // @ts-ignore
           name="termly-embed"
-          data-id="19f32aaf-07d1-41d3-81e6-43c053321e90"
+          data-id="764fd38d-83d1-4ebd-95b9-7502f5504720"
           data-type="iframe"
         ></div>
       </Layout>

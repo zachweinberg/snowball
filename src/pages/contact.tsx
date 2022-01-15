@@ -31,12 +31,12 @@ const Contact: NextPage = () => {
       <div className="max-w-xl p-6 mx-auto bg-white border rounded-lg border-gray">
         <h1 className="mb-6 text-4xl font-bold text-center">Contact Us</h1>
 
-        <p className="mb-6 text-lg text-left text-darkgray">
+        <p className="mb-6 leading-6 text-left text-darkgray">
           Obsidian Tracker is built by a small team and we're always looking for feedback and
           suggestions! Please feel free to contact us and we'll get back to you ASAP!
         </p>
 
-        <p className="flex items-center justify-center mb-6 text-xl font-semibold transition-colors text-evergreen hover:text-darkgray">
+        <p className="flex items-center justify-center mb-6 text-lg font-semibold transition-colors text-evergreen hover:text-darkgray">
           <MailIcon className="mr-1 w-7 h-7" />
           <a href="mailto:support@obsidiantracker.com">support@obsidiantracker.com</a>
         </p>

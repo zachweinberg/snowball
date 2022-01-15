@@ -1,6 +1,7 @@
 import { RealEstatePropertyType } from '@zachweinberg/obsidian-schema';
 import { trackGoal } from 'fathom-client';
 import { useEffect, useState } from 'react';
+import { API } from '~/lib/api';
 import AddressSearch from '../ui/AddressSearch';
 import Button from '../ui/Button';
 import Checkbox from '../ui/Checkbox';
@@ -52,15 +53,15 @@ const AddRealEstateForm: React.FunctionComponent<Props> = ({
     setLoading(true);
 
     try {
-      // await API.addRealEstateToPortfolio({
-      //   name,
-      //   automaticValuation,
-      //   apt,
-      //   placeID,
-      //   portfolioID,
-      //   propertyType,
-      //   propertyValue,
-      // });
+      await API.addRealEstateToPortfolio({
+        name,
+        automaticValuation,
+        apt,
+        placeID,
+        portfolioID,
+        propertyType,
+        propertyValue,
+      });
 
       trackGoal('GQQC3TA8', 0);
 

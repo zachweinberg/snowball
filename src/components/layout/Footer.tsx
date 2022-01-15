@@ -6,7 +6,7 @@ const Footer: React.FunctionComponent = () => {
       <div className="flex items-center justify-between px-4 py-6 mx-auto max-w-7xl">
         <div className="flex items-center space-x-3">
           <p>&copy; {new Date().getFullYear()} Obsidian Tracker</p>
-          <Link href="/terms" className="hover:text-evergreen">
+          <Link href="/terms-of-use" className="hover:text-evergreen">
             Terms Of Use
           </Link>
           <Link href="/privacy-policy" className="hover:text-evergreen">

@@ -1,4 +1,5 @@
 import {
+  Address,
   Alert,
   AlertCondition,
   AlertDestination,
@@ -94,7 +95,7 @@ export const buildCashData = (cash: CashPosition[]): CashTableData[] => {
 
 // Real Estate
 export interface RealEstateTableData {
-  address: string;
+  address: Address | null;
   propertyValue: number;
   assetType: AssetType;
   id: string;
@@ -107,7 +108,7 @@ export const buildRealEstateData = (
   return realEstate.map((realEstate) => ({
     id: realEstate.id,
     assetType: AssetType.RealEstate,
-    address: realEstate.address ?? '-',
+    address: realEstate.address ?? null,
     propertyValue: realEstate.propertyValue,
     propertyType: realEstate.propertyType,
   }));

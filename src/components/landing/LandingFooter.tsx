@@ -11,7 +11,7 @@ const LandingFooter: React.FunctionComponent = () => {
             <Logo />
           </div>
           <div className="flex items-center space-x-4">
-            <Link href="/terms" className="hover:text-gray">
+            <Link href="/terms-of-use" className="hover:text-gray">
               Terms of Use
             </Link>
             <Link href="/privacy-policy" className="hover:text-gray">

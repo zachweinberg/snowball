@@ -1,4 +1,5 @@
 import {
+  Address,
   AssetType,
   CashPosition,
   CryptoPosition,
@@ -94,8 +95,16 @@ const EditCryptoForm = ({ position }: { position: CryptoPosition }) => {
   );
 };
 
+const humanAddress = (address: Address): string => {
+  if (address.apt) {
+    return `${address.street} APT ${address.apt}, ${address.city} ${address.state}, ${address.zip}`;
+  }
+
+  return `${address.street}, ${address.city} ${address.state}, ${address.zip}`;
+};
+
 const EditRealEstateForm = ({ position }: { position: RealEstatePosition }) => {
-  const [address, setAddress] = useState(position.address ?? '');
+  const [address, setAddress] = useState<Address | null>(position.address ?? null);
   const [propertyType, setPropertyType] = useState(position.propertyType);
   const [propertyValue, setPropertyValue] = useState(position.propertyValue);
 
@@ -111,7 +120,7 @@ const EditRealEstateForm = ({ position }: { position: RealEstatePosition }) => {
           name="address"
           placeholder="Address (optional)"
           type="text"
-          value={address}
+          value={address ? humanAddress(address) : ''}
           onChange={(e) => setAddress(e.target.value)}
         />
       </div>
