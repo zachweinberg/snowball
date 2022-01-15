@@ -2,11 +2,11 @@ import { NextPage } from 'next';
 import Script from 'next/script';
 import Layout from '~/components/layout/Layout';
 
-const PrivacyPolicy: NextPage = () => {
+const TermsOfUse: NextPage = () => {
   return (
     <>
-      <Script src="/js/terms-of-use.js" />
-      <Layout title="Terms | Obsidian Tracker">
+      <Script src="/js/termly.js" />
+      <Layout title="Terms of Use | Obsidian Tracker">
         <div
           // @ts-ignore
           name="termly-embed"
@@ -18,4 +18,4 @@ const PrivacyPolicy: NextPage = () => {
   );
 };
 
-export default PrivacyPolicy;
+export default TermsOfUse;

@@ -5,7 +5,7 @@ import Layout from '~/components/layout/Layout';
 const PrivacyPolicy: NextPage = () => {
   return (
     <>
-      <Script src="/js/privacy-policy.js" />
+      <Script src="/js/termly.js" />
       <Layout title="Privacy Policy | Obsidian Tracker">
         <div
           // @ts-ignore
