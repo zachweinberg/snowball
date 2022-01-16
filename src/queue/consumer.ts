@@ -78,6 +78,9 @@ const addDailyBalances = async (job: Bull.Job) => {
   const data = job.data;
   const portfolioIDs = data.portfolioIDs;
 
+  if (Math.random() > 0.5) {
+    throw new Error('Job failed cuz its bad');
+  }
   for (const portfolioID of portfolioIDs) {
     const { cryptoValue, cashValue, stocksValue, realEstateValue, customsValue, totalValue } =
       await calculatePortfolioSummary(portfolioID);

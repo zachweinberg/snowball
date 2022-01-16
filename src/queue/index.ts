@@ -9,7 +9,7 @@ export enum JobNames {
 
 export const jobQueue = new Bull('job-queue', process.env.REDIS_URL!, {
   redis: { tls: { rejectUnauthorized: false } },
-  defaultJobOptions: { removeOnComplete: true, removeOnFail: true },
+  defaultJobOptions: { removeOnComplete: false, removeOnFail: false },
 });
 
 jobQueue.on('error', (error) => {

@@ -5,5 +5,7 @@ Sentry.init({
 });
 
 export const logSentryError = (err) => {
-  return Sentry.captureException(err);
+  if (process.env.NODE_ENV === 'production') {
+    return Sentry.captureException(err);
+  }
 };
