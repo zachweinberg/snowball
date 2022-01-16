@@ -1,4 +1,4 @@
-import { Alert, AlertDestination } from '@zachweinberg/obsidian-schema';
+import { Alert, AlertDestination, Period } from '@zachweinberg/obsidian-schema';
 import * as postmark from 'postmark';
 import { formatMoneyFromNumber } from '~/utils/money';
 
@@ -16,6 +16,10 @@ const Emails = {
   assetAlert: {
     templateAlias: 'asset-alert',
     messageStreamID: 'asset-alerts',
+  },
+  portfolioReminder: {
+    templateAlias: '',
+    messageStreamID: '',
   },
 };
 
@@ -64,4 +68,17 @@ export const sendAssetAlertEmail = async (alert: Alert) => {
   } catch (err) {
     console.error('Could not send email to', alert.destinationValue, err);
   }
+};
+
+export const sendPortfolioReminderEmail = async (toEmail: string, period: Period, portfolioID: string) => {
+  await emailClient.sendEmailWithTemplate({
+    From: 'Obsidian Tracker <alerts@obsidiantracker.com>',
+    To: toEmail,
+    MessageStream: Emails.portfolioReminder.messageStreamID,
+    TemplateAlias: Emails.portfolioReminder.templateAlias,
+    TemplateModel: {
+      period,
+      portfolioID,
+    },
+  });
 };

@@ -1,11 +1,10 @@
-import { DailyBalance, Portfolio } from '@zachweinberg/obsidian-schema';
+import { Period } from '@zachweinberg/obsidian-schema';
 import algoliasearch from 'algoliasearch';
 import axios from 'axios';
 import * as csv from 'fast-csv';
 import { getAllActiveCoins } from '~/lib/cmc';
-import { createDocument, findDocuments } from '~/utils/db';
-import { calculatePortfolioSummary } from '~/utils/positions';
-import { triggerPriceAlertsJobs } from './alerts';
+import { logSentryError } from '~/lib/sentry';
+import { produceDailyBalancesJobs, produceEmailReminders, producePriceAlertJobs } from './produce';
 
 interface CMCCoin {
   id: number;
@@ -138,25 +137,6 @@ const indexAllStocksInAlgolia = async () => {
   }
 };
 
-const addDailyBalancesToPortfolio = async () => {
-  const portfolios = await findDocuments<Portfolio>('portfolios');
-
-  for (const portfolio of portfolios) {
-    const { cryptoValue, cashValue, stocksValue, realEstateValue, customsValue, totalValue } =
-      await calculatePortfolioSummary(portfolio.id);
-
-    await createDocument<DailyBalance>(`portfolios/${portfolio.id}/dailyBalances`, {
-      date: new Date(),
-      cashValue,
-      cryptoValue,
-      stocksValue,
-      realEstateValue,
-      customsValue,
-      totalValue,
-    });
-  }
-};
-
 const runCron = async () => {
   try {
     switch (process.argv[2]) {
@@ -167,12 +147,22 @@ const runCron = async () => {
         await indexAllCryptocurrenciesInAlgolia();
         break;
       case 'daily-balances':
-        await addDailyBalancesToPortfolio();
+        await produceDailyBalancesJobs();
         break;
       case 'process-alerts':
-        await triggerPriceAlertsJobs();
+        await producePriceAlertJobs();
         break;
-
+      case 'email-reminders-daily':
+        await produceEmailReminders(Period.Daily);
+        break;
+      case 'email-reminders-weekly':
+        await produceEmailReminders(Period.Weekly);
+        break;
+      case 'email-reminders-monthly':
+        await produceEmailReminders(Period.Monthly);
+        break;
+      case 'email-reminders-weekly':
+      case 'email-reminders-monthly':
       default:
         console.error('Invalid job. Did you supply the job name as a param?');
         break;
@@ -181,6 +171,7 @@ const runCron = async () => {
     process.exit(0);
   } catch (err) {
     console.error(err);
+    logSentryError(err);
     process.exit(1);
   }
 };

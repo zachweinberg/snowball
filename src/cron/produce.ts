@@ -1,12 +1,36 @@
-import { Alert, AssetType } from '@zachweinberg/obsidian-schema';
+import { Alert, AssetType, Period, Portfolio } from '@zachweinberg/obsidian-schema';
 import _ from 'lodash';
 import { DateTime } from 'luxon';
-import { assetAlertsQueue, JobNames } from '~/queue';
+import { JobNames, jobQueue } from '~/queue';
 import { findDocuments } from '~/utils/db';
+
+export const produceDailyBalancesJobs = async () => {
+  const portfolios = await findDocuments<Portfolio>('portfolios');
+
+  console.log(`> Adding daily balances to ${portfolios.length} portfolios...`);
+
+  const portfolioIDs = portfolios.map((p) => p.id);
+
+  const chunks = _.chunk(portfolioIDs, 5);
+
+  for (const chunk of chunks) {
+    await jobQueue.add(
+      JobNames.AddDailyBalances,
+      { portfolioIDs: chunk },
+      { attempts: 2, removeOnComplete: true, removeOnFail: true }
+    );
+  }
+};
+
+export const produceEmailReminders = async (period: Period) => {
+  const portfoliosToEmail = await findDocuments<Portfolio>('portfolios', [
+    { property: 'settings.reminderEmailPeriod', condition: '==', value: period },
+  ]);
+};
 
 const STOCK_MARKET_OPEN_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
-export const triggerPriceAlertsJobs = async () => {
+export const producePriceAlertJobs = async () => {
   // Crypto alerts
   const cryptoAlerts = await findDocuments<Alert>('alerts', [
     { property: 'assetType', condition: '==', value: AssetType.Crypto },
@@ -17,7 +41,7 @@ export const triggerPriceAlertsJobs = async () => {
   const cryptoChunks = _.chunk(cryptoAlerts, 5);
 
   for (const alerts of cryptoChunks) {
-    await assetAlertsQueue.add(
+    await jobQueue.add(
       JobNames.AssetAlertsCrypto,
       { alerts, type: AssetType.Crypto },
       {
@@ -43,7 +67,7 @@ export const triggerPriceAlertsJobs = async () => {
     const stockChunks = _.chunk(stockAlerts, 5);
 
     for (const alerts of stockChunks) {
-      await assetAlertsQueue.add(
+      await jobQueue.add(
         JobNames.AssetAlertsStocks,
         { alerts, type: AssetType.Stock },
         {

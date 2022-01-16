@@ -1,24 +1,27 @@
-import { Alert, AlertCondition, AlertDestination, AssetType } from '@zachweinberg/obsidian-schema';
+import { Alert, AlertCondition, AlertDestination, AssetType, DailyBalance } from '@zachweinberg/obsidian-schema';
+import Bull from 'bull';
 import { getCryptoPrices } from '~/lib/cmc';
 import { sendAssetAlertEmail } from '~/lib/email';
 import { getStockPrices } from '~/lib/iex';
 import { sendText } from '~/lib/phone';
-import { deleteDocument, fetchDocumentByID } from '~/utils/db';
+import { createDocument, deleteDocument, fetchDocumentByID } from '~/utils/db';
 import { formatMoneyFromNumber } from '~/utils/money';
-import { assetAlertsQueue, JobNames } from '.';
+import { calculatePortfolioSummary } from '~/utils/positions';
+import { JobNames, jobQueue } from '.';
 
 const startWorker = (): void => {
-  assetAlertsQueue.process(JobNames.AssetAlertsStocks, processAssetAlerts);
-  assetAlertsQueue.process(JobNames.AssetAlertsCrypto, processAssetAlerts);
+  jobQueue.process(JobNames.AssetAlertsStocks, processAssetAlerts);
+  jobQueue.process(JobNames.AssetAlertsCrypto, processAssetAlerts);
+  jobQueue.process(JobNames.AddDailyBalances, addDailyBalances);
   console.log('> [Consumer] Worker online');
 };
 
-const processAssetAlerts = async (job) => {
+const processAssetAlerts = async (job: Bull.Job) => {
   const data = job.data;
   const alerts = data.alerts as Alert[];
   const type = data.type as AssetType;
 
-  console.log(`> [Consumer] Received ${alerts.length} ${type} alerts`);
+  console.log(`> [Consumer] Received ${alerts.length} ${type} alerts to process`);
 
   // Ensure docs exist
   for (let i = 0; i < alerts.length; i++) {
@@ -56,7 +59,7 @@ const sendAlertNotification = async (alert: Alert) => {
   if (alert.destination === AlertDestination.Email) {
     console.log(`> [Consumer] Sending Email...`);
     await sendAssetAlertEmail(alert);
-    await deleteAlert(alert.id);
+    await deleteDocument(`alerts/${alert.id}`);
   } else if (alert.destination === AlertDestination.SMS) {
     console.log(`> [Consumer] Sending SMS...`);
     await sendText(
@@ -67,12 +70,28 @@ const sendAlertNotification = async (alert: Alert) => {
         alert.price
       )}.\n\nThis alert has been removed from your alerts on obsidiantracker.com`
     );
-    await deleteAlert(alert.id);
+    await deleteDocument(`alerts/${alert.id}`);
   }
 };
 
-const deleteAlert = async (alertID: string) => {
-  await deleteDocument(`alerts/${alertID}`);
+const addDailyBalances = async (job: Bull.Job) => {
+  const data = job.data;
+  const portfolioIDs = data.portfolioIDs;
+
+  for (const portfolioID of portfolioIDs) {
+    const { cryptoValue, cashValue, stocksValue, realEstateValue, customsValue, totalValue } =
+      await calculatePortfolioSummary(portfolioID);
+
+    await createDocument<DailyBalance>(`portfolios/${portfolioID}/dailyBalances`, {
+      date: new Date(),
+      cashValue,
+      cryptoValue,
+      stocksValue,
+      realEstateValue,
+      customsValue,
+      totalValue,
+    });
+  }
 };
 
 startWorker();

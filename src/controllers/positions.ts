@@ -164,6 +164,7 @@ positionsRouter.post(
       position.automaticValuation = true;
       position.propertyValue = estimate;
       position.address = address;
+      position.googlePlaceID = placeID;
     } else {
       position.propertyValue = propertyValue as number;
     }
