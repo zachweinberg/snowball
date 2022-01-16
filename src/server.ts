@@ -1,7 +1,6 @@
 import { createBullBoard } from '@bull-board/api';
 import { BullAdapter } from '@bull-board/api/bullAdapter';
 import { ExpressAdapter } from '@bull-board/express';
-import { ExpressRequest } from '@sentry/node/dist/handlers';
 import cors from 'cors';
 import express from 'express';
 import * as OpenApiValidator from 'express-openapi-validator';
@@ -62,13 +61,8 @@ app.use(limiter);
 app.use(express.json({ limit: '5mb' }));
 app.use(cors());
 app.use(ignoreFavicon);
-app.use(
-  morgan('tiny', {
-    skip: (req: ExpressRequest, res) => {
-      return req.url?.startsWith('/jobs');
-    },
-  })
-);
+app.use('/jobs', authConnect(basicAuth), bullBoardAdapter.getRouter());
+app.use(morgan('tiny'));
 
 const apiSpec = path.join(__dirname, '..', 'schema', 'openapi.yaml');
 
@@ -92,7 +86,6 @@ const Server = {
       app.use('/api/alerts', alertsRouter);
       app.use('/api/plaid', plaidRouter);
       app.use('/api/subscriptions', subscriptionsRouter);
-      app.use('/jobs', authConnect(basicAuth), bullBoardAdapter.getRouter());
 
       app.use(handleErrors);
 
