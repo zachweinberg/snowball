@@ -1,27 +1,34 @@
+import { createBullBoard } from '@bull-board/api';
+import { BullAdapter } from '@bull-board/api/bullAdapter';
+import { ExpressAdapter } from '@bull-board/express';
 import cors from 'cors';
 import express from 'express';
 import * as OpenApiValidator from 'express-openapi-validator';
 import RateLimit from 'express-rate-limit';
 import http from 'http';
+import auth from 'http-auth';
+import authConnect from 'http-auth-connect';
 import Redis from 'ioredis';
 import morgan from 'morgan';
 import path from 'path';
 import RedisStore from 'rate-limit-redis';
+import alertsRouter from '~/controllers/alerts';
+import newsRouter from '~/controllers/news';
+import plaidRouter from '~/controllers/plaid';
 import portfoliosRouter from '~/controllers/portfolios';
+import positionsRouter from '~/controllers/positions';
+import quotesRouter from '~/controllers/quotes';
+import subscriptionsRouter from '~/controllers/subscriptions';
 import usersRouter from '~/controllers/users';
+import watchListRouter from '~/controllers/watchlist';
+import { jobQueue } from '~/queue';
 import { handleErrors, ignoreFavicon } from '~/utils/api';
-import alertsRouter from './controllers/alerts';
-import newsRouter from './controllers/news';
-import plaidRouter from './controllers/plaid';
-import positionsRouter from './controllers/positions';
-import quotesRouter from './controllers/quotes';
-import subscriptionsRouter from './controllers/subscriptions';
-import watchListRouter from './controllers/watchlist';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 let server: http.Server | null = null;
 
+// Rate limiting
 const limiter = RateLimit({
   windowMs: 15000,
   store: new RedisStore({
@@ -30,6 +37,24 @@ const limiter = RateLimit({
     client: new Redis(process.env.REDIS_URL!, { tls: { rejectUnauthorized: false } }),
   }),
   max: 27,
+});
+
+// Basic auth for /jobs
+const basicAuth = auth.basic(
+  {
+    realm: 'Jobs',
+  },
+  (username, password, callback) => {
+    callback(username === process.env.JOBS_CREDS?.split(':')[0] && password === process.env.JOBS_CREDS?.split(':')[1]);
+  }
+);
+
+// Bull-board UI for redis jobs
+const bullBoardAdapter = new ExpressAdapter();
+bullBoardAdapter.setBasePath('/jobs');
+createBullBoard({
+  queues: [new BullAdapter(jobQueue)],
+  serverAdapter: bullBoardAdapter,
 });
 
 app.use(limiter);
@@ -60,6 +85,8 @@ const Server = {
       app.use('/api/alerts', alertsRouter);
       app.use('/api/plaid', plaidRouter);
       app.use('/api/subscriptions', subscriptionsRouter);
+      app.use('/jobs', authConnect(basicAuth), bullBoardAdapter.getRouter());
+
       app.use(handleErrors);
 
       server = app.listen(PORT, () => {
