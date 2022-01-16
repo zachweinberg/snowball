@@ -14,11 +14,7 @@ export const produceDailyBalancesJobs = async () => {
   const chunks = _.chunk(portfolioIDs, 5);
 
   for (const chunk of chunks) {
-    await jobQueue.add(
-      JobNames.AddDailyBalances,
-      { portfolioIDs: chunk },
-      { attempts: 2, removeOnComplete: true, removeOnFail: true }
-    );
+    await jobQueue.add(JobNames.AddDailyBalances, { portfolioIDs: chunk }, { attempts: 2 });
   }
 };
 
@@ -46,8 +42,6 @@ export const producePriceAlertJobs = async () => {
       { alerts, type: AssetType.Crypto },
       {
         attempts: 3,
-        removeOnComplete: true,
-        removeOnFail: true,
       }
     );
   }
@@ -72,8 +66,6 @@ export const producePriceAlertJobs = async () => {
         { alerts, type: AssetType.Stock },
         {
           attempts: 3,
-          removeOnComplete: true,
-          removeOnFail: true,
         }
       );
     }
