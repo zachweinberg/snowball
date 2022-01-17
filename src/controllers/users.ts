@@ -8,8 +8,9 @@ import {
   User,
 } from '@zachweinberg/obsidian-schema';
 import { Router } from 'express';
-import { sendContactRequestEmail } from '~/lib/email';
+import { sendContactRequestEmail, sendWelcomeEmail } from '~/lib/email';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
+import { logSentryError } from '~/lib/sentry';
 import { catchErrors, requireSignedIn } from '~/utils/api';
 import { createDocument, fetchDocumentByID, findDocuments, updateDocument } from '~/utils/db';
 import { capitalize } from '~/utils/misc';
@@ -59,8 +60,11 @@ usersRouter.post(
   catchErrors(async (req, res) => {
     const { email, name, password } = req.body as CreateUserRequest;
 
+    const userEmail = email.toLowerCase();
+    const userName = capitalize(name).trim();
+
     const existingUsers = await findDocuments<User>('users', [
-      { property: 'email', condition: '==', value: email.toLowerCase() },
+      { property: 'email', condition: '==', value: userEmail },
     ]);
 
     if (existingUsers.length > 0) {
@@ -71,24 +75,29 @@ usersRouter.post(
     }
 
     try {
-      const newUser = await firebaseAdmin()
-        .auth()
-        .createUser({
-          email: email.toLowerCase(),
-          emailVerified: false,
-          password,
-          displayName: capitalize(name).trim(),
-          disabled: false,
-        });
+      const newUser = await firebaseAdmin().auth().createUser({
+        email: userEmail,
+        emailVerified: false,
+        password,
+        displayName: userName,
+        disabled: false,
+      });
 
       const userDataToSet: User = {
         id: newUser.uid,
-        email: email.toLowerCase(),
-        name: capitalize(name).trim(),
+        email: userEmail,
+        name: userName,
         createdAt: new Date(),
       };
 
       await createDocument<User>('users', userDataToSet, newUser.uid);
+
+      try {
+        await sendWelcomeEmail(email, userName);
+      } catch (err) {
+        console.error(err);
+        logSentryError(err);
+      }
 
       const response: CreateUserResponse = {
         status: 'ok',
@@ -137,13 +146,13 @@ usersRouter.put(
   catchErrors(async (req, res) => {
     const userID = req.authContext!.uid;
 
-    const email = req.body.newEmail;
+    const userEmail = req.body.newEmail.toLowerCase();
 
     await firebaseAdmin().auth().updateUser(userID, {
-      email: email.toLowerCase(),
+      email: userEmail,
     });
 
-    await updateDocument('users', userID, { email: email.toLowerCase() });
+    await updateDocument('users', userID, { email: userEmail });
 
     res.status(200).json({ status: 'ok' });
   })
