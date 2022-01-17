@@ -374,3 +374,11 @@ export interface Address {
 export interface GetGooglePlaceAddressResponse extends BaseResponse {
   address: Address | null;
 }
+
+export interface CheckEmailRequest {
+  email: string;
+}
+
+export interface CheckEmailResponse extends BaseResponse {
+  email: string;
+}
