@@ -11,8 +11,6 @@ export interface User {
     email: string;
     name: string;
     createdAt: Date;
-    verified: boolean;
-    verificationCode?: string;
 }
 export declare enum AssetColor {
     Stocks = "#CEF33C",
@@ -118,13 +116,6 @@ export interface SendContactEmailRequest {
 export interface CreateUserResponse extends BaseResponse {
     user: User;
 }
-export interface CheckVerificationTokenRequest {
-    token: string;
-    userID: string;
-}
-export interface CheckVerificationTokenResponse extends BaseResponse {
-    verified: boolean;
-}
 export interface CreatePortfolioRequest {
     name: string;
     public: boolean;
@@ -143,12 +134,6 @@ export interface GetPortfolioResponse extends BaseResponse {
 }
 export interface MeResponse extends BaseResponse {
     me: User;
-}
-export interface VerifyEmailRequest {
-    email: string;
-}
-export interface VerifyEmailResponse extends BaseResponse {
-    email: string;
 }
 export interface AddStockRequest {
     portfolioID: string;
