@@ -1,11 +1,13 @@
 import { NextPage } from 'next';
-import Script from 'next/script';
+import Head from 'next/head';
 import Layout from '~/components/layout/Layout';
 
 const TermsOfUse: NextPage = () => {
   return (
     <>
-      <Script src="/js/termly.js" />
+      <Head>
+        <script src="/js/termly.js" />
+      </Head>
       <Layout title="Terms of Use | Obsidian Tracker">
         <div
           // @ts-ignore
