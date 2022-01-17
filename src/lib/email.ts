@@ -5,9 +5,9 @@ import { formatMoneyFromNumber } from '~/utils/money';
 const emailClient = new postmark.ServerClient(process.env.POSTMARK_API_KEY!);
 
 const Emails = {
-  welcomeVerify: {
-    templateAlias: 'welcome-verify-email',
-    messageStreamID: 'verify-email',
+  welcome: {
+    templateAlias: 'welcome-email',
+    messageStreamID: 'welcome-email',
   },
   contactRequest: {
     templateAlias: 'contact-request-email',
@@ -23,15 +23,14 @@ const Emails = {
   },
 };
 
-export const sendVerifyEmailEmail = async (toEmail: string, fullName: string, verifyEmailURL: string) => {
+export const sendWelcomeEmail = async (toEmail: string, name) => {
   await emailClient.sendEmailWithTemplate({
-    From: 'support@obsidiantracker.com',
+    From: 'Obsidian Tracker <support@obsidiantracker.com>',
     To: toEmail,
-    MessageStream: Emails.welcomeVerify.messageStreamID,
-    TemplateAlias: Emails.welcomeVerify.templateAlias,
+    MessageStream: Emails.welcome.messageStreamID,
+    TemplateAlias: Emails.welcome.templateAlias,
     TemplateModel: {
-      fullName,
-      verifyEmailURL,
+      name,
     },
   });
 };

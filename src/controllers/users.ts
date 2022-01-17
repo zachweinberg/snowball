@@ -1,18 +1,14 @@
 import {
-  CheckVerificationTokenRequest,
-  CheckVerificationTokenResponse,
+  CheckEmailRequest,
+  CheckEmailResponse,
   CreateUserRequest,
   CreateUserResponse,
   MeResponse,
   SendContactEmailRequest,
   User,
-  VerifyEmailRequest,
-  VerifyEmailResponse,
 } from '@zachweinberg/obsidian-schema';
-import crypto from 'crypto';
 import { Router } from 'express';
-import { firestore } from 'firebase-admin';
-import { sendContactRequestEmail, sendVerifyEmailEmail } from '~/lib/email';
+import { sendContactRequestEmail } from '~/lib/email';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { catchErrors, requireSignedIn } from '~/utils/api';
 import { createDocument, fetchDocumentByID, findDocuments, updateDocument } from '~/utils/db';
@@ -20,26 +16,15 @@ import { capitalize } from '~/utils/misc';
 
 const usersRouter = Router();
 
-const generateVerificationToken = async (): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    crypto.randomBytes(46, (err, buf) => {
-      if (err) {
-        return reject(err);
-      }
-      return resolve(buf.toString('hex'));
-    });
-  });
-};
-
 usersRouter.post(
   '/contact',
   catchErrors(async (req, res) => {
     const { name, email, message } = req.body as SendContactEmailRequest;
 
     const body = `
-      Name: ${name}
-      Return email: ${email ? email : 'None'}
-      Message: ${message}
+      Name: ${name}\n
+      Return email: ${email ? email : 'None'}\n
+      Message: ${message}\n
     `;
 
     await sendContactRequestEmail(body);
@@ -74,7 +59,9 @@ usersRouter.post(
   catchErrors(async (req, res) => {
     const { email, name, password } = req.body as CreateUserRequest;
 
-    const existingUsers = await findDocuments<User>('users', [{ property: 'email', condition: '==', value: email }]);
+    const existingUsers = await findDocuments<User>('users', [
+      { property: 'email', condition: '==', value: email.toLowerCase() },
+    ]);
 
     if (existingUsers.length > 0) {
       return res.status(400).json({
@@ -87,30 +74,21 @@ usersRouter.post(
       const newUser = await firebaseAdmin()
         .auth()
         .createUser({
-          email,
+          email: email.toLowerCase(),
           emailVerified: false,
           password,
           displayName: capitalize(name).trim(),
           disabled: false,
         });
 
-      // const verificationCode = await generateVerificationToken();
-
       const userDataToSet: User = {
         id: newUser.uid,
-        email,
+        email: email.toLowerCase(),
         name: capitalize(name).trim(),
         createdAt: new Date(),
-        verified: false,
       };
 
       await createDocument<User>('users', userDataToSet, newUser.uid);
-
-      // await sendVerifyEmailEmail(
-      //   email,
-      //   name,
-      //   `https://staging.obsidiantracker.com/verify?t=${userDataToSet.verificationCode}&u=${userDataToSet.id}`
-      // );
 
       const response: CreateUserResponse = {
         status: 'ok',
@@ -134,63 +112,20 @@ usersRouter.post(
 usersRouter.post(
   '/check',
   catchErrors(async (req, res) => {
-    const { email } = req.body as VerifyEmailRequest;
+    const { email } = req.body as CheckEmailRequest;
 
-    const existingUsers = await findDocuments<User>('users', [{ property: 'email', condition: '==', value: email }]);
+    const existingUsers = await findDocuments<User>('users', [
+      { property: 'email', condition: '==', value: email.toLowerCase() },
+    ]);
 
     if (existingUsers.length === 0) {
       return res.status(404).json({ status: 'error', error: 'Invalid email or password.' });
     }
 
-    const response: VerifyEmailResponse = {
+    const response: CheckEmailResponse = {
       status: 'ok',
       email,
     };
-
-    res.status(200).json(response);
-  })
-);
-
-usersRouter.post(
-  '/resend-email',
-  requireSignedIn,
-  catchErrors(async (req, res) => {
-    const userID = req.authContext!.uid;
-
-    const verificationCode = await generateVerificationToken();
-
-    const user = await fetchDocumentByID<User>('users', userID);
-
-    await updateDocument('users', userID, { verificationCode });
-
-    await sendVerifyEmailEmail(user.email, verificationCode, userID);
-
-    res.status(200).end();
-  })
-);
-
-usersRouter.post(
-  '/check-verification-token',
-  catchErrors(async (req, res) => {
-    const { token, userID } = req.body as CheckVerificationTokenRequest;
-
-    const user = await fetchDocumentByID<User>('users', userID);
-
-    const response: CheckVerificationTokenResponse = { verified: false, status: 'ok' };
-
-    if (user.verified) {
-      throw new Error('Already verified');
-    }
-
-    if (token === user.verificationCode) {
-      await updateDocument('users', userID, { verified: true, verificationCode: firestore.FieldValue.delete() });
-
-      await firebaseAdmin().auth().updateUser(userID, { emailVerified: true });
-
-      response.verified = true;
-    } else {
-      response.verified = false;
-    }
 
     res.status(200).json(response);
   })
@@ -205,10 +140,10 @@ usersRouter.put(
     const email = req.body.newEmail;
 
     await firebaseAdmin().auth().updateUser(userID, {
-      email,
+      email: email.toLowerCase(),
     });
 
-    await updateDocument('users', userID, { email });
+    await updateDocument('users', userID, { email: email.toLowerCase() });
 
     res.status(200).json({ status: 'ok' });
   })
