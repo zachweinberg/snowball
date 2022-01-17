@@ -32,7 +32,6 @@ const SignUpPage: NextPage = () => {
   const auth = useAuth();
 
   const onSubmit = async (e) => {
-    return;
     e.preventDefault();
 
     trackGoal('CW2O7VSW', 0);
@@ -95,9 +94,7 @@ const SignUpPage: NextPage = () => {
             }
           )}
         >
-          {/* fix margin mb20*/}
-
-          <div className="flex justify-between mb-5">
+          <div className="flex justify-between mb-10">
             <div className="flex items-center font-semibold text-[1rem]">
               <p className="text-darkgray">Already have an account?</p>
               <Link href="/login">
@@ -105,10 +102,6 @@ const SignUpPage: NextPage = () => {
               </Link>
             </div>
           </div>
-
-          <p className="p-4 mb-5 font-medium leading-5 text-left text-white rounded-lg bg-dark">
-            Obsidian is invite-only right now. Please enter your invite code below.
-          </p>
 
           <div className="mb-6">
             <h1 className="text-dark font-bold text-[1.75rem] leading-tight mb-3">
@@ -121,16 +114,6 @@ const SignUpPage: NextPage = () => {
           </div>
 
           <div className="mb-5">
-            <TextInput
-              name="inviteCode"
-              placeholder="Invite code"
-              required
-              type="text"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              className="mb-4"
-            />
-
             <TextInput
               name="name"
               placeholder="Your name"

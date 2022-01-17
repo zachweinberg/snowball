@@ -7,8 +7,8 @@ import {
   AddStockRequest,
   AddWatchListItemRequest,
   AssetType,
-  CheckVerificationTokenRequest,
-  CheckVerificationTokenResponse,
+  CheckEmailRequest,
+  CheckEmailResponse,
   CreatePortfolioRequest,
   CreatePortfolioResponse,
   CreateUserRequest,
@@ -26,8 +26,6 @@ import {
   GetWatchListResponse,
   MeResponse,
   SendContactEmailRequest,
-  VerifyEmailRequest,
-  VerifyEmailResponse,
 } from '@zachweinberg/obsidian-schema';
 import axios from 'axios';
 import firebase from '~/lib/firebase';
@@ -109,19 +107,6 @@ export const API = {
     return request<undefined, MeResponse>(`/api/users/me`, 'get');
   },
 
-  resendVerificationEmail: () => {
-    return request<undefined, undefined>('/api/users/resend-email', 'post');
-  },
-
-  checkVerificationToken: (token: string, userID: string) => {
-    return request<CheckVerificationTokenRequest, CheckVerificationTokenResponse>(
-      '/api/users/check-verification-token',
-      'post',
-      { token, userID },
-      false
-    );
-  },
-
   createUser: (userData: CreateUserRequest) => {
     return request<CreateUserRequest, CreateUserResponse>(
       '/api/users',
@@ -132,7 +117,7 @@ export const API = {
   },
 
   checkEmailExists: (email: string) => {
-    return request<VerifyEmailRequest, VerifyEmailResponse>(
+    return request<CheckEmailRequest, CheckEmailResponse>(
       '/api/users/check',
       'post',
       { email },
