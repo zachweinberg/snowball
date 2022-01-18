@@ -108,8 +108,7 @@ const SignUpPage: NextPage = () => {
               Create an account
             </h1>
             <p className="font-medium text-[1.1rem] text-darkgray leading-snug">
-              Sign up below to start tracking your assets and amplify your financial
-              experience.
+              Sign up below to start tracking your assets and keep a pulse on your net worth.
             </p>
           </div>
 

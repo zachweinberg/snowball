@@ -75,7 +75,7 @@ const LoginPage: NextPage = () => {
             <h1 className="text-dark font-bold text-[1.75rem] leading-tight">
               Check out how your
               <br />
-              Net Worth has changed.
+              net worth has changed.
             </h1>
           </div>
 
