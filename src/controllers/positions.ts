@@ -110,7 +110,7 @@ positionsRouter.post(
 
     await trackPortfolioLogItem(
       portfolioID,
-      `Added ${quantity} shares of ${symbol} @ ${formatMoneyFromNumber(costPerCoin)} each`
+      `Added ${quantity} ${symbol} @ ${formatMoneyFromNumber(costPerCoin)} each`
     );
 
     const response = {
