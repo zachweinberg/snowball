@@ -15,6 +15,10 @@ const loginSchema = yup.object().shape({
   password: yup.string().required(),
 });
 
+export const getServerSideProps = async () => {
+  throw new Error('asdgf');
+};
+
 const LoginPage: NextPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

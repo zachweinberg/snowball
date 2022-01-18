@@ -103,20 +103,7 @@ const SVGChart: React.FunctionComponent<SVGChartProps> = (props: SVGChartProps) 
             hideTooltip();
           }}
         />
-        {/* <Axis
-          scale={dateScale}
-          top={height}
-          orientation="top"
-          stroke={'#ccc'}
-          strokeWidth={0}
-          tickStroke={'#ccc'}
-          tickLabelProps={() => ({
-            fill: 'yellow',
-            textAnchor: 'middle',
-            verticalAnchor: 'middle',
-            fontSize: ' .65rem',
-          })}
-        /> */}
+
         {tooltipData && (
           <g>
             <Line
@@ -155,6 +142,7 @@ const BalanceOverTime: React.FunctionComponent<{
 
   const loadDailyBalanceHistory = async () => {
     setLoading(true);
+
     try {
       const response = await API.getPortfolioDailyBalances(portfolioID, period);
       setData(response.dailyBalances);
@@ -207,7 +195,7 @@ const BalanceOverTime: React.FunctionComponent<{
             <div className="mx-auto">
               <Spinner size={34} color="#CEF33C" />
             </div>
-          ) : (
+          ) : data.length > 0 ? (
             <SVGChart
               onReset={() =>
                 setPoint({
@@ -220,6 +208,8 @@ const BalanceOverTime: React.FunctionComponent<{
               width={parent.width}
               height={parent.height * 0.65}
             />
+          ) : (
+            <p className="text-sm text-center text-gray">No chart data yet. Stay tuned!</p>
           )}
 
           <div style={{ height: parent.height * 0.2 }} className="flex items-center px-3">

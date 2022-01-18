@@ -93,7 +93,7 @@ const PasswordResetPage: NextPage = () => {
           </div>
 
           {success && (
-            <p className="mb-5 font-semibold text-evergreen">
+            <p className="mb-5 font-medium leading-5 text-evergreen">
               We've sent you an email with password reset instructions!
             </p>
           )}
