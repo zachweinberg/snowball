@@ -7,7 +7,6 @@ import CustomAssetIcon from '~/components/icons/CustomAssetIcon';
 import RealEstateIcon from '~/components/icons/RealEstateIcon';
 import StockIcon from '~/components/icons/StockIcon';
 import Container from '~/components/landing/Container';
-import FeatureSection from '~/components/landing/FeatureSection';
 import H2 from '~/components/landing/H2';
 import LandingFooter from '~/components/landing/LandingFooter';
 import LandingHeader from '~/components/landing/LandingHeader';
@@ -61,7 +60,7 @@ const Landing: React.FunctionComponent = () => {
 
         <div className="py-20 text-center border-b border-gray">
           <Container>
-            <H2>Obsidian Tracker tracks everything in one place.</H2>
+            <H2>Obsidian Tracker lets you tracks everything in one place.</H2>
 
             <p className="mt-12 leading-6 text-md md:text-lg">
               Add a variety of asset classes to your portfolios and track them over time.
@@ -94,11 +93,31 @@ const Landing: React.FunctionComponent = () => {
           </Container>
         </div>
 
-        <FeatureSection
-          heading="Set price alerts for stocks and crypto"
-          subtitle="Never miss a trade. Set an alert and we will notify you via email or SMS when an asset hits your target."
-          imgURL="/img/landing/alerts.png"
-        />
+        <div className="py-40 text-center text-white bg-dark">
+          <Container>
+            <div className="flex items-center justify-between w-full text-left mb-44">
+              <div>
+                <H2 dark>Set custom stock and crypto price alerts</H2>
+                <p className="mt-5 leading-6 text-darkgray">
+                  Never miss a trade again. We'll notify you via email or SMS when a price
+                  alert gets triggered.
+                </p>
+              </div>
+              <img src="/img/landing/ui.png" className="w-1/2 ml-12 rounded-lg" />
+            </div>
+
+            <div className="flex items-center justify-between w-full text-left">
+              <div>
+                <H2 dark>Keep a pulse on market news for your positions</H2>
+                <p className="mt-5 leading-6 text-darkgray">
+                  Use our news portal to get a glance at what's happening. Or, filter news by a
+                  stock or crypto.
+                </p>
+              </div>
+              <img src="/img/landing/news2.png" className="w-1/2 ml-12 rounded-lg" />
+            </div>
+          </Container>
+        </div>
 
         <div className="py-20">
           <Container>

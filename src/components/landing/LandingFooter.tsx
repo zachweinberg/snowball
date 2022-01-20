@@ -8,9 +8,14 @@ const LandingFooter: React.FunctionComponent = () => {
       <Container>
         <div className="flex items-center justify-between text-sm">
           <div className="flex items-center">
-            <Logo />
+            <div className="flex flex-col space-y-2">
+              <Logo />
+              <div className="text-darkgray">
+                &copy; {new Date().getFullYear()} Obsidian Tracker
+              </div>
+            </div>
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-5">
             <a href="/terms-of-use" className="hover:text-gray">
               Terms of Use
             </a>
