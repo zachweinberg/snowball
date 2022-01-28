@@ -5,6 +5,8 @@ export enum JobNames {
   AssetAlertsStocks = 'asset-alerts-stocks',
   AssetAlertsCrypto = 'asset-alerts-crypto',
   AddDailyBalances = 'add-daily-balances',
+  SendPortfolioSummaryEmails = 'send-portfolio-summary-emails',
+  SendPortfolioReminderEmails = 'send-portfolio-reminder-emails',
 }
 
 export const jobQueue = new Bull('job-queue', process.env.REDIS_URL!, {

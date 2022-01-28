@@ -18,10 +18,38 @@ export const produceDailyBalancesJobs = async () => {
   }
 };
 
-export const produceEmailReminders = async (period: Period) => {
-  const portfoliosToEmail = await findDocuments<Portfolio>('portfolios', [
+export const producePortfolioEmails = async (period: Period) => {
+  // Reminder emails
+  const reminderEmailPortfolios = await findDocuments<Portfolio>('portfolios', [
     { property: 'settings.reminderEmailPeriod', condition: '==', value: period },
   ]);
+
+  console.log(`> Found ${reminderEmailPortfolios.length} reminder emails to send...`);
+
+  const reminderChunks = _.chunk(reminderEmailPortfolios, 5);
+
+  for (const portfolios of reminderChunks) {
+    await jobQueue.add(JobNames.SendPortfolioReminderEmails, {
+      portfolios,
+      period,
+    });
+  }
+
+  // Summary emails
+  const summaryEmailPortfolios = await findDocuments<Portfolio>('portfolios', [
+    { property: 'settings.summaryEmailPeriod', condition: '==', value: period },
+  ]);
+
+  console.log(`> Found ${summaryEmailPortfolios.length} summary emails to send...`);
+
+  const summaryChunks = _.chunk(summaryEmailPortfolios, 5);
+
+  for (const portfolios of summaryChunks) {
+    await jobQueue.add(JobNames.SendPortfolioSummaryEmails, {
+      portfolios,
+      period,
+    });
+  }
 };
 
 const STOCK_MARKET_OPEN_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];

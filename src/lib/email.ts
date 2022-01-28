@@ -4,6 +4,8 @@ import { formatMoneyFromNumber } from '~/utils/money';
 
 const emailClient = new postmark.ServerClient(process.env.POSTMARK_API_KEY!);
 
+const fromEmail = (user: string) => `Obsidian Tracker <${user}@obsidiantracker.com>`;
+
 const Emails = {
   welcome: {
     templateAlias: 'welcome-email',
@@ -17,15 +19,19 @@ const Emails = {
     templateAlias: 'asset-alert',
     messageStreamID: 'asset-alerts',
   },
+  portfolioSummary: {
+    templateAlias: '',
+    messageStreamID: 'portfolio-summary',
+  },
   portfolioReminder: {
     templateAlias: '',
-    messageStreamID: '',
+    messageStreamID: 'portfolio-reminder',
   },
 };
 
 export const sendWelcomeEmail = async (toEmail: string, name) => {
   await emailClient.sendEmailWithTemplate({
-    From: 'Obsidian Tracker <support@obsidiantracker.com>',
+    From: fromEmail('support'),
     To: toEmail,
     MessageStream: Emails.welcome.messageStreamID,
     TemplateAlias: Emails.welcome.templateAlias,
@@ -37,7 +43,7 @@ export const sendWelcomeEmail = async (toEmail: string, name) => {
 
 export const sendContactRequestEmail = async (body: string) => {
   await emailClient.sendEmailWithTemplate({
-    From: 'Obsidian Tracker <support@obsidiantracker.com>',
+    From: fromEmail('support'),
     To: 'zach@obsidiantracker.com',
     MessageStream: Emails.contactRequest.messageStreamID,
     TemplateAlias: Emails.contactRequest.templateAlias,
@@ -52,31 +58,66 @@ export const sendAssetAlertEmail = async (alert: Alert) => {
     return;
   }
 
-  try {
-    await emailClient.sendEmailWithTemplate({
-      From: 'Obsidian Tracker <alerts@obsidiantracker.com>',
-      To: alert.destinationValue,
-      MessageStream: Emails.assetAlert.messageStreamID,
-      TemplateAlias: Emails.assetAlert.templateAlias,
-      TemplateModel: {
-        symbol: alert.symbol,
-        direction: alert.condition.toLowerCase(),
-        priceStr: formatMoneyFromNumber(alert.price),
-      },
-    });
-  } catch (err) {
-    console.error('Could not send email to', alert.destinationValue, err);
-  }
+  await emailClient.sendEmailWithTemplate({
+    From: fromEmail('alerts'),
+    To: alert.destinationValue,
+    MessageStream: Emails.assetAlert.messageStreamID,
+    TemplateAlias: Emails.assetAlert.templateAlias,
+    TemplateModel: {
+      symbol: alert.symbol,
+      direction: alert.condition.toLowerCase(),
+      priceStr: formatMoneyFromNumber(alert.price),
+    },
+  });
 };
 
-export const sendPortfolioReminderEmail = async (toEmail: string, period: Period, portfolioID: string) => {
+export const sendPortfolioSummaryEmail = async (
+  toEmail: string,
+  period: Period,
+  portfolioName: string,
+  portfolioID: string,
+  stocksValue: number,
+  cryptoValue: number,
+  cashValue: number,
+  realEstateValue: number,
+  customsValue: number,
+  totalValue: number
+) => {
   await emailClient.sendEmailWithTemplate({
-    From: 'Obsidian Tracker <alerts@obsidiantracker.com>',
+    From: fromEmail('alerts'),
+    To: toEmail,
+    MessageStream: Emails.portfolioSummary.messageStreamID,
+    TemplateAlias: Emails.portfolioSummary.templateAlias,
+    TemplateModel: {
+      period,
+      portfolioName,
+      portfolioID,
+      stocksValue,
+      cryptoValue,
+      cashValue,
+      realEstateValue,
+      customsValue,
+      totalValue,
+    },
+  });
+};
+
+export const sendPortfolioReminderEmail = async (
+  toEmail: string,
+  period: Period,
+  portfolioName: string,
+  portfolioID: string,
+  fullName: string
+) => {
+  await emailClient.sendEmailWithTemplate({
+    From: fromEmail('alerts'),
     To: toEmail,
     MessageStream: Emails.portfolioReminder.messageStreamID,
     TemplateAlias: Emails.portfolioReminder.templateAlias,
     TemplateModel: {
-      period,
+      period: period.toLowerCase(),
+      fullName,
+      portfolioName,
       portfolioID,
     },
   });

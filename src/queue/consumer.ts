@@ -1,9 +1,19 @@
-import { Alert, AlertCondition, AlertDestination, AssetType, DailyBalance } from '@zachweinberg/obsidian-schema';
+import {
+  Alert,
+  AlertCondition,
+  AlertDestination,
+  AssetType,
+  DailyBalance,
+  Period,
+  Portfolio,
+  User,
+} from '@zachweinberg/obsidian-schema';
 import Bull from 'bull';
 import { getCryptoPrices } from '~/lib/cmc';
-import { sendAssetAlertEmail } from '~/lib/email';
+import { sendAssetAlertEmail, sendPortfolioReminderEmail, sendPortfolioSummaryEmail } from '~/lib/email';
 import { getStockPrices } from '~/lib/iex';
 import { sendText } from '~/lib/phone';
+import { logSentryError } from '~/lib/sentry';
 import { createDocument, deleteDocument, fetchDocumentByID } from '~/utils/db';
 import { formatMoneyFromNumber } from '~/utils/money';
 import { calculatePortfolioSummary } from '~/utils/positions';
@@ -13,13 +23,13 @@ const startWorker = (): void => {
   jobQueue.process(JobNames.AssetAlertsStocks, processAssetAlerts);
   jobQueue.process(JobNames.AssetAlertsCrypto, processAssetAlerts);
   jobQueue.process(JobNames.AddDailyBalances, addDailyBalances);
+  jobQueue.process(JobNames.SendPortfolioSummaryEmails, sendPortfolioSummaryEmails);
+  jobQueue.process(JobNames.SendPortfolioReminderEmails, sendPortfolioReminderEmails);
   console.log('> [Consumer] Worker online');
 };
 
 const processAssetAlerts = async (job: Bull.Job) => {
-  const data = job.data;
-  const alerts = data.alerts as Alert[];
-  const type = data.type as AssetType;
+  const { alerts, type } = job.data as { alerts: Alert[]; type: AssetType };
 
   console.log(`> [Consumer] Received ${alerts.length} ${type} alerts to process`);
 
@@ -34,14 +44,24 @@ const processAssetAlerts = async (job: Bull.Job) => {
 
   let prices = {};
 
-  if (type === AssetType.Stock) {
-    prices = await getStockPrices(alerts.map((alert) => alert.symbol));
-  } else if (type === AssetType.Crypto) {
-    prices = await getCryptoPrices(alerts.map((alert) => alert.symbol));
-  }
+  try {
+    if (type === AssetType.Stock) {
+      prices = await getStockPrices(alerts.map((alert) => alert.symbol));
+    } else if (type === AssetType.Crypto) {
+      prices = await getCryptoPrices(alerts.map((alert) => alert.symbol));
+    }
 
-  for (const alert of alerts) {
-    await sendAlertIfHit(alert, prices[alert.symbol]?.latestPrice);
+    for (const alert of alerts) {
+      try {
+        await sendAlertIfHit(alert, prices[alert.symbol]?.latestPrice);
+      } catch (err) {
+        console.error(err);
+        logSentryError(err);
+      }
+    }
+  } catch (err) {
+    console.error(err);
+    logSentryError(err);
   }
 };
 
@@ -75,22 +95,69 @@ const sendAlertNotification = async (alert: Alert) => {
 };
 
 const addDailyBalances = async (job: Bull.Job) => {
-  const data = job.data;
-  const portfolioIDs = data.portfolioIDs;
+  const { portfolioIDs } = job.data as { portfolioIDs: string[] };
 
   for (const portfolioID of portfolioIDs) {
-    const { cryptoValue, cashValue, stocksValue, realEstateValue, customsValue, totalValue } =
-      await calculatePortfolioSummary(portfolioID);
+    try {
+      const { cryptoValue, cashValue, stocksValue, realEstateValue, customsValue, totalValue } =
+        await calculatePortfolioSummary(portfolioID);
 
-    await createDocument<DailyBalance>(`portfolios/${portfolioID}/dailyBalances`, {
-      date: new Date(),
-      cashValue,
-      cryptoValue,
-      stocksValue,
-      realEstateValue,
-      customsValue,
-      totalValue,
-    });
+      await createDocument<DailyBalance>(`portfolios/${portfolioID}/dailyBalances`, {
+        date: new Date(),
+        cashValue,
+        cryptoValue,
+        stocksValue,
+        realEstateValue,
+        customsValue,
+        totalValue,
+      });
+    } catch (err) {
+      console.error(err);
+      logSentryError(err);
+    }
+  }
+};
+
+const sendPortfolioSummaryEmails = async (job: Bull.Job) => {
+  const { period, portfolios } = job.data as { period: Period; portfolios: Portfolio[] };
+
+  for (const portfolio of portfolios) {
+    try {
+      const { cryptoValue, cashValue, stocksValue, realEstateValue, customsValue, totalValue } =
+        await calculatePortfolioSummary(portfolio.id);
+
+      const user = await fetchDocumentByID<User>('users', portfolio.userID);
+
+      await sendPortfolioSummaryEmail(
+        user.email,
+        period,
+        portfolio.name,
+        portfolio.id,
+        stocksValue,
+        cryptoValue,
+        cashValue,
+        realEstateValue,
+        customsValue,
+        totalValue
+      );
+    } catch (err) {
+      console.error(err);
+      logSentryError(err);
+    }
+  }
+};
+
+const sendPortfolioReminderEmails = async (job: Bull.Job) => {
+  const { period, portfolios } = job.data as { period: Period; portfolios: Portfolio[] };
+
+  for (const portfolio of portfolios) {
+    try {
+      const user = await fetchDocumentByID<User>('users', portfolio.userID);
+      await sendPortfolioReminderEmail(user.email, period, portfolio.name, portfolio.id, user.name);
+    } catch (err) {
+      console.error(err);
+      logSentryError(err);
+    }
   }
 };
 
