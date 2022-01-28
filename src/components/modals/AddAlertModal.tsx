@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import Modal from '~/components/ui/Modal';
 import Select from '~/components/ui/Select';
 import TextInputWithResults from '~/components/ui/TextInputWithResults';
+import { useAuth } from '~/hooks/useAuth';
 import { API } from '~/lib/api';
 import Button from '../ui/Button';
 import MoneyInput from '../ui/MoneyInput';
@@ -27,6 +28,7 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
   const [symbol, setSymbol] = useState<string>('');
   const [price, setPrice] = useState<number>(0);
   const [assetType, setAssetType] = useState<AssetType | null>(null);
+  const auth = useAuth();
 
   const STEP = !assetType ? 1 : assetType && !symbol ? 2 : assetType && symbol ? 3 : 1;
 
@@ -77,7 +79,11 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
   }, [open]);
 
   useEffect(() => {
-    setDestinationValue('');
+    if (destination === AlertDestination.Email) {
+      setDestinationValue(auth.user?.email ?? '');
+    } else {
+      setDestinationValue('');
+    }
   }, [destination]);
 
   return (
@@ -191,7 +197,7 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
                     <TextInput
                       type="email"
                       name="destinationValue"
-                      value={destinationValue}
+                      value={destinationValue ?? auth.user?.email ?? ''}
                       placeholder="Enter email"
                       onChange={(e) => setDestinationValue(e.target.value)}
                     />

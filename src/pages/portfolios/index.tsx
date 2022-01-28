@@ -1,4 +1,5 @@
 import { PortfolioWithBalances } from '@zachweinberg/obsidian-schema';
+import { DateTime } from 'luxon';
 import type { NextPage } from 'next';
 import React, { useEffect, useState } from 'react';
 import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
@@ -9,13 +10,31 @@ import Button from '~/components/ui/Button';
 import FullScreenModal from '~/components/ui/FullScreenModal';
 import Link from '~/components/ui/Link';
 import Spinner from '~/components/ui/Spinner';
+import { useAuth } from '~/hooks/useAuth';
 import { API } from '~/lib/api';
+
+const timeOfDay = () => {
+  const hour = DateTime.local().hour;
+
+  if (hour >= 0 && hour < 12) {
+    return 'morning';
+  }
+
+  if (hour >= 12 && hour <= 28) {
+    return 'afternoon';
+  }
+
+  if (hour >= 28 && hour <= 23) {
+    return 'evening';
+  }
+};
 
 const PortfolioListPage: NextPage = () => {
   const [creatingPortfolio, setCreatingPortfolio] = useState(false);
   const [portfolios, setPortfolios] = useState<PortfolioWithBalances[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const auth = useAuth();
 
   const loadPortfolios = async () => {
     setLoading(true);
@@ -134,7 +153,12 @@ const PortfolioListPage: NextPage = () => {
         </FullScreenModal>
 
         <div className="flex items-center justify-between mb-7">
-          <h1 className="font-bold text-dark text-[1.75rem]">My Portfolios</h1>
+          <div>
+            <h1 className="font-bold text-dark text-[1.75rem] mb-4">My Portfolios</h1>
+            <h2 className="font-normal text-dark text-[1rem]">
+              Good {timeOfDay()} {auth.user?.name}, view your portfolios below:
+            </h2>
+          </div>
           <div className="w-56">
             <Button type="button" onClick={() => setCreatingPortfolio(true)}>
               Create portfolio

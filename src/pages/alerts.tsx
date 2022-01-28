@@ -42,9 +42,7 @@ const BellIcon = () => (
 
 const WatchListContent: React.FunctionComponent = () => {
   const [loadingAlerts, setLoadingAlerts] = useState(true);
-
   const [addingAlert, setAddingAlert] = useState(false);
-
   const [alerts, setAlerts] = useState<Alert[]>([]);
 
   const loadAlerts = async () => {
