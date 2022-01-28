@@ -20,7 +20,7 @@ const Emails = {
     messageStreamID: 'asset-alerts',
   },
   portfolioSummary: {
-    templateAlias: '',
+    templateAlias: 'asset-alert-2',
     messageStreamID: 'portfolio-summary',
   },
   portfolioReminder: {
@@ -81,7 +81,8 @@ export const sendPortfolioSummaryEmail = async (
   cashValue: number,
   realEstateValue: number,
   customsValue: number,
-  totalValue: number
+  totalValue: number,
+  dateStr: string
 ) => {
   await emailClient.sendEmailWithTemplate({
     From: fromEmail('alerts'),
@@ -89,15 +90,16 @@ export const sendPortfolioSummaryEmail = async (
     MessageStream: Emails.portfolioSummary.messageStreamID,
     TemplateAlias: Emails.portfolioSummary.templateAlias,
     TemplateModel: {
+      dateStr,
       period,
       portfolioName,
       portfolioID,
-      stocksValue,
-      cryptoValue,
-      cashValue,
-      realEstateValue,
-      customsValue,
-      totalValue,
+      stocksValue: formatMoneyFromNumber(stocksValue),
+      cryptoValue: formatMoneyFromNumber(cryptoValue),
+      cashValue: formatMoneyFromNumber(cashValue),
+      realEstateValue: formatMoneyFromNumber(realEstateValue),
+      customsValue: formatMoneyFromNumber(customsValue),
+      totalValue: formatMoneyFromNumber(totalValue),
     },
   });
 };

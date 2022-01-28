@@ -9,6 +9,7 @@ import {
   User,
 } from '@zachweinberg/obsidian-schema';
 import Bull from 'bull';
+import { DateTime } from 'luxon';
 import { getCryptoPrices } from '~/lib/cmc';
 import { sendAssetAlertEmail, sendPortfolioReminderEmail, sendPortfolioSummaryEmail } from '~/lib/email';
 import { getStockPrices } from '~/lib/iex';
@@ -138,7 +139,8 @@ const sendPortfolioSummaryEmails = async (job: Bull.Job) => {
         cashValue,
         realEstateValue,
         customsValue,
-        totalValue
+        totalValue,
+        DateTime.toLocaleString()
       );
     } catch (err) {
       console.error(err);
