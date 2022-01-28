@@ -140,7 +140,7 @@ const sendPortfolioSummaryEmails = async (job: Bull.Job) => {
         realEstateValue,
         customsValue,
         totalValue,
-        DateTime.toLocaleString()
+        DateTime.local().toLocaleString()
       );
     } catch (err) {
       console.error(err);
