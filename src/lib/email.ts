@@ -24,7 +24,7 @@ const Emails = {
     messageStreamID: 'portfolio-summary',
   },
   portfolioReminder: {
-    templateAlias: '',
+    templateAlias: 'asset-alert-1',
     messageStreamID: 'portfolio-reminder',
   },
 };
