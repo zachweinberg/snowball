@@ -2,6 +2,7 @@ import { RealEstatePosition } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
 import Menu from '~/components/ui/Menu';
 import { useAuth } from '~/hooks/useAuth';
+import { formatAddresstoString } from '~/lib/addresses';
 import { formatMoneyFromNumber } from '~/lib/money';
 import { VerticalDots } from '../icons/VerticalDots';
 import Button from '../ui/Button';
@@ -51,7 +52,7 @@ const RealEstateTable: React.FunctionComponent<Props> = ({
       {
         Header: 'Address',
         accessor: 'address',
-        Cell: ({ value }) => (value ? value : '-'),
+        Cell: ({ value }) => (value ? formatAddresstoString(value) : '-'),
       },
       {
         Header: 'Property Value',

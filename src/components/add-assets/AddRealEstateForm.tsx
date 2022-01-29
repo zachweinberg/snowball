@@ -139,7 +139,7 @@ const AddRealEstateForm: React.FunctionComponent<Props> = ({
         className="mb-6"
         onChange={(checked) => setAutomaticValuation(checked)}
         checked={automaticValuation}
-        description="Every two weeks we will update this property value with our own estimate. Uncheck this to enter your own manual property value."
+        description="Every week we will update this property value with our own estimate. Uncheck this to enter your own manual property value."
       />
 
       {!automaticValuation ? (
