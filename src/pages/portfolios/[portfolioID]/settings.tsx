@@ -219,34 +219,6 @@ const PortfolioSettingsPageContent: React.FunctionComponent = () => {
                     </div>
                   </div>
 
-                  <div className="mb-8">
-                    <label className="block text-sm font-medium text-dark">
-                      Reminder Emails
-                    </label>
-                    <p className="mb-1 text-sm font-medium text-darkgray">
-                      How often would you like us to send you an email reminding you to update
-                      portfolio assets?
-                    </p>
-
-                    <div className="w-64">
-                      <Select
-                        selected={settings.reminderEmailPeriod}
-                        onChange={(period) =>
-                          setSettings({
-                            ...settings,
-                            reminderEmailPeriod: period as Period,
-                          })
-                        }
-                        options={[
-                          { label: 'Daily', value: Period.Daily },
-                          { label: 'Weekly', value: Period.Weekly },
-                          { label: 'Monthly', value: Period.Monthly },
-                          { label: 'Never', value: Period.Never },
-                        ]}
-                      />
-                    </div>
-                  </div>
-
                   <div className="mb-10">
                     <label className="block text-sm font-medium text-dark">
                       Summary Emails
