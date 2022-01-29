@@ -333,3 +333,11 @@ export interface CheckEmailRequest {
 export interface CheckEmailResponse extends BaseResponse {
     email: string;
 }
+export interface Property {
+    address: Address;
+    automaticValuation: boolean;
+    googlePlaceID: string;
+    propertyType: RealEstatePropertyType;
+    propertyValue: number;
+    createdAt: Date;
+}
