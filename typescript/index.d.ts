@@ -80,6 +80,7 @@ export interface RealEstatePosition extends Position {
     propertyType: RealEstatePropertyType;
     propertyValue: number;
     createdAt: Date;
+    portfolioID: string;
 }
 export interface CashPosition extends Position {
     amount: number;
