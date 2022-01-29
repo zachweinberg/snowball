@@ -2,6 +2,32 @@ import { Address } from '@zachweinberg/obsidian-schema';
 import axios from 'axios';
 import { getRedisKey, setRedisKey } from './redis';
 
+const getEstatedAddressString = (address: Address): string => {
+  let addressString = `${address.street}, ${address.city} ${address.state}${address.zip ? `, ${address.zip}` : ''}`;
+
+  if (address.apt) {
+    addressString = `${address.street} APT ${address.apt}, ${address.city} ${address.state}${
+      address.zip ? `, ${address.zip}` : ''
+    }`;
+  }
+
+  return addressString;
+};
+
+export const fetchEstimateFromEstated = async (address: Address): Promise<number | null> => {
+  const addressString = getEstatedAddressString(address);
+
+  let estatedURL = `https://apis.estated.com/v4/property?token=${process.env.ESTATED_API_KEY}&combined_address=${addressString}`;
+
+  const estatedResponse = await axios.get(estatedURL);
+
+  if (!estatedResponse.data || !estatedResponse.data.data || !estatedResponse.data.data.valuation) {
+    return null;
+  }
+
+  return estatedResponse.data.data.valuation.value as number;
+};
+
 // Use Google places and Estated to determine property estimate based on google place ID
 // Cache Estated result for 4 days to prevent insane bill
 export const getPropertyValueEstimateByGooglePlaceID = async (
@@ -38,38 +64,25 @@ export const getPropertyValueEstimateByGooglePlaceID = async (
       address.apt = apt;
     }
 
-    let addressString = `${address.street}, ${address.city} ${address.state}${address.zip ? `, ${address.zip}` : ''}`;
-
-    if (address.apt) {
-      addressString = `${address.street} APT ${address.apt}, ${address.city} ${address.state}${
-        address.zip ? `, ${address.zip}` : ''
-      }`;
-    }
-
     const cachedEstimate = await getRedisKey(redisKey);
     const FOUR_DAYS = 345600;
 
     if (cachedEstimate) {
-      console.log(cachedEstimate);
       return {
         address,
         estimate: JSON.parse(cachedEstimate),
       };
     }
 
-    let estatedURL = `https://apis.estated.com/v4/property?token=${process.env.ESTATED_API_KEY}&combined_address=${addressString}`;
+    const estimate = await fetchEstimateFromEstated(address);
 
-    const estatedResponse = await axios.get(estatedURL);
-
-    if (!estatedResponse.data || !estatedResponse.data.data || !estatedResponse.data.data.valuation) {
+    if (!estimate) {
       await setRedisKey(redisKey, null, FOUR_DAYS);
       return {
         address,
         estimate: null,
       };
     }
-
-    const estimate = estatedResponse.data.data.valuation.value as number;
 
     await setRedisKey(redisKey, estimate, FOUR_DAYS);
 

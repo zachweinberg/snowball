@@ -4,7 +4,12 @@ import axios from 'axios';
 import * as csv from 'fast-csv';
 import { getAllActiveCoins } from '~/lib/cmc';
 import { logSentryError } from '~/lib/sentry';
-import { produceDailyBalancesJobs, producePortfolioEmails, producePriceAlertJobs } from './produce';
+import {
+  produceDailyBalancesJobs,
+  producePortfolioEmailJobs,
+  producePriceAlertJobs,
+  produceUpdatePropertyValuesJob,
+} from './produce';
 
 interface CMCCoin {
   id: number;
@@ -152,14 +157,17 @@ const runCron = async () => {
       case 'process-alerts':
         await producePriceAlertJobs();
         break;
+      case 'update-property-values':
+        await produceUpdatePropertyValuesJob();
+        break;
       case 'emails-daily':
-        await producePortfolioEmails(Period.Daily);
+        await producePortfolioEmailJobs(Period.Daily);
         break;
       case 'emails-weekly':
-        await producePortfolioEmails(Period.Weekly);
+        await producePortfolioEmailJobs(Period.Weekly);
         break;
       case 'emails-monthly':
-        await producePortfolioEmails(Period.Monthly);
+        await producePortfolioEmailJobs(Period.Monthly);
         break;
       default:
         console.error('Invalid job. Did you supply the job name as a param?');

@@ -1,10 +1,4 @@
-import {
-  CashPosition,
-  CryptoPosition,
-  CustomPosition,
-  RealEstatePosition,
-  StockPosition,
-} from '@zachweinberg/obsidian-schema';
+import { CashPosition, CryptoPosition, CustomPosition, RealEstatePosition, StockPosition } from '@zachweinberg/obsidian-schema';
 import currency from 'currency.js';
 import { getCryptoPrices } from '~/lib/cmc';
 import { getStockPrices } from '~/lib/iex';
@@ -54,9 +48,9 @@ export const calculateRealEstateValue = (realEstatePositions: RealEstatePosition
 
   let total = currency(0);
 
-  for (const realEstatePosition of realEstatePositions) {
-    if (realEstatePosition.propertyValue) {
-      total = total.add(realEstatePosition.propertyValue);
+  for (const position of realEstatePositions) {
+    if (position.propertyValue) {
+      total = total.add(position.propertyValue);
     }
   }
 

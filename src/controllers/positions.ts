@@ -12,6 +12,7 @@ import {
   StockPosition,
 } from '@zachweinberg/obsidian-schema';
 import { Router } from 'express';
+import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { deleteRedisKey } from '~/lib/redis';
 import { getPropertyValueEstimateByGooglePlaceID } from '~/lib/valuations';
 import { catchErrors, requireSignedIn } from '~/utils/api';
@@ -108,10 +109,7 @@ positionsRouter.post(
     await deleteRedisKey(redisKey);
     await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
 
-    await trackPortfolioLogItem(
-      portfolioID,
-      `Added ${quantity} ${symbol} @ ${formatMoneyFromNumber(costPerCoin)} each`
-    );
+    await trackPortfolioLogItem(portfolioID, `Added ${quantity} ${symbol} @ ${formatMoneyFromNumber(costPerCoin)} each`);
 
     const response = {
       status: 'ok',
@@ -127,8 +125,7 @@ positionsRouter.post(
   catchErrors(async (req, res) => {
     const userID = req.authContext?.uid!;
 
-    const { portfolioID, propertyType, propertyValue, placeID, apt, name, automaticValuation } =
-      req.body as AddRealEstateRequest;
+    const { portfolioID, propertyType, propertyValue, placeID, apt, name, automaticValuation } = req.body as AddRealEstateRequest;
 
     const redisKey = `portfolio-${portfolioID}`;
 
@@ -137,18 +134,20 @@ positionsRouter.post(
     }
 
     let position: Partial<RealEstatePosition> = {
+      portfolioID,
       name,
       assetType: AssetType.RealEstate,
       propertyType,
       createdAt: new Date(),
       automaticValuation: false,
-      googlePlaceID: null,
-      address: null,
     };
 
     if (automaticValuation) {
       if (!placeID) {
-        return res.status(400).end();
+        return res.status(400).json({
+          status: 'error',
+          error: 'Invalid address.',
+        });
       }
 
       const { address, estimate } = await getPropertyValueEstimateByGooglePlaceID(placeID, apt);
@@ -156,8 +155,7 @@ positionsRouter.post(
       if (!estimate || !address) {
         return res.status(404).json({
           status: 'error',
-          error:
-            "It looks like we don't have any estimates for that property. Please uncheck the automatic valuation box.",
+          error: "It looks like we don't have any estimates for that property. Please uncheck the automatic valuation box.",
         });
       }
 
@@ -169,7 +167,7 @@ positionsRouter.post(
       position.propertyValue = propertyValue as number;
     }
 
-    await createDocument<RealEstatePosition>(`portfolios/${portfolioID}/positions`, position);
+    await createDocument<RealEstatePosition>(`real-estate-positions`, position);
     await deleteRedisKey(redisKey);
     await deleteRedisKey(`portfoliolist-${userID}`);
 
@@ -240,10 +238,7 @@ positionsRouter.post(
     await deleteRedisKey(redisKey);
     await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
 
-    await trackPortfolioLogItem(
-      portfolioID,
-      `Added ${assetName ?? 'a custom asset'} worth ${formatMoneyFromNumber(value)}`
-    );
+    await trackPortfolioLogItem(portfolioID, `Added ${assetName ?? 'a custom asset'} worth ${formatMoneyFromNumber(value)}`);
 
     const response = {
       status: 'ok',
@@ -270,7 +265,7 @@ positionsRouter.put(
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
     }
 
-    await updateDocument(`portfolios/${portfolioID}/positions`, positionID, {
+    await updateDocument(`real-estate-positions`, positionID, {
       propertyType,
       propertyValue,
       automaticValuation,
@@ -311,10 +306,7 @@ positionsRouter.put(
     await deleteRedisKey(redisKey);
     await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
 
-    await trackPortfolioLogItem(
-      portfolioID,
-      `Updated ${accountName ?? 'cash'} to new value ${formatMoneyFromNumber(amount)}`
-    );
+    await trackPortfolioLogItem(portfolioID, `Updated ${accountName ?? 'cash'} to new value ${formatMoneyFromNumber(amount)}`);
 
     const response = {
       status: 'ok',
@@ -378,12 +370,19 @@ positionsRouter.delete(
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
     }
 
-    await deleteDocument(`portfolios/${portfolioID}/positions/${positionID}`);
+    const position = await firebaseAdmin().firestore().collection(`portfolios/${portfolioID}/positions`).doc(positionID).get();
+
+    // Could be real estate
+    if (position.exists) {
+      await deleteDocument(`portfolios/${portfolioID}/positions/${positionID}`);
+    } else {
+      await deleteDocument(`real-estate-positions/${positionID}`);
+    }
 
     await deleteRedisKey(redisKey);
     await deleteRedisKey(`portfoliolist-${userID}`);
 
-    await trackPortfolioLogItem(portfolioID, `Deleted an assset`);
+    await trackPortfolioLogItem(portfolioID, `Removed an asset`);
 
     res.status(200).end();
   })

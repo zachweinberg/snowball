@@ -6,6 +6,7 @@ import {
   DailyBalance,
   Period,
   Portfolio,
+  RealEstatePosition,
   User,
 } from '@zachweinberg/obsidian-schema';
 import Bull from 'bull';
@@ -15,7 +16,8 @@ import { sendAssetAlertEmail, sendPortfolioReminderEmail, sendPortfolioSummaryEm
 import { getStockPrices } from '~/lib/iex';
 import { sendText } from '~/lib/phone';
 import { logSentryError } from '~/lib/sentry';
-import { createDocument, deleteDocument, fetchDocumentByID } from '~/utils/db';
+import { fetchEstimateFromEstated } from '~/lib/valuations';
+import { createDocument, deleteDocument, fetchDocumentByID, updateDocument } from '~/utils/db';
 import { formatMoneyFromNumber } from '~/utils/money';
 import { calculatePortfolioSummary } from '~/utils/positions';
 import { JobNames, jobQueue } from '.';
@@ -26,6 +28,7 @@ const startWorker = (): void => {
   jobQueue.process(JobNames.AddDailyBalances, addDailyBalances);
   jobQueue.process(JobNames.SendPortfolioSummaryEmails, sendPortfolioSummaryEmails);
   jobQueue.process(JobNames.SendPortfolioReminderEmails, sendPortfolioReminderEmails);
+  jobQueue.process(JobNames.UpdatePropertyValue, updatePropertyValue);
   console.log('> [Consumer] Worker online');
 };
 
@@ -61,6 +64,7 @@ const processAssetAlerts = async (job: Bull.Job) => {
       }
     }
   } catch (err) {
+    console.error(`JOB ID: ${job.id}`);
     console.error(err);
     logSentryError(err);
   }
@@ -100,8 +104,9 @@ const addDailyBalances = async (job: Bull.Job) => {
 
   for (const portfolioID of portfolioIDs) {
     try {
-      const { cryptoValue, cashValue, stocksValue, realEstateValue, customsValue, totalValue } =
-        await calculatePortfolioSummary(portfolioID);
+      const { cryptoValue, cashValue, stocksValue, realEstateValue, customsValue, totalValue } = await calculatePortfolioSummary(
+        portfolioID
+      );
 
       await createDocument<DailyBalance>(`portfolios/${portfolioID}/dailyBalances`, {
         date: new Date(),
@@ -113,6 +118,7 @@ const addDailyBalances = async (job: Bull.Job) => {
         totalValue,
       });
     } catch (err) {
+      console.error(`JOB ID: ${job.id}`);
       console.error(err);
       logSentryError(err);
     }
@@ -124,8 +130,9 @@ const sendPortfolioSummaryEmails = async (job: Bull.Job) => {
 
   for (const portfolio of portfolios) {
     try {
-      const { cryptoValue, cashValue, stocksValue, realEstateValue, customsValue, totalValue } =
-        await calculatePortfolioSummary(portfolio.id);
+      const { cryptoValue, cashValue, stocksValue, realEstateValue, customsValue, totalValue } = await calculatePortfolioSummary(
+        portfolio.id
+      );
 
       const user = await fetchDocumentByID<User>('users', portfolio.userID);
 
@@ -143,6 +150,7 @@ const sendPortfolioSummaryEmails = async (job: Bull.Job) => {
         DateTime.local().toLocaleString()
       );
     } catch (err) {
+      console.error(`JOB ID: ${job.id}`);
       console.error(err);
       logSentryError(err);
     }
@@ -157,9 +165,24 @@ const sendPortfolioReminderEmails = async (job: Bull.Job) => {
       const user = await fetchDocumentByID<User>('users', portfolio.userID);
       await sendPortfolioReminderEmail(user.email, period, portfolio.name, portfolio.id, user.name);
     } catch (err) {
+      console.error(`JOB ID: ${job.id}`);
       console.error(err);
       logSentryError(err);
     }
+  }
+};
+
+const updatePropertyValue = async (job: Bull.Job) => {
+  const { realEstatePosition } = job.data as { realEstatePosition: RealEstatePosition };
+
+  if (realEstatePosition.automaticValuation) {
+    const estimate = await fetchEstimateFromEstated(realEstatePosition.address);
+
+    if (!estimate) {
+      return;
+    }
+
+    await updateDocument(`real-estate-positions`, realEstatePosition.id, { propertyValue: estimate });
   }
 };
 

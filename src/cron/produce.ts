@@ -1,4 +1,4 @@
-import { Alert, AssetType, Period, Portfolio } from '@zachweinberg/obsidian-schema';
+import { Alert, AssetType, Period, Portfolio, RealEstatePosition } from '@zachweinberg/obsidian-schema';
 import _ from 'lodash';
 import { DateTime } from 'luxon';
 import { JobNames, jobQueue } from '~/queue';
@@ -18,7 +18,7 @@ export const produceDailyBalancesJobs = async () => {
   }
 };
 
-export const producePortfolioEmails = async (period: Period) => {
+export const producePortfolioEmailJobs = async (period: Period) => {
   // Reminder emails
   const reminderEmailPortfolios = await findDocuments<Portfolio>('portfolios', [
     { property: 'settings.reminderEmailPeriod', condition: '==', value: period },
@@ -97,5 +97,15 @@ export const producePriceAlertJobs = async () => {
         }
       );
     }
+  }
+};
+
+export const produceUpdatePropertyValuesJob = async () => {
+  const realEstatePositionsToUpdate = await findDocuments<RealEstatePosition>('real-estate-positions', [
+    { property: 'automaticValuation', condition: '==', value: true },
+  ]);
+
+  for (const realEstatePosition of realEstatePositionsToUpdate) {
+    await jobQueue.add(JobNames.UpdatePropertyValue, { realEstatePosition }, { attempts: 2 });
   }
 };

@@ -35,17 +35,22 @@ interface PortfolioValues {
 
 export const calculatePortfolioSummary = async (portfolioID: string): Promise<PortfolioValues> => {
   const assets = await findDocuments<Position>(`/portfolios/${portfolioID}/positions`);
+  const realEstatePositions = await findDocuments<RealEstatePosition>(`/real-estate-positions`, [
+    { property: 'portfolioID', condition: '==', value: portfolioID },
+  ]);
 
-  const stocks = assets.filter((asset) => asset.assetType === AssetType.Stock) as StockPosition[];
-  const crypto = assets.filter((asset) => asset.assetType === AssetType.Crypto) as CryptoPosition[];
-  const realEstate = assets.filter((asset) => asset.assetType === AssetType.RealEstate) as RealEstatePosition[];
-  const cash = assets.filter((asset) => asset.assetType === AssetType.Cash) as CashPosition[];
-  const customs = assets.filter((asset) => asset.assetType === AssetType.Custom) as CustomPosition[];
+  const stockPositions = assets.filter((asset) => asset.assetType === AssetType.Stock) as StockPosition[];
+  const cryptoPositions = assets.filter((asset) => asset.assetType === AssetType.Crypto) as CryptoPosition[];
+  const cashPositions = assets.filter((asset) => asset.assetType === AssetType.Cash) as CashPosition[];
+  const customPositions = assets.filter((asset) => asset.assetType === AssetType.Custom) as CustomPosition[];
 
-  const [stocksValue, cryptoValue] = await Promise.all([calculateStocksTotal(stocks), calculateCryptoTotal(crypto)]);
-  const realEstateValue = await calculateRealEstateValue(realEstate);
-  const cashValue = await calculateCashValue(cash);
-  const customsValue = await calculateCustomsValue(customs);
+  const [stocksValue, cryptoValue] = await Promise.all([
+    calculateStocksTotal(stockPositions),
+    calculateCryptoTotal(cryptoPositions),
+  ]);
+  const realEstateValue = await calculateRealEstateValue(realEstatePositions);
+  const cashValue = await calculateCashValue(cashPositions);
+  const customsValue = await calculateCustomsValue(customPositions);
 
   const totalValue = currency(stocksValue).add(cryptoValue).add(realEstateValue).add(cashValue).add(customsValue).value;
 
@@ -94,10 +99,12 @@ export const calculatePortfolioQuotes = async (
   customsTotal: number;
 }> => {
   const positions = await findDocuments<Position>(`portfolios/${portfolioID}/positions`);
+  const realEstatePositions = await findDocuments<RealEstatePosition>(`/real-estate-positions`, [
+    { property: 'portfolioID', condition: '==', value: portfolioID },
+  ]);
 
   const stockPositions = positions.filter((p) => p.assetType === AssetType.Stock) as StockPosition[];
   const cryptoPositions = positions.filter((p) => p.assetType === AssetType.Crypto) as CryptoPosition[];
-  const realEstatePositions = positions.filter((p) => p.assetType === AssetType.RealEstate) as RealEstatePosition[];
   const cashPositions = positions.filter((p) => p.assetType === AssetType.Cash) as CashPosition[];
   const customsPositions = positions.filter((p) => p.assetType === AssetType.Custom) as CustomPosition[];
 
@@ -110,8 +117,7 @@ export const calculatePortfolioQuotes = async (
 
   for (const stock of stockPositions) {
     if (stockPriceMap[stock.symbol]) {
-      const gainLoss =
-        (stockPriceMap[stock.symbol]?.latestPrice ?? 0) * stock.quantity - stock.costPerShare * stock.quantity;
+      const gainLoss = (stockPriceMap[stock.symbol]?.latestPrice ?? 0) * stock.quantity - stock.costPerShare * stock.quantity;
 
       stockPositionsWithQuotes.push({
         ...stock,
@@ -131,8 +137,7 @@ export const calculatePortfolioQuotes = async (
     if (cryptoPriceMap[coin.symbol]) {
       const dayChange = (cryptoPriceMap[coin.symbol]?.changePercent ?? 0) * (coin.costPerCoin * coin.quantity);
 
-      const gainLoss =
-        (cryptoPriceMap[coin.symbol]?.latestPrice ?? 0) * coin.quantity - coin.costPerCoin * coin.quantity;
+      const gainLoss = (cryptoPriceMap[coin.symbol]?.latestPrice ?? 0) * coin.quantity - coin.costPerCoin * coin.quantity;
 
       cryptoPositionsWithQuotes.push({
         ...coin,
