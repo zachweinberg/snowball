@@ -56,7 +56,7 @@ portfoliosRouter.put(
   requireSignedIn,
   catchErrors(async (req, res) => {
     const { name, settings } = req.body as EditPortfolioSettingsRequest;
-    const { private: _private, defaultAssetType, reminderEmailPeriod, summaryEmailPeriod } = settings;
+    const { private: _private, defaultAssetType, summaryEmailPeriod } = settings;
     const redisKey = `portfolio-${req.params.portfolioID}`;
 
     let userOwnsPortfolio = false;
@@ -79,7 +79,7 @@ portfoliosRouter.put(
       settings: {
         private: _private,
         defaultAssetType,
-        reminderEmailPeriod,
+
         summaryEmailPeriod,
       },
     };
@@ -110,9 +110,7 @@ portfoliosRouter.get(
       return res.status(200).json(JSON.parse(cachedResponse));
     }
 
-    const portfolios = await findDocuments<Portfolio>('portfolios', [
-      { property: 'userID', condition: '==', value: userID },
-    ]);
+    const portfolios = await findDocuments<Portfolio>('portfolios', [{ property: 'userID', condition: '==', value: userID }]);
 
     if (portfolios.length === 0) {
       return res.status(200).json({ status: 'ok', portfolios: [] });
@@ -176,7 +174,6 @@ portfoliosRouter.post(
       settings: {
         defaultAssetType: AssetType.Stock,
         private: isPublic ? false : true,
-        reminderEmailPeriod: Period.Weekly,
         summaryEmailPeriod: Period.Weekly,
       },
     };

@@ -226,8 +226,6 @@ paths:
                   properties:
                     private:
                       type: boolean
-                    reminderEmailPeriod:
-                      type: string
                     summaryEmailPeriod:
                       type: string
                     defaultAssetType:

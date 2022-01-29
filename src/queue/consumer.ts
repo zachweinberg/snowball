@@ -147,7 +147,8 @@ const sendPortfolioSummaryEmails = async (job: Bull.Job) => {
         realEstateValue,
         customsValue,
         totalValue,
-        DateTime.local().toLocaleString()
+        DateTime.local().toLocaleString(),
+        user.name
       );
     } catch (err) {
       console.error(`JOB ID: ${job.id}`);

@@ -82,7 +82,8 @@ export const sendPortfolioSummaryEmail = async (
   realEstateValue: number,
   customsValue: number,
   totalValue: number,
-  dateStr: string
+  dateStr: string,
+  fullName
 ) => {
   await emailClient.sendEmailWithTemplate({
     From: fromEmail('alerts'),
@@ -92,6 +93,7 @@ export const sendPortfolioSummaryEmail = async (
     TemplateModel: {
       dateStr,
       period,
+      fullName,
       portfolioName,
       portfolioID,
       stocksValue: formatMoneyFromNumber(stocksValue),

@@ -19,23 +19,6 @@ export const produceDailyBalancesJobs = async () => {
 };
 
 export const producePortfolioEmailJobs = async (period: Period) => {
-  // Reminder emails
-  const reminderEmailPortfolios = await findDocuments<Portfolio>('portfolios', [
-    { property: 'settings.reminderEmailPeriod', condition: '==', value: period },
-  ]);
-
-  console.log(`> Found ${reminderEmailPortfolios.length} reminder emails to send...`);
-
-  const reminderChunks = _.chunk(reminderEmailPortfolios, 5);
-
-  for (const portfolios of reminderChunks) {
-    await jobQueue.add(JobNames.SendPortfolioReminderEmails, {
-      portfolios,
-      period,
-    });
-  }
-
-  // Summary emails
   const summaryEmailPortfolios = await findDocuments<Portfolio>('portfolios', [
     { property: 'settings.summaryEmailPeriod', condition: '==', value: period },
   ]);
