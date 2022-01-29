@@ -73,11 +73,7 @@ export declare enum RealEstatePropertyType {
 }
 export interface RealEstatePosition extends Position {
     name: string;
-    address: Address | null;
-    propertyValue: number;
-    propertyType: RealEstatePropertyType;
-    automaticValuation: boolean;
-    googlePlaceID: string | null;
+    propertyID: string;
 }
 export interface CashPosition extends Position {
     amount: number;
@@ -334,6 +330,7 @@ export interface CheckEmailResponse extends BaseResponse {
     email: string;
 }
 export interface Property {
+    id: string;
     address: Address;
     automaticValuation: boolean;
     googlePlaceID: string;
