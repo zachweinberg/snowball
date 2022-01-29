@@ -306,7 +306,6 @@ export declare enum Period {
 export interface PortfolioSettings {
     private: boolean;
     defaultAssetType: AssetType;
-    reminderEmailPeriod: Period;
     summaryEmailPeriod: Period;
 }
 export interface PlaidItem {
