@@ -329,6 +329,34 @@ paths:
             application/json:
               schema:
                 type: object
+    put:
+      summary: Edit a stock in a portfolio
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              required:
+                - portfolioID
+                - positionID
+                - quantity
+                - costPerShare
+              properties:
+                portfolioID:
+                  type: string
+                positionID:
+                  type: string
+                quantity:
+                  type: number
+                costPerShare:
+                  type: number
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
   /positions/crypto:
     post:
       summary: Add crypto to a portfolio
@@ -356,6 +384,34 @@ paths:
                   type: number
                 logoURL:
                   type: string
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      summary: Edit crypto in a portfolio
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              required:
+                - portfolioID
+                - positionID
+                - quantity
+                - costPerCoin
+              properties:
+                portfolioID:
+                  type: string
+                positionID:
+                  type: string
+                quantity:
+                  type: number
+                costPerCoin:
+                  type: number
       responses:
         '200':
           description: Valid request

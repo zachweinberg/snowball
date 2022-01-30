@@ -47,10 +47,7 @@ const snapshotToType = <T extends object>(snapshot: FirebaseFirestore.DocumentSn
   };
 };
 
-export const fetchDocumentByID = async <T extends object>(
-  collection: string,
-  documentID: string
-): Promise<WithID<T>> => {
+export const fetchDocumentByID = async <T extends object>(collection: string, documentID: string): Promise<WithID<T>> => {
   const doc = await fetchDocumentSnapshot(collection, documentID);
   return snapshotToType<T>(doc);
 };
@@ -99,6 +96,10 @@ export const createDocument = async <T>(collection: string, data: Partial<T>, do
 };
 
 export const updateDocument = async (collection: string, documentID: string, data: FirebaseFirestore.DocumentData) => {
+  const doc = await firebaseAdmin().firestore().collection(collection).doc(documentID).get();
+  if (!doc.exists) {
+    throw new Error('Unknown entity');
+  }
   return firebaseAdmin().firestore().collection(collection).doc(documentID).set(data, { merge: true });
 };
 
