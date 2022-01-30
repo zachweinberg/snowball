@@ -249,7 +249,7 @@ positionsRouter.post(
 );
 
 positionsRouter.put(
-  '/stocks',
+  '/stock',
   requireSignedIn,
   catchErrors(async (req, res) => {
     const userID = req.authContext!.uid;
