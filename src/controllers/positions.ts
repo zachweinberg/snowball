@@ -248,6 +248,68 @@ positionsRouter.post(
   })
 );
 
+positionsRouter.put(
+  '/stocks',
+  requireSignedIn,
+  catchErrors(async (req, res) => {
+    const userID = req.authContext!.uid;
+    const { portfolioID, positionID, quantity, costPerShare } = req.body;
+
+    const redisKey = `portfolio-${portfolioID}`;
+
+    if (!(await userOwnsPortfolio(req, res, portfolioID))) {
+      return res.status(401).json({ status: 'error', error: 'Invalid.' });
+    }
+
+    await updateDocument(`portfolios/${portfolioID}/positions`, positionID, {
+      quantity,
+      costPerShare,
+    });
+
+    await deleteRedisKey(redisKey);
+    await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
+
+    await trackPortfolioLogItem(portfolioID, `Edited a stock`);
+
+    const response = {
+      status: 'ok',
+    };
+
+    res.status(200).json(response);
+  })
+);
+
+positionsRouter.put(
+  '/crypto',
+  requireSignedIn,
+  catchErrors(async (req, res) => {
+    const userID = req.authContext!.uid;
+    const { portfolioID, positionID, quantity, costPerCoin } = req.body;
+
+    const redisKey = `portfolio-${portfolioID}`;
+
+    if (!(await userOwnsPortfolio(req, res, portfolioID))) {
+      return res.status(401).json({ status: 'error', error: 'Invalid.' });
+    }
+
+    await updateDocument(`portfolios/${portfolioID}/positions`, positionID, {
+      quantity,
+      costPerCoin,
+    });
+
+    await deleteRedisKey(redisKey);
+    await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
+
+    await trackPortfolioLogItem(portfolioID, `Edited a cryptocurrency`);
+
+    const response = {
+      status: 'ok',
+    };
+
+    res.status(200).json(response);
+  })
+);
+
 // UPDATE
 positionsRouter.put(
   '/real-estate',
