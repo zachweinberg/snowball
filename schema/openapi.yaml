@@ -582,15 +582,15 @@ paths:
               additionalProperties: false
               required:
                 - portfolioID
-                - accountName
-                - amount
+                - assetName
+                - value
                 - positionID
               properties:
                 portfolioID:
                   type: string
-                accountName:
+                assetName:
                   type: string
-                amount:
+                value:
                   type: number
                 positionID:
                   type: string

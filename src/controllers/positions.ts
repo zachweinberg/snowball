@@ -248,6 +248,8 @@ positionsRouter.post(
   })
 );
 
+// UPDATE
+
 positionsRouter.put(
   '/stock',
   requireSignedIn,
@@ -310,7 +312,6 @@ positionsRouter.put(
   })
 );
 
-// UPDATE
 positionsRouter.put(
   '/real-estate',
   requireSignedIn,
@@ -347,7 +348,6 @@ positionsRouter.put(
   })
 );
 
-// UPDATE
 positionsRouter.put(
   '/cash',
   requireSignedIn,
@@ -378,7 +378,6 @@ positionsRouter.put(
   })
 );
 
-// UPDATE
 positionsRouter.put(
   '/custom',
   requireSignedIn,
