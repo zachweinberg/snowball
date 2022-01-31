@@ -18,7 +18,11 @@ import AddAssetForm from '~/components/add-assets/AddAssetForm';
 import BalanceOverTime from '~/components/charts/BalanceOverTime';
 import Layout from '~/components/layout/Layout';
 import { DeletePositionModal } from '~/components/modals/DeletePositionModal';
-import { EditPositionModal } from '~/components/modals/EditPositionModal';
+import EditCashModal from '~/components/modals/EditCashModal';
+import EditCryptoModal from '~/components/modals/EditCryptoModal';
+import EditCustomModal from '~/components/modals/EditCustomModal';
+import EditRealEstateModal from '~/components/modals/EditRealEstateModal';
+import EditStockModal from '~/components/modals/EditStockModal';
 import AssetPercentCard from '~/components/portfolio-view/AssetPercentCard';
 import CashTable from '~/components/tables/CashTable';
 import CryptoTable from '~/components/tables/CryptoTable';
@@ -32,6 +36,13 @@ import Select from '~/components/ui/Select';
 import Spinner from '~/components/ui/Spinner';
 import { useAuth } from '~/hooks/useAuth';
 import { API } from '~/lib/api';
+
+type PositionType =
+  | StockPosition
+  | CryptoPosition
+  | RealEstatePosition
+  | CashPosition
+  | CustomPosition;
 
 const PortfolioView: NextPage = () => {
   const auth = useAuth();
@@ -49,9 +60,7 @@ const PortfolioView: NextPage = () => {
     name: string;
   } | null>(null);
 
-  const [editPosition, setEditPosition] = useState<
-    StockPosition | CryptoPosition | RealEstatePosition | CashPosition | CustomPosition | null
-  >(null);
+  const [editPosition, setEditPosition] = useState<PositionType | null>(null);
 
   const portfolioTotal = useMemo(
     () =>
@@ -63,7 +72,7 @@ const PortfolioView: NextPage = () => {
     [portfolio]
   );
 
-  const loadPortfolioData = async () => {
+  const loadPortfolioData = async (firstMount?: boolean) => {
     setLoading(true);
 
     try {
@@ -71,7 +80,7 @@ const PortfolioView: NextPage = () => {
 
       setPortfolio(portfolioData.portfolio);
 
-      if (portfolioData.portfolio.settings.defaultAssetType) {
+      if (firstMount && portfolioData.portfolio.settings.defaultAssetType) {
         setActiveTab(portfolioData.portfolio.settings.defaultAssetType);
       }
     } catch (err) {
@@ -88,7 +97,7 @@ const PortfolioView: NextPage = () => {
   };
 
   useEffect(() => {
-    loadPortfolioData();
+    loadPortfolioData(true);
   }, []);
 
   const renderTable = useMemo(() => {
@@ -156,6 +165,7 @@ const PortfolioView: NextPage = () => {
           return (
             <CustomAssetsTable
               belongsTo={portfolio.userID}
+              onEdit={(position) => setEditPosition(position)}
               customs={portfolio.customs}
               onAddAsset={() => setAddingAsset(true)}
               onDelete={(customID) => {
@@ -174,6 +184,73 @@ const PortfolioView: NextPage = () => {
       return null;
     }
   }, [portfolio, activeTab, unit]);
+
+  const renderEditModal = useMemo(() => {
+    if (!editPosition || !portfolio) {
+      return null;
+    }
+    const onClose = (reload: boolean) => {
+      setEditPosition(null);
+      if (reload) {
+        loadPortfolioData();
+      }
+    };
+
+    if (editPosition.assetType === AssetType.Stock) {
+      return (
+        <EditStockModal
+          open={editPosition !== null}
+          position={editPosition as StockPosition}
+          portfolioID={portfolio.id}
+          onClose={onClose}
+        />
+      );
+    }
+
+    if (editPosition.assetType === AssetType.Crypto) {
+      return (
+        <EditCryptoModal
+          open={editPosition !== null}
+          position={editPosition as CryptoPosition}
+          portfolioID={portfolio.id}
+          onClose={onClose}
+        />
+      );
+    }
+
+    if (editPosition.assetType === AssetType.RealEstate) {
+      return (
+        <EditRealEstateModal
+          open={editPosition !== null}
+          position={editPosition as RealEstatePosition}
+          portfolioID={portfolio.id}
+          onClose={onClose}
+        />
+      );
+    }
+
+    if (editPosition.assetType === AssetType.Cash) {
+      return (
+        <EditCashModal
+          open={editPosition !== null}
+          position={editPosition as CashPosition}
+          portfolioID={portfolio.id}
+          onClose={onClose}
+        />
+      );
+    }
+
+    if (editPosition.assetType === AssetType.Custom) {
+      return (
+        <EditCustomModal
+          open={editPosition !== null}
+          position={editPosition as CustomPosition}
+          portfolioID={portfolio.id}
+          onClose={onClose}
+        />
+      );
+    }
+  }, [editPosition, portfolio]);
 
   const onDeleteAsset = async () => {
     if (deleteAsset && portfolio) {
@@ -219,12 +296,7 @@ const PortfolioView: NextPage = () => {
             assetName={deleteAsset?.name ?? ''}
           />
 
-          <EditPositionModal
-            open={editPosition !== null}
-            onEdit={() => null}
-            position={editPosition}
-            onClose={() => setEditPosition(null)}
-          />
+          {renderEditModal}
 
           <div>
             <div className="flex items-center justify-between mb-7">
@@ -318,11 +390,13 @@ const PortfolioView: NextPage = () => {
               </div>
             </div>
 
-            <Link href={`/portfolios/${router.query.portfolioID}/history`}>
-              <p className="mb-2 text-sm font-medium text-right text-evergreen hover:opacity-75">
-                View History
-              </p>
-            </Link>
+            <div className="flex justify-end mb-2">
+              <Link href={`/portfolios/${router.query.portfolioID}/history`}>
+                <a className="inline-block text-sm font-medium text-evergreen hover:opacity-75">
+                  View History
+                </a>
+              </Link>
+            </div>
 
             <div className="px-5 py-4 mb-32 bg-white border rounded-3xl border-bordergray">
               <div className="flex mb-7">

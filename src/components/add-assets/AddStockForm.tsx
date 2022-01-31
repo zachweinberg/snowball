@@ -115,44 +115,54 @@ const AddStockForm: React.FunctionComponent<Props> = ({
         Add a specific equity to your portfolio.
       </p>
 
-      <TextInputWithResults
-        placeholder="Add stock"
-        backgroundColor="#F9FAFF"
-        type={AssetType.Stock}
-        autofocus
-        floatingResults
-        onError={(e) => setError(e)}
-        onResult={(symbol, fullName) => {
-          API.getQuote(symbol, AssetType.Stock).then((quoteData) => {
-            if (quoteData.status === 'ok') {
-              setCostPerShare(quoteData.latestPrice);
-            }
-          });
+      <div>
+        <div className="mb-1 text-sm text-darkgray">Symbol</div>
 
-          setSymbol(symbol.toUpperCase());
-          setCompanyName(fullName);
-        }}
-      />
-
-      <div className="grid grid-cols-2 gap-6 mb-4">
-        <QuantityInput
-          placeholder="Quantity"
-          required
-          value={quantity}
+        <TextInputWithResults
+          placeholder="Add stock"
           backgroundColor="#F9FAFF"
-          name="quantity"
-          onChange={(val) => setQuantity(Number(val))}
-        />
-        <MoneyInput
-          placeholder="Cost Per Share"
-          required
-          value={costPerShare}
-          name="costPerShare"
-          onChange={(val) => setCostPerShare(val)}
+          type={AssetType.Stock}
+          autofocus
+          floatingResults
+          onError={(e) => setError(e)}
+          onResult={(symbol, fullName) => {
+            API.getQuote(symbol, AssetType.Stock).then((quoteData) => {
+              if (quoteData.status === 'ok') {
+                setCostPerShare(quoteData.latestPrice);
+              }
+            });
+
+            setSymbol(symbol.toUpperCase());
+            setCompanyName(fullName);
+          }}
         />
       </div>
 
-      {error && <p className="mb-6 font-semibold text-center text-red">{error}</p>}
+      <div className="grid grid-cols-2 gap-6 mb-4">
+        <div>
+          <div className="mb-1 text-sm text-darkgray">Quantity</div>
+          <QuantityInput
+            placeholder="Quantity"
+            required
+            value={quantity}
+            backgroundColor="#F9FAFF"
+            name="quantity"
+            onChange={(val) => setQuantity(Number(val))}
+          />
+        </div>
+        <div>
+          <div className="mb-1 text-sm text-darkgray">Cost Per Share</div>
+          <MoneyInput
+            placeholder="Cost Per Share"
+            required
+            value={costPerShare}
+            name="costPerShare"
+            onChange={(val) => setCostPerShare(val)}
+          />
+        </div>
+      </div>
+
+      {error && <p className="mb-6 leading-5 text-left text-red">{error}</p>}
 
       <Button type="submit" disabled={loading}>
         {canAdd

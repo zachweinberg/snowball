@@ -99,7 +99,7 @@ const LoginPage: NextPage = () => {
             />
           </div>
 
-          {error && <p className="mb-5 font-medium text-center text-red">{error}</p>}
+          {error && <p className="mb-5 leading-5 text-left text-red">{error}</p>}
 
           <div className="flex justify-center mb-5">
             <div>

@@ -111,6 +111,7 @@ export const buildRealEstateData = (
     address: realEstate.address ?? null,
     propertyValue: realEstate.propertyValue,
     propertyType: realEstate.propertyType,
+    automaticValuation: realEstate.automaticValuation,
   }));
 };
 

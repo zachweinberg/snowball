@@ -124,7 +124,7 @@ const AddCashForm: React.FunctionComponent<Props> = ({
         onChange={(val) => setAmount(val)}
       />
 
-      {error && <p className="mb-6 font-semibold text-center text-red">{error}</p>}
+      {error && <p className="mb-6 leading-5 text-left text-red">{error}</p>}
 
       <Button type="submit" disabled={loading}>
         {canAdd ? `Add ${accountName} with ${formatMoneyFromNumber(amount)}` : 'Add cash'}

@@ -93,7 +93,7 @@ const PortfolioSettingsPageContent: React.FunctionComponent = () => {
     if (error) {
       return (
         <div className="max-w-md p-8 mx-auto bg-white rounded-md">
-          <p className="mb-6 text-xl font-medium text-center text-purple2">{error}</p>
+          <p className="mb-6 text-xl font-medium text-center text-purple">{error}</p>
           <Link href="/portfolios">
             <Button type="button">Go Back</Button>
           </Link>
@@ -112,7 +112,7 @@ const PortfolioSettingsPageContent: React.FunctionComponent = () => {
             <>
               <div className="flex items-center mb-7">
                 <Link href={`/portfolios/${router.query.portfolioID}`}>
-                  <ArrowCircleLeftIcon className="w-8 h-8 mr-3 cursor-pointer hover:opacity-70" />
+                  <ArrowCircleLeftIcon className="w-6 h-6 mr-3 cursor-pointer hover:opacity-70" />
                 </Link>
                 <h1 className="font-bold text-[1.75rem]">{portfolio?.name ?? ''}</h1>
               </div>

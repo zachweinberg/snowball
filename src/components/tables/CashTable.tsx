@@ -62,7 +62,7 @@ const CashTable: React.FunctionComponent<Props> = ({
         Cell: ({ value, row }) => (
           <Menu
             options={[
-              { label: 'Edit position', onClick: () => onEdit(row.original) },
+              { label: 'Edit', onClick: () => onEdit(row.original) },
               { label: 'Delete', onClick: () => onDelete(value) },
             ]}
             button={() => <VerticalDots />}

@@ -88,7 +88,7 @@ const CreatePortfolioForm: React.FunctionComponent<Props> = ({ afterCreate }: Pr
         />
       </div>
 
-      {error && <p className="mb-4 font-medium text-center text-red">{error}</p>}
+      {error && <p className="mb-4 leading-5 text-left text-red">{error}</p>}
 
       <Button type="submit" disabled={loading}>
         Create portfolio

@@ -116,51 +116,62 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
         Add a specific cryptocurrency to your portfolio.
       </p>
 
-      <TextInputWithResults
-        placeholder="Add crypto"
-        backgroundColor="#F9FAFF"
-        type={AssetType.Crypto}
-        floatingResults
-        autofocus
-        onError={(e) => setError(e)}
-        onResult={(symbol, fullName, logoURL) => {
-          API.getQuote(symbol, AssetType.Crypto).then((quoteData) => {
-            if (quoteData.status === 'ok') {
-              setCostPerCoin(quoteData.latestPrice);
-            }
-          });
-
-          if (logoURL) {
-            setLogoURL(logoURL);
-          } else {
-            setLogoURL('');
-          }
-          setSymbol(symbol.toUpperCase());
-          setCoinName(fullName);
-        }}
-      />
-
-      <div className="grid grid-cols-2 gap-6 mb-4">
-        <QuantityInput
-          placeholder="Quantity"
-          required
-          value={quantity}
+      <div>
+        <div className="mb-1 text-sm text-darkgray">Symbol</div>
+        <TextInputWithResults
+          placeholder="Add crypto"
           backgroundColor="#F9FAFF"
-          name="quantity"
-          numDecimals={8}
-          onChange={(val) => setQuantity(Number(val))}
-        />
-        <MoneyInput
-          placeholder="Cost Per Share"
-          required
-          value={costPerCoin}
-          name="costPerCoin"
-          numDecimals={8}
-          onChange={(val) => setCostPerCoin(val)}
+          type={AssetType.Crypto}
+          floatingResults
+          autofocus
+          onError={(e) => setError(e)}
+          onResult={(symbol, fullName, logoURL) => {
+            API.getQuote(symbol, AssetType.Crypto).then((quoteData) => {
+              if (quoteData.status === 'ok') {
+                setCostPerCoin(quoteData.latestPrice);
+              }
+            });
+
+            if (logoURL) {
+              setLogoURL(logoURL);
+            } else {
+              setLogoURL('');
+            }
+            setSymbol(symbol.toUpperCase());
+            setCoinName(fullName);
+          }}
         />
       </div>
 
-      {error && <p className="mb-6 font-semibold text-center text-red">{error}</p>}
+      <div className="grid grid-cols-2 gap-6 mb-4">
+        <div>
+          <div className="mb-1 text-sm text-darkgray">Quantity</div>
+          <QuantityInput
+            placeholder="Quantity"
+            required
+            value={quantity}
+            backgroundColor="#F9FAFF"
+            name="quantity"
+            numDecimals={8}
+            onChange={(val) => setQuantity(Number(val))}
+          />
+        </div>
+
+        <div>
+          <div className="mb-1 text-sm text-darkgray">Cost Per Coin</div>
+
+          <MoneyInput
+            placeholder="Cost Per Coin"
+            required
+            value={costPerCoin}
+            name="costPerCoin"
+            numDecimals={8}
+            onChange={(val) => setCostPerCoin(val)}
+          />
+        </div>
+      </div>
+
+      {error && <p className="mb-6 leading-5 text-left text-red">{error}</p>}
 
       <Button type="submit" disabled={loading}>
         {canAdd

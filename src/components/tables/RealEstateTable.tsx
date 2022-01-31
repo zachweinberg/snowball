@@ -50,9 +50,12 @@ const RealEstateTable: React.FunctionComponent<Props> = ({
   const columns = useMemo(
     () => [
       {
-        Header: 'Address',
+        Header: '',
         accessor: 'address',
-        Cell: ({ value }) => (value ? formatAddresstoString(value) : '-'),
+        Cell: ({ row }) =>
+          row.original.address
+            ? formatAddresstoString(row.original.address)
+            : row.original.name ?? '-',
       },
       {
         Header: 'Property Value',
@@ -70,7 +73,7 @@ const RealEstateTable: React.FunctionComponent<Props> = ({
         Cell: ({ value, row }) => (
           <Menu
             options={[
-              { label: 'Edit position', onClick: () => onEdit(row.original) },
+              { label: 'Edit', onClick: () => onEdit(row.original) },
               { label: 'Delete', onClick: () => onDelete(value) },
             ]}
             button={() => <VerticalDots />}

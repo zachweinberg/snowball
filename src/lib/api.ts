@@ -239,6 +239,31 @@ export const API = {
     );
   },
 
+  // EDIT POSITIONS
+
+  editStockInPortfolio: (data: Partial<AddStockRequest> & { positionID: string }) => {
+    return request<typeof data, undefined>('/api/positions/stock', 'put', data);
+  },
+
+  editCryptoInPortfolio: (data: Partial<AddCryptoRequest> & { positionID: string }) => {
+    return request<typeof data, undefined>('/api/positions/crypto', 'put', data);
+  },
+
+  editRealEstateInPortfolio: (
+    data: Partial<AddRealEstateRequest> & { positionID: string }
+  ) => {
+    return request<typeof data, undefined>('/api/positions/real-estate', 'put', data);
+  },
+
+  editCashInPortfolio: (data: AddCashRequest & { positionID: string }) => {
+    return request<typeof data, undefined>('/api/positions/cash', 'put', data);
+  },
+
+  editCustomInPortfolio: (data: AddCustomAssetRequest & { positionID: string }) => {
+    return request<typeof data, undefined>('/api/positions/custom', 'put', data);
+  },
+
+  // QUOTES
   getQuote: (symbol: string, type: AssetType) => {
     return request<{ symbol: string; type: AssetType }, GetQuoteResponse>(
       `/api/quotes?symbol=${symbol}&type=${type}`,

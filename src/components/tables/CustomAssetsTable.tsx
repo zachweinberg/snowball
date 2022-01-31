@@ -13,6 +13,7 @@ interface Props {
   onAddAsset: () => void;
   onDelete: (customAssetID: string) => void;
   belongsTo: string;
+  onEdit: (position: CustomPosition) => void;
 }
 
 const CustomAssetTable: React.FunctionComponent<Props> = ({
@@ -20,6 +21,7 @@ const CustomAssetTable: React.FunctionComponent<Props> = ({
   onAddAsset,
   onDelete,
   belongsTo,
+  onEdit,
 }: Props) => {
   if (customs.length === 0) {
     const auth = useAuth();
@@ -57,10 +59,10 @@ const CustomAssetTable: React.FunctionComponent<Props> = ({
         Header: '',
         accessor: 'id',
         disableSortBy: true,
-        Cell: ({ value }) => (
+        Cell: ({ value, row }) => (
           <Menu
             options={[
-              { label: 'Edit position', onClick: () => null },
+              { label: 'Edit', onClick: () => onEdit(row.original) },
               { label: 'Delete', onClick: () => onDelete(value) },
             ]}
             button={() => <VerticalDots />}

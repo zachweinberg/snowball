@@ -110,7 +110,7 @@ const AddRealEstateForm: React.FunctionComponent<Props> = ({
 
       <TextInput
         name="name"
-        placeholder="Name"
+        placeholder="Nickname (optional)"
         type="text"
         value={name}
         onChange={(e) => setName(e.target.value)}
@@ -167,7 +167,7 @@ const AddRealEstateForm: React.FunctionComponent<Props> = ({
         </div>
       )}
 
-      {error && <p className="mb-6 font-semibold text-center text-red">{error}</p>}
+      {error && <p className="mb-6 leading-5 text-left text-red">{error}</p>}
 
       <Button type="submit" disabled={loading}>
         Add Real Estate
