@@ -329,7 +329,7 @@ positionsRouter.put(
 
     await updateDocument(`real-estate-positions`, positionID, {
       propertyType,
-      propertyValue,
+      propertyValue: propertyValue ?? null,
       automaticValuation,
       name,
     });

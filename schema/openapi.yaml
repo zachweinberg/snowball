@@ -430,7 +430,6 @@ paths:
               required:
                 - name
                 - portfolioID
-                - propertyValue
                 - propertyType
                 - automaticValuation
                 - apt
