@@ -1,21 +1,10 @@
 import { Address } from '@zachweinberg/obsidian-schema';
 import axios from 'axios';
+import { addresstoString } from '~/utils/misc';
 import { getRedisKey, setRedisKey } from './redis';
 
-const getEstatedAddressString = (address: Address): string => {
-  let addressString = `${address.street}, ${address.city} ${address.state}${address.zip ? `, ${address.zip}` : ''}`;
-
-  if (address.apt) {
-    addressString = `${address.street} APT ${address.apt}, ${address.city} ${address.state}${
-      address.zip ? `, ${address.zip}` : ''
-    }`;
-  }
-
-  return addressString;
-};
-
 export const fetchEstimateFromEstated = async (address: Address): Promise<number | null> => {
-  const addressString = getEstatedAddressString(address);
+  const addressString = addresstoString(address);
 
   let estatedURL = `https://apis.estated.com/v4/property?token=${process.env.ESTATED_API_KEY}&combined_address=${addressString}`;
 

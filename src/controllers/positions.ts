@@ -12,12 +12,12 @@ import {
   StockPosition,
 } from '@zachweinberg/obsidian-schema';
 import { Router } from 'express';
-import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { deleteRedisKey } from '~/lib/redis';
 import { getPropertyValueEstimateByGooglePlaceID } from '~/lib/valuations';
 import { catchErrors, requireSignedIn } from '~/utils/api';
-import { createDocument, deleteDocument, findDocuments, updateDocument } from '~/utils/db';
+import { createDocument, deleteDocument, fetchDocumentByID, findDocuments, updateDocument } from '~/utils/db';
 import { trackPortfolioLogItem } from '~/utils/logs';
+import { addresstoString } from '~/utils/misc';
 import { formatMoneyFromNumber } from '~/utils/money';
 import { userOwnsPortfolio } from '~/utils/portfolios';
 
@@ -61,7 +61,7 @@ positionsRouter.post(
 
     await trackPortfolioLogItem(
       portfolioID,
-      `Added ${quantity} shares of ${symbol} @ ${formatMoneyFromNumber(costPerShare)} each`
+      `Added ${quantity} shares of ${symbol} @ ${formatMoneyFromNumber(costPerShare)} each.`
     );
 
     const response = {
@@ -109,7 +109,7 @@ positionsRouter.post(
     await deleteRedisKey(redisKey);
     await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
 
-    await trackPortfolioLogItem(portfolioID, `Added ${quantity} ${symbol} @ ${formatMoneyFromNumber(costPerCoin)} each`);
+    await trackPortfolioLogItem(portfolioID, `Added ${quantity} ${symbol} @ ${formatMoneyFromNumber(costPerCoin)} each.`);
 
     const response = {
       status: 'ok',
@@ -177,7 +177,7 @@ positionsRouter.post(
 
     await trackPortfolioLogItem(
       portfolioID,
-      `Added ${name ?? 'a property'} worth ${formatMoneyFromNumber(position.propertyValue)}`
+      `Added ${name ?? 'a property'} worth ${formatMoneyFromNumber(position.propertyValue)}.`
     );
 
     res.status(200).json(response);
@@ -206,7 +206,7 @@ positionsRouter.post(
     await deleteRedisKey(redisKey);
     await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
 
-    await trackPortfolioLogItem(portfolioID, `Added ${accountName ?? 'cash'} worth ${formatMoneyFromNumber(amount)}`);
+    await trackPortfolioLogItem(portfolioID, `Added ${accountName ?? 'a cash account'} worth ${formatMoneyFromNumber(amount)}.`);
 
     const response = {
       status: 'ok',
@@ -238,7 +238,7 @@ positionsRouter.post(
     await deleteRedisKey(redisKey);
     await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
 
-    await trackPortfolioLogItem(portfolioID, `Added ${assetName ?? 'a custom asset'} worth ${formatMoneyFromNumber(value)}`);
+    await trackPortfolioLogItem(portfolioID, `Added ${assetName ?? 'a custom asset'} worth ${formatMoneyFromNumber(value)}.`);
 
     const response = {
       status: 'ok',
@@ -263,6 +263,8 @@ positionsRouter.put(
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
     }
 
+    const position = await fetchDocumentByID<StockPosition>(`portfolios/${portfolioID}/positions`, positionID);
+
     await updateDocument(`portfolios/${portfolioID}/positions`, positionID, {
       quantity,
       costPerShare,
@@ -271,7 +273,10 @@ positionsRouter.put(
     await deleteRedisKey(redisKey);
     await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
 
-    await trackPortfolioLogItem(portfolioID, `Edited a stock`);
+    await trackPortfolioLogItem(
+      portfolioID,
+      `Updated ${position.symbol} to ${quantity} shares and cost per share of ${formatMoneyFromNumber(costPerShare)}.`
+    );
 
     const response = {
       status: 'ok',
@@ -294,6 +299,8 @@ positionsRouter.put(
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
     }
 
+    const position = await fetchDocumentByID<CryptoPosition>(`portfolios/${portfolioID}/positions`, positionID);
+
     await updateDocument(`portfolios/${portfolioID}/positions`, positionID, {
       quantity,
       costPerCoin,
@@ -302,7 +309,10 @@ positionsRouter.put(
     await deleteRedisKey(redisKey);
     await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
 
-    await trackPortfolioLogItem(portfolioID, `Edited a cryptocurrency`);
+    await trackPortfolioLogItem(
+      portfolioID,
+      `Updated ${position.symbol} quantity to ${quantity} and cost per coin of ${formatMoneyFromNumber(costPerCoin)}.`
+    );
 
     const response = {
       status: 'ok',
@@ -328,6 +338,8 @@ positionsRouter.put(
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
     }
 
+    const position = await fetchDocumentByID<RealEstatePosition>(`real-estate-positions`, positionID);
+
     await updateDocument(`real-estate-positions`, positionID, {
       propertyType,
       propertyValue: propertyValue ?? null,
@@ -338,7 +350,17 @@ positionsRouter.put(
     await deleteRedisKey(redisKey);
     await deleteRedisKey(`portfoliolist-${userID}`);
 
-    await trackPortfolioLogItem(portfolioID, `Updated ${name ?? 'a property'}`);
+    await trackPortfolioLogItem(portfolioID, `Updated ${name ?? 'a property'}.`);
+
+    let log = `Updated ${
+      position.address ? addresstoString(position.address) : position.name ? position.name : 'a property'
+    } to ${propertyType} and automatic valuation to ${automaticValuation ? 'on' : 'off'}.`;
+
+    if (position.propertyValue !== propertyValue && propertyValue) {
+      log += `New property value: ${formatMoneyFromNumber(propertyValue)}`;
+    }
+
+    await trackPortfolioLogItem(portfolioID, log);
 
     const response = {
       status: 'ok',
@@ -368,7 +390,10 @@ positionsRouter.put(
     await deleteRedisKey(redisKey);
     await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
 
-    await trackPortfolioLogItem(portfolioID, `Updated ${accountName ?? 'cash'} to new value ${formatMoneyFromNumber(amount)}`);
+    await trackPortfolioLogItem(
+      portfolioID,
+      `Updated ${accountName ?? 'cash'} to a balance of ${formatMoneyFromNumber(amount)}.`
+    );
 
     const response = {
       status: 'ok',
@@ -402,7 +427,7 @@ positionsRouter.put(
 
     await trackPortfolioLogItem(
       portfolioID,
-      `Updated ${assetName ?? 'custom assett'} to new value ${formatMoneyFromNumber(value)}`
+      `Updated ${assetName ?? 'custom asset'} to new value ${formatMoneyFromNumber(value)}.`
     );
 
     const response = {
@@ -418,7 +443,7 @@ positionsRouter.delete(
   '/:positionID',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const { portfolioID } = req.query as { positionID: string; portfolioID: string };
+    const { portfolioID, assetType } = req.query as { portfolioID: string; assetType: AssetType };
     const { positionID } = req.params;
     const userID = req.authContext!.uid;
     const redisKey = `portfolio-${portfolioID}`;
@@ -431,19 +456,44 @@ positionsRouter.delete(
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
     }
 
-    const position = await firebaseAdmin().firestore().collection(`portfolios/${portfolioID}/positions`).doc(positionID).get();
+    let log = '';
 
-    // Could be real estate
-    if (position.exists) {
-      await deleteDocument(`portfolios/${portfolioID}/positions/${positionID}`);
-    } else {
+    if (assetType === AssetType.RealEstate) {
+      const position = await fetchDocumentByID<RealEstatePosition>(`real-estate-positions`, positionID);
       await deleteDocument(`real-estate-positions/${positionID}`);
+      log = `Deleted ${
+        position.address ? addresstoString(position.address) : position.name ? position.name : 'a property'
+      } from portfolio.`;
+    }
+
+    if (assetType === AssetType.Stock) {
+      const position = await fetchDocumentByID<StockPosition>(`portfolios/${portfolioID}/positions`, positionID);
+      await deleteDocument(`portfolios/${portfolioID}/positions/${positionID}`);
+      log = `Deleted ${position.quantity} ${position.symbol} from portfolio.`;
+    }
+
+    if (assetType === AssetType.Crypto) {
+      const position = await fetchDocumentByID<CryptoPosition>(`portfolios/${portfolioID}/positions`, positionID);
+      await deleteDocument(`portfolios/${portfolioID}/positions/${positionID}`);
+      log = `Deleted ${position.quantity} ${position.symbol} from portfolio.`;
+    }
+
+    if (assetType === AssetType.Cash) {
+      const position = await fetchDocumentByID<CashPosition>(`portfolios/${portfolioID}/positions`, positionID);
+      await deleteDocument(`portfolios/${portfolioID}/positions/${positionID}`);
+      log = `Deleted ${position.accountName} with ${formatMoneyFromNumber(position.amount)} from portfolio.`;
+    }
+
+    if (assetType === AssetType.Custom) {
+      const position = await fetchDocumentByID<CustomPosition>(`portfolios/${portfolioID}/positions`, positionID);
+      await deleteDocument(`portfolios/${portfolioID}/positions/${positionID}`);
+      log = `Deleted ${position.assetName} worth ${formatMoneyFromNumber(position.value)} from portfolio.`;
     }
 
     await deleteRedisKey(redisKey);
     await deleteRedisKey(`portfoliolist-${userID}`);
 
-    await trackPortfolioLogItem(portfolioID, `Removed an asset`);
+    await trackPortfolioLogItem(portfolioID, log);
 
     res.status(200).end();
   })
