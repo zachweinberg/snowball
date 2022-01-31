@@ -470,32 +470,23 @@ paths:
               required:
                 - name
                 - portfolioID
-                - propertyValue
+                - positionID
                 - propertyType
                 - automaticValuation
-                - apt
-                - placeID
-                - positionID
               properties:
                 positionID:
+                  type: string
+                portfolioID:
                   type: string
                 name:
                   type: string
                 automaticValuation:
                   type: boolean
-                apt:
-                  type: string
-                  nullable: true
-                portfolioID:
-                  type: string
                 propertyValue:
                   type: number
                   nullable: true
                 propertyType:
                   type: string
-                placeID:
-                  type: string
-                  nullable: true
       responses:
         '200':
           description: Valid request
