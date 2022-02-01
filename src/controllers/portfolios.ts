@@ -10,6 +10,7 @@ import {
   GetPortfoliosResponse,
   Period,
   Portfolio,
+  RealEstatePosition,
 } from '@zachweinberg/obsidian-schema';
 import { Router } from 'express';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
@@ -316,6 +317,13 @@ portfoliosRouter.delete(
     await deleteDocument(`portfolios/${req.params.portfolioID}`);
     await deleteCollection(`portfolios/${req.params.portfolioID}/dailyBalances`);
     await deleteCollection(`portfolios/${req.params.portfolioID}/positions`);
+    await deleteCollection(`portfolios/${req.params.portfolioID}/logs`);
+
+    const realEstateDocs = await findDocuments<RealEstatePosition>('real-estate-positions', [
+      { property: 'portfolioID', condition: '==', value: req.params.portfolioID },
+    ]);
+
+    await Promise.all(realEstateDocs.map((doc) => deleteDocument(`real-estate-positions/${doc.id}`)));
 
     await deleteRedisKey(redisKey);
     await deleteRedisKey(`portfoliolist-${authUser!.uid}`);
