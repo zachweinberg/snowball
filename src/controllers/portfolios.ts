@@ -9,6 +9,7 @@ import {
   GetPortfolioSettingsResponse,
   GetPortfoliosResponse,
   Period,
+  PlanType,
   Portfolio,
   RealEstatePosition,
 } from '@zachweinberg/obsidian-schema';
@@ -102,7 +103,7 @@ portfoliosRouter.get(
   '/',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const userID = req.authContext!.uid;
+    const userID = req.user!.id;
     const redisKey = `portfoliolist-${userID}`;
 
     const cachedResponse = await getRedisKey(redisKey);
@@ -154,15 +155,20 @@ portfoliosRouter.post(
   requireSignedIn,
   catchErrors(async (req, res) => {
     const { name, public: isPublic } = req.body as CreatePortfolioRequest;
-    const userID = req.authContext!.uid;
+    const userID = req.user!.id;
     const redisKey = `portfoliolist-${userID}`;
 
     const existingPortfolios = await findDocuments<Portfolio>('portfolios', [
       { property: 'userID', condition: '==', value: userID },
     ]);
 
-    if (existingPortfolios.length >= 2) {
-      return res.status(400).json({ status: 'error', error: 'You can only have 2 portfolios.' });
+    if (existingPortfolios.length >= 1 && req.user!.plan.type === PlanType.FREE) {
+      return res.status(400).json({
+        status: 'error',
+        error:
+          'Your account is currently on the free plan. If you would like to create more than one portfolio, please upgrade to the premium plan.',
+        code: 'PLAN',
+      });
     }
 
     const newPortfolioDocRef = firebaseAdmin().firestore().collection('portfolios').doc();

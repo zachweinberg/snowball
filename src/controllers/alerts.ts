@@ -1,4 +1,4 @@
-import { AddAlertRequest, Alert, AlertDestination, GetAlertsResponse } from '@zachweinberg/obsidian-schema';
+import { AddAlertRequest, Alert, AlertDestination, GetAlertsResponse, PlanType } from '@zachweinberg/obsidian-schema';
 import * as EmailValidator from 'email-validator';
 import { Router } from 'express';
 import _ from 'lodash';
@@ -12,7 +12,7 @@ alertsRouter.get(
   '/',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const userID = req.authContext!.uid;
+    const userID = req.user!.id;
 
     const alerts = await findDocuments<Alert>(`alerts`, [{ property: 'userID', condition: '==', value: userID }]);
 
@@ -29,9 +29,20 @@ alertsRouter.post(
   '/',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const userID = req.authContext!.uid;
+    const userID = req.user!.id;
 
     const body = req.body as AddAlertRequest;
+
+    const existingAlerts = await findDocuments('alerts', [{ property: 'userID', condition: '==', value: userID }]);
+
+    if (existingAlerts.length >= 3 && req.user!.plan.type === PlanType.FREE) {
+      return res.status(400).json({
+        status: 'error',
+        error:
+          'Your account is currently on the free plan. If you would like to enable more than three price alerts at a time, please upgrade to the premium plan.',
+        code: 'PLAN',
+      });
+    }
 
     if (body.destination === AlertDestination.SMS) {
       body.destinationValue = formatPhoneNumber(body.destinationValue);
@@ -60,7 +71,7 @@ alertsRouter.delete(
   '/',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const userID = req.authContext!.uid;
+    const userID = req.user!.id;
 
     const { alertID } = req.query as { alertID: string };
 

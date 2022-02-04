@@ -1,9 +1,9 @@
-import * as firebaseAdmin from 'firebase-admin';
+import { User } from '@zachweinberg/obsidian-schema';
 
 declare global {
   namespace Express {
     interface Request {
-      authContext?: firebaseAdmin.auth.DecodedIdToken;
+      user?: User;
     }
   }
 }

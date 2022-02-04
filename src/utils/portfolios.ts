@@ -3,7 +3,7 @@ import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { fetchDocumentByID } from './db';
 
 export const userOwnsPortfolio = async (req, res, portfolioID) => {
-  const userID = req.authContext!.uid;
+  const userID = req.user!.id;
 
   const portfolio = await fetchDocumentByID<Portfolio>('portfolios', portfolioID);
 

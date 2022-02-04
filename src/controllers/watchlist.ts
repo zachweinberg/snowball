@@ -1,4 +1,4 @@
-import { AddWatchListItemRequest, AssetType, GetWatchListResponse, WatchListItem } from '@zachweinberg/obsidian-schema';
+import { AddWatchListItemRequest, AssetType, GetWatchListResponse, PlanType, WatchListItem } from '@zachweinberg/obsidian-schema';
 import { Router } from 'express';
 import _ from 'lodash';
 import { getCryptoPrices } from '~/lib/cmc';
@@ -12,7 +12,7 @@ watchListRouter.get(
   '/',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const userID = req.authContext!.uid;
+    const userID = req.user!.id;
 
     const watchListItems = await findDocuments<WatchListItem>(`watchlists/${userID}/assets`);
 
@@ -69,7 +69,18 @@ watchListRouter.post(
   '/',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const userID = req.authContext!.uid;
+    const userID = req.user!.id;
+
+    const existingItems = await findDocuments(`watchlists/${userID}/assets`, []);
+
+    if (existingItems.length >= 6 && req.user!.plan.type === PlanType.FREE) {
+      return res.status(400).json({
+        status: 'error',
+        error:
+          'Your account is currently on the free plan. If you would like to add more than six watchlist assets, please upgrade to the premium plan.',
+        code: 'PLAN',
+      });
+    }
 
     const body = req.body as AddWatchListItemRequest;
 
@@ -90,7 +101,7 @@ watchListRouter.delete(
   '/',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const userID = req.authContext!.uid;
+    const userID = req.user!.id;
 
     const { itemID } = req.query as { itemID: string };
 

@@ -24,7 +24,7 @@ plaidRouter.get(
   '/create-link-token',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const userID = req.authContext!.uid;
+    const userID = req.user!.id;
 
     const plaidRequest: LinkTokenCreateRequest = {
       user: {
@@ -48,7 +48,7 @@ plaidRouter.post(
   '/exchange-public-token-and-fetch-holdings',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const userID = req.authContext?.uid!;
+    const userID = req.user!.id;
     const publicToken = req.body.publicToken;
 
     const tokenResponse = await plaidClient.itemPublicTokenExchange({

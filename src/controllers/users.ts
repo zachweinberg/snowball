@@ -4,6 +4,7 @@ import {
   CreateUserRequest,
   CreateUserResponse,
   MeResponse,
+  PlanType,
   SendContactEmailRequest,
   User,
 } from '@zachweinberg/obsidian-schema';
@@ -23,9 +24,9 @@ usersRouter.post(
     const { name, email, message } = req.body as SendContactEmailRequest;
 
     const body = `
-      Name: ${name}\n
-      Return email: ${email ? email : 'None'}\n
-      Message: ${message}\n
+      Name: ${name}<br/>
+      Return email: ${email ? email : 'None'}<br/>
+      Message: ${message}<br/>
     `;
 
     await sendContactRequestEmail(body);
@@ -42,7 +43,7 @@ usersRouter.get(
   '/me',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const userID = req.authContext!.uid;
+    const userID = req.user!.id;
 
     const user = await fetchDocumentByID<User>('users', userID);
 
@@ -63,14 +64,12 @@ usersRouter.post(
     const userEmail = email.toLowerCase();
     const userName = capitalize(name).trim();
 
-    const existingUsers = await findDocuments<User>('users', [
-      { property: 'email', condition: '==', value: userEmail },
-    ]);
+    const existingUsers = await findDocuments<User>('users', [{ property: 'email', condition: '==', value: userEmail }]);
 
     if (existingUsers.length > 0) {
       return res.status(400).json({
         status: 'error',
-        error: 'User with that email already exists.',
+        error: 'A user with that email already exists.',
       });
     }
 
@@ -88,6 +87,9 @@ usersRouter.post(
         email: userEmail,
         name: userName,
         createdAt: new Date(),
+        plan: {
+          type: PlanType.FREE,
+        },
       };
 
       await createDocument<User>('users', userDataToSet, newUser.uid);
@@ -144,7 +146,7 @@ usersRouter.put(
   '/update-email',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const userID = req.authContext!.uid;
+    const userID = req.user!.id;
 
     const userEmail = req.body.newEmail.toLowerCase();
 
@@ -162,7 +164,7 @@ usersRouter.put(
   '/change-password',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const userID = req.authContext!.uid;
+    const userID = req.user!.id;
 
     const { newPassword, confirmNewPassword } = req.body;
 

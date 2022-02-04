@@ -1,12 +1,11 @@
+import { User } from '@zachweinberg/obsidian-schema';
 import express from 'express';
 import { auth } from 'firebase-admin';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
+import { logSentryError } from '~/lib/sentry';
+import { fetchDocumentByID } from './db';
 
-export const ignoreFavicon = (
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
-) => {
+export const ignoreFavicon = (req: express.Request, res: express.Response, next: express.NextFunction) => {
   if (req.originalUrl.includes('favicon.ico')) {
     return res.status(204).end();
   }
@@ -14,8 +13,7 @@ export const ignoreFavicon = (
 };
 
 export const catchErrors =
-  (fn: express.RequestHandler) =>
-  async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  (fn: express.RequestHandler) => async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     try {
       await fn(req, res, next);
     } catch (err) {
@@ -23,13 +21,9 @@ export const catchErrors =
     }
   };
 
-export const handleErrors = (
-  error,
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
-) => {
+export const handleErrors = (error, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error(error);
+  logSentryError(error);
 
   const errorObject = {
     status: error.status ?? 500,
@@ -62,10 +56,7 @@ const getAuthorizationToken = (req: express.Request, required = true) => {
   return parts[1];
 };
 
-export const getUserFromAuthHeader = async (
-  req: express.Request,
-  required = true
-): Promise<auth.DecodedIdToken | null> => {
+export const getUserFromAuthHeader = async (req: express.Request, required = true): Promise<auth.DecodedIdToken | null> => {
   const token = getAuthorizationToken(req, required);
 
   if (!token) {
@@ -83,14 +74,17 @@ export const getUserFromAuthHeader = async (
   }
 };
 
-export const requireSignedIn = async (
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
-) => {
+export const requireSignedIn = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
   try {
     const authUser = await getUserFromAuthHeader(req, true);
-    req.authContext = authUser as auth.DecodedIdToken;
+
+    if (!authUser) {
+      throw new Error('Unauth');
+    }
+
+    const user = (await fetchDocumentByID('users', authUser.uid)) as User;
+
+    req.user = user;
     next();
   } catch (err) {
     Object.defineProperty(err, 'status', { value: 403 });

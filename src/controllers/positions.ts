@@ -8,6 +8,7 @@ import {
   CashPosition,
   CryptoPosition,
   CustomPosition,
+  PlanType,
   RealEstatePosition,
   StockPosition,
 } from '@zachweinberg/obsidian-schema';
@@ -27,7 +28,7 @@ positionsRouter.post(
   '/stock',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const userID = req.authContext!.uid;
+    const userID = req.user!.id;
     const { portfolioID, symbol, companyName, quantity, costPerShare } = req.body as AddStockRequest;
     const redisKey = `portfolio-${portfolioID}`;
 
@@ -35,12 +36,22 @@ positionsRouter.post(
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
     }
 
-    const stockExisting = await findDocuments<StockPosition>(`portfolios/${portfolioID}/positions`, [
+    const existingStockPositions = await findDocuments<StockPosition>(`portfolios/${portfolioID}/positions`, [
       { property: 'assetType', condition: '==', value: AssetType.Stock },
-      { property: 'symbol', condition: '==', value: symbol.toUpperCase() },
     ]);
 
-    if (stockExisting.length > 0) {
+    if (existingStockPositions.length >= 5 && req.user!.plan.type === PlanType.FREE) {
+      return res.status(400).json({
+        status: 'error',
+        error:
+          'Your account is currently on the free plan. If you would like to add more than four stock positions per portfolio, please upgrade to the premium plan.',
+        code: 'PLAN',
+      });
+    }
+
+    const stocksExisting = existingStockPositions.filter((stockPosition) => stockPosition.symbol === symbol.toUpperCase());
+
+    if (stocksExisting.length > 0) {
       return res.status(400).json({
         status: 'error',
         error: 'You already have that stock in your portfolio. Please edit the position instead.',
@@ -76,7 +87,7 @@ positionsRouter.post(
   '/crypto',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const userID = req.authContext!.uid;
+    const userID = req.user!.id;
     const { portfolioID, symbol, coinName, quantity, costPerCoin, logoURL } = req.body as AddCryptoRequest;
     const redisKey = `portfolio-${portfolioID}`;
 
@@ -84,10 +95,20 @@ positionsRouter.post(
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
     }
 
-    const cryptoExisting = await findDocuments<CryptoPosition>(`portfolios/${portfolioID}/positions`, [
+    const existingCryptoPositions = await findDocuments<StockPosition>(`portfolios/${portfolioID}/positions`, [
       { property: 'assetType', condition: '==', value: AssetType.Crypto },
-      { property: 'symbol', condition: '==', value: symbol.toUpperCase() },
     ]);
+
+    if (existingCryptoPositions.length >= 5 && req.user!.plan.type === PlanType.FREE) {
+      return res.status(400).json({
+        status: 'error',
+        error:
+          'Your account is currently on the free plan. If you would like to add more than four crypto positions per portfolio, please upgrade to the premium plan.',
+        code: 'PLAN',
+      });
+    }
+
+    const cryptoExisting = existingCryptoPositions.filter((cryptoPosition) => cryptoPosition.symbol === symbol.toUpperCase());
 
     if (cryptoExisting.length > 0) {
       return res.status(400).json({
@@ -123,7 +144,7 @@ positionsRouter.post(
   '/real-estate',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const userID = req.authContext?.uid!;
+    const userID = req.user!.id;
 
     const { portfolioID, propertyType, propertyValue, placeID, apt, name, automaticValuation } = req.body as AddRealEstateRequest;
 
@@ -131,6 +152,19 @@ positionsRouter.post(
 
     if (!(await userOwnsPortfolio(req, res, portfolioID))) {
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
+    }
+
+    const existingREPositions = await findDocuments('real-estate-positions', [
+      { property: 'portfolioID', condition: '==', value: portfolioID },
+    ]);
+
+    if (existingREPositions.length >= 2 && req.user!.plan.type === PlanType.FREE) {
+      return res.status(400).json({
+        status: 'error',
+        error:
+          'Your account is currently on the free plan. If you would like to add more than two real estate holdings per portfolio, please upgrade to the premium plan.',
+        code: 'PLAN',
+      });
     }
 
     let position: Partial<RealEstatePosition> = {
@@ -188,12 +222,25 @@ positionsRouter.post(
   '/cash',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const userID = req.authContext!.uid;
+    const userID = req.user!.id;
     const { portfolioID, amount, accountName } = req.body as AddCashRequest;
     const redisKey = `portfolio-${portfolioID}`;
 
     if (!(await userOwnsPortfolio(req, res, portfolioID))) {
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
+    }
+
+    const existingCashPositions = await findDocuments(`portfolios/${portfolioID}/positions`, [
+      { property: 'assetType', condition: '==', value: AssetType.Cash },
+    ]);
+
+    if (existingCashPositions.length >= 4 && req.user!.plan.type === PlanType.FREE) {
+      return res.status(400).json({
+        status: 'error',
+        error:
+          'Your account is currently on the free plan. If you would like to add more than four cash positions per portfolio, please upgrade to the premium plan.',
+        code: 'PLAN',
+      });
     }
 
     await createDocument<CashPosition>(`portfolios/${portfolioID}/positions`, {
@@ -220,12 +267,25 @@ positionsRouter.post(
   '/custom',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const userID = req.authContext!.uid;
+    const userID = req.user!.id;
     const { portfolioID, value, assetName } = req.body as AddCustomAssetRequest;
     const redisKey = `portfolio-${portfolioID}`;
 
     if (!(await userOwnsPortfolio(req, res, portfolioID))) {
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
+    }
+
+    const existingCustom = await findDocuments(`portfolios/${portfolioID}/positions`, [
+      { property: 'assetType', condition: '==', value: AssetType.Custom },
+    ]);
+
+    if (existingCustom.length >= 4 && req.user!.plan.type === PlanType.FREE) {
+      return res.status(400).json({
+        status: 'error',
+        error:
+          'Your account is currently on the free plan. If you would like to add more than four custom assets per portfolio, please upgrade to the premium plan.',
+        code: 'PLAN',
+      });
     }
 
     await createDocument<CustomPosition>(`portfolios/${portfolioID}/positions`, {
@@ -254,7 +314,7 @@ positionsRouter.put(
   '/stock',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const userID = req.authContext!.uid;
+    const userID = req.user!.id;
     const { portfolioID, positionID, quantity, costPerShare } = req.body;
 
     const redisKey = `portfolio-${portfolioID}`;
@@ -290,7 +350,7 @@ positionsRouter.put(
   '/crypto',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const userID = req.authContext!.uid;
+    const userID = req.user!.id;
     const { portfolioID, positionID, quantity, costPerCoin } = req.body;
 
     const redisKey = `portfolio-${portfolioID}`;
@@ -326,7 +386,7 @@ positionsRouter.put(
   '/real-estate',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const userID = req.authContext!.uid;
+    const userID = req.user!.id;
     const { portfolioID, name, propertyType, propertyValue, positionID, automaticValuation } =
       req.body as AddRealEstateRequest & {
         positionID: string;
@@ -374,7 +434,7 @@ positionsRouter.put(
   '/cash',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const userID = req.authContext!.uid;
+    const userID = req.user!.id;
     const { portfolioID, amount, accountName, positionID } = req.body as AddCashRequest & { positionID: string };
     const redisKey = `portfolio-${portfolioID}`;
 
@@ -407,7 +467,7 @@ positionsRouter.put(
   '/custom',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const userID = req.authContext!.uid;
+    const userID = req.user!.id;
     const { portfolioID, value, assetName, positionID } = req.body as AddCustomAssetRequest & {
       positionID: string;
     };
@@ -445,7 +505,7 @@ positionsRouter.delete(
   catchErrors(async (req, res) => {
     const { portfolioID, assetType } = req.query as { portfolioID: string; assetType: AssetType };
     const { positionID } = req.params;
-    const userID = req.authContext!.uid;
+    const userID = req.user!.id;
     const redisKey = `portfolio-${portfolioID}`;
 
     if (!positionID || !portfolioID) {
