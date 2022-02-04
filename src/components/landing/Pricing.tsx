@@ -13,16 +13,28 @@ const PricingLight: React.FunctionComponent = () => {
           Create one portfolio
         </li>
         <li className="relative pl-4 before:absolute leading-6 before:top-2 before:left-0 before:w-1.5 before:h-1.5 before:rounded before:bg-evergreen">
-          Add 5 of each asset class to your portfolio
+          Add up to six assets to your watchlist
         </li>
         <li className="relative pl-4 before:absolute leading-6 before:top-2 before:left-0 before:w-1.5 before:h-1.5 before:rounded before:bg-evergreen">
-          Add 3 assets to your watchlist
-        </li>
-        <li className="relative pl-4 before:absolute leading-6 before:top-2 before:left-0 before:w-1.5 before:h-1.5 before:rounded before:bg-evergreen">
-          Create 2 asset alerts
+          Create up to three asset alerts at once
         </li>
         <li className="relative pl-4 before:absolute leading-6 before:top-2 before:left-0 before:w-1.5 before:h-1.5 before:rounded before:bg-evergreen">
           Stock and crypto market news portal
+        </li>
+        <li className="relative pl-4 before:absolute leading-6 before:top-2 before:left-0 before:w-1.5 before:h-1.5 before:rounded before:bg-evergreen">
+          Add four stocks positions per portfolio
+        </li>
+        <li className="relative pl-4 before:absolute leading-6 before:top-2 before:left-0 before:w-1.5 before:h-1.5 before:rounded before:bg-evergreen">
+          Add four crypto positions per portfolio
+        </li>
+        <li className="relative pl-4 before:absolute leading-6 before:top-2 before:left-0 before:w-1.5 before:h-1.5 before:rounded before:bg-evergreen">
+          Add two real estate holdings per portfolio
+        </li>
+        <li className="relative pl-4 before:absolute leading-6 before:top-2 before:left-0 before:w-1.5 before:h-1.5 before:rounded before:bg-evergreen">
+          Add four cash positions per portfolio
+        </li>
+        <li className="relative pl-4 before:absolute leading-6 before:top-2 before:left-0 before:w-1.5 before:h-1.5 before:rounded before:bg-evergreen">
+          Add four custom assets per portfolio
         </li>
       </ul>
     </div>
@@ -45,7 +57,7 @@ const PricingDark: React.FunctionComponent = () => {
         <span className="absolute text-2xl font-semibold top-2 -left-5 md:text-xl md:top-1 md:-left-4">
           $
         </span>
-        <span className="text-6xl font-bold leading-none md:text-5xl">9.99</span>
+        <span className="text-6xl font-bold leading-none md:text-5xl">10.00</span>
       </div>
       <p className="mt-4 text-lg font-bold leading-none sm:mt-2 xl:text-base">
         <strong>per month</strong>
@@ -53,20 +65,31 @@ const PricingDark: React.FunctionComponent = () => {
 
       <ul className="self-start mt-10 space-y-4 sm:mt-5">
         <li className="relative pl-4 before:absolute leading-6 before:top-2 before:left-0 before:w-1.5 before:h-1.5 before:rounded before:bg-lime">
-          Create up to five portfolios
+          Create up to four portfolios
         </li>
         <li className="relative pl-4 before:absolute leading-6 before:top-2 before:left-0 before:w-1.5 before:h-1.5 before:rounded before:bg-lime">
-          Add over 40 positions in each asset class
+          Add up to 30 assets to your watchlist
         </li>
         <li className="relative pl-4 before:absolute leading-6 before:top-2 before:left-0 before:w-1.5 before:h-1.5 before:rounded before:bg-lime">
-          Unlimited assets in your watchlist
+          Create up to 20 asset alerts at once
         </li>
-        <li className="relative pl-4 before:absolute leading-6 before:top-2 before:left-0 before:w-1.5 before:h-1.5 before:rounded before:bg-lime">
-          Create up to 20 price alerts at a time
-        </li>
-
         <li className="relative pl-4 before:absolute leading-6 before:top-2 before:left-0 before:w-1.5 before:h-1.5 before:rounded before:bg-lime">
           Stock and crypto market news portal
+        </li>
+        <li className="relative pl-4 before:absolute leading-6 before:top-2 before:left-0 before:w-1.5 before:h-1.5 before:rounded before:bg-lime">
+          Add 30 stocks positions per portfolio
+        </li>
+        <li className="relative pl-4 before:absolute leading-6 before:top-2 before:left-0 before:w-1.5 before:h-1.5 before:rounded before:bg-lime">
+          Add 30 crypto positions per portfolio
+        </li>
+        <li className="relative pl-4 before:absolute leading-6 before:top-2 before:left-0 before:w-1.5 before:h-1.5 before:rounded before:bg-lime">
+          Add 20 real estate holdings per portfolio
+        </li>
+        <li className="relative pl-4 before:absolute leading-6 before:top-2 before:left-0 before:w-1.5 before:h-1.5 before:rounded before:bg-lime">
+          Add 30 cash positions per portfolio
+        </li>
+        <li className="relative pl-4 before:absolute leading-6 before:top-2 before:left-0 before:w-1.5 before:h-1.5 before:rounded before:bg-lime">
+          Add 30 custom assets per portfolio
         </li>
       </ul>
     </div>

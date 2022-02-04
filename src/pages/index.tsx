@@ -127,8 +127,8 @@ const Landing: React.FunctionComponent = () => {
               </h1>
 
               <p className="mb-3 text-lg">
-                Unlock premium features with a monthly subscription if you want access to more
-                portfolio tracking and alerting.
+                Unlock premium features with a monthly subscription and access more portfolio
+                tracking and alerting features! Cancel at any time.
               </p>
             </div>
 

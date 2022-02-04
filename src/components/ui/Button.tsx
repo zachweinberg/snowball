@@ -9,7 +9,6 @@ interface Props {
   secondary?: boolean;
   variant?: 'primary' | 'secondary' | 'white' | 'danger';
   children: ReactNode;
-  loading?: boolean;
 }
 
 const Button: React.FunctionComponent<Props> = ({
@@ -18,7 +17,6 @@ const Button: React.FunctionComponent<Props> = ({
   className,
   type,
   onClick,
-  loading,
   variant = 'primary',
 }: Props) => {
   return (

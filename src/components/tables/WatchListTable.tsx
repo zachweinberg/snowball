@@ -68,7 +68,7 @@ const WatchListTable: React.FunctionComponent<Props> = ({ items, onDelete }: Pro
         Header: 'Market Cap',
         accessor: 'marketCap',
         Cell: ({ value }) =>
-          value > 0 ? formatMoneyFromNumber(value, true).replace('~', '') : '-',
+          value > 0 ? formatMoneyFromNumber(value, true).replace('~', '$') : '-',
       },
       {
         Header: '',

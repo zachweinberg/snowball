@@ -152,7 +152,6 @@ const EditRealEstateModal = ({ position, portfolioID, onClose, open }: Props) =>
             variant="primary"
             onClick={onEditRealEstate}
             disabled={loading}
-            loading={loading}
           >
             Save
           </Button>
