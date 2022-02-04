@@ -71,7 +71,7 @@ watchListRouter.post(
   catchErrors(async (req, res) => {
     const userID = req.user!.id;
 
-    const existingItems = await findDocuments(`watchlists/${userID}/assets`, []);
+    const existingItems = await findDocuments<WatchListItem>(`watchlists/${userID}/assets`, []);
 
     if (existingItems.length >= 6 && req.user!.plan.type === PlanType.FREE) {
       return res.status(400).json({
@@ -83,6 +83,14 @@ watchListRouter.post(
     }
 
     const body = req.body as AddWatchListItemRequest;
+
+    const duplicate = existingItems.find(
+      (asset) => asset.symbol === body.symbol.toUpperCase() && asset.assetType === body.assetType
+    );
+
+    if (duplicate) {
+      return res.status(200).end();
+    }
 
     await createDocument(`watchlists/${userID}/assets`, {
       ...body,
