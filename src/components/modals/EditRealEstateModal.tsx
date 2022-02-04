@@ -38,6 +38,12 @@ const EditRealEstateModal = ({ position, portfolioID, onClose, open }: Props) =>
 
   const onEditRealEstate = async () => {
     setLoading(true);
+
+    if (!automaticValuation && !propertyValue) {
+      alert('Please enter property value.');
+      setLoading(false);
+      return;
+    }
     try {
       const body: any = {
         portfolioID,
@@ -146,6 +152,7 @@ const EditRealEstateModal = ({ position, portfolioID, onClose, open }: Props) =>
             variant="primary"
             onClick={onEditRealEstate}
             disabled={loading}
+            loading={loading}
           >
             Save
           </Button>
