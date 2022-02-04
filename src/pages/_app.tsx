@@ -1,4 +1,5 @@
 import type { AppProps } from 'next/app';
+import Head from 'next/head';
 import { useEffect } from 'react';
 import { hotjar } from 'react-hotjar';
 import { ToastContainer } from 'react-toastify';
@@ -19,21 +20,26 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   }, []);
 
   return (
-    <AuthProvider>
-      <WaitForAuth>
-        <ToastContainer
-          position="top-center"
-          autoClose={7000}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          pauseOnHover
-          theme="dark"
-        />
-        <Component {...pageProps} />
-      </WaitForAuth>
-    </AuthProvider>
+    <>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </Head>
+      <AuthProvider>
+        <WaitForAuth>
+          <ToastContainer
+            position="top-center"
+            autoClose={7000}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            pauseOnHover
+            theme="dark"
+          />
+          <Component {...pageProps} />
+        </WaitForAuth>
+      </AuthProvider>
+    </>
   );
 };
 export default MyApp;
