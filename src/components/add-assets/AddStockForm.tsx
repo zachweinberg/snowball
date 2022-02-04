@@ -126,12 +126,6 @@ const AddStockForm: React.FunctionComponent<Props> = ({
           floatingResults
           onError={(e) => setError(e)}
           onResult={(symbol, fullName) => {
-            API.getQuote(symbol, AssetType.Stock).then((quoteData) => {
-              if (quoteData.status === 'ok') {
-                setCostPerShare(quoteData.latestPrice);
-              }
-            });
-
             setSymbol(symbol.toUpperCase());
             setCompanyName(fullName);
           }}

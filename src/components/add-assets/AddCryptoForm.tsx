@@ -126,12 +126,6 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
           autofocus
           onError={(e) => setError(e)}
           onResult={(symbol, fullName, logoURL) => {
-            API.getQuote(symbol, AssetType.Crypto).then((quoteData) => {
-              if (quoteData.status === 'ok') {
-                setCostPerCoin(quoteData.latestPrice);
-              }
-            });
-
             if (logoURL) {
               setLogoURL(logoURL);
             } else {
