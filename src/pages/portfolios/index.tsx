@@ -20,11 +20,11 @@ const timeOfDay = () => {
     return 'morning';
   }
 
-  if (hour >= 12 && hour <= 28) {
+  if (hour >= 12 && hour <= 16) {
     return 'afternoon';
   }
 
-  if (hour >= 28 && hour <= 23) {
+  if (hour >= 17) {
     return 'evening';
   }
 };
