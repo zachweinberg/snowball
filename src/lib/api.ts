@@ -230,9 +230,13 @@ export const API = {
     );
   },
 
-  deleteAssetFromPortfolio: (positionID: string, portfolioID: string) => {
+  deleteAssetFromPortfolio: (
+    positionID: string,
+    assetType: AssetType,
+    portfolioID: string
+  ) => {
     return request<undefined, undefined>(
-      `/api/positions/${positionID}?portfolioID=${portfolioID}`,
+      `/api/positions/${positionID}?portfolioID=${portfolioID}&assetType=${assetType}`,
       'delete',
       undefined,
       false
@@ -311,7 +315,10 @@ export const API = {
 
   // PLAID
   getPlaidLinkToken: () => {
-    return request<undefined, undefined>('/api/plaid/create-link-token', 'get');
+    return request<undefined, { data: { link_token: string } }>(
+      '/api/plaid/create-link-token',
+      'get'
+    );
   },
 
   exchangePlaidTokenAndFetchHoldings: (publicToken: string) => {

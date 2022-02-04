@@ -1,59 +1,48 @@
+import { trackGoal } from 'fathom-client';
 import React, { useCallback, useEffect, useState } from 'react';
-import { usePlaidLink } from 'react-plaid-link';
+import { PlaidLinkOnSuccess, PlaidLinkOptions, usePlaidLink } from 'react-plaid-link';
 import { API } from '~/lib/api';
 import Button from '../ui/Button';
 
 const PlaidLink: React.FunctionComponent = () => {
-  const [linkToken, setLinkToken] = useState(null);
+  const [linkToken, setLinkToken] = useState<string | null>(null);
 
-  const generateToken = async () => {
-    const response = (await API.getPlaidLinkToken()) as any;
-
-    console.log(response);
-
-    setLinkToken(response.data.link_token);
-  };
-
-  useEffect(() => {
-    generateToken();
-  }, []);
-
-  return !linkToken ? (
-    <Button type="button" className="w-60" onClick={() => open()} disabled>
-      Import automatically
-    </Button>
-  ) : (
-    <Link linkToken={linkToken} />
-  );
-};
-
-export default PlaidLink;
-
-interface LinkProps {
-  linkToken: string | null;
-}
-
-const Link: React.FunctionComponent<LinkProps> = ({ linkToken }: LinkProps) => {
-  const onSuccess = useCallback(async (public_token, metadata) => {
-    const response = (await API.exchangePlaidTokenAndFetchHoldings(public_token)) as any;
+  const onSuccess = useCallback<PlaidLinkOnSuccess>(async (public_token, metadata) => {
+    const response = await API.exchangePlaidTokenAndFetchHoldings(public_token);
     console.log(response);
   }, []);
 
-  const config: Parameters<typeof usePlaidLink>[0] = {
-    token: linkToken!,
+  const config: PlaidLinkOptions = {
+    token: linkToken ?? '',
     onSuccess,
   };
 
   const { open, ready } = usePlaidLink(config);
 
-  return (
+  useEffect(() => {
+    API.getPlaidLinkToken().then((response) => {
+      localStorage.setItem('link_token', response.data.link_token);
+      setLinkToken(response.data.link_token);
+    });
+  }, []);
+
+  return !linkToken ? (
+    <Button type="button" className="w-60" onClick={() => null} disabled>
+      Import Automatically
+    </Button>
+  ) : (
     <Button
       type="button"
       className="w-60"
-      onClick={() => open()}
+      onClick={() => {
+        trackGoal('JALIKOJQ', 0);
+        open();
+      }}
       disabled={!ready || !linkToken}
     >
-      Import automatically
+      Import Automatically
     </Button>
   );
 };
+
+export default PlaidLink;

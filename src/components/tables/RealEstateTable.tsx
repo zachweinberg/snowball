@@ -50,7 +50,7 @@ const RealEstateTable: React.FunctionComponent<Props> = ({
   const columns = useMemo(
     () => [
       {
-        Header: '',
+        Header: 'Property',
         accessor: 'address',
         Cell: ({ row }) =>
           row.original.address

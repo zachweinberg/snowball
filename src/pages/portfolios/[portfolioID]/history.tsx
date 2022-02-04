@@ -71,8 +71,11 @@ const PortfolioLogsPage: NextPage = () => {
         </div>
 
         <ul className="mt-8 space-y-2">
-          {logs.map((log) => (
-            <li className="flex items-center justify-between p-3 bg-white border rounded-md border-bordergray">
+          {logs.map((log, i) => (
+            <li
+              key={i}
+              className="flex items-center justify-between p-3 bg-white border rounded-md border-bordergray"
+            >
               <p>{log.description}</p>
               <p className="text-sm text-darkgray">
                 {DateTime.fromMillis(log.createdAt).toFormat('LLL d yyyy, t')}
@@ -84,7 +87,7 @@ const PortfolioLogsPage: NextPage = () => {
     );
   };
 
-  return <Layout title={`History - Obsidian Tracker`}>{renderContent()}</Layout>;
+  return <Layout title={`History | Obsidian Tracker`}>{renderContent()}</Layout>;
 };
 
 export default PortfolioLogsPage;

@@ -16,12 +16,12 @@ const Header: React.FunctionComponent<Props> = ({ noBorder }: Props) => {
 
   return (
     <header className={classNames('bg-white', { 'border-b border-bordergray': !noBorder })}>
-      <div className="flex items-center justify-between px-4 mx-auto max-w-7xl">
-        <Link href={auth.user ? '/portfolios' : '/'}>
+      <div className="flex items-center justify-between w-full px-4 mx-auto">
+        <Link className="hidden sm:block" href={auth.user ? '/portfolios' : '/'}>
           <Logo dark />
         </Link>
-        <div>
-          <nav className="flex items-center">
+        <div className="w-full">
+          <nav className="flex items-center justify-end w-full">
             <ul className="flex space-x-9 mr-9">
               {auth.user ? (
                 <>
@@ -29,7 +29,7 @@ const Header: React.FunctionComponent<Props> = ({ noBorder }: Props) => {
                     <Link href="/portfolios">
                       <div
                         className={classNames(
-                          'py-5 font-semibold text-[.95rem] border-b-4',
+                          'py-5 font-semibold text-xs md:text-[.95rem] border-b-4',
                           router.pathname.includes('portfolios')
                             ? 'border-lime text-dark'
                             : 'text-darkgray border-white hover:text-dark transition-colors'
@@ -43,7 +43,7 @@ const Header: React.FunctionComponent<Props> = ({ noBorder }: Props) => {
                     <Link href="/alerts">
                       <div
                         className={classNames(
-                          'py-5 font-semibold text-[.95rem] border-b-4',
+                          'py-5 font-semibold text-xs md:text-[.95rem] border-b-4',
                           router.pathname.includes('alerts')
                             ? 'border-lime text-dark'
                             : 'text-darkgray border-white hover:text-dark transition-colors'
@@ -57,7 +57,7 @@ const Header: React.FunctionComponent<Props> = ({ noBorder }: Props) => {
                     <Link href="/watchlist">
                       <div
                         className={classNames(
-                          'py-5 font-semibold text-[.95rem] border-b-4',
+                          'py-5 font-semibold text-xs md:text-[.95rem] border-b-4',
                           router.pathname.includes('watchlist')
                             ? 'border-lime text-dark'
                             : 'text-darkgray hover:text-dark border-white transition-colors'
@@ -71,7 +71,7 @@ const Header: React.FunctionComponent<Props> = ({ noBorder }: Props) => {
                     <Link href="/news">
                       <div
                         className={classNames(
-                          'py-5 font-semibold text-[.95rem] border-b-4',
+                          'py-5 font-semibold text-xs md:text-[.95rem] border-b-4',
                           router.pathname.includes('news')
                             ? 'border-lime text-dark'
                             : 'text-darkgray border-white hover:text-dark transition-colors'
@@ -88,7 +88,7 @@ const Header: React.FunctionComponent<Props> = ({ noBorder }: Props) => {
                     <Link href="/login">
                       <div
                         className={classNames(
-                          'py-5 font-semibold text-[.95rem] border-b-4',
+                          'py-5 font-semibold text-xs md:text-[.95rem] border-b-4',
                           router.pathname.includes('login')
                             ? 'border-lime text-dark'
                             : 'text-darkgray hover:text-dark transition-colors border-transparent'

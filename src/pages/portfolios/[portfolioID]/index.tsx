@@ -44,6 +44,7 @@ type PositionType =
   | CashPosition
   | CustomPosition;
 
+const MIN_WIDTH = '1100px';
 const PortfolioView: NextPage = () => {
   const auth = useAuth();
   const router = useRouter();
@@ -254,15 +255,9 @@ const PortfolioView: NextPage = () => {
 
   const onDeleteAsset = async () => {
     if (deleteAsset && portfolio) {
-      await API.deleteAssetFromPortfolio(deleteAsset.id, portfolio.id);
+      await API.deleteAssetFromPortfolio(deleteAsset.id, deleteAsset.type, portfolio.id);
       setDeleteAsset(null);
       loadPortfolioData();
-    }
-  };
-
-  const onEditPosition = async () => {
-    if (editPosition && portfolio) {
-      // await API.
     }
   };
 
@@ -309,7 +304,7 @@ const PortfolioView: NextPage = () => {
 
                 <h1 className="font-bold text-[1.75rem] mr-4">{portfolio.name}</h1>
 
-                {portfolio.settings.private === false && (
+                {!portfolio.settings.private && (
                   <p className="px-2 py-1 text-xs font-medium rounded-full text-darkgray bg-gray">
                     Public
                   </p>
@@ -342,7 +337,10 @@ const PortfolioView: NextPage = () => {
               )}
             </div>
 
-            <div className="grid grid-cols-1 grid-rows-2 gap-4 lg:grid-rows-1 lg:grid-cols-2 mb-7 h-72">
+            <div
+              className="grid grid-cols-2 grid-rows-1 gap-6 mb-7 h-72"
+              style={{ minWidth: MIN_WIDTH }}
+            >
               <BalanceOverTime portfolioID={portfolio.id} portfolioTotal={portfolioTotal} />
 
               <div className="grid grid-cols-3 gap-6">
@@ -398,7 +396,10 @@ const PortfolioView: NextPage = () => {
               </Link>
             </div>
 
-            <div className="px-5 py-4 mb-32 bg-white border rounded-3xl border-bordergray">
+            <div
+              style={{ minWidth: MIN_WIDTH }}
+              className="px-5 py-4 mb-32 bg-white border rounded-3xl border-bordergray"
+            >
               <div className="flex mb-7">
                 <div className="mr-5 w-44">
                   <Select
@@ -436,11 +437,12 @@ const PortfolioView: NextPage = () => {
         </>
       );
     }
+
     return null;
   };
 
   return (
-    <Layout title={`${portfolio?.name ?? 'Portfolio'} - Obsidian Tracker`}>
+    <Layout title={`${portfolio?.name ?? 'Portfolio'} | Obsidian Tracker`}>
       {portfolio && (
         <FullScreenModal isOpen={addingAsset} onClose={() => setAddingAsset(false)}>
           <AddAssetForm

@@ -69,7 +69,7 @@ const WatchListContent: React.FunctionComponent = () => {
   }, []);
 
   return (
-    <Layout title="Alerts - Obsidian Tracker">
+    <Layout title="Alerts | Obsidian Tracker">
       <AddAlertModal
         open={addingAlert}
         onClose={(reload) => {

@@ -83,7 +83,7 @@ const NewsPageContent: React.FunctionComponent = () => {
   }, [page]);
 
   return (
-    <Layout title="News - Obsidian Tracker">
+    <Layout title="News | Obsidian Tracker">
       <div className="flex items-center mb-7">
         <h1 className="font-bold text-[1.75rem]">News</h1>
       </div>

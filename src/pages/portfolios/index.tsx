@@ -72,12 +72,12 @@ const PortfolioListPage: NextPage = () => {
 
     if (portfolios && portfolios.length === 0) {
       return (
-        <div className="flex flex-col items-center justify-center max-w-md mx-auto">
+        <div className="flex flex-col items-center justify-center max-w-md mx-auto mt-10">
           <svg
             viewBox="0 0 150 150"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className="mb-8 w-28 h-28"
+            className="w-20 h-20 mb-8"
           >
             <circle cx="75" cy="75" r="75" fill="#EEEFF3" />
             <path
@@ -101,10 +101,10 @@ const PortfolioListPage: NextPage = () => {
               fill="#00565B"
             />
           </svg>
-          <p className="mb-4 text-[1.75rem] font-bold text-dark">
-            Welcome to Obsidian Tracker.
+          <p className="mb-4 text-[1.5rem] font-bold text-dark">
+            Welcome to Obsidian Tracker!
           </p>
-          <p className="mb-5 font-medium text-center text-darkgray text-[1rem] leading-tight">
+          <p className="mb-5 font-medium text-center text-darkgray text-[.9rem] leading-5">
             You do not have any portfolios yet.
             <br />
             Create one and start tracking your net worth.
@@ -137,7 +137,7 @@ const PortfolioListPage: NextPage = () => {
 
   return (
     <RequiredLoggedIn>
-      <Layout title="My Portfolios - Obsidian Tracker">
+      <Layout title="My Portfolios | Obsidian Tracker">
         <FullScreenModal
           isOpen={creatingPortfolio}
           onClose={() => setCreatingPortfolio(false)}
@@ -155,7 +155,7 @@ const PortfolioListPage: NextPage = () => {
         <div className="flex items-center justify-between mb-7">
           <div>
             <h1 className="font-bold text-dark text-[1.75rem] mb-4">My Portfolios</h1>
-            <h2 className="font-normal text-dark text-[1rem]">
+            <h2 className="font-normal text-dark text-[1rem] leading-5">
               Good {timeOfDay()} {auth.user?.name}, view your portfolios below:
             </h2>
           </div>

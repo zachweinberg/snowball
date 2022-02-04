@@ -11,7 +11,7 @@ const Modal: React.FunctionComponent<Props> = ({ isOpen, onClose, children }: Pr
   return (
     <Transition.Root show={isOpen} as={Fragment}>
       <Dialog as="div" className="fixed inset-0 z-10 overflow-visible" onClose={onClose}>
-        <div className="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 overflow-visible text-center sm:block sm:p-0">
+        <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 overflow-visible text-center sm:block sm:p-0">
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-200"

@@ -8,6 +8,8 @@ export default class MyDocument extends Document {
         <Head>
           <link rel="preconnect" href="https://cdn.usefathom.com" crossOrigin="" />
 
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
           <script
             async
             src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places,geometry&language=en`}
