@@ -16,7 +16,7 @@ const Header: React.FunctionComponent<Props> = ({ noBorder }: Props) => {
 
   return (
     <header className={classNames('bg-white', { 'border-b border-bordergray': !noBorder })}>
-      <div className="flex items-center justify-between w-full px-4 mx-auto">
+      <div className="flex items-center justify-between px-4 mx-auto md:max-w-7xl">
         <Link className="hidden sm:block" href={auth.user ? '/portfolios' : '/'}>
           <Logo dark />
         </Link>
