@@ -38,7 +38,8 @@ const PlaidLink: React.FunctionComponent = () => {
         trackGoal('JALIKOJQ', 0);
         open();
       }}
-      disabled={!ready || !linkToken}
+      // disabled={!ready || !linkToken}
+      disabled
     >
       Import Automatically
     </Button>
