@@ -11,6 +11,11 @@ export interface User {
     email: string;
     name: string;
     createdAt: Date;
+    plan: Plan;
+}
+export declare type PlanType = "FREE" | "PREMIUM";
+export interface Plan {
+    type: PlanType;
 }
 export declare enum AssetColor {
     Stocks = "#CEF33C",
