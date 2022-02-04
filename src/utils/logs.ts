@@ -10,7 +10,7 @@ export const getPortfolioLogItems = async (portfolioID: string) => {
     `portfolios/${portfolioID}/logs`,
     [],
     { property: 'createdAt', direction: 'desc' },
-    100
+    400
   );
   return logItems;
 };
