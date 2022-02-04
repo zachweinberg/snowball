@@ -15,7 +15,10 @@ export interface User {
   plan: Plan;
 }
 
-export type PlanType = "FREE" | "PREMIUM";
+export enum PlanType {
+  FREE = "FREE",
+  PREMIUM = "PREMIUM",
+}
 export interface Plan {
   type: PlanType;
 }
