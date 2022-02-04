@@ -13,7 +13,10 @@ export interface User {
     createdAt: Date;
     plan: Plan;
 }
-export declare type PlanType = "FREE" | "PREMIUM";
+export declare enum PlanType {
+    FREE = "FREE",
+    PREMIUM = "PREMIUM"
+}
 export interface Plan {
     type: PlanType;
 }
