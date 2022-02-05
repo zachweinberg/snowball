@@ -13,6 +13,7 @@ export interface User {
   name: string;
   createdAt: Date;
   plan: Plan;
+  lastLogin: Date;
 }
 
 export enum PlanType {
