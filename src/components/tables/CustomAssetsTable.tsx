@@ -62,7 +62,7 @@ const CustomAssetTable: React.FunctionComponent<Props> = ({
         Cell: ({ value, row }) => (
           <Menu
             options={[
-              { label: 'Edit', onClick: () => onEdit(row.original) },
+              { label: 'Edit Custom Asset', onClick: () => onEdit(row.original) },
               { label: 'Delete', onClick: () => onDelete(value) },
             ]}
             button={() => <VerticalDots />}

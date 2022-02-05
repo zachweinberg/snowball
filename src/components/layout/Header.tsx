@@ -22,7 +22,7 @@ const Header: React.FunctionComponent<Props> = ({ noBorder }: Props) => {
         </Link>
         <div className="w-full">
           <nav className="flex items-center justify-end w-full">
-            <ul className="flex space-x-9 mr-9">
+            <ul className="flex space-x-9">
               {auth.user ? (
                 <>
                   <li>
@@ -102,7 +102,7 @@ const Header: React.FunctionComponent<Props> = ({ noBorder }: Props) => {
                     <Link href="/signup">
                       <button
                         type="button"
-                        className="p-3 rounded-lg font-semibold text-[.95rem] text-white bg-dark hover:text-gray"
+                        className="p-3 text-xs font-semibold text-white md:text-[.95rem] rounded-lg bg-dark hover:text-gray"
                       >
                         Get Started
                       </button>
@@ -119,7 +119,7 @@ const Header: React.FunctionComponent<Props> = ({ noBorder }: Props) => {
                   { label: 'Log Out', onClick: () => auth.logout() },
                 ]}
                 button={() => (
-                  <div className="flex items-center">
+                  <div className="flex items-center ml-9">
                     <span className="inline-flex items-center justify-center w-10 h-10 mr-1 rounded-full bg-dark hover:opacity-90">
                       <span className="text-lg font-medium leading-none text-white">
                         {auth.user?.name?.[0].toUpperCase()}

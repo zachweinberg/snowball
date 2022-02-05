@@ -133,7 +133,7 @@ const CryptoTable: React.FunctionComponent<Props> = ({
         Cell: ({ row, value }) => (
           <Menu
             options={[
-              { label: 'Edit', onClick: () => onEdit(row.original) },
+              { label: 'Edit Crypto', onClick: () => onEdit(row.original) },
               { label: 'Delete', onClick: () => onDelete(value, row.original.symbol) },
             ]}
             button={() => <VerticalDots />}

@@ -121,7 +121,7 @@ const StocksTable: React.FunctionComponent<Props> = ({
           !auth.user ? null : (
             <Menu
               options={[
-                { label: 'Edit', onClick: () => onEdit(row.original) },
+                { label: 'Edit Stock', onClick: () => onEdit(row.original) },
                 { label: 'Delete', onClick: () => onDelete(value, row.original.symbol) },
               ]}
               button={() => <VerticalDots />}

@@ -35,18 +35,20 @@ const AddRealEstateForm: React.FunctionComponent<Props> = ({
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name) {
-      setError('Name is required.');
-      return;
-    }
-
     if (automaticValuation && !placeID) {
-      setError('Please select an address.');
+      setError('Please enter an address or disable automatic valuation.');
       return;
     }
 
     if (!automaticValuation && !propertyValue) {
-      setError('Please enter a manual property value.');
+      setError('Please enter a manual property value or enable automatic valuation.');
+      return;
+    }
+
+    if (!placeID && !name) {
+      setError(
+        'Please enter a nickname for the property, we need a way to display which property this is.'
+      );
       return;
     }
 

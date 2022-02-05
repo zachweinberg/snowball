@@ -265,7 +265,7 @@ const PortfolioView: NextPage = () => {
     if (error) {
       return (
         <div className="max-w-md p-8 mx-auto bg-white rounded-md">
-          <p className="mb-6 text-xl font-medium text-center text-purple2">{error}</p>
+          <p className="mb-6 text-xl font-medium text-center">{error}</p>
           <Link href="/portfolios">
             <Button type="button">Go Back</Button>
           </Link>
