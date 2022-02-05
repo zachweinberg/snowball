@@ -87,7 +87,7 @@ export const requireSignedIn = async (req: express.Request, res: express.Respons
 
     const THIRTY_MIN_AGO = DateTime.local().minus({ minute: 30 }).toJSDate();
 
-    if (user.lastLogin < THIRTY_MIN_AGO) {
+    if (user.lastLogin < THIRTY_MIN_AGO || !user.lastLogin) {
       await updateDocument(`users`, authUser.uid, { lastLogin: new Date() });
     }
 
