@@ -548,23 +548,11 @@ positionsRouter.delete(
     const userID = req.user!.id;
     const redisKey = `portfolio-${portfolioID}`;
 
-    if (!positionID || !portfolioID) {
-      return res.status(400).end();
-    }
-
     if (!(await userOwnsPortfolio(req, res, portfolioID))) {
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
     }
 
     let log = '';
-
-    if (assetType === AssetType.RealEstate) {
-      const position = await fetchDocumentByID<RealEstatePosition>(`real-estate-positions`, positionID);
-      await deleteDocument(`real-estate-positions/${positionID}`);
-      log = `Deleted ${
-        position.address ? addresstoString(position.address) : position.name ? position.name : 'a property'
-      } from portfolio.`;
-    }
 
     if (assetType === AssetType.Stock) {
       const position = await fetchDocumentByID<StockPosition>(`portfolios/${portfolioID}/positions`, positionID);
@@ -576,6 +564,14 @@ positionsRouter.delete(
       const position = await fetchDocumentByID<CryptoPosition>(`portfolios/${portfolioID}/positions`, positionID);
       await deleteDocument(`portfolios/${portfolioID}/positions/${positionID}`);
       log = `Deleted ${position.quantity} ${position.symbol} from portfolio.`;
+    }
+
+    if (assetType === AssetType.RealEstate) {
+      const position = await fetchDocumentByID<RealEstatePosition>(`real-estate-positions`, positionID);
+      await deleteDocument(`real-estate-positions/${positionID}`);
+      log = `Deleted ${
+        position.address ? addresstoString(position.address) : position.name ? position.name : 'a property'
+      } from portfolio.`;
     }
 
     if (assetType === AssetType.Cash) {
