@@ -82,6 +82,14 @@ watchListRouter.post(
       });
     }
 
+    if (existingItems.length >= 30) {
+      return res.status(400).json({
+        status: 'error',
+        error: 'At this time, we allow up to 30 assets in watchlists.',
+        code: 'MAX_PLAN',
+      });
+    }
+
     const body = req.body as AddWatchListItemRequest;
 
     const duplicate = existingItems.find(

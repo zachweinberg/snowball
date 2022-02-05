@@ -85,6 +85,7 @@ usersRouter.post(
       const userDataToSet: User = {
         id: newUser.uid,
         email: userEmail,
+        lastLogin: new Date(),
         name: userName,
         createdAt: new Date(),
         plan: {

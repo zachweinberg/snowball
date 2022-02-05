@@ -171,6 +171,14 @@ portfoliosRouter.post(
       });
     }
 
+    if (existingPortfolios.length >= 4) {
+      return res.status(400).json({
+        status: 'error',
+        error: 'At this time, we allow up to four portfolios on the premium plan.',
+        code: 'MAX_PLAN',
+      });
+    }
+
     const newPortfolioDocRef = firebaseAdmin().firestore().collection('portfolios').doc();
 
     const portfolioDataToSet: Portfolio = {

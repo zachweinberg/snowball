@@ -40,12 +40,20 @@ positionsRouter.post(
       { property: 'assetType', condition: '==', value: AssetType.Stock },
     ]);
 
-    if (existingStockPositions.length >= 5 && req.user!.plan.type === PlanType.FREE) {
+    if (existingStockPositions.length >= 4 && req.user!.plan.type === PlanType.FREE) {
       return res.status(400).json({
         status: 'error',
         error:
           'Your account is currently on the free plan. If you would like to add more than four stock positions per portfolio, please upgrade to the premium plan.',
         code: 'PLAN',
+      });
+    }
+
+    if (existingStockPositions.length >= 30) {
+      return res.status(400).json({
+        status: 'error',
+        error: 'At this time, we allow up to 30 stock positions in a portfolio.',
+        code: 'MAX_PLAN',
       });
     }
 
@@ -99,12 +107,20 @@ positionsRouter.post(
       { property: 'assetType', condition: '==', value: AssetType.Crypto },
     ]);
 
-    if (existingCryptoPositions.length >= 5 && req.user!.plan.type === PlanType.FREE) {
+    if (existingCryptoPositions.length >= 4 && req.user!.plan.type === PlanType.FREE) {
       return res.status(400).json({
         status: 'error',
         error:
           'Your account is currently on the free plan. If you would like to add more than four crypto positions per portfolio, please upgrade to the premium plan.',
         code: 'PLAN',
+      });
+    }
+
+    if (existingCryptoPositions.length >= 30) {
+      return res.status(400).json({
+        status: 'error',
+        error: 'At this time, we allow up to 30 crypto positions in a portfolio.',
+        code: 'MAX_PLAN',
       });
     }
 
@@ -164,6 +180,14 @@ positionsRouter.post(
         error:
           'Your account is currently on the free plan. If you would like to add more than two real estate holdings per portfolio, please upgrade to the premium plan.',
         code: 'PLAN',
+      });
+    }
+
+    if (existingREPositions.length >= 20) {
+      return res.status(400).json({
+        status: 'error',
+        error: 'At this time, we allow up to 20 real estate holdings in a portfolio.',
+        code: 'MAX_PLAN',
       });
     }
 
@@ -243,6 +267,14 @@ positionsRouter.post(
       });
     }
 
+    if (existingCashPositions.length >= 30) {
+      return res.status(400).json({
+        status: 'error',
+        error: 'At this time, we allow up to 30 cash positions in a portfolio.',
+        code: 'MAX_PLAN',
+      });
+    }
+
     await createDocument<CashPosition>(`portfolios/${portfolioID}/positions`, {
       assetType: AssetType.Cash,
       accountName,
@@ -285,6 +317,14 @@ positionsRouter.post(
         error:
           'Your account is currently on the free plan. If you would like to add more than four custom assets per portfolio, please upgrade to the premium plan.',
         code: 'PLAN',
+      });
+    }
+
+    if (existingCustom.length >= 30) {
+      return res.status(400).json({
+        status: 'error',
+        error: 'At this time, we allow up to 30 custom positions in a portfolio.',
+        code: 'MAX_PLAN',
       });
     }
 

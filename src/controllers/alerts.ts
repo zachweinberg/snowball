@@ -44,6 +44,14 @@ alertsRouter.post(
       });
     }
 
+    if (existingAlerts.length >= 20) {
+      return res.status(400).json({
+        status: 'error',
+        error: 'At this time, we allow up to 20 alerts at once.',
+        code: 'MAX_PLAN',
+      });
+    }
+
     if (body.destination === AlertDestination.SMS) {
       body.destinationValue = formatPhoneNumber(body.destinationValue);
     } else if (body.destination === AlertDestination.Email) {

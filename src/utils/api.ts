@@ -1,9 +1,10 @@
 import { User } from '@zachweinberg/obsidian-schema';
 import express from 'express';
 import { auth } from 'firebase-admin';
+import { DateTime } from 'luxon';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { logSentryError } from '~/lib/sentry';
-import { fetchDocumentByID } from './db';
+import { fetchDocumentByID, updateDocument } from './db';
 
 export const ignoreFavicon = (req: express.Request, res: express.Response, next: express.NextFunction) => {
   if (req.originalUrl.includes('favicon.ico')) {
@@ -83,6 +84,12 @@ export const requireSignedIn = async (req: express.Request, res: express.Respons
     }
 
     const user = (await fetchDocumentByID('users', authUser.uid)) as User;
+
+    const THIRTY_MIN_AGO = DateTime.local().minus({ minute: 30 }).toJSDate();
+
+    if (user.lastLogin < THIRTY_MIN_AGO) {
+      await updateDocument(`users`, authUser.uid, { lastLogin: new Date() });
+    }
 
     req.user = user;
     next();
