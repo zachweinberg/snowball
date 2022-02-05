@@ -362,11 +362,14 @@ export interface PortfolioSettings {
   summaryEmailPeriod: Period;
 }
 
+export type PlaidItemStatus = "GOOD" | "BAD";
 export interface PlaidItem {
-  itemID: string;
+  plaidItemID: string;
   userID: string;
   createdAt: Date;
-  accessToken: string;
+  plaidAccessToken: string;
+  plaidInstitutionID: string;
+  status: PlaidItemStatus;
 }
 
 export interface PortfolioLogItem {
@@ -393,4 +396,9 @@ export interface CheckEmailRequest {
 
 export interface CheckEmailResponse extends BaseResponse {
   email: string;
+}
+
+export interface FoundPlaidAsset {
+  assetType: AssetType;
+  plaidItemID: string;
 }
