@@ -321,6 +321,7 @@ export declare type PlaidItemStatus = "GOOD" | "BAD";
 export interface PlaidItem {
     plaidItemID: string;
     userID: string;
+    plaidInstitutionName: string;
     createdAt: Date;
     plaidAccessToken: string;
     plaidInstitutionID: string;
