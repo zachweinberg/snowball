@@ -372,6 +372,17 @@ export interface PlaidItem {
   status: PlaidItemStatus;
 }
 
+export interface PlaidAccount {
+  plaidItemID: string;
+  plaidAccountID: string;
+  name: string;
+  currentBalance: number;
+  subtype: string;
+  type: string;
+  userID: string;
+  createdAt: Date;
+}
+
 export interface PortfolioLogItem {
   portfolioID: string;
   description: string;
