@@ -1,4 +1,4 @@
-import { AssetType, StockPosition } from '@zachweinberg/obsidian-schema';
+import { AssetType, GetPlaidTokenResponse, PlaidItem, StockPosition } from '@zachweinberg/obsidian-schema';
 import { Router } from 'express';
 import { Configuration, CountryCode, LinkTokenCreateRequest, PlaidApi, PlaidEnvironments, Products } from 'plaid';
 import { catchErrors, requireSignedIn } from '~/utils/api';
@@ -24,6 +24,7 @@ plaidRouter.get(
   '/create-link-token',
   requireSignedIn,
   catchErrors(async (req, res) => {
+    return res.status(200).end();
     const userID = req.user!.id;
 
     const plaidRequest: LinkTokenCreateRequest = {
@@ -32,7 +33,7 @@ plaidRouter.get(
       },
       redirect_uri: 'https://obsidiantracker.com/plaid/oauth-redirect',
       client_name: 'Obsidian Tracker',
-      products: [Products.Transactions, Products.Investments, Products.Auth],
+      products: [Products.Auth],
       language: 'en',
       webhook: 'https://api.obsidiantracker.com/plaid/webhooks',
       country_codes: [CountryCode.Us],
@@ -40,7 +41,81 @@ plaidRouter.get(
 
     const createTokenResponse = await plaidClient.linkTokenCreate(plaidRequest);
 
-    res.status(200).json({ status: 'ok', data: createTokenResponse.data });
+    const response: GetPlaidTokenResponse = {
+      status: 'ok',
+      data: createTokenResponse.data,
+    };
+
+    res.status(200).json(response);
+  })
+);
+
+plaidRouter.post(
+  '/items',
+  requireSignedIn,
+  catchErrors(async (req, res) => {
+    const userID = req.user!.id;
+    const { publicToken, institution, accounts } = req.body as {
+      publicToken: string;
+      institution: { name: string; institution_id: string };
+      accounts: Array<{
+        id: string;
+        name: string;
+        mask: string;
+        type: string;
+        subtype: string;
+        verification_status: string;
+      }>;
+    };
+
+    // exchange the public token for a private access token and store with the item.
+    const response = await plaidClient.itemPublicTokenExchange({
+      public_token: publicToken,
+    });
+
+    const plaidAccessToken = response.data.access_token;
+    const plaidItemID = response.data.item_id;
+
+    const plaidItem: PlaidItem = {
+      userID,
+      plaidInstitutionName: institution.name,
+      plaidInstitutionID: institution.institution_id,
+      plaidItemID,
+      plaidAccessToken,
+      createdAt: new Date(),
+      status: 'GOOD',
+    };
+
+    await createDocument('plaid-items', plaidItem);
+
+    // choose the  or savings account.
+    const checkingAccounts = accounts.filter((account) => account.subtype === 'checking');
+    const savingsAccounts = accounts.filter((account) => account.subtype === 'savings');
+    const account = accounts.length === 1 ? accounts[0] : checkingAccounts.length > 0 ? checkingAccounts[0] : savingsAccounts[0];
+
+    const balanceResponse = await plaidClient.accountsBalanceGet({
+      access_token: plaidAccessToken,
+      options: { account_ids: [account.id] },
+    });
+
+    console.log(JSON.stringify(balanceResponse.data));
+    const plaidAccount = {
+      plaidItemID,
+      plaidAccountID: account.id,
+      name: account.name,
+      currentBalance: balanceResponse,
+      type: '',
+      subtype: '',
+      userID,
+    };
+
+    await createDocument('plaid-accounts', {});
+    res.status(200).end();
+
+    // res.json({
+    //   items: sanitizeItems(newItem),
+    //   accounts: sanitizeAccounts(newAccount),
+    // });
   })
 );
 
@@ -92,9 +167,10 @@ plaidRouter.post(
       return accum;
     }, [] as TemporaryStockPosition[]);
 
-    console.log(holdings);
-    console.log('----------------');
-    console.log(securities);
+    // const response: {
+    //   status: 'ok';
+    // };
+
     res.status(200).json({ holdings, securities });
   })
 );
