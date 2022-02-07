@@ -1,8 +1,13 @@
-import { AssetType, GetPlaidTokenResponse, PlaidItem, StockPosition } from '@zachweinberg/obsidian-schema';
+import { AssetType, CashPosition, GetPlaidTokenResponse, PlaidItem, PlanType } from '@zachweinberg/obsidian-schema';
 import { Router } from 'express';
 import { Configuration, CountryCode, LinkTokenCreateRequest, PlaidApi, PlaidEnvironments, Products } from 'plaid';
+import { deleteRedisKey } from '~/lib/redis';
 import { catchErrors, requireSignedIn } from '~/utils/api';
-import { createDocument } from '~/utils/db';
+import { encrypt } from '~/utils/crypto';
+import { createDocument, findDocuments } from '~/utils/db';
+import { trackPortfolioLogItem } from '~/utils/logs';
+import { formatMoneyFromNumber } from '~/utils/money';
+import { userOwnsPortfolio } from '~/utils/portfolios';
 
 const plaidRouter = Router();
 
@@ -18,13 +23,19 @@ const plaidConfig = new Configuration({
 
 const plaidClient = new PlaidApi(plaidConfig);
 
-type TemporaryStockPosition = Omit<StockPosition, 'id' | 'createdAt'>;
+interface NativePlaidAccount {
+  id: string;
+  name: string;
+  mask: string;
+  type: string;
+  subtype: string;
+  verification_status: string;
+}
 
 plaidRouter.get(
   '/create-link-token',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    return res.status(200).end();
     const userID = req.user!.id;
 
     const plaidRequest: LinkTokenCreateRequest = {
@@ -51,129 +62,179 @@ plaidRouter.get(
 );
 
 plaidRouter.post(
-  '/items',
+  '/cash-item',
   requireSignedIn,
   catchErrors(async (req, res) => {
     const userID = req.user!.id;
-    const { publicToken, institution, accounts } = req.body as {
+    const { publicToken, portfolioID, institutionID, institutionName, account } = req.body as {
       publicToken: string;
-      institution: { name: string; institution_id: string };
-      accounts: Array<{
-        id: string;
-        name: string;
-        mask: string;
-        type: string;
-        subtype: string;
-        verification_status: string;
-      }>;
+      institutionName: string;
+      portfolioID: string;
+      institutionID: string;
+      account: NativePlaidAccount;
     };
 
-    // exchange the public token for a private access token and store with the item.
-    const response = await plaidClient.itemPublicTokenExchange({
+    if (!(await userOwnsPortfolio(req, res, portfolioID))) {
+      return res.status(401).json({ status: 'error', error: 'Invalid.' });
+    }
+
+    const existingCashPositions = await findDocuments(`portfolios/${portfolioID}/positions`, [
+      { property: 'assetType', condition: '==', value: AssetType.Cash },
+    ]);
+
+    if (existingCashPositions.length >= 4 && req.user!.plan.type === PlanType.FREE) {
+      return res.status(400).json({
+        status: 'error',
+        error:
+          'Your account is currently on the free plan. If you would like to add more than four cash positions per portfolio, please upgrade to the premium plan.',
+        code: 'PLAN',
+      });
+    }
+
+    if (existingCashPositions.length >= 30) {
+      return res.status(400).json({
+        status: 'error',
+        error: 'At this time, we allow up to 30 cash positions in a portfolio.',
+        code: 'MAX_PLAN',
+      });
+    }
+
+    const usersPlaidItems = await findDocuments<PlaidItem>('plaid-items', [
+      { property: 'userID', condition: '==', value: userID },
+    ]);
+    const alreadyLinked = usersPlaidItems.find((plaidItem) => plaidItem.plaidInstitutionID === institutionID);
+
+    if (alreadyLinked) {
+      return res.status(400).json({
+        status: 'error',
+        error:
+          'You have already linked this financial institution to your account. Please delete any existing cash positions linked to this institution and try again.',
+      });
+    }
+    // Exchange the public token for a private access token and store with the item
+    const exchangeResponse = await plaidClient.itemPublicTokenExchange({
       public_token: publicToken,
     });
 
-    const plaidAccessToken = response.data.access_token;
-    const plaidItemID = response.data.item_id;
+    const plaidAccessToken = exchangeResponse.data.access_token;
+    const plaidItemID = exchangeResponse.data.item_id;
 
     const plaidItem: PlaidItem = {
       userID,
-      plaidInstitutionName: institution.name,
-      plaidInstitutionID: institution.institution_id,
+      plaidInstitutionName: institutionName,
+      plaidInstitutionID: institutionID,
       plaidItemID,
-      plaidAccessToken,
+      plaidAccessToken: encrypt(plaidAccessToken),
       createdAt: new Date(),
       status: 'GOOD',
     };
 
-    await createDocument('plaid-items', plaidItem);
-
-    // choose the  or savings account.
-    const checkingAccounts = accounts.filter((account) => account.subtype === 'checking');
-    const savingsAccounts = accounts.filter((account) => account.subtype === 'savings');
-    const account = accounts.length === 1 ? accounts[0] : checkingAccounts.length > 0 ? checkingAccounts[0] : savingsAccounts[0];
-
-    const balanceResponse = await plaidClient.accountsBalanceGet({
-      access_token: plaidAccessToken,
-      options: { account_ids: [account.id] },
-    });
-
-    console.log(JSON.stringify(balanceResponse.data));
     const plaidAccount = {
       plaidItemID,
       plaidAccountID: account.id,
       name: account.name,
-      currentBalance: balanceResponse,
-      type: '',
-      subtype: '',
+      type: account.type ?? '',
+      subtype: account.subtype ?? '',
       userID,
     };
 
-    await createDocument('plaid-accounts', {});
-    res.status(200).end();
+    await Promise.all([
+      createDocument('plaid-accounts', plaidAccount),
+      createDocument('plaid-items', plaidItem, plaidItem.plaidItemID),
+    ]);
 
-    // res.json({
-    //   items: sanitizeItems(newItem),
-    //   accounts: sanitizeAccounts(newAccount),
-    // });
-  })
-);
+    const redisKey = `portfolio-${portfolioID}`;
 
-plaidRouter.post(
-  '/exchange-public-token-and-fetch-holdings',
-  requireSignedIn,
-  catchErrors(async (req, res) => {
-    const userID = req.user!.id;
-    const publicToken = req.body.publicToken;
-
-    const tokenResponse = await plaidClient.itemPublicTokenExchange({
-      public_token: publicToken,
+    const balanceResponse = await plaidClient.accountsBalanceGet({
+      access_token: plaidAccessToken,
     });
 
-    const accessToken = tokenResponse.data.access_token;
-    const itemID = tokenResponse.data.item_id;
+    const currentBalance =
+      balanceResponse.data.accounts?.find((account) => account.account_id === plaidAccount.plaidAccountID)?.balances?.available ??
+      0;
+    const accountName = `${plaidItem.plaidInstitutionName} - ${plaidAccount.name}`;
 
-    await createDocument('plaid-items', {
+    await createDocument<CashPosition>(`portfolios/${portfolioID}/positions`, {
+      assetType: AssetType.Cash,
+      isPlaid: true,
+      plaidAccountID: plaidAccount.plaidAccountID,
+      plaidItemID: plaidItem.plaidItemID,
+      accountName,
+      amount: currentBalance,
       createdAt: new Date(),
-      itemID,
-      accessToken,
-      userID,
     });
 
-    const holdingsResponse = await plaidClient.investmentsHoldingsGet({
-      access_token: accessToken,
-    });
+    await deleteRedisKey(redisKey);
+    await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
 
-    const holdings = holdingsResponse.data.holdings;
-    const securities = holdingsResponse.data.securities;
+    await trackPortfolioLogItem(
+      portfolioID,
+      `Added ${accountName} cash account (via Plaid) with ${formatMoneyFromNumber(currentBalance)}.`
+    );
 
-    const mappedHoldings: TemporaryStockPosition[] = holdings.reduce((accum, holding) => {
-      const theSecurity = securities.find((security) => security.security_id === holding.security_id);
+    const response = {
+      status: 'ok',
+    };
 
-      if (!theSecurity) {
-        return accum;
-      }
-
-      if (theSecurity.type === 'equity' && theSecurity.name && theSecurity.ticker_symbol && holding.cost_basis) {
-        accum.push({
-          companyName: theSecurity.name,
-          symbol: theSecurity.ticker_symbol.toUpperCase(),
-          assetType: AssetType.Stock,
-          quantity: holding.quantity ?? 1,
-          costPerShare: holding.cost_basis,
-        });
-      }
-
-      return accum;
-    }, [] as TemporaryStockPosition[]);
-
-    // const response: {
-    //   status: 'ok';
-    // };
-
-    res.status(200).json({ holdings, securities });
+    res.status(200).json(response);
   })
 );
+
+// plaidRouter.post(
+//   '/exchange-public-token-and-fetch-holdings',
+//   requireSignedIn,
+//   catchErrors(async (req, res) => {
+//     const userID = req.user!.id;
+//     const publicToken = req.body.publicToken;
+
+//     const tokenResponse = await plaidClient.itemPublicTokenExchange({
+//       public_token: publicToken,
+//     });
+
+//     const accessToken = tokenResponse.data.access_token;
+//     const itemID = tokenResponse.data.item_id;
+
+//     await createDocument('plaid-items', {
+//       createdAt: new Date(),
+//       itemID,
+//       accessToken,
+//       userID,
+//     });
+
+//     const holdingsResponse = await plaidClient.investmentsHoldingsGet({
+//       access_token: accessToken,
+//     });
+
+//     const holdings = holdingsResponse.data.holdings;
+//     const securities = holdingsResponse.data.securities;
+
+//     const mappedHoldings: TemporaryStockPosition[] = holdings.reduce((accum, holding) => {
+//       const theSecurity = securities.find((security) => security.security_id === holding.security_id);
+
+//       if (!theSecurity) {
+//         return accum;
+//       }
+
+//       if (theSecurity.type === 'equity' && theSecurity.name && theSecurity.ticker_symbol && holding.cost_basis) {
+//         accum.push({
+//           companyName: theSecurity.name,
+//           symbol: theSecurity.ticker_symbol.toUpperCase(),
+//           assetType: AssetType.Stock,
+//           quantity: holding.quantity ?? 1,
+//           costPerShare: holding.cost_basis,
+//         });
+//       }
+
+//       return accum;
+//     }, [] as TemporaryStockPosition[]);
+
+//     // const response: {
+//     //   status: 'ok';
+//     // };
+
+//     res.status(200).json({ holdings, securities });
+//   })
+// );
 
 plaidRouter.get(
   '/webhooks',

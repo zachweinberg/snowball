@@ -177,7 +177,17 @@ export const calculatePortfolioQuotes = async (
   return {
     stocks: stockPositionsWithQuotes.sort((a, b) => b.marketValue - a.marketValue),
     crypto: cryptoPositionsWithQuotes.sort((a, b) => b.marketValue - a.marketValue),
-    cash: cashPositions.sort((a, b) => b.amount - a.amount),
+    cash: cashPositions
+      .sort((a, b) => b.amount - a.amount)
+      // Remove sensitive plaid ids
+      .map((cashPosition) => ({
+        accountName: cashPosition.accountName,
+        amount: cashPosition.amount,
+        assetType: cashPosition.assetType,
+        createdAt: cashPosition.createdAt,
+        id: cashPosition.id,
+        isPlaid: cashPosition.isPlaid,
+      })),
     realEstate: realEstatePositions.sort((a, b) => b.propertyValue - a.propertyValue),
     customs: customsPositions.sort((a, b) => b.value - a.value),
     stocksTotal: stocksTotal.value,

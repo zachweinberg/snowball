@@ -783,6 +783,38 @@ paths:
             application/json:
               schema:
                 type: object
+  /plaid/cash-item:
+    post:
+      summary: Create cash item and account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              required:
+                - institutionName
+                - institutionID
+                - account
+                - publicToken
+                - portfolioID
+              properties:
+                portfolioID:
+                  type: string
+                institutionID:
+                  type: string
+                institutionName:
+                  type: string
+                account:
+                  type: object
+                publicToken:
+                  type: string
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
   /plaid/exchange-public-token-and-fetch-holdings:
     post:
       summary: Exchange public token for item info

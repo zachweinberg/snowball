@@ -285,7 +285,7 @@ positionsRouter.post(
     await deleteRedisKey(redisKey);
     await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
 
-    await trackPortfolioLogItem(portfolioID, `Added ${accountName ?? 'a cash account'} worth ${formatMoneyFromNumber(amount)}.`);
+    await trackPortfolioLogItem(portfolioID, `Added ${accountName ?? 'a cash account'} with ${formatMoneyFromNumber(amount)}.`);
 
     const response = {
       status: 'ok',
