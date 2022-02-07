@@ -329,6 +329,7 @@ export interface PlaidItem {
     plaidAccessToken: string;
     plaidInstitutionID: string;
     status: PlaidItemStatus;
+    forAssetType: AssetType;
 }
 export interface PlaidAccount {
     plaidItemID: string;
@@ -338,6 +339,7 @@ export interface PlaidAccount {
     subtype: string;
     type: string;
     userID: string;
+    forAssetType: AssetType;
     createdAt: Date;
 }
 export interface PortfolioLogItem {
