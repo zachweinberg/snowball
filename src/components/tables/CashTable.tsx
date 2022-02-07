@@ -1,5 +1,7 @@
+import { LinkIcon } from '@heroicons/react/outline';
 import { CashPosition } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
+import ReactTooltip from 'react-tooltip';
 import Menu from '~/components/ui/Menu';
 import { useAuth } from '~/hooks/useAuth';
 import { formatMoneyFromNumber } from '~/lib/money';
@@ -49,6 +51,17 @@ const CashTable: React.FunctionComponent<Props> = ({
       {
         Header: 'Account',
         accessor: 'accountName',
+        Cell: ({ value, row }) => (
+          <div className="flex items-center">
+            {value}{' '}
+            {row.original.isPlaid && (
+              <LinkIcon
+                data-tip={`This account is linked to your bank via Plaid.<br/>We will update the cash amount six times per day.`}
+                className="w-4 h-4 ml-4"
+              />
+            )}
+          </div>
+        ),
       },
       {
         Header: 'Cash Amount',
@@ -56,24 +69,40 @@ const CashTable: React.FunctionComponent<Props> = ({
         Cell: ({ value }) => formatMoneyFromNumber(value),
       },
       {
+        Header: 'Added On',
+        accessor: 'createdAt',
+        Cell: ({ value }) => `${new Date(value).toLocaleDateString()}`,
+      },
+      {
         Header: '',
         accessor: 'id',
         disableSortBy: true,
-        Cell: ({ value, row }) => (
-          <Menu
-            options={[
-              { label: 'Edit Cash', onClick: () => onEdit(row.original) },
-              { label: 'Delete', onClick: () => onDelete(value) },
-            ]}
-            button={() => <VerticalDots />}
-          />
-        ),
+        Cell: ({ value, row }) => {
+          const isPlaid = row.original.isPlaid;
+
+          const options = [
+            {
+              label: `${isPlaid ? 'Unlink Account' : 'Delete'}`,
+              onClick: () => onDelete(value),
+            },
+          ];
+
+          if (!isPlaid) {
+            options.unshift({ label: 'Edit Cash', onClick: () => onEdit(row.original) });
+          }
+          return <Menu options={options} button={() => <VerticalDots />} />;
+        },
       },
     ],
     []
   );
 
-  return <BaseTable columns={columns} data={data} />;
+  return (
+    <>
+      <ReactTooltip multiline />
+      <BaseTable columns={columns} data={data} />
+    </>
+  );
 };
 
 export default CashTable;

@@ -50,6 +50,7 @@ const PortfolioView: NextPage = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [addingAsset, setAddingAsset] = useState(false);
+  const [defaultAssetTypeToAdd, setDefaultAssetTypeToAdd] = useState<AssetType | null>(null);
   const [portfolio, setPortfolio] = useState<PortfolioWithQuotes | null>(null);
   const [activeTab, setActiveTab] = useState<AssetType>(AssetType.Stock);
   const [unit, setUnit] = useState<Unit>(Unit.Dollars);
@@ -110,7 +111,7 @@ const PortfolioView: NextPage = () => {
               belongsTo={portfolio.userID}
               stocks={portfolio.stocks}
               unit={unit}
-              onAddAsset={() => setAddingAsset(true)}
+              onAddAsset={() => setDefaultAssetTypeToAdd(AssetType.Stock)}
               onEdit={(position) => setEditPosition(position)}
               onDelete={(stockID, name) => {
                 setDeleteAsset({ id: stockID, type: AssetType.Stock, name });
@@ -123,7 +124,7 @@ const PortfolioView: NextPage = () => {
               belongsTo={portfolio.userID}
               crypto={portfolio.crypto}
               unit={unit}
-              onAddAsset={() => setAddingAsset(true)}
+              onAddAsset={() => setDefaultAssetTypeToAdd(AssetType.Crypto)}
               onEdit={(position) => setEditPosition(position)}
               onDelete={(cryptoID, name) => {
                 setDeleteAsset({ id: cryptoID, type: AssetType.Crypto, name });
@@ -135,7 +136,7 @@ const PortfolioView: NextPage = () => {
             <CashTable
               belongsTo={portfolio.userID}
               cash={portfolio.cash}
-              onAddAsset={() => setAddingAsset(true)}
+              onAddAsset={() => setDefaultAssetTypeToAdd(AssetType.Cash)}
               onEdit={(position) => setEditPosition(position)}
               onDelete={(cashID) => {
                 setDeleteAsset({
@@ -150,8 +151,8 @@ const PortfolioView: NextPage = () => {
           return (
             <RealEstateTable
               belongsTo={portfolio.userID}
+              onAddAsset={() => setDefaultAssetTypeToAdd(AssetType.RealEstate)}
               realEstate={portfolio.realEstate}
-              onAddAsset={() => setAddingAsset(true)}
               onEdit={(position) => setEditPosition(position)}
               onDelete={(realEstateID) => {
                 setDeleteAsset({
@@ -166,9 +167,9 @@ const PortfolioView: NextPage = () => {
           return (
             <CustomAssetsTable
               belongsTo={portfolio.userID}
+              onAddAsset={() => setDefaultAssetTypeToAdd(AssetType.Custom)}
               onEdit={(position) => setEditPosition(position)}
               customs={portfolio.customs}
-              onAddAsset={() => setAddingAsset(true)}
               onDelete={(customID) => {
                 setDeleteAsset({
                   id: customID,
@@ -390,9 +391,9 @@ const PortfolioView: NextPage = () => {
 
             <div className="flex justify-end mb-2">
               <Link href={`/portfolios/${router.query.portfolioID}/history`}>
-                <a className="inline-block text-sm font-medium text-evergreen hover:opacity-75">
+                <div className="inline-block text-sm font-medium text-evergreen hover:opacity-75">
                   View History
-                </a>
+                </div>
               </Link>
             </div>
 
@@ -415,20 +416,22 @@ const PortfolioView: NextPage = () => {
                   />
                 </div>
 
-                <div className="flex items-center">
-                  {[Unit.Dollars, Unit.Percents].map((u) => (
-                    <button
-                      key={u}
-                      onClick={() => setUnit(u)}
-                      className={classNames(
-                        'text-[1rem] px-3 py-2 font-semibold  rounded-md text-darkgray hover:bg-light',
-                        { 'border-evergreen text-evergreen': u === unit }
-                      )}
-                    >
-                      {u}
-                    </button>
-                  ))}
-                </div>
+                {[AssetType.Stock, AssetType.Crypto].includes(activeTab) && (
+                  <div className="flex items-center">
+                    {[Unit.Dollars, Unit.Percents].map((u) => (
+                      <button
+                        key={u}
+                        onClick={() => setUnit(u)}
+                        className={classNames(
+                          'text-[1rem] px-3 py-2 font-semibold  rounded-md text-darkgray hover:bg-light',
+                          { 'border-evergreen text-evergreen': u === unit }
+                        )}
+                      >
+                        {u}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {renderTable}
@@ -444,14 +447,22 @@ const PortfolioView: NextPage = () => {
   return (
     <Layout title={`${portfolio?.name ?? 'Portfolio'} | Obsidian Tracker`}>
       {portfolio && (
-        <FullScreenModal isOpen={addingAsset} onClose={() => setAddingAsset(false)}>
+        <FullScreenModal
+          isOpen={addingAsset || !!defaultAssetTypeToAdd}
+          onClose={() => {
+            setAddingAsset(false);
+            setDefaultAssetTypeToAdd(null);
+          }}
+        >
           <AddAssetForm
             portfolioName={portfolio.name}
             portfolioID={portfolio.id}
+            defaultAssetType={defaultAssetTypeToAdd}
             onClose={async (assetTypeAdded) => {
               await loadPortfolioData();
               setActiveTab(assetTypeAdded);
               setAddingAsset(false);
+              setDefaultAssetTypeToAdd(null);
             }}
           />
         </FullScreenModal>

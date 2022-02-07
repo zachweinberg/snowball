@@ -90,6 +90,8 @@ export const buildCashData = (cash: CashPosition[]): CashTableData[] => {
     assetType: AssetType.Cash,
     accountName: cash.accountName ?? 'Cash account',
     value: cash.amount,
+    isPlaid: cash.isPlaid,
+    createdAt: cash.createdAt,
   }));
 };
 
@@ -129,6 +131,7 @@ export const buildCustomAssetData = (custom: CustomPosition[]): CustomAssetTable
     assetType: AssetType.Custom,
     assetName: c.assetName,
     value: c.value,
+    createdAt: c.createdAt,
   }));
 };
 

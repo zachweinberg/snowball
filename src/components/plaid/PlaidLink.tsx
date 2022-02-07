@@ -7,9 +7,8 @@ import Button from '../ui/Button';
 const PlaidLink: React.FunctionComponent = () => {
   const [linkToken, setLinkToken] = useState<string | null>(null);
 
-  const onSuccess = useCallback<PlaidLinkOnSuccess>(async (public_token, metadata) => {
-    const response = await API.exchangePlaidTokenAndFetchHoldings(public_token);
-    console.log(response);
+  const onSuccess = useCallback<PlaidLinkOnSuccess>(async (publicToken, metadata) => {
+    await API.exchangeToken(publicToken, metadata.institution!, metadata.accounts);
   }, []);
 
   const config: PlaidLinkOptions = {
@@ -38,8 +37,7 @@ const PlaidLink: React.FunctionComponent = () => {
         trackGoal('JALIKOJQ', 0);
         open();
       }}
-      // disabled={!ready || !linkToken}
-      disabled
+      disabled={!ready || !linkToken}
     >
       Import Automatically
     </Button>

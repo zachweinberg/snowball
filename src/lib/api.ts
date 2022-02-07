@@ -28,6 +28,7 @@ import {
   SendContactEmailRequest,
 } from '@zachweinberg/obsidian-schema';
 import axios from 'axios';
+import { PlaidAccount } from 'react-plaid-link';
 import firebase from '~/lib/firebase';
 
 // Convert object timestamps from Firestore to Dates
@@ -320,14 +321,19 @@ export const API = {
       'get'
     );
   },
-
-  exchangePlaidTokenAndFetchHoldings: (publicToken: string) => {
-    return request<any, undefined>(
-      '/api/plaid/exchange-public-token-and-fetch-holdings',
-      'post',
-      {
-        publicToken,
-      }
-    );
+  exchangeToken: (
+    portfolioID: string,
+    publicToken: string,
+    account: PlaidAccount,
+    institutionName: string,
+    institutionID: string
+  ) => {
+    return request(`/api/plaid/cash-item`, 'post', {
+      portfolioID,
+      publicToken,
+      account,
+      institutionName,
+      institutionID,
+    });
   },
 };

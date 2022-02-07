@@ -1,5 +1,6 @@
 import { trackGoal } from 'fathom-client';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { PlaidLinkOnSuccess, PlaidLinkOptions, usePlaidLink } from 'react-plaid-link';
 import * as Yup from 'yup';
 import * as yup from 'yup';
 import { API } from '~/lib/api';
@@ -35,8 +36,46 @@ const AddCashForm: React.FunctionComponent<Props> = ({
   const [accountName, setAccountName] = useState('');
   const [amount, setAmount] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
+  const [linkToken, setLinkToken] = useState<string | null>(null);
 
   const canAdd = amount && amount > 0 && accountName;
+
+  const onSuccess = useCallback<PlaidLinkOnSuccess>(async (publicToken, metadata) => {
+    const institutionName = metadata.institution?.name ?? 'Bank';
+    const institutionID = metadata.institution?.institution_id ?? '';
+    const accounts = metadata.accounts;
+
+    await API.exchangeToken(
+      portfolioID,
+      publicToken,
+      accounts[0],
+      institutionName,
+      institutionID
+    );
+  }, []);
+
+  const config: PlaidLinkOptions = {
+    token: linkToken ?? '',
+    onSuccess,
+    language: 'en',
+    countryCodes: ['US'],
+  };
+
+  const fetchLinkToken = async () => {
+    const tokenResponse = await API.getPlaidLinkToken();
+    localStorage.setItem('link_token', tokenResponse.data.link_token);
+    setLinkToken(tokenResponse.data.link_token);
+  };
+
+  useEffect(() => {
+    fetchLinkToken();
+  }, []);
+
+  const { open, ready } = usePlaidLink(config);
+
+  const openLink = () => {
+    open();
+  };
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -97,10 +136,20 @@ const AddCashForm: React.FunctionComponent<Props> = ({
         Back
       </div>
 
-      <h2 className="mb-3 text-center text-[1.75rem] font-bold">Add Cash</h2>
+      <h2 className="mb-7 text-center text-[1.75rem] font-bold">Add Cash</h2>
 
-      <p className="text-center mb-7 text-darkgray text-[1rem] font-medium">
-        Add a cash account to your portfolio.
+      <p className="text-sm font-medium text-center mb-7 text-darkgray">
+        Link a bank account to automatically update your cash holdings:
+      </p>
+
+      <div className="flex justify-center pb-10 border-b border-gray">
+        <Button type="button" className="w-1/2" onClick={openLink} disabled={!ready}>
+          Link Bank
+        </Button>
+      </div>
+
+      <p className="pt-10 text-sm font-medium text-center mb-7 text-darkgray">
+        Or, manually add cash and update it when you want:
       </p>
 
       <TextInput

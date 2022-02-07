@@ -56,6 +56,11 @@ const CustomAssetTable: React.FunctionComponent<Props> = ({
         Cell: ({ value }) => formatMoneyFromNumber(value),
       },
       {
+        Header: 'Added On',
+        accessor: 'createdAt',
+        Cell: ({ value }) => `${new Date(value).toLocaleDateString()}`,
+      },
+      {
         Header: '',
         accessor: 'id',
         disableSortBy: true,
