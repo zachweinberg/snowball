@@ -104,6 +104,9 @@ export interface RealEstatePosition extends Position {
 export interface CashPosition extends Position {
   amount: number;
   accountName?: string;
+  isPlaid: boolean;
+  plaidItemID?: string;
+  plaidAccountID?: string;
 }
 
 export interface CustomPosition extends Position {
