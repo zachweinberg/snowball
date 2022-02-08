@@ -386,7 +386,8 @@ export interface PlaidAccount {
   type: string;
   userID: string;
   forAssetType: AssetType;
-
+  positionID: string;
+  portfolioID: string;
   createdAt: Date;
 }
 
