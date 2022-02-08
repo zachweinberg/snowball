@@ -210,7 +210,7 @@ const updatePlaidCashAccounts = async (job: Bull.Job) => {
 
     await Promise.all([
       updateDocument('plaid-accounts', plaidAccount.id, { currentBalance }),
-      updateDocument(`portfolios/${plaidAccount.portfolioID}}`, plaidAccount.positionID, { amount: currentBalance }),
+      updateDocument(`portfolios/${plaidAccount.portfolioID}/positions`, plaidAccount.positionID, { amount: currentBalance }),
     ]);
   } catch (err) {
     console.error(err);
