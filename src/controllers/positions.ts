@@ -8,14 +8,19 @@ import {
   CashPosition,
   CryptoPosition,
   CustomPosition,
+  PlaidItem,
   PlanType,
   RealEstatePosition,
   StockPosition,
 } from '@zachweinberg/obsidian-schema';
 import { Router } from 'express';
+import { ItemRemoveRequest } from 'plaid';
+import { plaidClient } from '~/lib/plaid';
 import { deleteRedisKey } from '~/lib/redis';
+import { logSentryError } from '~/lib/sentry';
 import { getPropertyValueEstimateByGooglePlaceID } from '~/lib/valuations';
 import { catchErrors, requireSignedIn } from '~/utils/api';
+import { decrypt } from '~/utils/crypto';
 import { createDocument, deleteDocument, fetchDocumentByID, findDocuments, updateDocument } from '~/utils/db';
 import { trackPortfolioLogItem } from '~/utils/logs';
 import { addresstoString } from '~/utils/misc';
@@ -576,7 +581,27 @@ positionsRouter.delete(
 
     if (assetType === AssetType.Cash) {
       const position = await fetchDocumentByID<CashPosition>(`portfolios/${portfolioID}/positions`, positionID);
-      await deleteDocument(`portfolios/${portfolioID}/positions/${positionID}`);
+
+      if (position.isPlaid) {
+        const plaidItem = await fetchDocumentByID<PlaidItem>('plaid-items', position.plaidItemID!);
+
+        const itemRemoveReq: ItemRemoveRequest = {
+          access_token: decrypt(plaidItem.plaidAccessToken),
+        };
+
+        try {
+          await Promise.all([
+            plaidClient.itemRemove(itemRemoveReq),
+            deleteDocument(`portfolios/${portfolioID}/positions/${positionID}`),
+            deleteDocument(`plaid-items/${position.plaidItemID}`),
+            deleteDocument(`plaid-accounts/${position.plaidAccountID}`),
+          ]);
+        } catch (err) {
+          logSentryError(err);
+          throw err;
+        }
+      }
+
       log = `Deleted ${position.accountName} with ${formatMoneyFromNumber(position.amount)} from portfolio.`;
     }
 
