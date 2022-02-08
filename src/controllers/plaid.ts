@@ -52,7 +52,7 @@ plaidRouter.get(
 );
 
 plaidRouter.post(
-  '/cash-items',
+  '/cash-item',
   requireSignedIn,
   catchErrors(async (req, res) => {
     const userID = req.user!.id;
