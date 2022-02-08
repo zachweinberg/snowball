@@ -1,7 +1,11 @@
 import Cryptr from 'cryptr';
 
-const cryptr = new Cryptr(process.env.ENCRYPTION_KEY);
+const cryptr = new Cryptr('MbQeThWmZq4t6w9z$C&F)J@NcRfUjXn2');
 
-export const encrypt = (val) => cryptr.encrypt(val);
+export const encrypt = (text: string) => {
+  return cryptr.encrypt(text);
+};
 
-export const decrypt = (encrypted) => cryptr.decrypt(encrypted);
+export const decrypt = (encryptedValue: string) => {
+  return cryptr.decrypt(encryptedValue);
+};

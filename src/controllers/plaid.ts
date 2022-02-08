@@ -108,14 +108,6 @@ plaidRouter.post(
       forAssetType: AssetType.Cash,
     };
 
-    const balanceResponse = await plaidClient.accountsBalanceGet({
-      access_token: plaidAccessToken,
-    });
-
-    const currentBalance =
-      balanceResponse.data.accounts?.find((account) => account.account_id === plaidAccount.plaidAccountID)?.balances?.available ??
-      0;
-
     const newPositionDoc = await firebaseAdmin().firestore().collection(`portfolios/${portfolioID}/positions`).doc();
 
     const plaidAccount: PlaidAccount = {
@@ -125,17 +117,27 @@ plaidRouter.post(
       name: account.name,
       type: account.type ?? '',
       subtype: account.subtype ?? '',
-      currentBalance,
+      currentBalance: 0,
       userID,
       portfolioID,
       positionID: newPositionDoc.id,
       createdAt: new Date(),
     };
 
+    const balanceResponse = await plaidClient.accountsBalanceGet({
+      access_token: plaidAccessToken,
+    });
+
+    const currentBalance =
+      balanceResponse.data.accounts?.find((account) => account.account_id === plaidAccount.plaidAccountID)?.balances?.available ??
+      0;
+
+    plaidAccount.currentBalance = currentBalance;
+
     const accountName = `${plaidItem.plaidInstitutionName} - ${plaidAccount.name}`;
 
     await Promise.all([
-      createDocument('plaid-accounts', plaidAccount),
+      createDocument('plaid-accounts', plaidAccount, plaidAccount.plaidAccountID),
       createDocument('plaid-items', plaidItem, plaidItem.plaidItemID),
       newPositionDoc.set(
         {
