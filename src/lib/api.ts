@@ -321,7 +321,7 @@ export const API = {
       'get'
     );
   },
-  exchangeToken: (
+  exchangeTokenForCashItem: (
     portfolioID: string,
     publicToken: string,
     account: PlaidAccount,

@@ -7,6 +7,7 @@ import { API } from '~/lib/api';
 import { formatMoneyFromNumber } from '~/lib/money';
 import Button from '../ui/Button';
 import MoneyInput from '../ui/MoneyInput';
+import Spinner from '../ui/Spinner';
 import TextInput from '../ui/TextInput';
 
 const addCashSchema = yup.object().shape({
@@ -41,17 +42,24 @@ const AddCashForm: React.FunctionComponent<Props> = ({
   const canAdd = amount && amount > 0 && accountName;
 
   const onSuccess = useCallback<PlaidLinkOnSuccess>(async (publicToken, metadata) => {
+    setLoading(true);
+
     const institutionName = metadata.institution?.name ?? 'Bank';
     const institutionID = metadata.institution?.institution_id ?? '';
     const accounts = metadata.accounts;
 
-    await API.exchangeToken(
+    await API.exchangeTokenForCashItem(
       portfolioID,
       publicToken,
       accounts[0],
       institutionName,
       institutionID
     );
+
+    setLoading(false);
+    trackGoal('2FZCG11L', 0);
+
+    afterAdd();
   }, []);
 
   const config: PlaidLinkOptions = {
@@ -142,36 +150,44 @@ const AddCashForm: React.FunctionComponent<Props> = ({
         Link a bank account to automatically update your cash holdings:
       </p>
 
-      <div className="flex justify-center pb-10 border-b border-gray">
-        <Button type="button" className="w-1/2" onClick={openLink} disabled={!ready}>
-          Link Bank
-        </Button>
-      </div>
+      {loading ? (
+        <div className="flex justify-center">
+          <Spinner size={28} />
+        </div>
+      ) : (
+        <>
+          <div className="flex justify-center pb-10 border-b border-gray">
+            <Button type="button" className="w-1/2" onClick={openLink} disabled={!ready}>
+              Link Bank
+            </Button>
+          </div>
 
-      <p className="pt-10 text-sm font-medium text-center mb-7 text-darkgray">
-        Or, manually add cash and update it when you want:
-      </p>
+          <p className="pt-10 text-sm font-medium text-center mb-7 text-darkgray">
+            Or, manually add cash and update it when you want:
+          </p>
 
-      <TextInput
-        placeholder="Account name"
-        backgroundColor="#F9FAFF"
-        type="text"
-        className="mb-4"
-        value={accountName}
-        autofocus
-        name="accountName"
-        onChange={(e) => setAccountName(e.target.value)}
-      />
+          <TextInput
+            placeholder="Account name"
+            backgroundColor="#F9FAFF"
+            type="text"
+            className="mb-4"
+            value={accountName}
+            autofocus
+            name="accountName"
+            onChange={(e) => setAccountName(e.target.value)}
+          />
 
-      <MoneyInput
-        placeholder="Cash amount"
-        required
-        value={amount}
-        name="amount"
-        className="mb-4"
-        numDecimals={2}
-        onChange={(val) => setAmount(val)}
-      />
+          <MoneyInput
+            placeholder="Cash amount"
+            required
+            value={amount}
+            name="amount"
+            className="mb-4"
+            numDecimals={2}
+            onChange={(val) => setAmount(val)}
+          />
+        </>
+      )}
 
       {error && <p className="mb-6 leading-5 text-left text-red">{error}</p>}
 
