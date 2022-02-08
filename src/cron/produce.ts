@@ -1,4 +1,4 @@
-import { Alert, AssetType, Period, Portfolio, RealEstatePosition } from '@zachweinberg/obsidian-schema';
+import { Alert, AssetType, Period, PlaidAccount, Portfolio, RealEstatePosition } from '@zachweinberg/obsidian-schema';
 import _ from 'lodash';
 import { DateTime } from 'luxon';
 import { JobNames, jobQueue } from '~/queue';
@@ -90,5 +90,17 @@ export const produceUpdatePropertyValuesJob = async () => {
 
   for (const realEstatePosition of realEstatePositionsToUpdate) {
     await jobQueue.add(JobNames.UpdatePropertyValue, { realEstatePosition }, { attempts: 2 });
+  }
+};
+
+export const updatePlaidCashAccounts = async () => {
+  const cashPlaidAccounts = await findDocuments<PlaidAccount>('plaid-accounts', [
+    { property: 'forAssetType', condition: '==', value: AssetType.Cash },
+  ]);
+
+  console.log(`Found ${cashPlaidAccounts.length} cash plaid accounts to update`);
+
+  for (const plaidAccount of cashPlaidAccounts) {
+    await jobQueue.add(JobNames.UpdatePlaidCashAccounts, { plaidAccount }, { attempts: 2 });
   }
 };

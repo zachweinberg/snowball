@@ -9,6 +9,7 @@ import {
   producePortfolioEmailJobs,
   producePriceAlertJobs,
   produceUpdatePropertyValuesJob,
+  updatePlaidCashAccounts,
 } from './produce';
 
 interface CMCCoin {
@@ -168,6 +169,9 @@ const runCron = async () => {
         break;
       case 'emails-monthly':
         await producePortfolioEmailJobs(Period.Monthly);
+        break;
+      case 'update-plaid-cash-accounts':
+        await updatePlaidCashAccounts();
         break;
       default:
         console.error('Invalid job. Did you supply the job name as a param?');

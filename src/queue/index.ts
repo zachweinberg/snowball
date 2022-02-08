@@ -8,6 +8,7 @@ export enum JobNames {
   SendPortfolioSummaryEmails = 'send-portfolio-summary-emails',
   SendPortfolioReminderEmails = 'send-portfolio-reminder-emails',
   UpdatePropertyValue = 'update-property-value',
+  UpdatePlaidCashAccounts = 'update-plaid-cash-accounts',
 }
 
 export const jobQueue = new Bull('job-queue', process.env.REDIS_URL!, {

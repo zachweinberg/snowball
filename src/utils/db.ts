@@ -1,7 +1,7 @@
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { logSentryError } from '~/lib/sentry';
 
-type WithID<T> = T & {
+export type WithID<T> = T & {
   id: string;
 };
 

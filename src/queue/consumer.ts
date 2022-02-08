@@ -5,6 +5,8 @@ import {
   AssetType,
   DailyBalance,
   Period,
+  PlaidAccount,
+  PlaidItem,
   Portfolio,
   RealEstatePosition,
   User,
@@ -15,9 +17,10 @@ import { getCryptoPrices } from '~/lib/cmc';
 import { sendAssetAlertEmail, sendPortfolioReminderEmail, sendPortfolioSummaryEmail } from '~/lib/email';
 import { getStockPrices } from '~/lib/iex';
 import { sendText } from '~/lib/phone';
+import { plaidClient } from '~/lib/plaid';
 import { logSentryError } from '~/lib/sentry';
 import { fetchEstimateFromEstated } from '~/lib/valuations';
-import { createDocument, deleteDocument, fetchDocumentByID, updateDocument } from '~/utils/db';
+import { createDocument, deleteDocument, fetchDocumentByID, updateDocument, WithID } from '~/utils/db';
 import { formatMoneyFromNumber } from '~/utils/money';
 import { calculatePortfolioSummary } from '~/utils/positions';
 import { JobNames, jobQueue } from '.';
@@ -29,6 +32,7 @@ const startWorker = (): void => {
   jobQueue.process(JobNames.SendPortfolioSummaryEmails, sendPortfolioSummaryEmails);
   jobQueue.process(JobNames.SendPortfolioReminderEmails, sendPortfolioReminderEmails);
   jobQueue.process(JobNames.UpdatePropertyValue, updatePropertyValue);
+  jobQueue.process(JobNames.UpdatePlaidCashAccounts, updatePlaidCashAccounts);
   console.log('> [Consumer] Worker online');
 };
 
@@ -185,6 +189,28 @@ const updatePropertyValue = async (job: Bull.Job) => {
 
     await updateDocument(`real-estate-positions`, realEstatePosition.id, { propertyValue: estimate });
   }
+};
+
+const updatePlaidCashAccounts = async (job: Bull.Job) => {
+  const { plaidAccount } = job.data as { plaidAccount: WithID<PlaidAccount> };
+
+  const plaidItem = await fetchDocumentByID<PlaidItem>('plaid-items', plaidAccount.plaidItemID);
+
+  // const accessToken = decrypt(plaidItem.plaidAccessToken);
+  const accessToken = plaidItem.plaidAccessToken;
+
+  const balanceResponse = await plaidClient.accountsBalanceGet({
+    access_token: accessToken,
+  });
+
+  const currentBalance =
+    balanceResponse.data.accounts?.find((account) => account.account_id === plaidAccount.plaidAccountID)?.balances?.available ??
+    0;
+
+  await Promise.all([
+    updateDocument('plaid-accounts', plaidAccount.id, { currentBalance }),
+    updateDocument(`portfolios/${plaidAccount.portfolioID}}`, plaidAccount.positionID, { amount: currentBalance }),
+  ]);
 };
 
 startWorker();
