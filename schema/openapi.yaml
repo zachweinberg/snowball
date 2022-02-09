@@ -776,6 +776,12 @@ paths:
   /plaid/create-link-token:
     get:
       summary: Get plaid link token
+      parameters:
+        - name: assetType
+          in: query
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Valid request
@@ -786,6 +792,38 @@ paths:
   /plaid/cash-item:
     post:
       summary: Create cash item and account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              required:
+                - institutionName
+                - institutionID
+                - account
+                - publicToken
+                - portfolioID
+              properties:
+                portfolioID:
+                  type: string
+                institutionID:
+                  type: string
+                institutionName:
+                  type: string
+                account:
+                  type: object
+                publicToken:
+                  type: string
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
+  /plaid/stock-item:
+    post:
+      summary: Create stock item and holdings
       requestBody:
         content:
           application/json:

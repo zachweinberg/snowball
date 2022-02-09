@@ -22,29 +22,42 @@ interface NativePlaidAccount {
   verification_status: string;
 }
 
+const createPlaidLinkToken = async (userID: string, assetType: AssetType) => {
+  const products = [Products.Auth];
+
+  if (assetType === AssetType.Stock) {
+    products.push(Products.Investments);
+  }
+
+  const plaidRequest: LinkTokenCreateRequest = {
+    user: {
+      client_user_id: userID,
+    },
+    redirect_uri: 'https://obsidiantracker.com/plaid/oauth-redirect',
+    client_name: 'Obsidian Tracker',
+    products,
+    language: 'en',
+    webhook: 'https://api.obsidiantracker.com/plaid/webhooks',
+    country_codes: [CountryCode.Us],
+  };
+
+  const createTokenResponse = await plaidClient.linkTokenCreate(plaidRequest);
+
+  return createTokenResponse.data;
+};
+
 plaidRouter.get(
   '/create-link-token',
   requireSignedIn,
   catchErrors(async (req, res) => {
     const userID = req.user!.id;
+    const { assetType } = req.query as { assetType: AssetType };
 
-    const plaidRequest: LinkTokenCreateRequest = {
-      user: {
-        client_user_id: userID,
-      },
-      redirect_uri: 'https://obsidiantracker.com/plaid/oauth-redirect',
-      client_name: 'Obsidian Tracker',
-      products: [Products.Auth],
-      language: 'en',
-      webhook: 'https://api.obsidiantracker.com/plaid/webhooks',
-      country_codes: [CountryCode.Us],
-    };
-
-    const createTokenResponse = await plaidClient.linkTokenCreate(plaidRequest);
+    const data = await createPlaidLinkToken(userID, assetType);
 
     const response: GetPlaidTokenResponse = {
       status: 'ok',
-      data: createTokenResponse.data,
+      data,
     };
 
     res.status(200).json(response);
@@ -161,6 +174,92 @@ plaidRouter.post(
       portfolioID,
       `Added ${accountName} cash account (via Plaid) with ${formatMoneyFromNumber(currentBalance)}.`
     );
+
+    const response = {
+      status: 'ok',
+    };
+
+    res.status(200).json(response);
+  })
+);
+
+plaidRouter.post(
+  '/stock-item',
+  requireSignedIn,
+  catchErrors(async (req, res) => {
+    const userID = req.user!.id;
+    const { publicToken, portfolioID, institutionID, institutionName, account } = req.body as {
+      publicToken: string;
+      institutionName: string;
+      portfolioID: string;
+      institutionID: string;
+      account: NativePlaidAccount;
+    };
+
+    if (!(await userOwnsPortfolio(req, res, portfolioID))) {
+      return res.status(401).json({ status: 'error', error: 'Invalid.' });
+    }
+
+    // const existingStockPositions = await findDocuments(`portfolios/${portfolioID}/positions`, [
+    //   { property: 'assetType', condition: '==', value: AssetType.Stock },
+    // ]);
+
+    // if (existingStockPositions.length >= 4 && req.user!.plan.type === PlanType.FREE) {
+    //   return res.status(400).json({
+    //     status: 'error',
+    //     error:
+    //       'Your account is currently on the free plan. If you would like to add more than four cash positions per portfolio, please upgrade to the premium plan.',
+    //     code: 'PLAN',
+    //   });
+    // }
+
+    // if (existingStockPositions.length >= 30) {
+    //   return res.status(400).json({
+    //     status: 'error',
+    //     error: 'At this time, we allow up to 30 cash positions in a portfolio.',
+    //     code: 'MAX_PLAN',
+    //   });
+    // }
+
+    // Exchange the public token for a private access token and store with the item
+    const exchangeResponse = await plaidClient.itemPublicTokenExchange({
+      public_token: publicToken,
+    });
+    console.log(exchangeResponse.data);
+    const plaidAccessToken = exchangeResponse.data.access_token;
+    const plaidItemID = exchangeResponse.data.item_id;
+
+    const holdingsResponse = await plaidClient.investmentsHoldingsGet({
+      access_token: plaidAccessToken,
+    });
+
+    console.log(JSON.stringify(holdingsResponse.data));
+
+    // await Promise.all([
+    //   createDocument('plaid-accounts', plaidAccount, plaidAccount.plaidAccountID),
+    //   createDocument('plaid-items', plaidItem, plaidItem.plaidItemID),
+    //   newPositionDoc.set(
+    //     {
+    //       assetType: AssetType.Cash,
+    //       isPlaid: true,
+    //       plaidAccountID: plaidAccount.plaidAccountID,
+    //       plaidItemID: plaidItem.plaidItemID,
+    //       accountName,
+    //       amount: currentBalance,
+    //       createdAt: new Date(),
+    //     },
+    //     { merge: true }
+    //   ),
+    // ]);
+
+    const redisKey = `portfolio-${portfolioID}`;
+    await deleteRedisKey(redisKey);
+    await deleteRedisKey(`portfoliolist-${userID}`); // Portfolio list
+
+    // await trackPortfolioLogItem(
+    //   portfolioID,
+    //   `Added ${accountName} cash account (via Plaid) with ${formatMoneyFromNumber(currentBalance)}.`
+    // );
 
     const response = {
       status: 'ok',
