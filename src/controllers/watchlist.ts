@@ -1,4 +1,11 @@
-import { AddWatchListItemRequest, AssetType, GetWatchListResponse, PlanType, WatchListItem } from '@zachweinberg/obsidian-schema';
+import {
+  AddWatchListItemRequest,
+  AssetType,
+  GetWatchListResponse,
+  PlanType,
+  PLAN_LIMITS,
+  WatchListItem,
+} from '@zachweinberg/obsidian-schema';
 import { Router } from 'express';
 import _ from 'lodash';
 import { getCryptoPrices } from '~/lib/cmc';
@@ -73,7 +80,7 @@ watchListRouter.post(
 
     const existingItems = await findDocuments<WatchListItem>(`watchlists/${userID}/assets`, []);
 
-    if (existingItems.length >= 6 && req.user!.plan.type === PlanType.FREE) {
+    if (existingItems.length >= PLAN_LIMITS.watchlist.free && req.user!.plan.type === PlanType.FREE) {
       return res.status(400).json({
         status: 'error',
         error:
@@ -82,10 +89,10 @@ watchListRouter.post(
       });
     }
 
-    if (existingItems.length >= 30) {
+    if (existingItems.length >= PLAN_LIMITS.watchlist.premium) {
       return res.status(400).json({
         status: 'error',
-        error: 'At this time, we allow up to 30 assets in watchlists.',
+        error: 'At this time, we allow up to 30 assets in watchlists on the premium plan.',
         code: 'MAX_PLAN',
       });
     }

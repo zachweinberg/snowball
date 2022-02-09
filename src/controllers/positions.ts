@@ -10,6 +10,7 @@ import {
   CustomPosition,
   PlaidItem,
   PlanType,
+  PLAN_LIMITS,
   RealEstatePosition,
   StockPosition,
 } from '@zachweinberg/obsidian-schema';
@@ -45,7 +46,7 @@ positionsRouter.post(
       { property: 'assetType', condition: '==', value: AssetType.Stock },
     ]);
 
-    if (existingStockPositions.length >= 4 && req.user!.plan.type === PlanType.FREE) {
+    if (existingStockPositions.length >= PLAN_LIMITS.stocks.free && req.user!.plan.type === PlanType.FREE) {
       return res.status(400).json({
         status: 'error',
         error:
@@ -54,10 +55,10 @@ positionsRouter.post(
       });
     }
 
-    if (existingStockPositions.length >= 30) {
+    if (existingStockPositions.length >= PLAN_LIMITS.stocks.premium) {
       return res.status(400).json({
         status: 'error',
-        error: 'At this time, we allow up to 30 stock positions in a portfolio.',
+        error: 'At this time, we allow up to 30 stock positions in a portfolio on the premium plan.',
         code: 'MAX_PLAN',
       });
     }
@@ -112,7 +113,7 @@ positionsRouter.post(
       { property: 'assetType', condition: '==', value: AssetType.Crypto },
     ]);
 
-    if (existingCryptoPositions.length >= 4 && req.user!.plan.type === PlanType.FREE) {
+    if (existingCryptoPositions.length >= PLAN_LIMITS.crypto.free && req.user!.plan.type === PlanType.FREE) {
       return res.status(400).json({
         status: 'error',
         error:
@@ -121,10 +122,10 @@ positionsRouter.post(
       });
     }
 
-    if (existingCryptoPositions.length >= 30) {
+    if (existingCryptoPositions.length >= PLAN_LIMITS.crypto.premium) {
       return res.status(400).json({
         status: 'error',
-        error: 'At this time, we allow up to 30 crypto positions in a portfolio.',
+        error: 'At this time, we allow up to 30 crypto positions in a portfolio on the premium plan.',
         code: 'MAX_PLAN',
       });
     }
@@ -179,7 +180,7 @@ positionsRouter.post(
       { property: 'portfolioID', condition: '==', value: portfolioID },
     ]);
 
-    if (existingREPositions.length >= 2 && req.user!.plan.type === PlanType.FREE) {
+    if (existingREPositions.length >= PLAN_LIMITS.realEstate.free && req.user!.plan.type === PlanType.FREE) {
       return res.status(400).json({
         status: 'error',
         error:
@@ -188,10 +189,10 @@ positionsRouter.post(
       });
     }
 
-    if (existingREPositions.length >= 20) {
+    if (existingREPositions.length >= PLAN_LIMITS.realEstate.premium) {
       return res.status(400).json({
         status: 'error',
-        error: 'At this time, we allow up to 20 real estate holdings in a portfolio.',
+        error: 'At this time, we allow up to 20 real estate holdings in a portfolio on the premium plan.',
         code: 'MAX_PLAN',
       });
     }
@@ -263,7 +264,7 @@ positionsRouter.post(
       { property: 'assetType', condition: '==', value: AssetType.Cash },
     ]);
 
-    if (existingCashPositions.length >= 4 && req.user!.plan.type === PlanType.FREE) {
+    if (existingCashPositions.length >= PLAN_LIMITS.cash.free && req.user!.plan.type === PlanType.FREE) {
       return res.status(400).json({
         status: 'error',
         error:
@@ -272,10 +273,10 @@ positionsRouter.post(
       });
     }
 
-    if (existingCashPositions.length >= 30) {
+    if (existingCashPositions.length >= PLAN_LIMITS.cash.premium) {
       return res.status(400).json({
         status: 'error',
-        error: 'At this time, we allow up to 30 cash positions in a portfolio.',
+        error: 'At this time, we allow up to 30 cash positions in a portfolio on the premium plan.',
         code: 'MAX_PLAN',
       });
     }
@@ -316,7 +317,7 @@ positionsRouter.post(
       { property: 'assetType', condition: '==', value: AssetType.Custom },
     ]);
 
-    if (existingCustom.length >= 4 && req.user!.plan.type === PlanType.FREE) {
+    if (existingCustom.length >= PLAN_LIMITS.custom.free && req.user!.plan.type === PlanType.FREE) {
       return res.status(400).json({
         status: 'error',
         error:
@@ -325,10 +326,10 @@ positionsRouter.post(
       });
     }
 
-    if (existingCustom.length >= 30) {
+    if (existingCustom.length >= PLAN_LIMITS.custom.premium) {
       return res.status(400).json({
         status: 'error',
-        error: 'At this time, we allow up to 30 custom positions in a portfolio.',
+        error: 'At this time, we allow up to 30 custom positions in a portfolio on the premium plan.',
         code: 'MAX_PLAN',
       });
     }

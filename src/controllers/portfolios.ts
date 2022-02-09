@@ -10,6 +10,7 @@ import {
   GetPortfoliosResponse,
   Period,
   PlanType,
+  PLAN_LIMITS,
   Portfolio,
   RealEstatePosition,
 } from '@zachweinberg/obsidian-schema';
@@ -162,7 +163,7 @@ portfoliosRouter.post(
       { property: 'userID', condition: '==', value: userID },
     ]);
 
-    if (existingPortfolios.length >= 1 && req.user!.plan.type === PlanType.FREE) {
+    if (existingPortfolios.length >= PLAN_LIMITS.portfolios.free && req.user!.plan.type === PlanType.FREE) {
       return res.status(400).json({
         status: 'error',
         error:
@@ -171,7 +172,7 @@ portfoliosRouter.post(
       });
     }
 
-    if (existingPortfolios.length >= 4) {
+    if (existingPortfolios.length >= PLAN_LIMITS.portfolios.premium) {
       return res.status(400).json({
         status: 'error',
         error: 'At this time, we allow up to four portfolios on the premium plan.',

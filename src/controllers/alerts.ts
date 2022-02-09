@@ -1,4 +1,11 @@
-import { AddAlertRequest, Alert, AlertDestination, GetAlertsResponse, PlanType } from '@zachweinberg/obsidian-schema';
+import {
+  AddAlertRequest,
+  Alert,
+  AlertDestination,
+  GetAlertsResponse,
+  PlanType,
+  PLAN_LIMITS,
+} from '@zachweinberg/obsidian-schema';
 import * as EmailValidator from 'email-validator';
 import { Router } from 'express';
 import _ from 'lodash';
@@ -35,7 +42,7 @@ alertsRouter.post(
 
     const existingAlerts = await findDocuments('alerts', [{ property: 'userID', condition: '==', value: userID }]);
 
-    if (existingAlerts.length >= 3 && req.user!.plan.type === PlanType.FREE) {
+    if (existingAlerts.length >= PLAN_LIMITS.alerts.free && req.user!.plan.type === PlanType.FREE) {
       return res.status(400).json({
         status: 'error',
         error:
@@ -44,10 +51,10 @@ alertsRouter.post(
       });
     }
 
-    if (existingAlerts.length >= 20) {
+    if (existingAlerts.length >= PLAN_LIMITS.alerts.premium) {
       return res.status(400).json({
         status: 'error',
-        error: 'At this time, we allow up to 20 alerts at once.',
+        error: 'At this time, we allow up to 20 alerts at once on the premium plan.',
         code: 'MAX_PLAN',
       });
     }

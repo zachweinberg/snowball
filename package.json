@@ -15,7 +15,7 @@
   "dependencies": {
     "@bull-board/express": "^3.9.0",
     "@sentry/node": "^6.16.1",
-    "@zachweinberg/obsidian-schema": "^1.14.6",
+    "@zachweinberg/obsidian-schema": "^1.14.7",
     "algoliasearch": "^4.10.4",
     "axios": "^0.21.1",
     "bull": "^4.1.1",
