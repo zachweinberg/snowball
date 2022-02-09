@@ -1,4 +1,9 @@
-import { StockPosition, StockPositionWithQuote, Unit } from '@zachweinberg/obsidian-schema';
+import {
+  PLAN_LIMITS,
+  StockPosition,
+  StockPositionWithQuote,
+  Unit,
+} from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
 import ReactTooltip from 'react-tooltip';
 import { useAuth } from '~/hooks/useAuth';
@@ -8,6 +13,7 @@ import Button from '../ui/Button';
 import Menu from '../ui/Menu';
 import { BaseTable } from './BaseTable';
 import { buildStockData, StocksTableData } from './builders';
+import UpgradeBanner from './UpgradeBanner';
 
 interface Props {
   stocks: StockPositionWithQuote[];
@@ -135,6 +141,9 @@ const StocksTable: React.FunctionComponent<Props> = ({
   return (
     <>
       <ReactTooltip />
+
+      {stocks.length >= PLAN_LIMITS.stocks.free && <UpgradeBanner type="stock positions" />}
+
       <BaseTable columns={columns} data={data} />
     </>
   );

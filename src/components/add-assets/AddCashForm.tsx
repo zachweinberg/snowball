@@ -1,3 +1,4 @@
+import { AssetType } from '@zachweinberg/obsidian-schema';
 import { trackGoal } from 'fathom-client';
 import { useCallback, useEffect, useState } from 'react';
 import { PlaidLinkOnSuccess, PlaidLinkOptions, usePlaidLink } from 'react-plaid-link';
@@ -70,7 +71,7 @@ const AddCashForm: React.FunctionComponent<Props> = ({
   };
 
   const fetchLinkToken = async () => {
-    const tokenResponse = await API.getPlaidLinkToken();
+    const tokenResponse = await API.getPlaidLinkToken(AssetType.Cash);
     localStorage.setItem('link_token', tokenResponse.data.link_token);
     setLinkToken(tokenResponse.data.link_token);
   };

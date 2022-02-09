@@ -1,4 +1,4 @@
-import { RealEstatePosition } from '@zachweinberg/obsidian-schema';
+import { PLAN_LIMITS, RealEstatePosition } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
 import Menu from '~/components/ui/Menu';
 import { useAuth } from '~/hooks/useAuth';
@@ -8,6 +8,7 @@ import { VerticalDots } from '../icons/VerticalDots';
 import Button from '../ui/Button';
 import { BaseTable } from './BaseTable';
 import { buildRealEstateData, RealEstateTableData } from './builders';
+import UpgradeBanner from './UpgradeBanner';
 
 interface Props {
   realEstate: RealEstatePosition[];
@@ -84,7 +85,14 @@ const RealEstateTable: React.FunctionComponent<Props> = ({
     []
   );
 
-  return <BaseTable columns={columns} data={data} />;
+  return (
+    <>
+      {realEstate.length >= PLAN_LIMITS.realEstate.free && (
+        <UpgradeBanner type="real estate" />
+      )}
+      <BaseTable columns={columns} data={data} />
+    </>
+  );
 };
 
 export default RealEstateTable;

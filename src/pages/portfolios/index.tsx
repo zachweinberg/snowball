@@ -1,4 +1,5 @@
-import { PortfolioWithBalances } from '@zachweinberg/obsidian-schema';
+import { ArrowCircleUpIcon } from '@heroicons/react/outline';
+import { PLAN_LIMITS, PortfolioWithBalances } from '@zachweinberg/obsidian-schema';
 import { DateTime } from 'luxon';
 import type { NextPage } from 'next';
 import React, { useEffect, useState } from 'react';
@@ -143,12 +144,30 @@ const PortfolioListPage: NextPage = () => {
           onClose={() => setCreatingPortfolio(false)}
         >
           <div className="max-w-sm mx-auto">
-            <CreatePortfolioForm
-              afterCreate={() => {
-                loadPortfolios();
-                setCreatingPortfolio(false);
-              }}
-            />
+            {portfolios.length >= PLAN_LIMITS.portfolios.free ? (
+              <div className="p-5 text-left border rounded-md border-bordergray">
+                <div className="flex justify-center">
+                  <ArrowCircleUpIcon className="w-12 h-12 mb-6 text-evergreen" />
+                </div>
+
+                <p className="mb-6 font-medium leading-5 text-md text-darkgray">
+                  Users on the free plan can create one portfolio. If you would like to create
+                  up to four portfolios, please upgrade to the premium plan.
+                </p>
+                <Link href="/upgrade">
+                  <Button variant="primary" type="button">
+                    Upgrade to Premium
+                  </Button>
+                </Link>
+              </div>
+            ) : (
+              <CreatePortfolioForm
+                afterCreate={() => {
+                  loadPortfolios();
+                  setCreatingPortfolio(false);
+                }}
+              />
+            )}
           </div>
         </FullScreenModal>
 

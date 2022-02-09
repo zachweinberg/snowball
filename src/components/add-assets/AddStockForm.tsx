@@ -1,6 +1,7 @@
 import { AssetType } from '@zachweinberg/obsidian-schema';
 import { trackGoal } from 'fathom-client';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { PlaidLinkOnSuccess, PlaidLinkOptions, usePlaidLink } from 'react-plaid-link';
 import * as Yup from 'yup';
 import * as yup from 'yup';
 import { API } from '~/lib/api';
@@ -8,6 +9,7 @@ import { formatMoneyFromNumber } from '~/lib/money';
 import Button from '../ui/Button';
 import MoneyInput from '../ui/MoneyInput';
 import QuantityInput from '../ui/QuantityInput';
+import Spinner from '../ui/Spinner';
 import TextInputWithResults from '../ui/TextInputWithResults';
 
 const addStockSchema = yup.object().shape({
@@ -43,8 +45,53 @@ const AddStockForm: React.FunctionComponent<Props> = ({
   const [quantity, setQuantity] = useState<number | null>(null);
   const [costPerShare, setCostPerShare] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
+  const [linkToken, setLinkToken] = useState<string | null>(null);
 
   const canAdd = symbol && costPerShare && costPerShare > 0 && quantity && quantity > 0;
+
+  const onSuccess = useCallback<PlaidLinkOnSuccess>(async (publicToken, metadata) => {
+    setLoading(true);
+
+    const institutionName = metadata.institution?.name ?? 'Brokerage';
+    const institutionID = metadata.institution?.institution_id ?? '';
+    const accounts = metadata.accounts;
+
+    await API.exchangeTokenForStockItem(
+      portfolioID,
+      publicToken,
+      accounts[0],
+      institutionName,
+      institutionID
+    );
+
+    setLoading(false);
+    trackGoal('W0HYS772', 0);
+
+    afterAdd();
+  }, []);
+
+  const config: PlaidLinkOptions = {
+    token: linkToken ?? '',
+    onSuccess,
+    language: 'en',
+    countryCodes: ['US'],
+  };
+
+  const fetchLinkToken = async () => {
+    const tokenResponse = await API.getPlaidLinkToken(AssetType.Stock);
+    localStorage.setItem('link_token', tokenResponse.data.link_token);
+    setLinkToken(tokenResponse.data.link_token);
+  };
+
+  useEffect(() => {
+    fetchLinkToken();
+  }, []);
+
+  const { open, ready } = usePlaidLink(config);
+
+  const openLink = () => {
+    open();
+  };
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -115,46 +162,64 @@ const AddStockForm: React.FunctionComponent<Props> = ({
         Add a specific equity to your portfolio.
       </p>
 
-      <div>
-        <div className="mb-1 text-sm text-darkgray">Symbol</div>
-
-        <TextInputWithResults
-          placeholder="Add stock"
-          backgroundColor="#F9FAFF"
-          type={AssetType.Stock}
-          autofocus
-          floatingResults
-          onError={(e) => setError(e)}
-          onResult={(symbol, fullName) => {
-            setSymbol(symbol.toUpperCase());
-            setCompanyName(fullName);
-          }}
-        />
-      </div>
-
-      <div className="grid grid-cols-2 gap-6 mb-4">
-        <div>
-          <div className="mb-1 text-sm text-darkgray">Quantity</div>
-          <QuantityInput
-            placeholder="Quantity"
-            required
-            value={quantity}
-            backgroundColor="#F9FAFF"
-            name="quantity"
-            onChange={(val) => setQuantity(Number(val))}
-          />
+      {loading ? (
+        <div className="flex justify-center">
+          <Spinner size={28} />
         </div>
-        <div>
-          <div className="mb-1 text-sm text-darkgray">Cost Per Share</div>
-          <MoneyInput
-            placeholder="Cost Per Share"
-            required
-            value={costPerShare}
-            name="costPerShare"
-            onChange={(val) => setCostPerShare(val)}
-          />
-        </div>
-      </div>
+      ) : (
+        <>
+          <div className="flex justify-center pb-10 border-b border-gray">
+            <Button type="button" className="w-1/2" onClick={openLink} disabled={!ready}>
+              Import From Brokerage
+            </Button>
+          </div>
+
+          <p className="pt-10 text-sm font-medium text-center mb-7 text-darkgray">
+            Or, manually add a stock:
+          </p>
+
+          <div>
+            <div className="mb-1 text-sm text-darkgray">Symbol</div>
+
+            <TextInputWithResults
+              placeholder="Add stock"
+              backgroundColor="#F9FAFF"
+              type={AssetType.Stock}
+              autofocus
+              floatingResults
+              onError={(e) => setError(e)}
+              onResult={(symbol, fullName) => {
+                setSymbol(symbol.toUpperCase());
+                setCompanyName(fullName);
+              }}
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-6 mb-4">
+            <div>
+              <div className="mb-1 text-sm text-darkgray">Quantity</div>
+              <QuantityInput
+                placeholder="Quantity"
+                required
+                value={quantity}
+                backgroundColor="#F9FAFF"
+                name="quantity"
+                onChange={(val) => setQuantity(Number(val))}
+              />
+            </div>
+            <div>
+              <div className="mb-1 text-sm text-darkgray">Cost Per Share</div>
+              <MoneyInput
+                placeholder="Cost Per Share"
+                required
+                value={costPerShare}
+                name="costPerShare"
+                onChange={(val) => setCostPerShare(val)}
+              />
+            </div>
+          </div>
+        </>
+      )}
 
       {error && <p className="mb-6 leading-5 text-left text-red">{error}</p>}
 

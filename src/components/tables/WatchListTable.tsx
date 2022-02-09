@@ -1,9 +1,10 @@
-import { WatchListItem } from '@zachweinberg/obsidian-schema';
+import { PLAN_LIMITS, WatchListItem } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
 import Menu from '~/components/ui/Menu';
 import { formatMoneyFromNumber, formatPercentageChange } from '~/lib/money';
 import { BaseTable } from './BaseTable';
 import { buildWatchlistData, WatchlistTableData } from './builders';
+import UpgradeBanner from './UpgradeBanner';
 
 interface Props {
   items: WatchListItem[];
@@ -95,7 +96,12 @@ const WatchListTable: React.FunctionComponent<Props> = ({ items, onDelete }: Pro
     []
   );
 
-  return <BaseTable columns={columns} data={data} />;
+  return (
+    <>
+      {items.length >= PLAN_LIMITS.watchlist.free && <UpgradeBanner type="watchlist items" />}
+      <BaseTable columns={columns} data={data} />
+    </>
+  );
 };
 
 export default WatchListTable;

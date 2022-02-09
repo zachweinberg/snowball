@@ -59,6 +59,7 @@ const axiosInstance = axios.create();
 
 axiosInstance.interceptors.response.use((response) => {
   response.data = normalizeTimestamps(response.data);
+  console.log('r', response);
   return response;
 });
 
@@ -315,9 +316,9 @@ export const API = {
   },
 
   // PLAID
-  getPlaidLinkToken: () => {
+  getPlaidLinkToken: (assetType: AssetType) => {
     return request<undefined, { data: { link_token: string } }>(
-      '/api/plaid/create-link-token',
+      `/api/plaid/create-link-token?assetType=${assetType}`,
       'get'
     );
   },
@@ -329,6 +330,21 @@ export const API = {
     institutionID: string
   ) => {
     return request(`/api/plaid/cash-item`, 'post', {
+      portfolioID,
+      publicToken,
+      account,
+      institutionName,
+      institutionID,
+    });
+  },
+  exchangeTokenForStockItem: (
+    portfolioID: string,
+    publicToken: string,
+    account: PlaidAccount,
+    institutionName: string,
+    institutionID: string
+  ) => {
+    return request(`/api/plaid/stock-item`, 'post', {
       portfolioID,
       publicToken,
       account,

@@ -1,5 +1,5 @@
 import { LinkIcon } from '@heroicons/react/outline';
-import { CashPosition } from '@zachweinberg/obsidian-schema';
+import { CashPosition, PLAN_LIMITS } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
 import ReactTooltip from 'react-tooltip';
 import Menu from '~/components/ui/Menu';
@@ -9,6 +9,7 @@ import { VerticalDots } from '../icons/VerticalDots';
 import Button from '../ui/Button';
 import { BaseTable } from './BaseTable';
 import { buildCashData, CashTableData } from './builders';
+import UpgradeBanner from './UpgradeBanner';
 
 interface Props {
   cash: CashPosition[];
@@ -100,6 +101,7 @@ const CashTable: React.FunctionComponent<Props> = ({
   return (
     <>
       <ReactTooltip multiline />
+      {cash.length >= PLAN_LIMITS.cash.free && <UpgradeBanner type="cash holdings" />}
       <BaseTable columns={columns} data={data} />
     </>
   );

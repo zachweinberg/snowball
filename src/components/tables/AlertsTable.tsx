@@ -1,9 +1,10 @@
-import { Alert, AlertDestination } from '@zachweinberg/obsidian-schema';
+import { Alert, AlertDestination, PLAN_LIMITS } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
 import { formatMoneyFromNumber } from '~/lib/money';
 import Menu from '../ui/Menu';
 import { BaseTable } from './BaseTable';
 import { AlertsTableData, buildAlertsData } from './builders';
+import UpgradeBanner from './UpgradeBanner';
 
 interface Props {
   alerts: Alert[];
@@ -80,7 +81,12 @@ const AlertsTable: React.FunctionComponent<Props> = ({ alerts, onDelete }: Props
     []
   );
 
-  return <BaseTable columns={columns} data={data} />;
+  return (
+    <>
+      {alerts.length >= PLAN_LIMITS.alerts.free && <UpgradeBanner type="alerts" />}
+      <BaseTable columns={columns} data={data} />
+    </>
+  );
 };
 
 export default AlertsTable;

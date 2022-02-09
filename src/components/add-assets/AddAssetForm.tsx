@@ -139,7 +139,7 @@ const AddAssetForm: React.FunctionComponent<AddAssetFormProps> = ({
   }, [assetType, onClose]);
 
   return (
-    <div className="relative max-w-5xl mx-auto mt-20">
+    <div className="relative max-w-5xl mx-auto mt-10">
       <Transition
         className="absolute w-full"
         show={assetType === null}

@@ -1,4 +1,4 @@
-import { CustomPosition } from '@zachweinberg/obsidian-schema';
+import { CustomPosition, PLAN_LIMITS } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
 import Menu from '~/components/ui/Menu';
 import { useAuth } from '~/hooks/useAuth';
@@ -7,6 +7,7 @@ import { VerticalDots } from '../icons/VerticalDots';
 import Button from '../ui/Button';
 import { BaseTable } from './BaseTable';
 import { buildCustomAssetData, CustomAssetTableData } from './builders';
+import UpgradeBanner from './UpgradeBanner';
 
 interface Props {
   customs: CustomPosition[];
@@ -78,7 +79,12 @@ const CustomAssetTable: React.FunctionComponent<Props> = ({
     []
   );
 
-  return <BaseTable columns={columns} data={data} />;
+  return (
+    <>
+      {customs.length >= PLAN_LIMITS.custom.free && <UpgradeBanner type="custom assets" />}
+      <BaseTable columns={columns} data={data} />
+    </>
+  );
 };
 
 export default CustomAssetTable;

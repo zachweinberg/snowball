@@ -1,4 +1,9 @@
-import { CryptoPosition, CryptoPositionWithQuote, Unit } from '@zachweinberg/obsidian-schema';
+import {
+  CryptoPosition,
+  CryptoPositionWithQuote,
+  PLAN_LIMITS,
+  Unit,
+} from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
 import ReactTooltip from 'react-tooltip';
 import { useAuth } from '~/hooks/useAuth';
@@ -8,6 +13,7 @@ import Button from '../ui/Button';
 import Menu from '../ui/Menu';
 import { BaseTable } from './BaseTable';
 import { buildCryptoData, CryptoTableData } from './builders';
+import UpgradeBanner from './UpgradeBanner';
 
 interface Props {
   crypto: CryptoPositionWithQuote[];
@@ -147,6 +153,7 @@ const CryptoTable: React.FunctionComponent<Props> = ({
   return (
     <>
       <ReactTooltip />
+      {crypto.length >= PLAN_LIMITS.crypto.free && <UpgradeBanner type="crypto positions" />}
       <BaseTable columns={columns} data={data} />
     </>
   );
