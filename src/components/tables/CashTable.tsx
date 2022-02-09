@@ -1,5 +1,5 @@
 import { LinkIcon } from '@heroicons/react/outline';
-import { CashPosition, PLAN_LIMITS } from '@zachweinberg/obsidian-schema';
+import { CashPosition, PlanType, PLAN_LIMITS } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
 import ReactTooltip from 'react-tooltip';
 import Menu from '~/components/ui/Menu';
@@ -55,7 +55,7 @@ const CashTable: React.FunctionComponent<Props> = ({
         Cell: ({ value, row }) => (
           <div className="flex items-center">
             {value}{' '}
-            {row.original.isPlaid && (
+            {auth.user && row.original.isPlaid && (
               <LinkIcon
                 data-tip={`This account is linked to your bank via Plaid.<br/>We will update the cash amount six times per day.`}
                 className="w-4 h-4 ml-4"
@@ -101,7 +101,9 @@ const CashTable: React.FunctionComponent<Props> = ({
   return (
     <>
       <ReactTooltip multiline />
-      {cash.length >= PLAN_LIMITS.cash.free && <UpgradeBanner type="cash holdings" />}
+      {cash.length >= PLAN_LIMITS.cash.free && auth.user?.plan?.type === PlanType.FREE && (
+        <UpgradeBanner type="cash holdings" />
+      )}
       <BaseTable columns={columns} data={data} />
     </>
   );

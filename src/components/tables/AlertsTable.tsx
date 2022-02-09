@@ -1,5 +1,6 @@
-import { Alert, AlertDestination, PLAN_LIMITS } from '@zachweinberg/obsidian-schema';
+import { Alert, AlertDestination, PlanType, PLAN_LIMITS } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
+import { useAuth } from '~/hooks/useAuth';
 import { formatMoneyFromNumber } from '~/lib/money';
 import Menu from '../ui/Menu';
 import { BaseTable } from './BaseTable';
@@ -12,6 +13,8 @@ interface Props {
 }
 
 const AlertsTable: React.FunctionComponent<Props> = ({ alerts, onDelete }: Props) => {
+  const auth = useAuth();
+
   if (alerts.length === 0) {
     return null;
   }
@@ -83,7 +86,9 @@ const AlertsTable: React.FunctionComponent<Props> = ({ alerts, onDelete }: Props
 
   return (
     <>
-      {alerts.length >= PLAN_LIMITS.alerts.free && <UpgradeBanner type="alerts" />}
+      {alerts.length >= PLAN_LIMITS.alerts.free && auth.user?.plan?.type === PlanType.FREE && (
+        <UpgradeBanner type="alerts" />
+      )}
       <BaseTable columns={columns} data={data} />
     </>
   );

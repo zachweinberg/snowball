@@ -1,4 +1,4 @@
-import { CustomPosition, PLAN_LIMITS } from '@zachweinberg/obsidian-schema';
+import { CustomPosition, PlanType, PLAN_LIMITS } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
 import Menu from '~/components/ui/Menu';
 import { useAuth } from '~/hooks/useAuth';
@@ -24,9 +24,9 @@ const CustomAssetTable: React.FunctionComponent<Props> = ({
   belongsTo,
   onEdit,
 }: Props) => {
-  if (customs.length === 0) {
-    const auth = useAuth();
+  const auth = useAuth();
 
+  if (customs.length === 0) {
     return (
       <div className="py-16 mx-auto text-center">
         {auth.user?.id === belongsTo ? (
@@ -81,7 +81,8 @@ const CustomAssetTable: React.FunctionComponent<Props> = ({
 
   return (
     <>
-      {customs.length >= PLAN_LIMITS.custom.free && <UpgradeBanner type="custom assets" />}
+      {customs.length >= PLAN_LIMITS.custom.free &&
+        auth.user?.plan?.type === PlanType.FREE && <UpgradeBanner type="custom assets" />}
       <BaseTable columns={columns} data={data} />
     </>
   );

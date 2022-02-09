@@ -1,6 +1,7 @@
 import {
   CryptoPosition,
   CryptoPositionWithQuote,
+  PlanType,
   PLAN_LIMITS,
   Unit,
 } from '@zachweinberg/obsidian-schema';
@@ -153,7 +154,9 @@ const CryptoTable: React.FunctionComponent<Props> = ({
   return (
     <>
       <ReactTooltip />
-      {crypto.length >= PLAN_LIMITS.crypto.free && <UpgradeBanner type="crypto positions" />}
+      {crypto.length >= PLAN_LIMITS.crypto.free && auth.user?.plan?.type === PlanType.FREE && (
+        <UpgradeBanner type="crypto positions" />
+      )}
       <BaseTable columns={columns} data={data} />
     </>
   );

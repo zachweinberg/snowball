@@ -1,6 +1,7 @@
-import { PLAN_LIMITS, WatchListItem } from '@zachweinberg/obsidian-schema';
+import { PlanType, PLAN_LIMITS, WatchListItem } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
 import Menu from '~/components/ui/Menu';
+import { useAuth } from '~/hooks/useAuth';
 import { formatMoneyFromNumber, formatPercentageChange } from '~/lib/money';
 import { BaseTable } from './BaseTable';
 import { buildWatchlistData, WatchlistTableData } from './builders';
@@ -12,6 +13,8 @@ interface Props {
 }
 
 const WatchListTable: React.FunctionComponent<Props> = ({ items, onDelete }: Props) => {
+  const auth = useAuth();
+
   if (items.length === 0) {
     return null;
   }
@@ -98,7 +101,8 @@ const WatchListTable: React.FunctionComponent<Props> = ({ items, onDelete }: Pro
 
   return (
     <>
-      {items.length >= PLAN_LIMITS.watchlist.free && <UpgradeBanner type="watchlist items" />}
+      {items.length >= PLAN_LIMITS.watchlist.free &&
+        auth.user?.plan?.type === PlanType.FREE && <UpgradeBanner type="watchlist items" />}
       <BaseTable columns={columns} data={data} />
     </>
   );

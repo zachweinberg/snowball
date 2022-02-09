@@ -1,4 +1,5 @@
 import {
+  PlanType,
   PLAN_LIMITS,
   StockPosition,
   StockPositionWithQuote,
@@ -141,9 +142,9 @@ const StocksTable: React.FunctionComponent<Props> = ({
   return (
     <>
       <ReactTooltip />
-
-      {stocks.length >= PLAN_LIMITS.stocks.free && <UpgradeBanner type="stock positions" />}
-
+      {stocks.length >= PLAN_LIMITS.stocks.free && auth.user?.plan?.type === PlanType.FREE && (
+        <UpgradeBanner type="stock positions" />
+      )}
       <BaseTable columns={columns} data={data} />
     </>
   );

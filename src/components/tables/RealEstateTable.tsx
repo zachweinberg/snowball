@@ -1,4 +1,4 @@
-import { PLAN_LIMITS, RealEstatePosition } from '@zachweinberg/obsidian-schema';
+import { PlanType, PLAN_LIMITS, RealEstatePosition } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
 import Menu from '~/components/ui/Menu';
 import { useAuth } from '~/hooks/useAuth';
@@ -87,9 +87,8 @@ const RealEstateTable: React.FunctionComponent<Props> = ({
 
   return (
     <>
-      {realEstate.length >= PLAN_LIMITS.realEstate.free && (
-        <UpgradeBanner type="real estate" />
-      )}
+      {realEstate.length >= PLAN_LIMITS.realEstate.free &&
+        auth.user?.plan?.type === PlanType.FREE && <UpgradeBanner type="real estate" />}
       <BaseTable columns={columns} data={data} />
     </>
   );
