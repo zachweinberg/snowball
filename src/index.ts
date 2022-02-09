@@ -421,3 +421,38 @@ export interface FoundPlaidAsset {
   assetType: AssetType;
   plaidItemID: string;
 }
+
+export const PLAN_LIMITS = {
+  portfolios: {
+    free: 1,
+    premium: 4,
+  },
+  watchlist: {
+    free: 6,
+    premium: 30,
+  },
+  alerts: {
+    free: 3,
+    premium: 20,
+  },
+  stocks: {
+    free: 4,
+    premium: 30,
+  },
+  crypto: {
+    free: 4,
+    premium: 30,
+  },
+  realEstate: {
+    free: 2,
+    premium: 20,
+  },
+  cash: {
+    free: 4,
+    premium: 30,
+  },
+  custom: {
+    free: 4,
+    premium: 30,
+  },
+};
