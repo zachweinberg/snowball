@@ -11,8 +11,10 @@ export interface User {
   id: string;
   email: string;
   name: string;
+  stripeCustomerID: string;
   createdAt: Date;
   plan: Plan;
+  planUpdatedAt: Date;
   lastLogin: Date;
 }
 
