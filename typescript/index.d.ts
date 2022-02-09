@@ -10,10 +10,8 @@ export interface User {
     id: string;
     email: string;
     name: string;
-    stripeCustomerID: string;
     createdAt: Date;
     plan: Plan;
-    planUpdatedAt: Date;
     lastLogin: Date;
 }
 export declare enum PlanType {
@@ -22,6 +20,9 @@ export declare enum PlanType {
 }
 export interface Plan {
     type: PlanType;
+    planUpdatedAt: Date;
+    stripeCustomerID: string | null;
+    stripeSubscriptionID: string | null;
 }
 export declare enum AssetColor {
     Stocks = "#CEF33C",
