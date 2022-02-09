@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Period = exports.Unit = exports.AlertMode = exports.AlertCondition = exports.AlertDestination = exports.RealEstatePropertyType = exports.AssetType = exports.AssetColor = exports.PlanType = exports.DailyBalancesPeriod = void 0;
+exports.PLAN_LIMITS = exports.Period = exports.Unit = exports.AlertMode = exports.AlertCondition = exports.AlertDestination = exports.RealEstatePropertyType = exports.AssetType = exports.AssetColor = exports.PlanType = exports.DailyBalancesPeriod = void 0;
 var DailyBalancesPeriod;
 (function (DailyBalancesPeriod) {
     DailyBalancesPeriod["OneDay"] = "OneDay";
@@ -68,3 +68,37 @@ var Period;
     Period["Monthly"] = "Monthly";
     Period["Never"] = "Never";
 })(Period = exports.Period || (exports.Period = {}));
+exports.PLAN_LIMITS = {
+    portfolios: {
+        free: 1,
+        premium: 4,
+    },
+    watchlist: {
+        free: 6,
+        premium: 30,
+    },
+    alerts: {
+        free: 3,
+        premium: 20,
+    },
+    stocks: {
+        free: 4,
+        premium: 30,
+    },
+    crypto: {
+        free: 4,
+        premium: 30,
+    },
+    realEstate: {
+        free: 2,
+        premium: 20,
+    },
+    cash: {
+        free: 4,
+        premium: 30,
+    },
+    custom: {
+        free: 4,
+        premium: 30,
+    },
+};

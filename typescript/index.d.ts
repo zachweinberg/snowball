@@ -369,3 +369,37 @@ export interface FoundPlaidAsset {
     assetType: AssetType;
     plaidItemID: string;
 }
+export declare const PLAN_LIMITS: {
+    portfolios: {
+        free: number;
+        premium: number;
+    };
+    watchlist: {
+        free: number;
+        premium: number;
+    };
+    alerts: {
+        free: number;
+        premium: number;
+    };
+    stocks: {
+        free: number;
+        premium: number;
+    };
+    crypto: {
+        free: number;
+        premium: number;
+    };
+    realEstate: {
+        free: number;
+        premium: number;
+    };
+    cash: {
+        free: number;
+        premium: number;
+    };
+    custom: {
+        free: number;
+        premium: number;
+    };
+};
