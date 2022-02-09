@@ -11,10 +11,8 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  stripeCustomerID: string;
   createdAt: Date;
   plan: Plan;
-  planUpdatedAt: Date;
   lastLogin: Date;
 }
 
@@ -24,6 +22,9 @@ export enum PlanType {
 }
 export interface Plan {
   type: PlanType;
+  planUpdatedAt: Date;
+  stripeCustomerID: string | null;
+  stripeSubscriptionID: string | null;
 }
 
 export enum AssetColor {
