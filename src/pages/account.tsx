@@ -204,8 +204,13 @@ const Account: NextPage = () => {
                   </thead>
                   <tbody className="divide-y divide-gray-200 whitespace-nowrap">
                     <tr>
-                      <td className="p-4 font-medium text-dark">Free Plan</td>
-                      <td className="p-4 font-medium text-dark">Free!</td>
+                      <td className="p-4 font-medium text-dark">
+                        {!isPremium ? 'Free Plan' : 'Premium Plan'}
+                      </td>
+                      <td className="p-4 font-medium text-dark">
+                        {' '}
+                        {!isPremium ? 'Free!' : '$10/mo'}
+                      </td>
                       <td className="py-4 pl-8 pr-4 font-medium xl:pr-7">
                         <button
                           onClick={handleSubscriptionClick}
