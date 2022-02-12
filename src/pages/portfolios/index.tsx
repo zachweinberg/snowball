@@ -1,5 +1,5 @@
 import { ArrowCircleUpIcon } from '@heroicons/react/outline';
-import { PLAN_LIMITS, PortfolioWithBalances } from '@zachweinberg/obsidian-schema';
+import { PlanType, PLAN_LIMITS, PortfolioWithBalances } from '@zachweinberg/obsidian-schema';
 import { DateTime } from 'luxon';
 import type { NextPage } from 'next';
 import React, { useEffect, useState } from 'react';
@@ -144,7 +144,8 @@ const PortfolioListPage: NextPage = () => {
           onClose={() => setCreatingPortfolio(false)}
         >
           <div className="max-w-sm mx-auto">
-            {portfolios.length >= PLAN_LIMITS.portfolios.free ? (
+            {portfolios.length >= PLAN_LIMITS.portfolios.free &&
+            auth.user?.plan?.type === PlanType.FREE ? (
               <div className="p-5 text-left border rounded-md border-bordergray">
                 <div className="flex justify-center">
                   <ArrowCircleUpIcon className="w-12 h-12 mb-6 text-evergreen" />
