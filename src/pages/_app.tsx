@@ -16,7 +16,9 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   useAnalytics();
 
   useEffect(() => {
-    hotjar.initialize(HJID, HSJV);
+    if (process.env.NODE_ENV === 'production') {
+      hotjar.initialize(HJID, HSJV);
+    }
   }, []);
 
   return (
