@@ -903,6 +903,22 @@ paths:
             application/json:
               schema:
                 type: object
+  /billing/session:
+    get:
+      summary: Get Stripe session
+      parameters:
+        - name: sessionID
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
   /billing/webhook:
     post:
       summary: Stripe webhooks
