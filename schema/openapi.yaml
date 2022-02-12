@@ -903,3 +903,13 @@ paths:
             application/json:
               schema:
                 type: object
+  /billing/webhook:
+    post:
+      summary: Stripe webhooks
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
