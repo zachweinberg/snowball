@@ -7,7 +7,7 @@ export default (children) => `<mjml>
             <mj-image href="https://obsidiantracker.com" src="https://obsidiantracker.com/img/logo-light.png" width="230px" />
         </mj-column>
     </mj-section>
-    <mj-section>
+    <mj-section background-color="#fff" border-radius="17px" padding="16px">
         ${children}
     </mj-section>
     <mj-section>

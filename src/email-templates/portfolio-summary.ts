@@ -2,8 +2,8 @@ import layout from './layout';
 
 const html = layout(`
       <mj-column>
-        <mj-text font-size="16px">
-        Hey {{fullName}}, here is your {{period}} Portfolio Summary for your portfolio <a href="https://obsidiantracker.com/portfolios/{{portfolioID}}">{{portfolioName}}</a>:
+        <mj-text font-size="16px" line-height="1.4">
+         Hey {{fullName}}, here is your {{period}} Portfolio Summary for your portfolio <a href="https://obsidiantracker.com/portfolios/{{portfolioID}}">{{portfolioName}}</a>:
         </mj-text>
 
         <mj-divider border-color="#ccc"></mj-divider>
