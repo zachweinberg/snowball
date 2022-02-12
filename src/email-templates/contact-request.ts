@@ -1,7 +1,7 @@
 import layout from './layout';
 
 const html = layout(`
-        <mj-text font-size="16px">
+        <mj-text font-size="16px" line-height="1.4">
         Welcome, {{name}}!
         </mj-text>
 
