@@ -11,7 +11,7 @@ const text = `Welcome, {{name}}!
     \n\n
     Thank you for signing up for Obsidian Tracker. If you are an investor of any kind, we hope you will find our asset tracker useful.
     \n\n
-    We love feedback, so please feel free to let us know what you think via the <a href="https://obsidiantracker.com/contact">contact page</a>.
+    We love feedback, so please feel free to let us know what you think at https://obsidiantracker.com/contact.
     `;
 
 export default {

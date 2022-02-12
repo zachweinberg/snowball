@@ -4,9 +4,7 @@ export default (children) => `<mjml>
     <mj-body background-color="#0f1418">
     <mj-section>
         <mj-column>
-            <a href="https://obsidiantracker.com">
-            <mj-image src="https://obsidiantracker.com/img/logo-light.png" width="230px" />
-            </a>
+            <mj-image href="https://obsidiantracker.com" src="https://obsidiantracker.com/img/logo-light.png" width="230px" />
         </mj-column>
     </mj-section>
     <mj-section background-color="#fff" border-radius="17px">

@@ -15,9 +15,9 @@ const text = `
     \n\n
     This alert has now been removed from your alert list.
     \n\n
-    Click <a href="https://obsidiantracker.com/alerts">here</a> to view your existing asset alerts
+    Go to https://obsidiantracker.com/alerts to view your existing asset alerts.
     \n\n
-    You are receiving this email because you set up an asset alert on <a href="https://obsidiantracker.com">Obsidian Tracker</a>.
+    You are receiving this email because you set up an asset alert on Obsidian Tracker.
 `;
 
 export default {

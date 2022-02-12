@@ -25,7 +25,7 @@ const html = layout(`
         <mj-text align="center">You can disable or edit these emails in your <a href="https://obsidiantracker.com/portfolios/{{portfolioID}}/settings">portfolio settings</a>.</mj-text>
       </mj-column>`);
 
-const text = `Hi {{fullName}}, this is your {{period}} Portfolio Summary for your portfolio <a href="https://obsidiantracker.com/portfolios/{{portfolioID}}">{{portfolioName}}</a>.
+const text = `Hi {{fullName}}, this is your {{period}} Portfolio Summary for your portfolio {{portfolioName}}</a>.
     \n\n
     Cash: {{cashValue}}
     \n
@@ -39,7 +39,7 @@ const text = `Hi {{fullName}}, this is your {{period}} Portfolio Summary for you
     \n
     Total: {{totalValue}}
     \n\n
-    You can disable or edit these emails in your <a href="https://obsidiantracker.com/portfolios/{{portfolioID}}/settings">portfolio settings</a>.
+    You can disable or edit these emails in your portfolio settings at https://obsidiantracker.com/portfolios/{{portfolioID}}/settings.
     `;
 
 export default {
