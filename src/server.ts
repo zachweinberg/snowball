@@ -36,7 +36,7 @@ const limiter = RateLimit({
     prefix: 'ratelimiter',
     client: new Redis(process.env.REDIS_URL!, { tls: { rejectUnauthorized: false } }),
   }),
-  max: 27,
+  max: 20,
 });
 
 // Basic auth for /jobs

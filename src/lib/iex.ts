@@ -11,10 +11,11 @@ interface IEXStockResponse {
   };
 }
 
+const token = process.env.IEX_CLOUD_PUBLISHABLE_KEY;
+
 const IEX_BASE_URL = 'https://cloud.iexapis.com/stable';
 
 const requestIEX = async <T>(path: string) => {
-  const token = process.env.IEX_CLOUD_PUBLISHABLE_KEY;
   const url = `${IEX_BASE_URL}${path}&token=${token}`;
   const response = await axios.get(url);
   return response.data as T;
@@ -37,9 +38,7 @@ export const getStockPrices = async (
   }
 
   const response = await requestIEX<IEXStockResponse>(
-    `/stock/market/batch?types=quote&filter=marketCap,latestPrice,change,changePercent&symbols=${dedupedSymbols.join(
-      ','
-    )}`
+    `/stock/market/batch?types=quote&filter=marketCap,latestPrice,change,changePercent&symbols=${dedupedSymbols.join(',')}`
   );
 
   return Object.keys(response).reduce(

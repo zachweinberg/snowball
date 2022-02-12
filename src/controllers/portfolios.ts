@@ -122,9 +122,10 @@ portfoliosRouter.get(
     let portfoliosWithBalances: any[] = [];
 
     for (const portfolio of portfolios) {
-      const summary = await calculatePortfolioSummary(portfolio.id);
-
-      const dailyBalances = await getPortfolioDailyHistory(portfolio.id, 30);
+      const [summary, dailyBalances] = await Promise.all([
+        calculatePortfolioSummary(portfolio.id),
+        getPortfolioDailyHistory(portfolio.id, 30),
+      ]);
 
       portfoliosWithBalances.push({
         ...portfolio,
