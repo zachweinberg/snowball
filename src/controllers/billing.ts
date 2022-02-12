@@ -18,9 +18,10 @@ billingRouter.get(
     const session = await stripeClient.checkout.sessions.create({
       metadata: {
         obsidianUserID: req.user!.id,
+        customerName: req.user!.name,
       },
       subscription_data: {
-        metadata: { obsidianUserID: req.user!.id },
+        metadata: { obsidianUserID: req.user!.id, customerName: req.user!.name },
       },
       customer: req.user!.plan.stripeCustomerID ?? undefined,
       billing_address_collection: 'auto',
@@ -49,7 +50,7 @@ billingRouter.get(
 billingRouter.get(
   '/session',
   express.json({ limit: '5mb' }),
-  // requireSignedIn,
+  requireSignedIn,
   catchErrors(async (req, res) => {
     const { sessionID } = req.query as { sessionID: string };
 
@@ -112,53 +113,70 @@ billingRouter.post(
       }
     }
 
-    // let subscription;
-    let status;
+    let subscription;
 
-    switch (event.type) {
-      case 'customer.subscription.created':
-        const subscription = event.data.object as Stripe.Subscription;
-        status = subscription.status;
-        console.log(`Subscription status is ${status}.`);
-
-        const userDataToSet: Partial<User> = {
-          plan: {
-            planUpdatedAt: new Date(),
-            stripeCustomerID: subscription.customer as string,
-            stripeSubscriptionID: subscription.id,
-            type: PlanType.PREMIUM,
-          },
-        };
-
-        const userID = subscription.metadata.obsidianUserID;
-
-        await updateDocument('users', userID, userDataToSet);
-
-        break;
-      // case 'customer.subscription.trial_will_end':
-      //   const subscription = event.data.object;
-      //   status = subscription.status;
-      //   console.log(`Subscription status is ${status}.`);
-      //   // handleSubscriptionTrialEnding(subscription);
-      //   break;
-      // case 'customer.subscription.deleted':
-      //   const subscription = event.data.object;
-      //   status = subscription.status;
-      //   console.log(`Subscription status is ${status}.`);
-      //   // handleSubscriptionDeleted(subscriptionDeleted);
-      //   break;
-      // case 'customer.subscription.updated':
-      //   const subscription = event.data.object;
-      //   status = subscription.status;
-      //   console.log(`Subscription status is ${status}.`);
-      //   // handleSubscriptionUpdated(subscription);
-      //   break;
-      default:
-        console.log(`Unhandled Stripe webhook event type ${event.type}.`);
+    try {
+      switch (event.type) {
+        case 'customer.subscription.created':
+          subscription = event.data.object as Stripe.Subscription;
+          console.log(JSON.stringify(subscription));
+          await handleSubscriptionCreated(subscription);
+          break;
+        case 'customer.subscription.trial_will_end':
+          subscription = event.data.object as Stripe.Subscription;
+          await handleSubscriptionAboutToEnd(subscription);
+          break;
+        case 'customer.subscription.deleted':
+          subscription = event.data.object as Stripe.Subscription;
+          console.log(JSON.stringify(subscription));
+          await handleSubscriptionDeleted(subscription);
+          break;
+        default:
+          console.log(`Unhandled Stripe webhook event type ${event.type}.`);
+      }
+    } catch (e) {
+      console.error(e);
+      logSentryError(e);
     }
 
     res.status(200).end();
   })
 );
+
+const handleSubscriptionCreated = async (subscription: Stripe.Subscription) => {
+  const userDataToSet: Partial<User> = {
+    plan: {
+      planUpdatedAt: new Date(),
+      stripeCustomerID: subscription.customer as string,
+      stripeSubscriptionID: subscription.id,
+      type: PlanType.PREMIUM,
+    },
+  };
+
+  const userID = subscription.metadata.obsidianUserID;
+
+  // await sendWelcomeEmail()
+  await updateDocument('users', userID, userDataToSet);
+};
+
+const handleSubscriptionDeleted = async (subscription: Stripe.Subscription) => {
+  const userDataToSet: Partial<User> = {
+    plan: {
+      planUpdatedAt: new Date(),
+      stripeCustomerID: subscription.customer as string,
+      stripeSubscriptionID: null,
+      type: PlanType.FREE,
+    },
+  };
+
+  const userID = subscription.metadata.obsidianUserID;
+
+  // await sendWelcomeEmail()
+  await updateDocument('users', userID, userDataToSet);
+};
+
+const handleSubscriptionAboutToEnd = async (subscription: Stripe.Subscription) => {
+  //send email
+};
 
 export default billingRouter;
