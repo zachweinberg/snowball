@@ -8,7 +8,7 @@ export default (children) => `<mjml>
         </mj-column>
     </mj-section>
     <mj-section padding="18px">
-        <mj-column background-color="#fff" border-radius="17px">
+        <mj-column background-color="#fff" border-radius="17px" padding="16px">
             ${children}
         </mj-column>
     </mj-section>

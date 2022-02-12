@@ -1,7 +1,6 @@
 import layout from './layout';
 
 const html = layout(`
-      <mj-column>
         <mj-text font-size="16px">
         Welcome, {{name}}!
         </mj-text>
@@ -23,7 +22,7 @@ const html = layout(`
         <mj-divider border-color="#ccc"></mj-divider>
 
         <mj-text align="center">You can disable or edit these emails in your <a href="https://obsidiantracker.com/portfolios/{{portfolioID}}/settings">portfolio settings</a>.</mj-text>
-      </mj-column>`);
+   `);
 
 const text = `Hi {{fullName}}, this is your {{period}} Portfolio Summary for your portfolio {{portfolioName}}</a>.
     \n\n
