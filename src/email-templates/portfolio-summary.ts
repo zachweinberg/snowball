@@ -3,11 +3,7 @@ import layout from './layout';
 const html = layout(`
       <mj-column>
         <mj-text font-size="16px">
-        Hey {{fullName}},
-        </mj-text>
-
-        <mj-text>
-        This is your {{period}} Portfolio Summary for your portfolio <a https://obsidiantracker.com/portfolios/{{portfolioID}}>{{portfolioName}}</a>.
+        Hey {{fullName}}, here is your {{period}} Portfolio Summary for your portfolio <a href="https://obsidiantracker.com/portfolios/{{portfolioID}}">{{portfolioName}}</a>:
         </mj-text>
 
         <mj-divider border-color="#ccc"></mj-divider>
