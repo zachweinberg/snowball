@@ -8,7 +8,7 @@ const html = layout(`
 
         <mj-text>
         This is your {{period}} Portfolio Summary for your portfolio <a https://obsidiantracker.com/portfolios/{{portfolioID}}>{{portfolioName}}</a>.
-        </mj-text->
+        </mj-text>
 
         <mj-divider border-color="#ccc"></mj-divider>
 
