@@ -1,6 +1,6 @@
 import Cryptr from 'cryptr';
 
-const cryptr = new Cryptr('MbQeThWmZq4t6w9z$C&F)J@NcRfUjXn2');
+const cryptr = new Cryptr(process.env.ENCRYPTION_KEY);
 
 export const encrypt = (text: string) => {
   return cryptr.encrypt(text);
