@@ -1,6 +1,6 @@
 const PricingLight: React.FunctionComponent = () => {
   return (
-    <div className="relative flex flex-col items-center px-8 py-10 bg-white border rounded-lg shadow-md sm:py-5 text-dark border-gray">
+    <div className="relative flex flex-col items-center px-8 py-10 bg-white border shadow-md rounded-xl sm:py-5 text-dark border-gray">
       <div className="relative mt-8 align-center sm:mt-4">
         <span className="text-6xl font-bold leading-none md:text-5xl">Free</span>
       </div>
@@ -43,9 +43,9 @@ const PricingLight: React.FunctionComponent = () => {
 
 const PricingDark: React.FunctionComponent = () => {
   return (
-    <div className="relative flex flex-col items-center px-8 py-10 text-white border rounded-bl-lg rounded-br-lg shadow-md sm:py-5 bg-dark border-dark">
+    <div className="relative flex flex-col items-center px-8 py-10 text-white border shadow-md rounded-bl-xl rounded-br-xl sm:py-5 bg-dark border-dark">
       <span
-        className="absolute top-0 flex items-center justify-center h-10 text-sm font-black tracking-wide uppercase -translate-y-full rounded-t rounded-tl-lg rounded-tr-lg -left-px -right-px text-dark"
+        className="absolute top-0 flex items-center justify-center h-10 text-sm font-black tracking-wide uppercase -translate-y-full rounded-t rounded-tl-xl rounded-tr-xl -left-px -right-px text-dark"
         style={{
           background: 'linear-gradient(269.58deg, #00565B 0%, #F5FDD8 100%)',
         }}

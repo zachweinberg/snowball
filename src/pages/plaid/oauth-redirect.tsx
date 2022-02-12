@@ -1,3 +1,4 @@
+import { AssetType } from '@zachweinberg/obsidian-schema';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { PlaidLinkOnSuccess, PlaidLinkOptions, usePlaidLink } from 'react-plaid-link';
@@ -20,7 +21,7 @@ const PlaidOAuthRedirect = () => {
       return;
     }
 
-    API.getPlaidLinkToken().then(({ data }) => {
+    API.getPlaidLinkToken(AssetType.Cash).then(({ data }) => {
       localStorage.setItem('link_token', data.link_token);
       setLinkToken(data.link_token);
     });

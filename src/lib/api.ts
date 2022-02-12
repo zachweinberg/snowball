@@ -352,4 +352,13 @@ export const API = {
       institutionID,
     });
   },
+
+  // BILLING
+  createCheckoutSession: () => {
+    return request<undefined, { url: string }>('/api/billing/create-checkout-session', 'get');
+  },
+
+  createPortalSession: () => {
+    return request<undefined, { url: string }>('/api/billing/create-portal-session', 'get');
+  },
 };

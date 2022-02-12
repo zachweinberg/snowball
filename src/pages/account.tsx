@@ -1,6 +1,8 @@
+import { PlanType } from '@zachweinberg/obsidian-schema';
 import { trackGoal } from 'fathom-client';
 import { NextPage } from 'next';
-import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
 import Layout from '~/components/layout/Layout';
@@ -21,9 +23,11 @@ const Btn = (props) => {
 
 const Account: NextPage = () => {
   const auth = useAuth();
+  const router = useRouter();
   const [email, setEmail] = useState(auth.user?.email ?? '');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const isPremium = useMemo(() => auth.user?.plan?.type === PlanType.PREMIUM, [auth.user]);
 
   const handleFirebaseError = (errorCode: string) => {
     if (errorCode === 'auth/weak-password') {
@@ -34,6 +38,14 @@ const Account: NextPage = () => {
       toast('Please use a stronger password.');
     } else {
       toast('Something went wrong.');
+    }
+  };
+
+  const handleSubscriptionClick = async () => {
+    if (!isPremium) {
+      router.push('/upgrade');
+    } else {
+      await API.createPortalSession();
     }
   };
 
@@ -192,15 +204,15 @@ const Account: NextPage = () => {
                   </thead>
                   <tbody className="divide-y divide-gray-200 whitespace-nowrap">
                     <tr>
-                      <td className="p-4 font-medium text-dark">Premium</td>
-                      <td className="p-4 font-medium text-dark">$4.99/mo</td>
+                      <td className="p-4 font-medium text-dark">Free Plan</td>
+                      <td className="p-4 font-medium text-dark">Free!</td>
                       <td className="py-4 pl-8 pr-4 font-medium xl:pr-7">
-                        <a
-                          href="/purchases/24771/receipt"
+                        <button
+                          onClick={handleSubscriptionClick}
                           className="px-4 py-2 font-semibold text-white transition-colors duration-150 rounded-md bg-evergreen hover:bg-opacity-90 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-evergreen focus:outline-none"
                         >
-                          Manage Subscription
-                        </a>
+                          {!isPremium ? 'Upgrade to Premium' : 'Manage Subscription'}
+                        </button>
                       </td>
                     </tr>
                   </tbody>

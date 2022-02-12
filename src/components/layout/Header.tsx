@@ -1,6 +1,8 @@
 import { ChevronDownIcon } from '@heroicons/react/outline';
+import { PlanType } from '@zachweinberg/obsidian-schema';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
+import { useMemo } from 'react';
 import Link from '~/components/ui/Link';
 import Menu from '~/components/ui/Menu';
 import { useAuth } from '~/hooks/useAuth';
@@ -14,11 +16,19 @@ const Header: React.FunctionComponent<Props> = ({ noBorder }: Props) => {
   const auth = useAuth();
   const router = useRouter();
 
+  const isPremium = useMemo(() => auth.user?.plan?.type === PlanType.PREMIUM, [auth.user]);
+
   return (
     <header className={classNames('bg-white', { 'border-b border-bordergray': !noBorder })}>
       <div className="flex items-center justify-between px-4 mx-auto md:max-w-7xl">
-        <Link className="hidden sm:block" href={auth.user ? '/portfolios' : '/'}>
+        <Link
+          className="hidden space-x-1 sm:flex sm:items-center"
+          href={auth.user ? '/portfolios' : '/'}
+        >
           <Logo dark />
+          {isPremium && (
+            <p className="px-2 py-1 text-xs font-semibold text-evergreen">PREMIUM</p>
+          )}
         </Link>
         <div className="w-full">
           <nav className="flex items-center justify-end w-full">
@@ -113,22 +123,25 @@ const Header: React.FunctionComponent<Props> = ({ noBorder }: Props) => {
             </ul>
 
             {auth.user && (
-              <Menu
-                options={[
-                  { label: 'Account', onClick: () => router.push('/account') },
-                  { label: 'Log Out', onClick: () => auth.logout() },
-                ]}
-                button={() => (
-                  <div className="flex items-center ml-9">
-                    <span className="inline-flex items-center justify-center w-10 h-10 mr-1 rounded-full bg-dark hover:opacity-90">
-                      <span className="text-lg font-medium leading-none text-white">
-                        {auth.user?.name?.[0].toUpperCase()}
+              <>
+                <Menu
+                  options={[
+                    { label: 'Account', onClick: () => router.push('/account') },
+                    { label: 'Log Out', onClick: () => auth.logout() },
+                  ]}
+                  button={() => (
+                    <div className="flex items-center ml-9">
+                      <span className="inline-flex items-center justify-center w-10 h-10 mr-1 rounded-full bg-dark hover:opacity-90">
+                        <span className="text-lg font-medium leading-none text-white">
+                          {auth.user?.name?.[0].toUpperCase()}
+                        </span>
                       </span>
-                    </span>
-                    <ChevronDownIcon className="w-5 h-5 text-dark" />
-                  </div>
-                )}
-              />
+
+                      <ChevronDownIcon className="w-5 h-5 text-dark" />
+                    </div>
+                  )}
+                />
+              </>
             )}
           </nav>
         </div>
