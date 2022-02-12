@@ -15,7 +15,7 @@
   "dependencies": {
     "@bull-board/express": "^3.9.0",
     "@sentry/node": "^6.16.1",
-    "@zachweinberg/obsidian-schema": "^1.14.7",
+    "@zachweinberg/obsidian-schema": "^1.14.9",
     "algoliasearch": "^4.10.4",
     "axios": "^0.21.1",
     "bull": "^4.1.1",
@@ -37,11 +37,13 @@
     "libphonenumber-js": "^1.9.38",
     "lodash": "^4.17.21",
     "luxon": "^2.0.2",
+    "mjml": "^4.12.0",
     "morgan": "^1.10.0",
+    "mustache": "^4.2.0",
     "plaid": "^9.7.0",
     "postmark": "^2.7.8",
     "rate-limit-redis": "^2.1.0",
-    "stripe": "^8.195.0",
+    "stripe": "^8.202.0",
     "twilio": "^3.70.0"
   },
   "devDependencies": {

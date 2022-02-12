@@ -883,3 +883,23 @@ paths:
             application/json:
               schema:
                 type: object
+  /billing/create-checkout-session:
+    get:
+      summary: Create session for Stripe and get url
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
+  /billing/create-portal-session:
+    get:
+      summary: Create portal session for Stripe and get url
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object

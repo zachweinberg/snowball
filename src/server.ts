@@ -18,11 +18,11 @@ import plaidRouter from '~/controllers/plaid';
 import portfoliosRouter from '~/controllers/portfolios';
 import positionsRouter from '~/controllers/positions';
 import quotesRouter from '~/controllers/quotes';
-import subscriptionsRouter from '~/controllers/subscriptions';
 import usersRouter from '~/controllers/users';
 import watchListRouter from '~/controllers/watchlist';
 import { jobQueue } from '~/queue';
 import { handleErrors, ignoreFavicon } from '~/utils/api';
+import billingRouter from './controllers/billing';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -85,7 +85,7 @@ const Server = {
       app.use('/api/watchlist', watchListRouter);
       app.use('/api/alerts', alertsRouter);
       app.use('/api/plaid', plaidRouter);
-      app.use('/api/subscriptions', subscriptionsRouter);
+      app.use('/api/billing', billingRouter);
 
       app.use(handleErrors);
 

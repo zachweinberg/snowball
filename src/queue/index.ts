@@ -6,7 +6,6 @@ export enum JobNames {
   AssetAlertsCrypto = 'asset-alerts-crypto',
   AddDailyBalances = 'add-daily-balances',
   SendPortfolioSummaryEmails = 'send-portfolio-summary-emails',
-  SendPortfolioReminderEmails = 'send-portfolio-reminder-emails',
   UpdatePropertyValue = 'update-property-value',
   UpdatePlaidCashAccounts = 'update-plaid-cash-accounts',
 }

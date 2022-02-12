@@ -14,7 +14,7 @@ import {
 import Bull from 'bull';
 import { DateTime } from 'luxon';
 import { getCryptoPrices } from '~/lib/cmc';
-import { sendAssetAlertEmail, sendPortfolioReminderEmail, sendPortfolioSummaryEmail } from '~/lib/email';
+import { sendAssetAlertEmail, sendPortfolioSummaryEmail } from '~/lib/email';
 import { getStockPrices } from '~/lib/iex';
 import { sendText } from '~/lib/phone';
 import { plaidClient } from '~/lib/plaid';
@@ -31,7 +31,6 @@ const startWorker = (): void => {
   jobQueue.process(JobNames.AssetAlertsCrypto, processAssetAlerts);
   jobQueue.process(JobNames.AddDailyBalances, addDailyBalances);
   jobQueue.process(JobNames.SendPortfolioSummaryEmails, sendPortfolioSummaryEmails);
-  jobQueue.process(JobNames.SendPortfolioReminderEmails, sendPortfolioReminderEmails);
   jobQueue.process(JobNames.UpdatePropertyValue, updatePropertyValue);
   jobQueue.process(JobNames.UpdatePlaidCashAccounts, updatePlaidCashAccounts);
   console.log('> [Consumer] Worker online');
@@ -155,21 +154,6 @@ const sendPortfolioSummaryEmails = async (job: Bull.Job) => {
         DateTime.local().toLocaleString(),
         user.name
       );
-    } catch (err) {
-      console.error(`JOB ID: ${job.id}`);
-      console.error(err);
-      logSentryError(err);
-    }
-  }
-};
-
-const sendPortfolioReminderEmails = async (job: Bull.Job) => {
-  const { period, portfolios } = job.data as { period: Period; portfolios: Portfolio[] };
-
-  for (const portfolio of portfolios) {
-    try {
-      const user = await fetchDocumentByID<User>('users', portfolio.userID);
-      await sendPortfolioReminderEmail(user.email, period, portfolio.name, portfolio.id, user.name);
     } catch (err) {
       console.error(`JOB ID: ${job.id}`);
       console.error(err);

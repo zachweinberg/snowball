@@ -90,6 +90,9 @@ usersRouter.post(
         createdAt: new Date(),
         plan: {
           type: PlanType.FREE,
+          stripeCustomerID: null,
+          stripeSubscriptionID: null,
+          planUpdatedAt: new Date(),
         },
       };
 
