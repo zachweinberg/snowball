@@ -45,7 +45,8 @@ const Account: NextPage = () => {
     if (!isPremium) {
       router.push('/upgrade');
     } else {
-      await API.createPortalSession();
+      const response = await API.createPortalSession();
+      window.location.href = response.url;
     }
   };
 
