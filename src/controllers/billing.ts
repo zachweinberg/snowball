@@ -8,6 +8,7 @@ const billingRouter = Router();
 
 billingRouter.get(
   '/create-checkout-session',
+  express.json({ limit: '5mb' }),
   requireSignedIn,
   catchErrors(async (req, res) => {
     const session = await stripeClient.checkout.sessions.create({
@@ -36,6 +37,7 @@ billingRouter.get(
 
 billingRouter.get(
   '/create-portal-session',
+  express.json({ limit: '5mb' }),
   requireSignedIn,
   catchErrors(async (req, res) => {
     if (!req.user!.plan.stripeCustomerID) {

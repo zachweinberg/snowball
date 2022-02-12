@@ -58,7 +58,6 @@ createBullBoard({
 });
 
 app.use(limiter);
-app.use(express.json({ limit: '5mb' }));
 app.use(cors());
 app.use(ignoreFavicon);
 app.use('/jobs', authConnect(basicAuth), bullBoardAdapter.getRouter());
@@ -77,14 +76,14 @@ const Server = {
         })
       );
 
-      app.use('/api/users', usersRouter);
-      app.use('/api/portfolios', portfoliosRouter);
-      app.use('/api/positions', positionsRouter);
-      app.use('/api/quotes', quotesRouter);
-      app.use('/api/news', newsRouter);
-      app.use('/api/watchlist', watchListRouter);
-      app.use('/api/alerts', alertsRouter);
-      app.use('/api/plaid', plaidRouter);
+      app.use('/api/users', express.json({ limit: '5mb' }), usersRouter);
+      app.use('/api/portfolios', express.json({ limit: '5mb' }), portfoliosRouter);
+      app.use('/api/positions', express.json({ limit: '5mb' }), positionsRouter);
+      app.use('/api/quotes', express.json({ limit: '5mb' }), quotesRouter);
+      app.use('/api/news', express.json({ limit: '5mb' }), newsRouter);
+      app.use('/api/watchlist', express.json({ limit: '5mb' }), watchListRouter);
+      app.use('/api/alerts', express.json({ limit: '5mb' }), alertsRouter);
+      app.use('/api/plaid', express.json({ limit: '5mb' }), plaidRouter);
       app.use('/api/billing', billingRouter);
 
       app.use(handleErrors);
