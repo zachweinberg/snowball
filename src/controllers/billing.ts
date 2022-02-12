@@ -19,6 +19,9 @@ billingRouter.get(
       metadata: {
         obsidianUserID: req.user!.id,
       },
+      subscription_data: {
+        metadata: { obsidianUserID: req.user!.id },
+      },
       customer: req.user!.plan.stripeCustomerID ?? undefined,
       billing_address_collection: 'auto',
       line_items: [
@@ -46,7 +49,7 @@ billingRouter.get(
 billingRouter.get(
   '/session',
   express.json({ limit: '5mb' }),
-  requireSignedIn,
+  // requireSignedIn,
   catchErrors(async (req, res) => {
     const { sessionID } = req.query as { sessionID: string };
 
@@ -109,8 +112,6 @@ billingRouter.post(
       }
     }
 
-    res.status(200).end();
-
     // let subscription;
     let status;
 
@@ -155,6 +156,8 @@ billingRouter.post(
       default:
         console.log(`Unhandled Stripe webhook event type ${event.type}.`);
     }
+
+    res.status(200).end();
   })
 );
 
