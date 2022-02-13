@@ -13,6 +13,7 @@ import {
 import { Router } from 'express';
 import { sendAccountDeletedEmail, sendContactRequestEmail, sendWelcomeEmail } from '~/lib/email';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
+import { deleteRedisKey } from '~/lib/redis';
 import { logSentryError } from '~/lib/sentry';
 import { catchErrors, requireSignedIn } from '~/utils/api';
 import { createDocument, deleteCollection, deleteDocument, fetchDocumentByID, findDocuments, updateDocument } from '~/utils/db';
@@ -206,6 +207,8 @@ usersRouter.delete(
     await deletePriceAlerts(userID);
     await firebaseAdmin().auth().deleteUser(userID);
     await deleteDocument(`users/${userID}`);
+
+    await deleteRedisKey(`portfoliolist-${userID}`);
 
     res.status(200).json({ status: 'ok' });
 
