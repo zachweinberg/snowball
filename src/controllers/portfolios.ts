@@ -21,7 +21,7 @@ import { catchErrors, getUserFromAuthHeader, requireSignedIn } from '~/utils/api
 import { deleteCollection, deleteDocument, fetchDocumentByID, findDocuments, updateDocument } from '~/utils/db';
 import { getPortfolioLogItems, trackPortfolioLogItem } from '~/utils/logs';
 import { capitalize } from '~/utils/misc';
-import { getPortfolioDailyHistory } from '~/utils/portfolios';
+import { getPortfolioDailyHistory, userOwnsPortfolio } from '~/utils/portfolios';
 import { calculatePortfolioQuotes, calculatePortfolioSummary } from '~/utils/positions';
 
 const portfoliosRouter = Router();
@@ -313,36 +313,37 @@ portfoliosRouter.delete(
   '/:portfolioID',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const redisKey = `portfolio-${req.params.portfolioID}`;
+    const portfolioID = req.params.portfolioID;
 
-    let userOwnsPortfolio = false;
-
-    const portfolio = await fetchDocumentByID<Portfolio>('portfolios', req.params.portfolioID);
-
-    const authUser = await getUserFromAuthHeader(req, false);
-
-    if (authUser && portfolio.userID === authUser.uid) {
-      userOwnsPortfolio = true;
+    if (!(await userOwnsPortfolio(req, res, portfolioID))) {
+      return res.status(401).json({ status: 'error', error: 'Invalid.' });
     }
 
-    if (!userOwnsPortfolio) {
-      // Private portfolio
-      return res.status(403).end();
-    }
+    const redisKey = `portfolio-${portfolioID}`;
 
-    await deleteDocument(`portfolios/${req.params.portfolioID}`);
-    await deleteCollection(`portfolios/${req.params.portfolioID}/dailyBalances`);
-    await deleteCollection(`portfolios/${req.params.portfolioID}/positions`);
-    await deleteCollection(`portfolios/${req.params.portfolioID}/logs`);
+    await deleteDocument(`portfolios/${portfolioID}`);
+    await deleteCollection(`portfolios/${portfolioID}/dailyBalances`);
+    await deleteCollection(`portfolios/${portfolioID}/positions`);
+    await deleteCollection(`portfolios/${portfolioID}/logs`);
 
     const realEstateDocs = await findDocuments<RealEstatePosition>('real-estate-positions', [
-      { property: 'portfolioID', condition: '==', value: req.params.portfolioID },
+      { property: 'portfolioID', condition: '==', value: portfolioID },
     ]);
 
     await Promise.all(realEstateDocs.map((doc) => deleteDocument(`real-estate-positions/${doc.id}`)));
 
+    const plaidAccounts = await findDocuments('plaid-accounts', [
+      { property: 'portfolioID', condition: '==', value: portfolioID },
+    ]);
+
+    await Promise.all(plaidAccounts.map((doc) => deleteDocument(`plaid-accounts/${doc.id}`)));
+
+    const plaidItems = await findDocuments('plaid-items', [{ property: 'portfolioID', condition: '==', value: portfolioID }]);
+
+    await Promise.all(plaidAccounts.map((doc) => deleteDocument(`plaid-accounts/${doc.id}`)));
+
     await deleteRedisKey(redisKey);
-    await deleteRedisKey(`portfoliolist-${authUser!.uid}`);
+    await deleteRedisKey(`portfoliolist-${req.user!.id}`);
 
     res.status(200).json({ status: 'ok' });
   })
