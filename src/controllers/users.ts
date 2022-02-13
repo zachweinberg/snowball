@@ -23,13 +23,7 @@ usersRouter.post(
   catchErrors(async (req, res) => {
     const { name, email, message } = req.body as SendContactEmailRequest;
 
-    const body = `
-      Name: ${name}<br/>
-      Return email: ${email ? email : 'None'}<br/>
-      Message: ${message}<br/>
-    `;
-
-    await sendContactRequestEmail(body);
+    await sendContactRequestEmail(name, message, email);
 
     const response = {
       status: 'ok',

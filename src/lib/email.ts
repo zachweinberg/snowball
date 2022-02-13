@@ -88,14 +88,16 @@ export const sendWelcomeEmail = async (toEmail: string, name) => {
   });
 };
 
-export const sendContactRequestEmail = async (body: string) => {
+export const sendContactRequestEmail = async (name: string, message: string, email?: string) => {
   await emailClient.sendEmail({
     From: fromEmail('support'),
     To: 'zach@obsidiantracker.com',
     Subject: 'New Contact Request',
     MessageStream: Emails.contactRequest.messageStreamID,
     ...renderEmailHtmlAndText(Emails.contactRequest.templates, {
-      body,
+      message,
+      name,
+      email,
     }),
   });
 };
