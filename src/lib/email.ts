@@ -149,7 +149,7 @@ export const sendPortfolioDeletedEmail = async (toEmail: string, portfolioName: 
     From: FROM_EMAIL,
     To: toEmail,
     MessageStream: Emails.portfolioDeleted.messageStreamID,
-    Subject: `Your account has been deleted`,
+    Subject: `Your portfolio has been deleted`,
     ...renderEmailHtmlAndText(Emails.portfolioDeleted.templates, {
       portfolioName,
     }),
