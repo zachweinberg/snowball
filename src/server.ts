@@ -68,14 +68,6 @@ const apiSpec = path.join(__dirname, '..', 'schema', 'openapi.yaml');
 const Server = {
   start: async () => {
     try {
-      app.use(
-        OpenApiValidator.middleware({
-          apiSpec,
-          validateRequests: true,
-          validateResponses: false,
-        })
-      );
-
       app.use('/api/users', express.json({ limit: '5mb' }), usersRouter);
       app.use('/api/portfolios', express.json({ limit: '5mb' }), portfoliosRouter);
       app.use('/api/positions', express.json({ limit: '5mb' }), positionsRouter);
@@ -87,6 +79,14 @@ const Server = {
       app.use('/api/billing', billingRouter);
 
       app.use(handleErrors);
+
+      app.use(
+        OpenApiValidator.middleware({
+          apiSpec,
+          validateRequests: true,
+          validateResponses: false,
+        })
+      );
 
       server = app.listen(PORT, () => {
         console.log(`- SERVER LIVE ON PORT ${PORT} -`);
