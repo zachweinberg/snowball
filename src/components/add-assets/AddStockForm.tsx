@@ -44,6 +44,7 @@ const AddStockForm: React.FunctionComponent<Props> = ({
   const [companyName, setCompanyName] = useState('');
   const [quantity, setQuantity] = useState<number | null>(null);
   const [costPerShare, setCostPerShare] = useState<number | null>(null);
+  const [currPrice, setCurrPrice] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [linkToken, setLinkToken] = useState<string | null>(null);
 
@@ -123,7 +124,6 @@ const AddStockForm: React.FunctionComponent<Props> = ({
         });
 
         trackGoal('GQJWAT79', 0);
-
         afterAdd();
       } catch (err) {
         if (err.response?.data?.error) {
@@ -163,7 +163,7 @@ const AddStockForm: React.FunctionComponent<Props> = ({
       </p>
 
       {loading ? (
-        <div className="flex justify-center">
+        <div className="flex justify-center mb-5">
           <Spinner size={28} />
         </div>
       ) : (
@@ -179,8 +179,15 @@ const AddStockForm: React.FunctionComponent<Props> = ({
           </p>
 
           <div>
-            <div className="mb-1 text-sm text-darkgray">Symbol</div>
-
+            <div className="flex items-center justify-between mb-1">
+              <div className="text-sm text-darkgray">Symbol</div>
+              <div className="flex text-sm text-darkgray">
+                <p>{companyName}</p>
+                {currPrice && (
+                  <p className="ml-1">- Current price: {formatMoneyFromNumber(currPrice)}</p>
+                )}
+              </div>
+            </div>
             <TextInputWithResults
               placeholder="Add stock"
               backgroundColor="#F9FAFF"
@@ -189,6 +196,14 @@ const AddStockForm: React.FunctionComponent<Props> = ({
               floatingResults
               onError={(e) => setError(e)}
               onResult={(symbol, fullName) => {
+                setCurrPrice(null);
+
+                API.getQuote(symbol, AssetType.Stock).then((data) => {
+                  if (data.latestPrice && typeof data.latestPrice === 'number') {
+                    setCurrPrice(data.latestPrice);
+                  }
+                });
+
                 setSymbol(symbol.toUpperCase());
                 setCompanyName(fullName);
               }}

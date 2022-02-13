@@ -59,7 +59,6 @@ const axiosInstance = axios.create();
 
 axiosInstance.interceptors.response.use((response) => {
   response.data = normalizeTimestamps(response.data);
-  console.log('r', response);
   return response;
 });
 
@@ -142,6 +141,10 @@ export const API = {
 
   updatePassword: (newPassword: string, confirmNewPassword: string) => {
     return request('/api/users/change-password', 'put', { newPassword, confirmNewPassword });
+  },
+
+  deleteAccount: () => {
+    return request('/api/users/delete', 'delete');
   },
 
   // PORTFOLIOS

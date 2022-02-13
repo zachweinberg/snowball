@@ -42,6 +42,7 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
   const [coinName, setCoinName] = useState('');
   const [quantity, setQuantity] = useState<number | null>(null);
   const [costPerCoin, setCostPerCoin] = useState<number | null>(null);
+  const [currPrice, setCurrPrice] = useState<number | null>(null);
   const [logoURL, setLogoURL] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -117,7 +118,16 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
       </p>
 
       <div>
-        <div className="mb-1 text-sm text-darkgray">Symbol</div>
+        <div className="flex items-center justify-between mb-1">
+          <div className="text-sm text-darkgray">Symbol</div>
+          <div className="flex text-sm text-darkgray">
+            <p>{coinName}</p>
+            {currPrice && (
+              <p className="ml-1">- Current price: {formatMoneyFromNumber(currPrice)}</p>
+            )}
+          </div>
+        </div>
+
         <TextInputWithResults
           placeholder="Add crypto"
           backgroundColor="#F9FAFF"
@@ -126,11 +136,20 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
           autofocus
           onError={(e) => setError(e)}
           onResult={(symbol, fullName, logoURL) => {
+            setCurrPrice(null);
+
             if (logoURL) {
               setLogoURL(logoURL);
             } else {
               setLogoURL('');
             }
+
+            API.getQuote(symbol, AssetType.Crypto).then((data) => {
+              if (data.latestPrice && typeof data.latestPrice === 'number') {
+                setCurrPrice(data.latestPrice);
+              }
+            });
+
             setSymbol(symbol.toUpperCase());
             setCoinName(fullName);
           }}

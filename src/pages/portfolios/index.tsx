@@ -74,7 +74,7 @@ const PortfolioListPage: NextPage = () => {
     if (portfolios && portfolios.length === 0) {
       return (
         <div className="flex flex-col items-center justify-center max-w-md mx-auto mt-32">
-          <p className="mb-4 text-[1.5rem] font-bold text-dark">
+          <p className="mb-5 text-[1.5rem] font-bold text-dark">
             Welcome to Obsidian Tracker!
           </p>
           <p className="mb-5 font-medium text-center text-darkgray text-[.9rem] leading-5">

@@ -64,6 +64,18 @@ const PortfolioSettingsPageContent: React.FunctionComponent = () => {
     }
   };
 
+  const deletePortfolio = async () => {
+    if (
+      window.confirm(
+        'Are you sure you want to delete this portfolio? All assets and history will be permanently deleted.'
+      )
+    ) {
+      setLoading(true);
+      await API.deletePortfolio(router.query.portfolioID as string);
+      router.push('/portfolios');
+    }
+  };
+
   const updatePortfolioSettings = async (e) => {
     e.preventDefault();
 
@@ -255,24 +267,13 @@ const PortfolioSettingsPageContent: React.FunctionComponent = () => {
                 </form>
 
                 <div className="flex justify-start py-16">
-                  <Button
-                    type="button"
-                    variant="danger"
-                    onClick={async () => {
-                      if (
-                        window.confirm(
-                          'Are you sure you want to delete this portfolio? All assets and history will be permanently deleted.'
-                        )
-                      ) {
-                        await API.deletePortfolio(router.query.portfolioID as string);
-                        setLoading(true);
-                        window.location.href = '/portfolios';
-                      }
-                    }}
-                    className="w-48"
+                  <button
+                    type="submit"
+                    onClick={deletePortfolio}
+                    className="px-4 py-3 font-semibold text-white transition-colors duration-150 rounded-md bg-red hover:bg-opacity-90 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-evergreen focus:outline-none"
                   >
                     Delete Portfolio
-                  </Button>
+                  </button>
                 </div>
               </div>
             </>

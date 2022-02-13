@@ -1,4 +1,5 @@
 import { PlanType } from '@zachweinberg/obsidian-schema';
+import classNames from 'classnames';
 import { trackGoal } from 'fathom-client';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
@@ -14,7 +15,10 @@ const Btn = (props) => {
   return (
     <button
       type="submit"
-      className="px-4 py-2 font-semibold text-white transition-colors duration-150 rounded-md bg-evergreen hover:bg-opacity-90 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-evergreen focus:outline-none"
+      className={classNames(
+        'px-4 py-2 font-semibold text-white transition-colors duration-150 rounded-md hover:bg-opacity-90 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-evergreen focus:outline-none',
+        props.red ? 'bg-red' : 'bg-evergreen'
+      )}
     >
       {props.children}
     </button>
@@ -96,6 +100,28 @@ const Account: NextPage = () => {
     }
   };
 
+  const deleteAccount = async (e) => {
+    e.preventDefault();
+
+    if (
+      window.confirm(
+        'Are you sure you want to delete your account. All data will be removed and you will not be able to recover your account.'
+      )
+    ) {
+      try {
+        await API.deleteAccount();
+        alert("Your account has been deleted. We're sorry to see you go!");
+        auth.logout();
+      } catch (err) {
+        if (err.response.data.error) {
+          toast(err.response.data.error);
+        } else {
+          toast('Something went wrong.');
+        }
+      }
+    }
+  };
+
   return (
     <RequiredLoggedIn>
       <Layout title="Account | Obsidian Tracker">
@@ -133,6 +159,51 @@ const Account: NextPage = () => {
                 <Btn>Update Email</Btn>
               </div>
             </form>
+          </section>
+
+          <section className="grid gap-6 py-10 lg:grid-cols-3 lg:gap-8 sm:py-12">
+            <div>
+              <h2 className="mb-2 text-base font-semibold text-dark">Subscription</h2>
+              <p>
+                Obsidian Tracker Premium is a monthly subscription that gives you access to
+                more alerts, more portfolios and more assets.
+              </p>
+            </div>
+
+            <div className="relative flex p-4 pr-0 -m-4 overflow-auto lg:col-span-2 sm:overflow-visible sm:block sm:m-0 sm:p-0">
+              <div className="pr-4 sm:pr-0">
+                <table className="w-full bg-white rounded-lg shadow min-w-screen-sm sm:min-w-0">
+                  <caption className="sr-only">Subscription</caption>
+                  <thead className="text-left border-b text-darkgray border-gray">
+                    <tr>
+                      <th className="w-full px-4 py-3 font-medium">Current Plan</th>
+                      <th className="px-4 py-3 font-medium">Price</th>
+                      <th className="px-4 py-3">
+                        <span className="sr-only">Receipt</span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 whitespace-nowrap">
+                    <tr>
+                      <td className="p-4 font-medium text-dark">
+                        {!isPremium ? 'Free Plan' : 'Premium Plan'}
+                      </td>
+                      <td className="p-4 font-medium text-dark">
+                        {!isPremium ? 'Free' : '$10/mo'}
+                      </td>
+                      <td className="py-4 pl-8 pr-4 font-medium xl:pr-7">
+                        <button
+                          onClick={handleSubscriptionClick}
+                          className="px-4 py-2 font-semibold text-white transition-colors duration-150 rounded-md bg-evergreen hover:bg-opacity-90 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-evergreen focus:outline-none"
+                        >
+                          {!isPremium ? 'Upgrade to Premium' : 'Manage Subscription'}
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </section>
 
           {/* Update password */}
@@ -181,50 +252,18 @@ const Account: NextPage = () => {
             </form>
           </section>
 
+          {/* Delete account */}
           <section className="grid gap-6 py-10 lg:grid-cols-3 lg:gap-8 sm:py-12">
             <div>
-              <h2 className="mb-2 text-base font-semibold text-dark">Subscription</h2>
-              <p>
-                Obsidian Tracker Premium is a monthly subscription that gives you access to
-                more alerts, more portfolios and more assets.
-              </p>
+              <h2 className="mb-2 text-base font-semibold text-dark">Account</h2>
+              <p className="mb-4 text-darkgray">Manage your account</p>
             </div>
 
-            <div className="relative flex p-4 pr-0 -m-4 overflow-auto lg:col-span-2 sm:overflow-visible sm:block sm:m-0 sm:p-0">
-              <div className="pr-4 sm:pr-0">
-                <table className="w-full bg-white rounded-lg shadow min-w-screen-sm sm:min-w-0">
-                  <caption className="sr-only">Subscription</caption>
-                  <thead className="text-left border-b text-darkgray border-gray">
-                    <tr>
-                      <th className="w-full px-4 py-3 font-medium">Current Plan</th>
-                      <th className="px-4 py-3 font-medium">Price</th>
-                      <th className="px-4 py-3">
-                        <span className="sr-only">Receipt</span>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200 whitespace-nowrap">
-                    <tr>
-                      <td className="p-4 font-medium text-dark">
-                        {!isPremium ? 'Free Plan' : 'Premium Plan'}
-                      </td>
-                      <td className="p-4 font-medium text-dark">
-                        {' '}
-                        {!isPremium ? 'Free!' : '$10/mo'}
-                      </td>
-                      <td className="py-4 pl-8 pr-4 font-medium xl:pr-7">
-                        <button
-                          onClick={handleSubscriptionClick}
-                          className="px-4 py-2 font-semibold text-white transition-colors duration-150 rounded-md bg-evergreen hover:bg-opacity-90 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-evergreen focus:outline-none"
-                        >
-                          {!isPremium ? 'Upgrade to Premium' : 'Manage Subscription'}
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+            <form onSubmit={deleteAccount} className="lg:col-span-2">
+              <div className="sm:flex sm:items-center sm:space-x-4 sm:space-x-reverse">
+                <Btn red>Delete Account</Btn>
               </div>
-            </div>
+            </form>
           </section>
         </div>
       </Layout>
