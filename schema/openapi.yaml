@@ -33,6 +33,16 @@ paths:
             application/json:
               schema:
                 type: object
+  /users/delete:
+    delete:
+      summary: Delete user account
+      responses:
+        '200':
+          description: Valid request
+          content:
+            application/json:
+              schema:
+                type: object
   /users/contact:
     post:
       summary: Create a user

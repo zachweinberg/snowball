@@ -2,8 +2,10 @@ import { Alert, AlertDestination, Period } from '@zachweinberg/obsidian-schema';
 import mjml from 'mjml';
 import mustache from 'mustache';
 import * as postmark from 'postmark';
+import accountDeletedTemplates from '~/email-templates/account-deleted';
 import assetAlertTemplates from '~/email-templates/asset-alert';
 import contactRequestTemplates from '~/email-templates/contact-request';
+import portfolioDeletedTemplates from '~/email-templates/portfolio-deleted';
 import portfolioSummaryEmailTemplates from '~/email-templates/portfolio-summary';
 import welcomeEmailTemplates from '~/email-templates/welcome';
 import { formatMoneyFromNumber } from '~/utils/money';
@@ -27,9 +29,17 @@ const Emails = {
     templates: assetAlertTemplates,
     messageStreamID: 'asset-alerts',
   },
+  accountDeleted: {
+    templates: accountDeletedTemplates,
+    messageStreamID: 'account-deleted',
+  },
+  portfolioDeleted: {
+    templates: portfolioDeletedTemplates,
+    messageStreamID: 'portfolio-deleted',
+  },
 };
 
-const fromEmail = (user: string) => `Obsidian Tracker <${user}@obsidiantracker.com>`;
+const FROM_EMAIL = 'support@obsidiantracker.com';
 
 const renderEmailHtmlAndText = (templateFile: { html: string; text: string }, templateVars: object) => {
   const renderedMJML = mustache.render(templateFile.html, templateVars);
@@ -56,7 +66,7 @@ export const sendPortfolioSummaryEmail = async (
   fullName
 ) => {
   await emailClient.sendEmail({
-    From: fromEmail('alerts'),
+    From: FROM_EMAIL,
     To: toEmail,
     MessageStream: Emails.portfolioSummary.messageStreamID,
     Subject: `${portfolioName} Portfolio Summary`,
@@ -78,7 +88,7 @@ export const sendPortfolioSummaryEmail = async (
 
 export const sendWelcomeEmail = async (toEmail: string, name) => {
   await emailClient.sendEmail({
-    From: fromEmail('support'),
+    From: FROM_EMAIL,
     To: toEmail,
     MessageStream: Emails.welcome.messageStreamID,
     Subject: `Welcome to Obsidian Tracker!`,
@@ -90,7 +100,7 @@ export const sendWelcomeEmail = async (toEmail: string, name) => {
 
 export const sendContactRequestEmail = async (name: string, message: string, email?: string) => {
   await emailClient.sendEmail({
-    From: fromEmail('support'),
+    From: FROM_EMAIL,
     To: 'zach@obsidiantracker.com',
     Subject: 'New Contact Request',
     MessageStream: Emails.contactRequest.messageStreamID,
@@ -112,7 +122,7 @@ export const sendAssetAlertEmail = async (alert: Alert) => {
   const priceStr = formatMoneyFromNumber(alert.price);
 
   await emailClient.sendEmail({
-    From: fromEmail('alerts'),
+    From: FROM_EMAIL,
     To: alert.destinationValue,
     MessageStream: Emails.assetAlert.messageStreamID,
     Subject: `${symbol} is ${direction} your price target of ${priceStr}`,
@@ -120,6 +130,28 @@ export const sendAssetAlertEmail = async (alert: Alert) => {
       symbol,
       direction,
       priceStr,
+    }),
+  });
+};
+
+export const sendAccountDeletedEmail = async (toEmail: string) => {
+  await emailClient.sendEmail({
+    From: FROM_EMAIL,
+    To: toEmail,
+    MessageStream: Emails.accountDeleted.messageStreamID,
+    Subject: `Your account has been deleted`,
+    ...renderEmailHtmlAndText(Emails.accountDeleted.templates, {}),
+  });
+};
+
+export const sendPortfolioDeletedEmail = async (toEmail: string, portfolioName: string) => {
+  await emailClient.sendEmail({
+    From: FROM_EMAIL,
+    To: toEmail,
+    MessageStream: Emails.portfolioDeleted.messageStreamID,
+    Subject: `Your account has been deleted`,
+    ...renderEmailHtmlAndText(Emails.portfolioDeleted.templates, {
+      portfolioName,
     }),
   });
 };

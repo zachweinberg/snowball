@@ -9,15 +9,20 @@ import {
   GetPortfolioSettingsResponse,
   GetPortfoliosResponse,
   Period,
+  PlaidAccount,
+  PlaidItem,
   PlanType,
   PLAN_LIMITS,
   Portfolio,
   RealEstatePosition,
 } from '@zachweinberg/obsidian-schema';
 import { Router } from 'express';
+import { sendPortfolioDeletedEmail } from '~/lib/email';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
+import { plaidClient } from '~/lib/plaid';
 import { deleteRedisKey, getRedisKey, setRedisKey } from '~/lib/redis';
 import { catchErrors, getUserFromAuthHeader, requireSignedIn } from '~/utils/api';
+import { decrypt } from '~/utils/crypto';
 import { deleteCollection, deleteDocument, fetchDocumentByID, findDocuments, updateDocument } from '~/utils/db';
 import { getPortfolioLogItems, trackPortfolioLogItem } from '~/utils/logs';
 import { capitalize } from '~/utils/misc';
@@ -309,46 +314,6 @@ portfoliosRouter.get(
   })
 );
 
-portfoliosRouter.delete(
-  '/:portfolioID',
-  requireSignedIn,
-  catchErrors(async (req, res) => {
-    const portfolioID = req.params.portfolioID;
-
-    if (!(await userOwnsPortfolio(req, res, portfolioID))) {
-      return res.status(401).json({ status: 'error', error: 'Invalid.' });
-    }
-
-    const redisKey = `portfolio-${portfolioID}`;
-
-    await deleteDocument(`portfolios/${portfolioID}`);
-    await deleteCollection(`portfolios/${portfolioID}/dailyBalances`);
-    await deleteCollection(`portfolios/${portfolioID}/positions`);
-    await deleteCollection(`portfolios/${portfolioID}/logs`);
-
-    const realEstateDocs = await findDocuments<RealEstatePosition>('real-estate-positions', [
-      { property: 'portfolioID', condition: '==', value: portfolioID },
-    ]);
-
-    await Promise.all(realEstateDocs.map((doc) => deleteDocument(`real-estate-positions/${doc.id}`)));
-
-    const plaidAccounts = await findDocuments('plaid-accounts', [
-      { property: 'portfolioID', condition: '==', value: portfolioID },
-    ]);
-
-    await Promise.all(plaidAccounts.map((doc) => deleteDocument(`plaid-accounts/${doc.id}`)));
-
-    const plaidItems = await findDocuments('plaid-items', [{ property: 'portfolioID', condition: '==', value: portfolioID }]);
-
-    await Promise.all(plaidAccounts.map((doc) => deleteDocument(`plaid-accounts/${doc.id}`)));
-
-    await deleteRedisKey(redisKey);
-    await deleteRedisKey(`portfoliolist-${req.user!.id}`);
-
-    res.status(200).json({ status: 'ok' });
-  })
-);
-
 portfoliosRouter.get(
   '/logs/:portfolioID',
   catchErrors(async (req, res) => {
@@ -371,5 +336,77 @@ portfoliosRouter.get(
     res.status(200).json({ status: 'ok', logItems });
   })
 );
+
+portfoliosRouter.delete(
+  '/:portfolioID',
+  requireSignedIn,
+  catchErrors(async (req, res) => {
+    const portfolioID = req.params.portfolioID;
+
+    if (!(await userOwnsPortfolio(req, res, portfolioID))) {
+      return res.status(401).json({ status: 'error', error: 'Invalid.' });
+    }
+
+    const portfolio = await fetchDocumentByID<Portfolio>(`portfolios`, portfolioID);
+
+    const redisKey = `portfolio-${portfolioID}`;
+
+    await deletePortfolioDocs(portfolioID);
+    await deleteRealEstatePositions(portfolioID);
+    await deletePlaidAccounts(portfolioID);
+    await deletePlaidItems(portfolioID);
+
+    await deleteRedisKey(redisKey);
+    await deleteRedisKey(`portfoliolist-${req.user!.id}`);
+
+    res.status(200).json({ status: 'ok' });
+
+    sendPortfolioDeletedEmail(req.user!.email, portfolio.name);
+  })
+);
+
+// UTILS
+const deletePortfolioDocs = async (portfolioID: string) => {
+  console.log(`> Deleting portfolio docs for ${portfolioID}`);
+  await Promise.all([
+    deleteCollection(`portfolios/${portfolioID}/dailyBalances`),
+    deleteCollection(`portfolios/${portfolioID}/positions`),
+    deleteCollection(`portfolios/${portfolioID}/logs`),
+    deleteDocument(`portfolios/${portfolioID}`),
+  ]);
+};
+
+const deleteRealEstatePositions = async (portfolioID: string) => {
+  console.log(`> Deleting real estate position docs for ${portfolioID}`);
+  const realEstateDocs = await findDocuments<RealEstatePosition>('real-estate-positions', [
+    { property: 'portfolioID', condition: '==', value: portfolioID },
+  ]);
+  await Promise.all(realEstateDocs.map((doc) => deleteDocument(`real-estate-positions/${doc.id}`)));
+};
+
+const deletePlaidAccounts = async (portfolioID: string) => {
+  console.log(`> Deleting plaid account docs for ${portfolioID}`);
+  const plaidAccounts = await findDocuments<PlaidAccount>('plaid-accounts', [
+    { property: 'portfolioID', condition: '==', value: portfolioID },
+  ]);
+  await Promise.all(plaidAccounts.map((doc) => deleteDocument(`plaid-accounts/${doc.id}`)));
+};
+
+const deletePlaidItems = async (portfolioID: string) => {
+  console.log(`> Deleting plaid item docs for ${portfolioID}`);
+  const plaidItems = await findDocuments<PlaidItem>('plaid-items', [
+    { property: 'portfolioID', condition: '==', value: portfolioID },
+  ]);
+
+  await Promise.all(
+    plaidItems.map((doc) => {
+      plaidClient.itemRemove({
+        access_token: decrypt(doc.plaidAccessToken),
+      });
+    })
+  );
+
+  await Promise.all(plaidItems.map((doc) => deleteDocument(`plaid-items/${doc.id}`)));
+};
 
 export default portfoliosRouter;

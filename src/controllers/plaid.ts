@@ -118,6 +118,7 @@ plaidRouter.post(
       plaidAccessToken: encrypt(plaidAccessToken),
       createdAt: new Date(),
       status: 'GOOD',
+      portfolioID,
       forAssetType: AssetType.Cash,
     };
 

@@ -15,7 +15,6 @@ import {
   StockPosition,
 } from '@zachweinberg/obsidian-schema';
 import { Router } from 'express';
-import { ItemRemoveRequest } from 'plaid';
 import { plaidClient } from '~/lib/plaid';
 import { deleteRedisKey } from '~/lib/redis';
 import { logSentryError } from '~/lib/sentry';
@@ -586,13 +585,11 @@ positionsRouter.delete(
       if (position.isPlaid) {
         const plaidItem = await fetchDocumentByID<PlaidItem>('plaid-items', position.plaidItemID!);
 
-        const itemRemoveReq: ItemRemoveRequest = {
-          access_token: decrypt(plaidItem.plaidAccessToken),
-        };
-
         try {
           await Promise.all([
-            plaidClient.itemRemove(itemRemoveReq),
+            plaidClient.itemRemove({
+              access_token: decrypt(plaidItem.plaidAccessToken),
+            }),
             deleteDocument(`portfolios/${portfolioID}/positions/${positionID}`),
             deleteDocument(`plaid-items/${position.plaidItemID}`),
             deleteDocument(`plaid-accounts/${position.plaidAccountID}`),

@@ -1,19 +1,21 @@
 import {
+  Alert,
   CheckEmailRequest,
   CheckEmailResponse,
   CreateUserRequest,
   CreateUserResponse,
   MeResponse,
   PlanType,
+  Portfolio,
   SendContactEmailRequest,
   User,
 } from '@zachweinberg/obsidian-schema';
 import { Router } from 'express';
-import { sendContactRequestEmail, sendWelcomeEmail } from '~/lib/email';
+import { sendAccountDeletedEmail, sendContactRequestEmail, sendWelcomeEmail } from '~/lib/email';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { logSentryError } from '~/lib/sentry';
 import { catchErrors, requireSignedIn } from '~/utils/api';
-import { createDocument, fetchDocumentByID, findDocuments, updateDocument } from '~/utils/db';
+import { createDocument, deleteCollection, deleteDocument, fetchDocumentByID, findDocuments, updateDocument } from '~/utils/db';
 import { capitalize } from '~/utils/misc';
 
 const usersRouter = Router();
@@ -175,5 +177,52 @@ usersRouter.put(
     res.status(200).json({ status: 'ok' });
   })
 );
+
+usersRouter.delete(
+  '/delete',
+  requireSignedIn,
+  catchErrors(async (req, res) => {
+    const userID = req.user!.id;
+
+    if (req.user!.plan.type === PlanType.PREMIUM) {
+      return res.status(400).json({
+        status: 'error',
+        error:
+          'Your premium subscription is still active. Please cancel it on the account settings page before deleting your account.',
+      });
+    }
+
+    const usersPortfolios = await findDocuments<Portfolio>('portfolios', [
+      { property: 'userID', condition: '==', value: userID },
+    ]);
+
+    if (usersPortfolios.length > 0) {
+      return res
+        .status(400)
+        .json({ status: 'error', error: 'Please delete all of your portfolios before deleting your account.' });
+    }
+
+    await deleteWatchListItems(userID);
+    await deletePriceAlerts(userID);
+    await firebaseAdmin().auth().deleteUser(userID);
+    await deleteDocument(`users/${userID}`);
+
+    res.status(200).json({ status: 'ok' });
+
+    sendAccountDeletedEmail(req.user!.email);
+  })
+);
+
+// UTILS
+const deleteWatchListItems = async (userID: string) => {
+  console.log(`> Deleting watchlist items for user ${userID}`);
+  await deleteCollection(`watchlists/${userID}/assets`);
+};
+
+const deletePriceAlerts = async (userID: string) => {
+  console.log(`> Deleting price alerts for user ${userID}`);
+  const priceAlerts = await findDocuments<Alert>('alerts', [{ property: 'userID', condition: '==', value: userID }]);
+  await Promise.all(priceAlerts.map((alert) => deleteDocument(`alerts/${alert.id}`)));
+};
 
 export default usersRouter;
