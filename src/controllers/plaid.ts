@@ -85,7 +85,7 @@ plaidRouter.post(
       { property: 'assetType', condition: '==', value: AssetType.Cash },
     ]);
 
-    if (existingCashPositions.length >= 4 && req.user!.plan.type === PlanType.FREE) {
+    if (existingCashPositions.length >= 4 && req.user!.plan?.type === PlanType.FREE) {
       return res.status(400).json({
         status: 'error',
         error:
@@ -205,7 +205,7 @@ plaidRouter.post(
     //   { property: 'assetType', condition: '==', value: AssetType.Stock },
     // ]);
 
-    // if (existingStockPositions.length >= 4 && req.user!.plan.type === PlanType.FREE) {
+    // if (existingStockPositions.length >= 4 && req.user!.plan?.type === PlanType.FREE) {
     //   return res.status(400).json({
     //     status: 'error',
     //     error:

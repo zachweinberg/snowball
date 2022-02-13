@@ -184,7 +184,7 @@ usersRouter.delete(
   catchErrors(async (req, res) => {
     const userID = req.user!.id;
 
-    if (req.user!.plan.type === PlanType.PREMIUM) {
+    if (req.user!.plan?.type === PlanType.PREMIUM) {
       return res.status(400).json({
         status: 'error',
         error:

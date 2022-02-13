@@ -169,7 +169,7 @@ portfoliosRouter.post(
       { property: 'userID', condition: '==', value: userID },
     ]);
 
-    if (existingPortfolios.length >= PLAN_LIMITS.portfolios.free && req.user!.plan.type === PlanType.FREE) {
+    if (existingPortfolios.length >= PLAN_LIMITS.portfolios.free && req.user!.plan?.type === PlanType.FREE) {
       return res.status(400).json({
         status: 'error',
         error:

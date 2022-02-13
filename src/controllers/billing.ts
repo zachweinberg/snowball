@@ -23,7 +23,7 @@ billingRouter.get(
       subscription_data: {
         metadata: { obsidianUserID: req.user!.id, customerName: req.user!.name },
       },
-      customer: req.user!.plan.stripeCustomerID ?? undefined,
+      customer: req.user!.plan?.stripeCustomerID ?? undefined,
       billing_address_collection: 'auto',
       line_items: [
         {
@@ -73,12 +73,12 @@ billingRouter.get(
   express.json({ limit: '5mb' }),
   requireSignedIn,
   catchErrors(async (req, res) => {
-    if (!req.user!.plan.stripeCustomerID) {
+    if (!req.user!.plan?.stripeCustomerID) {
       return res.status(401).json({ status: 'error', error: 'Invalid.' });
     }
 
     const portalSession = await stripeClient.billingPortal.sessions.create({
-      customer: req.user!.plan.stripeCustomerID,
+      customer: req.user!.plan?.stripeCustomerID,
       return_url: `https://obsidiantracker.com/account`,
     });
 

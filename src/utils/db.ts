@@ -126,7 +126,7 @@ const deleteQueryBatch = async (collectionPath: string, query: FirebaseFirestore
     // Delete documents in a batch
     const batch = firebaseAdmin().firestore().batch();
 
-    console.log(`Deleting ${snapshot.size} ${collectionPath} documents`);
+    console.log(`> Deleting ${snapshot.size} docs in ${collectionPath}`);
 
     snapshot.docs.forEach((doc) => {
       batch.delete(doc.ref);

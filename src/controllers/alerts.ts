@@ -42,7 +42,7 @@ alertsRouter.post(
 
     const existingAlerts = await findDocuments('alerts', [{ property: 'userID', condition: '==', value: userID }]);
 
-    if (existingAlerts.length >= PLAN_LIMITS.alerts.free && req.user!.plan.type === PlanType.FREE) {
+    if (existingAlerts.length >= PLAN_LIMITS.alerts.free && req.user!.plan?.type === PlanType.FREE) {
       return res.status(400).json({
         status: 'error',
         error:

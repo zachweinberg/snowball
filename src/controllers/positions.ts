@@ -45,7 +45,7 @@ positionsRouter.post(
       { property: 'assetType', condition: '==', value: AssetType.Stock },
     ]);
 
-    if (existingStockPositions.length >= PLAN_LIMITS.stocks.free && req.user!.plan.type === PlanType.FREE) {
+    if (existingStockPositions.length >= PLAN_LIMITS.stocks.free && req.user!.plan?.type === PlanType.FREE) {
       return res.status(400).json({
         status: 'error',
         error:
@@ -179,7 +179,7 @@ positionsRouter.post(
       { property: 'portfolioID', condition: '==', value: portfolioID },
     ]);
 
-    if (existingREPositions.length >= PLAN_LIMITS.realEstate.free && req.user!.plan.type === PlanType.FREE) {
+    if (existingREPositions.length >= PLAN_LIMITS.realEstate.free && req.user!.plan?.type === PlanType.FREE) {
       return res.status(400).json({
         status: 'error',
         error:
@@ -263,7 +263,7 @@ positionsRouter.post(
       { property: 'assetType', condition: '==', value: AssetType.Cash },
     ]);
 
-    if (existingCashPositions.length >= PLAN_LIMITS.cash.free && req.user!.plan.type === PlanType.FREE) {
+    if (existingCashPositions.length >= PLAN_LIMITS.cash.free && req.user!.plan?.type === PlanType.FREE) {
       return res.status(400).json({
         status: 'error',
         error:

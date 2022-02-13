@@ -80,7 +80,7 @@ watchListRouter.post(
 
     const existingItems = await findDocuments<WatchListItem>(`watchlists/${userID}/assets`, []);
 
-    if (existingItems.length >= PLAN_LIMITS.watchlist.free && req.user!.plan.type === PlanType.FREE) {
+    if (existingItems.length >= PLAN_LIMITS.watchlist.free && req.user!.plan?.type === PlanType.FREE) {
       return res.status(400).json({
         status: 'error',
         error:
