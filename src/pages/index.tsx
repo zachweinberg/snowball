@@ -1,6 +1,5 @@
 import { trackGoal } from 'fathom-client';
 import Head from 'next/head';
-import Image from 'next/image';
 import RequiredLoggedOut from '~/components/auth/RequireLoggedOut';
 import CashIcon from '~/components/icons/CashIcon';
 import CryptoIcon from '~/components/icons/CryptoIcon';
@@ -25,20 +24,20 @@ const Landing: React.FunctionComponent = () => {
       <LandingHeader dark />
 
       <main>
-        <div className="pt-16 pb-16 bg-dark">
+        <div className="pt-16 pb-32 bg-dark">
           <Container>
             <div className="max-w-3xl mx-auto text-center">
               <h1 className="text-4xl font-semibold leading-tight text-white lg:leading-tight lg:text-5xl mb-7">
                 Track all of your assets in one place and watch your portfolio grow
               </h1>
 
-              <p className="text-lg text-darkgray mb-7">
+              <p className="text-[1.2rem] text-darkgray mb-7 leading-7">
                 Say goodbye to those spreadsheets. Obsidian Tracker is a net worth tracker that
                 allows you to view all of your financial assets in one place. Track your
                 portfolio, get price alerts and keep a pulse on the market.
               </p>
 
-              <div className="w-56 mx-auto mb-10">
+              <div className="w-56 mx-auto mb-20">
                 <Link href="/signup">
                   <Button
                     type="button"
@@ -53,13 +52,7 @@ const Landing: React.FunctionComponent = () => {
             </div>
 
             <div className="flex justify-center">
-              <Image
-                src="/img/landing/ui.png"
-                className="rounded-xl"
-                width={1100}
-                loading="eager"
-                height={613}
-              />
+              <img src="/img/landing/ui.png" className="rounded-xl" />
             </div>
           </Container>
         </div>
@@ -99,35 +92,28 @@ const Landing: React.FunctionComponent = () => {
           </Container>
         </div>
 
-        <div className="py-40 text-center text-white bg-dark">
+        <div className="pt-40 pb-16 text-center text-white bg-dark">
           <Container>
-            <div className="flex items-center justify-between w-full text-left mb-44">
-              <div>
-                <H2 dark>Set custom stock and crypto price alerts</H2>
-                <p className="mt-5 leading-6 text-darkgray">
+            <div className="grid grid-cols-2 gap-16 text-left mb-44">
+              <img src="/img/landing/alerts.png" className="rounded-xl" />
+
+              <div className="flex flex-col justify-center">
+                <H2 dark>Set custom price alerts for stocks and crypto</H2>
+                <p className="mt-5 leading-7 text-darkgray text-[1.2rem]">
                   Never miss a trade again. We'll notify you via email or SMS when a price
                   alert gets triggered.
                 </p>
               </div>
-              {/* <img src="/img/landing/ui.png" className="w-1/2 ml-12 rounded-lg" /> */}
-              <Image
-                src="/img/landing/alerts.png"
-                className="rounded-xl"
-                width={1100}
-                loading="eager"
-                height={613}
-              />
             </div>
 
-            <div className="flex items-center justify-between w-full text-left">
-              <div>
-                <H2 dark>Keep a pulse on market news for your positions</H2>
-                <p className="mt-5 leading-6 text-darkgray">
-                  Use our news portal to get a glance at what's happening. Or, filter news by a
-                  stock or crypto.
+            <div className="grid grid-cols-2 gap-16 text-left mb-44">
+              <div className="flex flex-col justify-center">
+                <H2 dark>Keep a pulse on market news</H2>
+                <p className="mt-5 leading-7 text-darkgray text-[1.2rem]">
+                  Use our news portal to filter news by ticker or coin
                 </p>
               </div>
-              <img src="/img/landing/news2.png" className="w-1/2 ml-12 rounded-lg" />
+              <img src="/img/landing/alerts.png" className="rounded-xl" />
             </div>
           </Container>
         </div>
@@ -135,13 +121,13 @@ const Landing: React.FunctionComponent = () => {
         <div className="py-20">
           <Container>
             <div className="mb-32 text-center">
-              <h1 className="text-4xl font-semibold leading-tight lg:text-5xl mb-7">
+              <h1 className="text-4xl font-semibold leading-tight lg:text-[2.85rem] mb-7">
                 Pricing
               </h1>
 
-              <p className="mb-3 text-lg">
+              <p className="max-w-lg mx-auto mb-3 text-lg">
                 Unlock premium features with a monthly subscription and access more portfolio
-                tracking and alerting features! Cancel at any time.
+                tracking and alerting features. Cancel at any time.
               </p>
             </div>
 
@@ -150,6 +136,15 @@ const Landing: React.FunctionComponent = () => {
               <PricingDark />
             </div>
           </Container>
+        </div>
+
+        <div className="w-56 mx-auto mb-20">
+          <p className="mb-2 text-lg text-center">Ready to get started?</p>
+          <Link href="/signup">
+            <Button type="button" className="mt-6" onClick={() => trackGoal('ISXTDA9H', 0)}>
+              Create Account
+            </Button>
+          </Link>
         </div>
       </main>
 

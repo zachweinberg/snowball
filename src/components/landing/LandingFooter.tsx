@@ -11,7 +11,7 @@ const LandingFooter: React.FunctionComponent = () => {
             <div className="flex flex-col space-y-2">
               <Logo />
               <div className="text-darkgray">
-                &copy; {new Date().getFullYear()} Obsidian Tracker
+                &copy; {new Date().getFullYear()} Obsidian Tracker LLC.
               </div>
             </div>
           </div>
