@@ -7,6 +7,7 @@ import RequiredLoggedOut from '~/components/auth/RequireLoggedOut';
 import Layout from '~/components/layout/Layout';
 import Button from '~/components/ui/Button';
 import Link from '~/components/ui/Link';
+import Spinner from '~/components/ui/Spinner';
 import TextInput from '~/components/ui/TextInput';
 import { useAuth } from '~/hooks/useAuth';
 
@@ -55,13 +56,19 @@ const LoginPage: NextPage = () => {
       <Layout title="Login | Obsidian Tracker">
         <form
           className={classNames(
-            'max-w-lg border border-bordergray p-8 mx-auto mb-16 mt-10 bg-white shadow-md rounded-2xl',
+            'relative max-w-lg border border-bordergray p-8 mx-auto mb-16 mt-10 bg-white shadow-md rounded-2xl',
             {
               'opacity-70': loading,
             }
           )}
           onSubmit={onSubmit}
         >
+          {loading && (
+            <div className="absolute inset-0 flex justify-center mt-28">
+              <Spinner size={38} />
+            </div>
+          )}
+
           <div className="flex items-center justify-between mb-10">
             <div className="flex font-semibold text-[1rem]">
               <p className="text-darkgray">Need an account?</p>
