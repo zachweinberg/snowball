@@ -329,6 +329,7 @@ export interface PlaidItem {
     userID: string;
     plaidInstitutionName: string;
     createdAt: Date;
+    portfolioID: string;
     plaidAccessToken: string;
     plaidInstitutionID: string;
     status: PlaidItemStatus;
