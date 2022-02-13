@@ -1,3 +1,4 @@
+import React from 'react';
 import Link from '../ui/Link';
 
 const Footer: React.FunctionComponent = () => {
@@ -28,4 +29,4 @@ const Footer: React.FunctionComponent = () => {
   );
 };
 
-export default Footer;
+export default React.memo(Footer);

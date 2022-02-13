@@ -33,7 +33,9 @@ const Upgrade: NextPage = () => {
   const success = useMemo(() => router.query && router.query.success, [router.query]);
 
   useEffect(() => {
-    trackGoal('WJSCOSHX', 0);
+    if (cancelled) {
+      trackGoal('CGDQQ6RR', 0);
+    }
   }, []);
 
   const createCheckoutSession = async () => {
@@ -63,12 +65,6 @@ const Upgrade: NextPage = () => {
   return (
     <RequiredLoggedIn>
       <Layout title="Upgrade | Obsidian Tracker">
-        {cancelled && (
-          <div className="flex justify-center w-1/2 p-3 mx-auto mb-8 text-white rounded-lg bg-evergreen">
-            Sorry to hear you changed your mind.
-          </div>
-        )}
-
         {success && (
           <div className="flex justify-center w-1/2 p-3 mx-auto mb-8 text-white rounded-lg bg-evergreen">
             🎉 Thank you! We hope you enjoy Premium!
@@ -117,7 +113,7 @@ const Upgrade: NextPage = () => {
                 }
               }}
             >
-              {isPremium ? 'Cancel Premium' : 'Upgrade Now'}
+              {isPremium ? 'Cancel Premium' : 'Upgrade'}
             </Button>
           </div>
         </div>

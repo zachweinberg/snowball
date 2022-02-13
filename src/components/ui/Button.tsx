@@ -23,17 +23,16 @@ const Button: React.FunctionComponent<Props> = ({
     <button
       type={type}
       className={classNames(
-        'w-full rounded-xl p-5 font-semibold transition-colors',
+        'w-full rounded-xl hover:opacity-90 p-5 font-semibold transition-colors',
         { 'opacity-70 cursor-not-allowed': disabled },
-        { 'hover:opacity-90': !disabled },
         variant === 'secondary'
-          ? 'bg-background text-dark border-2 border-dark'
+          ? 'bg-background text-dark border-2 hover:opacity-100 border-dark hover:bg-dark hover:text-white'
           : variant === 'danger'
           ? 'bg-red text-white'
           : variant === 'white'
           ? 'bg-white text-dark hover:bg-lime'
           : variant === 'upgrade'
-          ? 'bg-gradient-to-r from-evergreen to-lightlime text-dark border-dark border-2'
+          ? 'bg-gradient-to-r from-evergreen to-lightlime text-dark shadow-md'
           : 'bg-dark text-white',
         className
       )}

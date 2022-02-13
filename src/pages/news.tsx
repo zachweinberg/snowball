@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
 import Layout from '~/components/layout/Layout';
 import Button from '~/components/ui/Button';
+import Spinner from '~/components/ui/Spinner';
 import TextInput from '~/components/ui/TextInput';
 import { API } from '~/lib/api';
 
@@ -55,11 +56,12 @@ const MAX_NUM_PAGES = 12;
 const NewsPageContent: React.FunctionComponent = () => {
   const [query, setQuery] = useState<string>('');
   const [pageOfNews, setPageOfNews] = useState<NewsItem[]>([]);
+  const [firstLoad, setFirstLoad] = useState(true);
   const [loadingNews, setLoadingNews] = useState<boolean>(true);
   const [hoveredNewsItem, setHoveredNewsItem] = useState<NewsItem | null>(null);
   const [page, setPage] = useState<number>(1);
 
-  const loadNews = async () => {
+  const loadNews = async (firstLoad: boolean = false) => {
     setLoadingNews(true);
 
     try {
@@ -75,8 +77,16 @@ const NewsPageContent: React.FunctionComponent = () => {
       );
     } finally {
       setLoadingNews(false);
+
+      if (firstLoad) {
+        setFirstLoad(false);
+      }
     }
   };
+
+  useEffect(() => {
+    loadNews(true).then(() => setFirstLoad(false));
+  }, []);
 
   useEffect(() => {
     loadNews();
@@ -88,7 +98,11 @@ const NewsPageContent: React.FunctionComponent = () => {
         <h1 className="font-bold text-[1.75rem]">News</h1>
       </div>
 
-      {pageOfNews.length === 0 ? null : (
+      {firstLoad ? (
+        <div className="flex justify-center mt-20">
+          <Spinner size={40} />
+        </div>
+      ) : pageOfNews.length === 0 ? null : (
         <div className={classNames({ 'opacity-60': loadingNews })}>
           {hoveredNewsItem && (
             <div className="grid grid-cols-1 gap-5 mb-5 lg:grid-cols-3">

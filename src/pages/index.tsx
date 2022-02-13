@@ -1,5 +1,6 @@
 import { trackGoal } from 'fathom-client';
 import Head from 'next/head';
+import Image from 'next/image';
 import RequiredLoggedOut from '~/components/auth/RequireLoggedOut';
 import CashIcon from '~/components/icons/CashIcon';
 import CryptoIcon from '~/components/icons/CryptoIcon';
@@ -24,7 +25,7 @@ const Landing: React.FunctionComponent = () => {
       <LandingHeader dark />
 
       <main>
-        <div className="pt-16 pb-32 bg-dark">
+        <div className="pt-16 pb-16 bg-dark">
           <Container>
             <div className="max-w-3xl mx-auto text-center">
               <h1 className="text-4xl font-semibold leading-tight text-white lg:leading-tight lg:text-5xl mb-7">
@@ -51,10 +52,15 @@ const Landing: React.FunctionComponent = () => {
               </div>
             </div>
 
-            <img
-              src="/img/landing/ui.png"
-              className="w-full border-2 shadow-lg border-gray rounded-xl"
-            />
+            <div className="flex justify-center">
+              <Image
+                src="/img/landing/ui.png"
+                className="rounded-xl"
+                width={1100}
+                loading="eager"
+                height={613}
+              />
+            </div>
           </Container>
         </div>
 
@@ -103,7 +109,14 @@ const Landing: React.FunctionComponent = () => {
                   alert gets triggered.
                 </p>
               </div>
-              <img src="/img/landing/ui.png" className="w-1/2 ml-12 rounded-lg" />
+              {/* <img src="/img/landing/ui.png" className="w-1/2 ml-12 rounded-lg" /> */}
+              <Image
+                src="/img/landing/alerts.png"
+                className="rounded-xl"
+                width={1100}
+                loading="eager"
+                height={613}
+              />
             </div>
 
             <div className="flex items-center justify-between w-full text-left">

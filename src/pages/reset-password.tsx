@@ -3,10 +3,10 @@ import type { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import * as yup from 'yup';
-import RequiredLoggedOut from '~/components/auth/RequireLoggedOut';
 import Layout from '~/components/layout/Layout';
 import Button from '~/components/ui/Button';
 import Link from '~/components/ui/Link';
+import Spinner from '~/components/ui/Spinner';
 import TextInput from '~/components/ui/TextInput';
 import { useAuth } from '~/hooks/useAuth';
 import firebase from '~/lib/firebase';
@@ -56,17 +56,22 @@ const TriggerResetPasswordEmail: React.FunctionComponent = () => {
     <form
       onSubmit={onSubmitEmail}
       className={classNames(
-        'max-w-lg border border-bordergray p-8 mx-auto mt-20 bg-white shadow-md rounded-2xl',
+        'max-w-lg border relative border-bordergray p-8 mx-auto mt-20 bg-white shadow-md rounded-2xl',
         {
-          'bg-opacity-70': loading,
+          'bg-opacity-50': loading,
         }
       )}
     >
+      {loading && (
+        <div className="absolute inset-0 flex justify-center mt-52">
+          <Spinner size={38} />
+        </div>
+      )}
+
       <div className="flex justify-between mb-20">
         <div className="flex font-semibold text-[1rem] items-center">
-          <p className="text-darkgray">Back to</p>
           <Link href="/login">
-            <span className="ml-1 underline text-evergreen hover:opacity-80">Login</span>
+            <span className="ml-1 underline text-evergreen hover:opacity-80">Back</span>
           </Link>
         </div>
       </div>
@@ -129,22 +134,17 @@ const EnterNewPassword: React.FunctionComponent = () => {
     }
 
     try {
-      console.log(1);
       await firebase.auth().verifyPasswordResetCode(code);
     } catch (err) {
-      console.error(err);
       setError('Something went wrong.');
       return;
     }
 
     try {
-      console.log(2);
       await firebase.auth().confirmPasswordReset(code, newPassword);
       setSuccess(true);
     } catch (err) {
-      console.error(err);
-
-      setError('Whoa');
+      setError('Something went wrong.');
     }
   };
 
@@ -164,17 +164,22 @@ const EnterNewPassword: React.FunctionComponent = () => {
     <form
       onSubmit={checkAndResetPassword}
       className={classNames(
-        'max-w-lg border border-bordergray p-8 mx-auto mt-20 bg-white shadow-md rounded-2xl',
+        'relative max-w-lg border border-bordergray p-8 mx-auto mt-20 bg-white shadow-md rounded-2xl',
         {
-          'bg-opacity-70': loading,
+          'bg-opacity-50': loading,
         }
       )}
     >
+      {loading && (
+        <div className="absolute inset-0 flex justify-center mt-52">
+          <Spinner size={38} />
+        </div>
+      )}
+
       <div className="flex justify-between mb-20">
         <div className="flex font-semibold text-[1rem] items-center">
-          <p className="text-darkgray">Back to</p>
           <Link href="/login">
-            <span className="ml-1 underline text-evergreen hover:opacity-80">Login</span>
+            <span className="ml-1 underline text-evergreen hover:opacity-80">Back</span>
           </Link>
         </div>
       </div>
@@ -214,7 +219,7 @@ const EnterNewPassword: React.FunctionComponent = () => {
 
       {success && (
         <p className="mb-5 font-medium leading-5 text-evergreen">
-          Password changed! Now you can <Link href="/login">login</Link>
+          Password changed! <Link href="/login">Go back</Link>
         </p>
       )}
 
@@ -244,15 +249,13 @@ const PasswordResetPage: NextPage = () => {
   const router = useRouter();
 
   return (
-    <RequiredLoggedOut>
-      <Layout title="Reset Password | Obsidian Tracker">
-        {router.query && router.query.mode === 'resetPassword' ? (
-          <EnterNewPassword />
-        ) : (
-          <TriggerResetPasswordEmail />
-        )}
-      </Layout>
-    </RequiredLoggedOut>
+    <Layout title="Reset Password | Obsidian Tracker">
+      {router.query && router.query.mode === 'resetPassword' ? (
+        <EnterNewPassword />
+      ) : (
+        <TriggerResetPasswordEmail />
+      )}
+    </Layout>
   );
 };
 

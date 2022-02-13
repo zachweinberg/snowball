@@ -2,7 +2,7 @@ import { ChevronDownIcon } from '@heroicons/react/outline';
 import { PlanType } from '@zachweinberg/obsidian-schema';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import Link from '~/components/ui/Link';
 import Menu from '~/components/ui/Menu';
 import { useAuth } from '~/hooks/useAuth';
@@ -150,4 +150,4 @@ const Header: React.FunctionComponent<Props> = ({ noBorder }: Props) => {
   );
 };
 
-export default Header;
+export default React.memo(Header);

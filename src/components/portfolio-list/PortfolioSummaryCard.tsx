@@ -1,5 +1,6 @@
 import { AssetColor, PortfolioWithBalances } from '@zachweinberg/obsidian-schema';
 import classNames from 'classnames';
+import React from 'react';
 import PercentageCircle from '~/components/ui/PercentageCircle';
 import { formatMoneyFromNumber, formatPercentageChange } from '~/lib/money';
 import Sparkline from '../charts/Sparkline';
@@ -106,30 +107,32 @@ const PortfolioSummaryCard: React.FunctionComponent<Props> = ({ portfolio }: Pro
   );
 };
 
-const AssetSummary = ({
-  percentInt,
-  amount,
-  label,
-  color,
-}: {
-  percentInt: number;
-  amount: number;
-  label: string;
-  color: string;
-}) => {
-  return (
-    <div className="flex items-center">
-      <PercentageCircle
-        percentDecimal={isNaN(percentInt) ? 0 : percentInt}
-        strokeColor={color}
-        className="w-16"
-      />
-      <div className="ml-3">
-        <p className="mb-2 text-[1rem] font-semibold">{formatMoneyFromNumber(amount)}</p>
-        <p className="text-darkgray text-[.95rem] font-semibold">{label}</p>
+const AssetSummary = React.memo(
+  ({
+    percentInt,
+    amount,
+    label,
+    color,
+  }: {
+    percentInt: number;
+    amount: number;
+    label: string;
+    color: string;
+  }) => {
+    return (
+      <div className="flex items-center">
+        <PercentageCircle
+          percentDecimal={isNaN(percentInt) ? 0 : percentInt}
+          strokeColor={color}
+          className="w-16"
+        />
+        <div className="ml-3">
+          <p className="mb-2 text-[1rem] font-semibold">{formatMoneyFromNumber(amount)}</p>
+          <p className="text-darkgray text-[.95rem] font-semibold">{label}</p>
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+);
 
-export default PortfolioSummaryCard;
+export default React.memo(PortfolioSummaryCard);

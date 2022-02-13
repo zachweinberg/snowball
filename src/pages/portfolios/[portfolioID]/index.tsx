@@ -423,8 +423,8 @@ const PortfolioView: NextPage = () => {
                         key={u}
                         onClick={() => setUnit(u)}
                         className={classNames(
-                          'text-[1rem] px-3 py-2 font-semibold  rounded-md text-darkgray hover:bg-light',
-                          { 'border-evergreen text-evergreen': u === unit }
+                          'text-[1rem] px-3 py-2 font-semibold rounded-md hover:bg-gray',
+                          u === unit ? 'border-evergreen text-evergreen' : 'text-darkgray'
                         )}
                       >
                         {u}

@@ -91,12 +91,12 @@ const SignUpPage: NextPage = () => {
           className={classNames(
             'relative max-w-lg border border-bordergray p-8 mx-auto mb-16 mt-10 bg-white shadow-md rounded-2xl',
             {
-              'bg-opacity-70': loading,
+              'bg-opacity-50': loading,
             }
           )}
         >
           {loading && (
-            <div className="absolute inset-0 flex justify-center mt-28">
+            <div className="absolute inset-0 flex justify-center mt-52">
               <Spinner size={38} />
             </div>
           )}
