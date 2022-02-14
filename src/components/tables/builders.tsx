@@ -110,6 +110,7 @@ export const buildRealEstateData = (
   return realEstate.map((realEstate) => ({
     id: realEstate.id,
     assetType: AssetType.RealEstate,
+    name: realEstate.name,
     address: realEstate.address ?? null,
     propertyValue: realEstate.propertyValue,
     propertyType: realEstate.propertyType,
