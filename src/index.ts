@@ -106,9 +106,10 @@ export interface RealEstatePosition extends Position {
 }
 
 export interface Mortgage {
-  endDate: Date;
-  monthlyPayment: number;
-  currentBalance: number;
+  startDate: Date;
+  term: 5 | 7 | 10 | 15 | 20 | 30;
+  rate: number;
+  startingBalance: number;
 }
 
 export interface CashPosition extends Position {
