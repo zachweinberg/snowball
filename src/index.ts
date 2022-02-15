@@ -209,6 +209,7 @@ export interface AddRealEstateRequest {
   propertyValue: number | null;
   propertyType: RealEstatePropertyType;
   placeID: string | null;
+  mortgage: Mortgage | null;
 }
 
 export interface AddCashRequest {
