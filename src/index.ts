@@ -102,6 +102,13 @@ export interface RealEstatePosition extends Position {
   propertyValue: number;
   createdAt: Date;
   portfolioID: string;
+  mortgage: Mortgage | null;
+}
+
+export interface Mortgage {
+  endDate: Date;
+  monthlyPayment: number;
+  currentBalance: number;
 }
 
 export interface CashPosition extends Position {
