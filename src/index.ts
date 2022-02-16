@@ -109,7 +109,7 @@ export interface Mortgage {
   startDate: Date;
   termYears: number;
   rate: number;
-  startingBalance: number;
+  monthlyPayment: number;
 }
 
 export interface CashPosition extends Position {
