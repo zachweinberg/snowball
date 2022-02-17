@@ -1,11 +1,17 @@
-import { RealEstatePropertyType } from '@zachweinberg/obsidian-schema';
+import {
+  AddRealEstateRequest,
+  Mortgage,
+  RealEstatePropertyType,
+} from '@zachweinberg/obsidian-schema';
 import { trackGoal } from 'fathom-client';
+import { DateTime } from 'luxon';
 import { useEffect, useState } from 'react';
 import { API } from '~/lib/api';
 import AddressSearch from '../ui/AddressSearch';
 import Button from '../ui/Button';
 import Checkbox from '../ui/Checkbox';
 import MoneyInput from '../ui/MoneyInput';
+import QuantityInput from '../ui/QuantityInput';
 import Select from '../ui/Select';
 import TextInput from '../ui/TextInput';
 
@@ -15,58 +21,84 @@ interface Props {
   portfolioID: string;
 }
 
+interface State {
+  name: string | null;
+  propertyType: RealEstatePropertyType;
+  placeID: string | null;
+  automaticValuation: boolean;
+  hasMortgage: boolean;
+  propertyValue: number | null;
+  apt: string | null;
+  mortgage: Mortgage | null;
+}
+
+const defaultState: State = {
+  name: '',
+  propertyType: RealEstatePropertyType.SingleFamily,
+  placeID: null,
+  apt: null,
+  propertyValue: null,
+  automaticValuation: true,
+  hasMortgage: false,
+  mortgage: {
+    rate: 3.25,
+    monthlyPayment: 1000,
+    startDateMs: Date.now(),
+    termYears: 30,
+  },
+};
+
 const AddRealEstateForm: React.FunctionComponent<Props> = ({
   afterAdd,
   portfolioID,
   goBack,
 }: Props) => {
-  const [propertyType, setPropertyType] = useState<RealEstatePropertyType>(
-    RealEstatePropertyType.SingleFamily
-  );
-  const [name, setName] = useState<string>('');
-  const [propertyValue, setPropertyValue] = useState<number | null>(null);
-  const [automaticValuation, setAutomaticValuation] = useState<boolean>(true);
-  const [placeID, setPlaceID] = useState<string | null>('');
-  const [apt, setApt] = useState<string | null>('');
-
+  const [state, setState] = useState<State>(defaultState);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>('');
 
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    if (automaticValuation && !placeID) {
+    if (state.automaticValuation && !state.placeID) {
       setError('Please enter an address or disable automatic valuation.');
       return;
     }
-
-    if (!automaticValuation && !propertyValue) {
+    if (!state.automaticValuation && !state.propertyValue) {
       setError('Please enter a manual property value or enable automatic valuation.');
       return;
     }
-
-    if (!placeID && !name) {
-      setError(
-        'Please enter a nickname for the property, we need a way to display which property this is.'
-      );
+    if (!state.placeID && !state.name) {
+      setError('Please enter a nickname for the property or enter an address.');
       return;
     }
 
     setLoading(true);
 
     try {
-      await API.addRealEstateToPortfolio({
-        name,
-        automaticValuation,
-        apt,
-        placeID,
+      const body: AddRealEstateRequest = {
         portfolioID,
-        propertyType,
-        propertyValue,
-      });
+        name: state.name ?? '',
+        automaticValuation: state.automaticValuation,
+        apt: state.apt,
+        placeID: state.placeID,
+        propertyType: state.propertyType,
+        propertyValue: state.propertyValue,
+        mortgage: null,
+      };
+
+      if (state.hasMortgage && state.mortgage) {
+        body.mortgage = {
+          rate: state.mortgage!.rate,
+          termYears: state.mortgage!.termYears,
+          monthlyPayment: state.mortgage!.monthlyPayment,
+          startDateMs: state.mortgage!.startDateMs,
+        };
+      }
+
+      await API.addRealEstateToPortfolio(body);
 
       trackGoal('GQQC3TA8', 0);
-
       afterAdd();
     } catch (err) {
       if (err.response?.data?.error) {
@@ -80,13 +112,15 @@ const AddRealEstateForm: React.FunctionComponent<Props> = ({
   };
 
   useEffect(() => {
-    if (!automaticValuation) {
-      setPropertyValue(null);
+    if (!state.automaticValuation) {
+      setState({ ...state, propertyValue: null });
     }
-  }, [automaticValuation]);
+  }, [state.automaticValuation]);
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col max-w-lg mx-auto" autoComplete="off">
+      {JSON.stringify(state)}
+
       <div
         className="flex items-center justify-center mb-10 cursor-pointer text-darkgray text-[.95rem] font-semibold"
         onClick={goBack}
@@ -114,14 +148,16 @@ const AddRealEstateForm: React.FunctionComponent<Props> = ({
         name="name"
         placeholder="Nickname (optional)"
         type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
+        value={state.name}
+        onChange={(e) => setState({ ...state, name: e.target.value })}
         className="mb-4"
       />
 
       <div className="mb-4">
         <Select
-          onChange={(selected) => setPropertyType(selected as RealEstatePropertyType)}
+          onChange={(selected) =>
+            setState({ ...state, propertyType: selected as RealEstatePropertyType })
+          }
           options={[
             { value: RealEstatePropertyType.SingleFamily, label: 'Single Family Home' },
             { value: RealEstatePropertyType.MultiFamily, label: 'Multi Family Home' },
@@ -131,47 +167,140 @@ const AddRealEstateForm: React.FunctionComponent<Props> = ({
             { value: RealEstatePropertyType.Storage, label: 'Storage Facility' },
             { value: RealEstatePropertyType.Other, label: 'Other' },
           ]}
-          selected={propertyType}
+          selected={state.propertyType}
         />
       </div>
 
       <Checkbox
-        name="automaticEstimate"
+        name="automaticValuation"
         title="Enable Automatic Estimate"
         className="mb-6"
-        onChange={(checked) => setAutomaticValuation(checked)}
-        checked={automaticValuation}
+        onChange={(checked) => setState({ ...state, automaticValuation: checked })}
+        checked={state.automaticValuation}
         description="Every week we will update this property value with our own estimate. Uncheck this to enter your own manual property value."
       />
 
-      {!automaticValuation ? (
+      {!state.automaticValuation ? (
         <div className="mb-4">
           <MoneyInput
             placeholder="Property value"
             required
-            value={propertyValue}
-            disabled={automaticValuation}
+            value={state.propertyValue}
+            disabled={state.automaticValuation}
             backgroundColor="#fff"
             name="propertyValue"
-            onChange={(val) => setPropertyValue(Number(val))}
+            onChange={(val) => setState({ ...state, propertyValue: Number(val) })}
           />
         </div>
       ) : (
-        <div className="mb-4">
-          <AddressSearch onSubmit={(placeID) => setPlaceID(placeID)} />
+        <div className="mb-6">
+          <AddressSearch onSubmit={(placeID) => setState({ ...state, placeID })} />
           <TextInput
             type="text"
             placeholder="Unit (optional)"
-            value={apt}
-            onChange={(e) => setApt(e.target.value)}
+            value={state.apt}
+            onChange={(e) => setState({ ...state, apt: e.target.value })}
             name="apt"
           />
         </div>
       )}
 
+      <Checkbox
+        name="mortgage"
+        title="Property Has Mortgage"
+        className="mb-6"
+        onChange={(checked) => setState({ ...state, hasMortgage: checked })}
+        checked={state.hasMortgage}
+        description="Do you have a mortgage on this property? We can calculate equity if you provide the details."
+      />
+
+      {state.hasMortgage && (
+        <>
+          <p className="text-center my-3 text-darkgray text-[1rem] font-medium">
+            Mortgage Info:
+          </p>
+
+          <div className="mb-6">
+            <div className="mb-2">
+              <label htmlFor="mortgage.monthlyPayment">Monthly Payment</label>
+            </div>
+            <MoneyInput
+              placeholder="Monthly payment (P+I)"
+              required
+              value={state.mortgage!.monthlyPayment}
+              disabled={!state.hasMortgage}
+              className="mb-4"
+              backgroundColor="#fff"
+              name="mortgage.monthlyPayment"
+              onChange={(val) =>
+                setState({
+                  ...state,
+                  mortgage: { ...state.mortgage!, monthlyPayment: Number(val) },
+                })
+              }
+            />
+
+            <div className="mb-2">
+              <label htmlFor="mortgage.termYears">Mortgage Term</label>
+            </div>
+            <Select
+              className="mb-4"
+              onChange={(selected) =>
+                setState({
+                  ...state,
+                  mortgage: { ...state.mortgage!, termYears: Number(selected) },
+                })
+              }
+              options={[
+                { value: '5', label: '5 year' },
+                { value: '7', label: '7 year' },
+                { value: '10', label: '10 year' },
+                { value: '15', label: '15 year' },
+                { value: '20', label: '20 year' },
+                { value: '30', label: '30 year' },
+              ]}
+              selected={state.mortgage!.termYears.toString()}
+            />
+
+            <div className="mb-2">
+              <label htmlFor="mortgage.rate">Interest Rate</label>
+            </div>
+            <QuantityInput
+              placeholder="Interest rate (%)"
+              required
+              value={state.mortgage!.rate}
+              backgroundColor="#fff"
+              name="mortgage.rate"
+              numDecimals={3}
+              onChange={(val) =>
+                setState({ ...state, mortgage: { ...state.mortgage!, rate: val } })
+              }
+            />
+
+            <div className="mt-4">
+              <div className="mb-4">
+                <label htmlFor="startDate">Start Date</label>
+              </div>
+              <input
+                className="w-full p-3 border-2 rounded-xl border-gray placeholder-darkgray focus:outline-none focus:ring-evergreen focus:border-evergreen"
+                type="date"
+                name="mortgage.startDate"
+                value={DateTime.fromMillis(state.mortgage!.startDateMs).toFormat('yyyy-MM-dd')}
+                onChange={(e) => {
+                  const ms = DateTime.fromFormat(e.target.value, 'yyyy-MM-dd').toMillis();
+                  setState({ ...state, mortgage: { ...state.mortgage!, startDateMs: ms } });
+                }}
+                min="1900-01-01"
+                max="2200-01-01"
+              />
+            </div>
+          </div>
+        </>
+      )}
+
       {error && <p className="mb-6 leading-5 text-left text-red">{error}</p>}
 
-      <Button type="submit" disabled={loading}>
+      <Button type="submit" disabled={loading} className="mb-48">
         Add Real Estate
       </Button>
     </form>

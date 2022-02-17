@@ -1,4 +1,10 @@
-import { PlanType, PLAN_LIMITS, RealEstatePosition } from '@zachweinberg/obsidian-schema';
+import {
+  Mortgage,
+  PlanType,
+  PLAN_LIMITS,
+  RealEstatePosition,
+} from '@zachweinberg/obsidian-schema';
+import { DateTime } from 'luxon';
 import { useMemo } from 'react';
 import Menu from '~/components/ui/Menu';
 import { useAuth } from '~/hooks/useAuth';
@@ -46,6 +52,15 @@ const RealEstateTable: React.FunctionComponent<Props> = ({
     );
   }
 
+  const calculateCurrentMortgageBalance = (
+    monthlyPmt: number,
+    monthsLeft: number,
+    yearlyRate: number
+  ): number => {
+    const monthlyRate = yearlyRate / 100 / 12;
+    return (monthlyPmt / monthlyRate) * (1 - Math.pow(1 / (1 + monthlyRate), monthsLeft));
+  };
+
   const data = useMemo<RealEstateTableData[]>(() => buildRealEstateData(realEstate), []);
 
   const columns = useMemo(
@@ -62,6 +77,31 @@ const RealEstateTable: React.FunctionComponent<Props> = ({
         Header: 'Property Value',
         accessor: 'propertyValue',
         Cell: ({ value }) => formatMoneyFromNumber(value),
+      },
+      {
+        Header: 'Mortgage',
+        accessor: 'mortgage',
+        Cell: ({ value, row }) => {
+          if (row.original.mortgage) {
+            const mortgage = row.original.mortgage as Mortgage;
+
+            const endOfMortgage = DateTime.fromMillis(mortgage.startDateMs).plus({
+              years: mortgage.termYears,
+            });
+
+            const monthsLeft = Math.abs(DateTime.local().diff(endOfMortgage, 'months').months);
+
+            const remaining = calculateCurrentMortgageBalance(
+              mortgage.monthlyPayment,
+              monthsLeft,
+              mortgage.rate
+            );
+
+            return formatMoneyFromNumber(remaining);
+          }
+
+          return '-';
+        },
       },
       {
         Header: 'Property Type',

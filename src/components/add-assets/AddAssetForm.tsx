@@ -1,6 +1,6 @@
 import { Transition } from '@headlessui/react';
 import { AssetType } from '@zachweinberg/obsidian-schema';
-import { useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import AddCashForm from './AddCashForm';
 import AddCryptoForm from './AddCryptoForm';
 import AddCustomAssetForm from './AddCustomAssetForm';
@@ -89,16 +89,16 @@ const AddAssetForm: React.FunctionComponent<AddAssetFormProps> = ({
   defaultAssetType,
   onClose,
 }: AddAssetFormProps) => {
-  const [assetType, setAssetType] = useState<AssetType | null>(defaultAssetType ?? null);
+  const [addingType, setAddingType] = useState<AssetType | null>(defaultAssetType ?? null);
 
   const renderAssetForm = useMemo(() => {
-    switch (assetType) {
+    switch (addingType) {
       case AssetType.Stock:
         return (
           <AddStockForm
             afterAdd={() => onClose(AssetType.Stock)}
             portfolioID={portfolioID}
-            goBack={() => setAssetType(null)}
+            goBack={() => setAddingType(null)}
           />
         );
       case AssetType.Crypto:
@@ -106,7 +106,7 @@ const AddAssetForm: React.FunctionComponent<AddAssetFormProps> = ({
           <AddCryptoForm
             afterAdd={() => onClose(AssetType.Crypto)}
             portfolioID={portfolioID}
-            goBack={() => setAssetType(null)}
+            goBack={() => setAddingType(null)}
           />
         );
       case AssetType.RealEstate:
@@ -114,7 +114,7 @@ const AddAssetForm: React.FunctionComponent<AddAssetFormProps> = ({
           <AddRealEstateForm
             afterAdd={() => onClose(AssetType.RealEstate)}
             portfolioID={portfolioID}
-            goBack={() => setAssetType(null)}
+            goBack={() => setAddingType(null)}
           />
         );
       case AssetType.Cash:
@@ -122,7 +122,7 @@ const AddAssetForm: React.FunctionComponent<AddAssetFormProps> = ({
           <AddCashForm
             afterAdd={() => onClose(AssetType.Cash)}
             portfolioID={portfolioID}
-            goBack={() => setAssetType(null)}
+            goBack={() => setAddingType(null)}
           />
         );
       case AssetType.Custom:
@@ -130,19 +130,19 @@ const AddAssetForm: React.FunctionComponent<AddAssetFormProps> = ({
           <AddCustomAssetForm
             afterAdd={() => onClose(AssetType.Custom)}
             portfolioID={portfolioID}
-            goBack={() => setAssetType(null)}
+            goBack={() => setAddingType(null)}
           />
         );
       default:
         return null;
     }
-  }, [assetType, onClose]);
+  }, [addingType, onClose]);
 
   return (
     <div className="relative max-w-5xl mx-auto mt-10">
       <Transition
         className="absolute w-full"
-        show={assetType === null}
+        show={addingType === null}
         enter="transition-all duration-300"
         enterFrom="-translate-x-24 opacity-0"
         enterTo="translate-x-0 opacity-100"
@@ -168,7 +168,7 @@ const AddAssetForm: React.FunctionComponent<AddAssetFormProps> = ({
               key={option.label}
               label={option.label}
               svg={option.svg}
-              onSelect={() => setAssetType(option.type)}
+              onSelect={() => setAddingType(option.type)}
             />
           ))}
         </div>
@@ -176,7 +176,7 @@ const AddAssetForm: React.FunctionComponent<AddAssetFormProps> = ({
 
       <Transition
         className="absolute w-full"
-        show={assetType !== null}
+        show={addingType !== null}
         enter="transition-all duration-300"
         enterFrom="translate-x-24 opacity-0"
         enterTo="translate-x-0 opacity-100"
@@ -196,20 +196,18 @@ interface AssetTypeCardProps {
   svg: React.ReactNode;
 }
 
-const AssetTypeCard: React.FunctionComponent<AssetTypeCardProps> = ({
-  label,
-  svg,
-  onSelect,
-}: AssetTypeCardProps) => {
-  return (
-    <div
-      onClick={onSelect}
-      className="flex flex-col items-center justify-center p-4 border-2 border-transparent shadow cursor-pointer bg-background rounded-3xl hover:border-darkgray"
-    >
-      {svg}
-      <span className="mt-5 font-bold text-dark">{label}</span>
-    </div>
-  );
-};
+const AssetTypeCard: React.FunctionComponent<AssetTypeCardProps> = React.memo(
+  ({ label, svg, onSelect }: AssetTypeCardProps) => {
+    return (
+      <div
+        onClick={onSelect}
+        className="flex flex-col items-center justify-center p-4 border-2 border-transparent shadow cursor-pointer bg-background rounded-3xl hover:border-darkgray"
+      >
+        {svg}
+        <span className="mt-5 font-bold text-dark">{label}</span>
+      </div>
+    );
+  }
+);
 
 export default AddAssetForm;
