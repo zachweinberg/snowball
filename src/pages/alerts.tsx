@@ -105,7 +105,7 @@ const WatchListContent: React.FunctionComponent = () => {
           </div>
           {loadingAlerts ? (
             <div className="flex items-center justify-center my-24">
-              <Spinner size={30} />
+              <Spinner />
             </div>
           ) : alerts.length === 0 ? (
             <div className="flex flex-col items-center justify-center my-24 text-center">

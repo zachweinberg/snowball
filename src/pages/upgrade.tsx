@@ -89,7 +89,7 @@ const Upgrade: NextPage = () => {
         >
           {loading && (
             <div className="absolute inset-0 flex justify-center mt-20">
-              <Spinner size={30} />
+              <Spinner />
             </div>
           )}
 

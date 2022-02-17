@@ -65,7 +65,7 @@ const LoginPage: NextPage = () => {
         >
           {loading && (
             <div className="absolute inset-0 flex justify-center mt-52">
-              <Spinner size={38} />
+              <Spinner />
             </div>
           )}
 

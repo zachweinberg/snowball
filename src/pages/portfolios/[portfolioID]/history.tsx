@@ -55,7 +55,7 @@ const PortfolioLogsPage: NextPage = () => {
     if (loading) {
       return (
         <div className="flex items-center justify-center mt-32">
-          <Spinner size={40} />
+          <Spinner />
         </div>
       );
     }

@@ -193,7 +193,7 @@ const BalanceOverTime: React.FunctionComponent<{
 
           {loading ? (
             <div className="mx-auto">
-              <Spinner size={34} color="#CEF33C" />
+              <Spinner color="#CEF33C" />
             </div>
           ) : data.length > 0 ? (
             <SVGChart

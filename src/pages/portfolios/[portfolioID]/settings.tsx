@@ -117,7 +117,7 @@ const PortfolioSettingsPageContent: React.FunctionComponent = () => {
       <Layout title={`${portfolio?.name ?? 'Portfolio'} Settings | Obsidian Tracker`}>
         {loading ? (
           <div className="flex items-center justify-center mt-32">
-            <Spinner size={40} />
+            <Spinner />
           </div>
         ) : (
           settings && (

@@ -7,11 +7,7 @@ interface Props {
   color?: string;
 }
 
-const Spinner: React.FunctionComponent<Props> = ({ size, color }: Props) => {
-  if (!size) {
-    size = 30;
-  }
-
+const Spinner: React.FunctionComponent<Props> = ({ size = 40, color }: Props) => {
   if (!color) {
     color = theme.colors['white'];
   }

@@ -64,7 +64,7 @@ const TriggerResetPasswordEmail: React.FunctionComponent = () => {
     >
       {loading && (
         <div className="absolute inset-0 flex justify-center mt-52">
-          <Spinner size={38} />
+          <Spinner />
         </div>
       )}
 
@@ -172,7 +172,7 @@ const EnterNewPassword: React.FunctionComponent = () => {
     >
       {loading && (
         <div className="absolute inset-0 flex justify-center mt-52">
-          <Spinner size={38} />
+          <Spinner />
         </div>
       )}
 

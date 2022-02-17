@@ -153,7 +153,7 @@ const AddCashForm: React.FunctionComponent<Props> = ({
 
       {loading ? (
         <div className="flex justify-center mb-5">
-          <Spinner size={28} />
+          <Spinner } />
         </div>
       ) : (
         <>

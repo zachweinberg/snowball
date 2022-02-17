@@ -100,7 +100,7 @@ const NewsPageContent: React.FunctionComponent = () => {
 
       {firstLoad ? (
         <div className="flex justify-center mt-20">
-          <Spinner size={40} />
+          <Spinner />
         </div>
       ) : pageOfNews.length === 0 ? null : (
         <div className={classNames({ 'opacity-60': loadingNews })}>
