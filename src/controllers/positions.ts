@@ -438,10 +438,9 @@ positionsRouter.put(
   requireSignedIn,
   catchErrors(async (req, res) => {
     const userID = req.user!.id;
-    const { portfolioID, name, propertyType, propertyValue, positionID, automaticValuation } =
-      req.body as AddRealEstateRequest & {
-        positionID: string;
-      };
+    const { portfolioID, name, propertyType, mortgage, positionID } = req.body as AddRealEstateRequest & {
+      positionID: string;
+    };
 
     const redisKey = `portfolio-${portfolioID}`;
 
@@ -453,23 +452,14 @@ positionsRouter.put(
 
     await updateDocument(`real-estate-positions`, positionID, {
       propertyType,
-      propertyValue: propertyValue ?? null,
-      automaticValuation,
       name,
+      mortgage,
     });
 
     await deleteRedisKey(redisKey);
     await deleteRedisKey(`portfoliolist-${userID}`);
 
-    await trackPortfolioLogItem(portfolioID, `Updated ${name ?? 'a property'}.`);
-
-    let log = `Updated ${
-      position.address ? addresstoString(position.address) : position.name ? position.name : 'a property'
-    } to ${propertyType} and automatic valuation to ${automaticValuation ? 'on' : 'off'}.`;
-
-    if (position.propertyValue !== propertyValue && propertyValue) {
-      log += `New property value: ${formatMoneyFromNumber(propertyValue)}`;
-    }
+    let log = `Updated ${position.address ? addresstoString(position.address) : position.name ? position.name : 'a property'}`;
 
     await trackPortfolioLogItem(portfolioID, log);
 
