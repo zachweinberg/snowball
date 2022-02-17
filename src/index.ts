@@ -106,7 +106,7 @@ export interface RealEstatePosition extends Position {
 }
 
 export interface Mortgage {
-  startDate: Date;
+  startDateMs: number;
   termYears: number;
   rate: number;
   monthlyPayment: number;
