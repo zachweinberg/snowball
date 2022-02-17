@@ -167,7 +167,8 @@ positionsRouter.post(
   catchErrors(async (req, res) => {
     const userID = req.user!.id;
 
-    const { portfolioID, propertyType, propertyValue, placeID, apt, name, automaticValuation } = req.body as AddRealEstateRequest;
+    const { portfolioID, propertyType, propertyValue, placeID, apt, name, automaticValuation, mortgage } =
+      req.body as AddRealEstateRequest;
 
     const redisKey = `portfolio-${portfolioID}`;
 
@@ -203,6 +204,7 @@ positionsRouter.post(
       propertyType,
       createdAt: new Date(),
       automaticValuation: false,
+      mortgage: null,
     };
 
     if (automaticValuation) {
@@ -228,6 +230,10 @@ positionsRouter.post(
       position.googlePlaceID = placeID;
     } else {
       position.propertyValue = propertyValue as number;
+    }
+
+    if (mortgage) {
+      position.mortgage = mortgage;
     }
 
     await createDocument<RealEstatePosition>(`real-estate-positions`, position);

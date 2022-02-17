@@ -11,8 +11,10 @@ import {
   StockPositionWithQuote,
 } from '@zachweinberg/obsidian-schema';
 import currency from 'currency.js';
+import { DateTime } from 'luxon';
 import { getCryptoPrices } from '~/lib/cmc';
 import { getStockPrices } from '~/lib/iex';
+import { calculateCurrentMortgageBalance } from '~/lib/valuations';
 import {
   calculateCashValue,
   calculateCryptoTotal,
@@ -35,7 +37,7 @@ interface PortfolioValues {
 
 export const calculatePortfolioSummary = async (portfolioID: string): Promise<PortfolioValues> => {
   const assets = await findDocuments<Position>(`/portfolios/${portfolioID}/positions`);
-  const realEstatePositions = await findDocuments<RealEstatePosition>(`/real-estate-positions`, [
+  const realEstatePositions = await findDocuments<RealEstatePosition>(`real-estate-positions`, [
     { property: 'portfolioID', condition: '==', value: portfolioID },
   ]);
 
@@ -166,6 +168,18 @@ export const calculatePortfolioQuotes = async (
   }
   for (const realEstatePosition of realEstatePositions) {
     realEstateTotal = realEstateTotal.add(realEstatePosition.propertyValue);
+    if (realEstatePosition.mortgage) {
+      const endOfMortgage = DateTime.fromMillis(realEstatePosition.mortgage.startDateMs).plus({
+        year: realEstatePosition.mortgage.termYears,
+      });
+      const monthsLeft = Math.abs(DateTime.local().diff(endOfMortgage, 'month').months);
+      const remainingBal = calculateCurrentMortgageBalance(
+        realEstatePosition.mortgage.monthlyPayment,
+        monthsLeft,
+        realEstatePosition.mortgage.rate
+      );
+      realEstateTotal = realEstateTotal.subtract(remainingBal ?? 0);
+    }
   }
   for (const cashPosition of cashPositions) {
     cashTotal = cashTotal.add(cashPosition.amount);

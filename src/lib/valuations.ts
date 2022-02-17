@@ -3,6 +3,10 @@ import axios from 'axios';
 import { addresstoString } from '~/utils/misc';
 import { getRedisKey, setRedisKey } from './redis';
 
+if (!process.env.GOOGLE_MAPS_API_KEY) {
+  throw new Error('Need GOOGLE_MAPS_API_KEY');
+}
+
 export const fetchEstimateFromEstated = async (address: Address): Promise<number | null> => {
   const addressString = addresstoString(address);
 
@@ -83,4 +87,9 @@ export const getPropertyValueEstimateByGooglePlaceID = async (
     console.error(err);
     return { address: null, estimate: null };
   }
+};
+
+export const calculateCurrentMortgageBalance = (monthlyPmt: number, monthsLeft: number, yearlyRate: number): number => {
+  const monthlyRate = yearlyRate / 100 / 12;
+  return (monthlyPmt / monthlyRate) * (1 - Math.pow(1 / (1 + monthlyRate), monthsLeft));
 };

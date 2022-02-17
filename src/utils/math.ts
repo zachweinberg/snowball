@@ -1,7 +1,9 @@
 import { CashPosition, CryptoPosition, CustomPosition, RealEstatePosition, StockPosition } from '@zachweinberg/obsidian-schema';
 import currency from 'currency.js';
+import { DateTime } from 'luxon';
 import { getCryptoPrices } from '~/lib/cmc';
 import { getStockPrices } from '~/lib/iex';
+import { calculateCurrentMortgageBalance } from '~/lib/valuations';
 
 export const calculateStocksTotal = async (stockPositions: StockPosition[]): Promise<number> => {
   if (stockPositions.length === 0) {
@@ -51,6 +53,13 @@ export const calculateRealEstateValue = (realEstatePositions: RealEstatePosition
   for (const position of realEstatePositions) {
     if (position.propertyValue) {
       total = total.add(position.propertyValue);
+    }
+
+    if (position.mortgage) {
+      const endOfMortgage = DateTime.fromMillis(position.mortgage.startDateMs).plus({ year: position.mortgage.termYears });
+      const monthsLeft = Math.abs(DateTime.local().diff(endOfMortgage, 'month').months);
+      const remainingBal = calculateCurrentMortgageBalance(position.mortgage.monthlyPayment, monthsLeft, position.mortgage.rate);
+      total = total.subtract(remainingBal ?? 0);
     }
   }
 

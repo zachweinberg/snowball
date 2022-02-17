@@ -444,6 +444,7 @@ paths:
                 - automaticValuation
                 - apt
                 - placeID
+                - mortgage
               properties:
                 name:
                   type: string
@@ -461,6 +462,9 @@ paths:
                   type: string
                 placeID:
                   type: string
+                  nullable: true
+                mortgage:
+                  type: object
                   nullable: true
       responses:
         '200':
