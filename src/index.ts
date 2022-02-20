@@ -73,6 +73,7 @@ export interface StockPosition extends Position {
   companyName: string;
   quantity: number;
   costPerShare: number;
+  objectID: string;
 }
 
 export interface CryptoPosition extends Position {
