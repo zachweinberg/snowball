@@ -34,7 +34,7 @@ positionsRouter.post(
   requireSignedIn,
   catchErrors(async (req, res) => {
     const userID = req.user!.id;
-    const { portfolioID, symbol, companyName, quantity, costPerShare } = req.body as AddStockRequest;
+    const { portfolioID, symbol, objectID, companyName, quantity, costPerShare } = req.body as AddStockRequest;
     const redisKey = `portfolio-${portfolioID}`;
 
     if (!(await userOwnsPortfolio(req, res, portfolioID))) {
@@ -76,6 +76,7 @@ positionsRouter.post(
       companyName,
       costPerShare,
       quantity,
+      objectID,
       symbol: symbol.toUpperCase(),
       createdAt: new Date(),
     });
