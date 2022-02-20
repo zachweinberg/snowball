@@ -702,10 +702,13 @@ paths:
               additionalProperties: false
               required:
                 - symbol
+                - objectID
                 - fullName
                 - assetType
               properties:
                 symbol:
+                  type: string
+                objectID:
                   type: string
                 assetType:
                   type: string
