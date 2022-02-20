@@ -313,7 +313,7 @@ const PortfolioView: NextPage = () => {
           <div>
             <div className="flex items-center justify-between mb-7">
               <div className="flex items-center">
-                {auth.user && (
+                {auth.user?.id === portfolio.userID && (
                   <Link href={`/portfolios`}>
                     <ArrowCircleLeftIcon className="w-6 h-6 mr-3 cursor-pointer hover:opacity-70" />
                   </Link>
@@ -327,13 +327,13 @@ const PortfolioView: NextPage = () => {
                   </p>
                 )}
               </div>
-              {auth.user && (
+              {auth.user?.id === portfolio.userID && (
                 <div className="flex items-center">
                   <div className="mr-3 w-44">
                     <Button
                       type="button"
                       onClick={() => setAddingAsset(true)}
-                      variant="secondary"
+                      variant="primary"
                     >
                       + Add Asset
                     </Button>
@@ -341,11 +341,7 @@ const PortfolioView: NextPage = () => {
 
                   <div className="w-44">
                     <Link href={`/portfolios/${portfolio.id}/settings`}>
-                      <Button
-                        type="button"
-                        variant="secondary"
-                        className="flex items-center justify-center"
-                      >
+                      <Button type="button" variant="secondary">
                         Settings
                       </Button>
                     </Link>

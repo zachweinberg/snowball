@@ -4,7 +4,12 @@ import { useEffect, useRef, useState } from 'react';
 import { SearchPositionsResult } from '~/lib/algolia';
 
 interface Props {
-  onSelect: (symbol: string | null, fullName?: string, logoURL?: string) => void;
+  onSelect: (
+    symbol: string | null,
+    objectID: string | null,
+    fullName?: string,
+    logoURL?: string
+  ) => void;
   searchResults: SearchPositionsResult[];
 }
 
@@ -38,7 +43,7 @@ const FloatingSearchResults: React.FunctionComponent<Props> = ({
     }
 
     if (!containerRef.current.contains(e.target as Node)) {
-      onSelect(null);
+      onSelect(null, null);
     }
   };
 
@@ -55,12 +60,12 @@ const FloatingSearchResults: React.FunctionComponent<Props> = ({
   return searchResults.length === 0 ? null : (
     <div
       ref={containerRef}
-      className="absolute z-50 w-full mt-4 overflow-y-auto bg-white shadow-2xl rounded-md no-scrollbar"
+      className="absolute z-50 w-full mt-4 overflow-y-auto bg-white rounded-md shadow-2xl no-scrollbar"
     >
       {searchResults.map((result, i) => (
         <div
           onClick={() => {
-            onSelect(result.symbol, result.fullName, result.logoURL);
+            onSelect(result.symbol, result.objectID, result.fullName, result.logoURL);
           }}
           className={classNames('flex items-center py-4 cursor-pointer hover:bg-lightlime', {
             'pl-4': result.logoURL,

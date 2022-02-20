@@ -89,7 +89,7 @@ const PortfolioListPage: NextPage = () => {
             className="w-44"
             onClick={() => setCreatingPortfolio(true)}
           >
-            Create portfolio
+            Create Portfolio
           </Button>
         </div>
       );
@@ -156,7 +156,7 @@ const PortfolioListPage: NextPage = () => {
           </div>
           <div className="w-56">
             <Button type="button" onClick={() => setCreatingPortfolio(true)}>
-              Create portfolio
+              Create Portfolio
             </Button>
           </div>
         </div>

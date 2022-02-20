@@ -66,7 +66,7 @@ const CustomAssetTable: React.FunctionComponent<Props> = ({
         accessor: 'id',
         disableSortBy: true,
         Cell: ({ value, row }) => {
-          if (!auth.user) {
+          if (auth.user?.id !== belongsTo) {
             return null;
           }
           return (

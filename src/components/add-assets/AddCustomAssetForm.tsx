@@ -129,7 +129,7 @@ const AddCustomAssetForm: React.FunctionComponent<Props> = ({
       <Button type="submit" disabled={loading}>
         {canAdd
           ? `Add ${assetName} worth ${formatMoneyFromNumber(value)}`
-          : 'Add custom asset'}
+          : 'Add Custom Asset'}
       </Button>
     </form>
   );

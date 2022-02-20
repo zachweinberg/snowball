@@ -23,7 +23,7 @@ const Button: React.FunctionComponent<Props> = ({
 
   switch (variant) {
     case 'primary':
-      classes += 'bg-dark text-white ';
+      classes += 'bg-dark text-white border-2 border-dark ';
       classes += disabled
         ? 'cursor-not-allowed opacity-50 '
         : 'cursor-pointer hover:opacity-90 ';
@@ -32,7 +32,7 @@ const Button: React.FunctionComponent<Props> = ({
       classes += 'bg-background text-dark border-2 border-dark ';
       classes += disabled
         ? 'cursor-not-allowed opacity-50 '
-        : 'cursor-pointer hover:opacity-90 hover:bg-dark hover:text-white ';
+        : 'cursor-pointer hover:bg-dark hover:text-white ';
       break;
     case 'danger':
       classes += 'bg-red text-white ';

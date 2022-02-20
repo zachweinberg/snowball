@@ -26,6 +26,7 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
   const [condition, setCondition] = useState<AlertCondition>(AlertCondition.Above);
   const [destination, setDestination] = useState<AlertDestination>(AlertDestination.Email);
   const [destinationValue, setDestinationValue] = useState<string>('');
+  const [objectID, setObjectID] = useState('');
   const [symbol, setSymbol] = useState<string>('');
   const [price, setPrice] = useState<number>(0);
   const [assetType, setAssetType] = useState<AssetType | null>(null);
@@ -62,6 +63,7 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
         assetType,
         price,
         symbol,
+        objectID,
         condition,
         destination,
         destinationValue,
@@ -138,7 +140,10 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
                 autofocus
                 placeholder={`Enter ${assetType === AssetType.Stock ? 'ticker' : 'symbol'}`}
                 type={assetType!}
-                onResult={(symbol) => setSymbol(symbol)}
+                onResult={(symbol, objectID) => {
+                  setSymbol(symbol);
+                  setObjectID(objectID);
+                }}
                 onError={(e) => toast(e)}
               />
             </form>

@@ -193,7 +193,7 @@ const AddCashForm: React.FunctionComponent<Props> = ({
       {error && <p className="mb-6 leading-5 text-left text-red">{error}</p>}
 
       <Button type="submit" disabled={loading}>
-        {canAdd ? `Add ${accountName} with ${formatMoneyFromNumber(amount)}` : 'Add cash'}
+        {canAdd ? `Add ${accountName} with ${formatMoneyFromNumber(amount)}` : 'Add Cash'}
       </Button>
     </form>
   );

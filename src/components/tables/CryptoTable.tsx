@@ -129,11 +129,14 @@ const CryptoTable: React.FunctionComponent<Props> = ({
         Header: 'Gain / Loss',
         accessor: 'gainLoss',
         Cell: ({ row, value }) => (
-          <p className={value >= 0 ? 'text-green' : 'text-red'}>
-            {unit === Unit.Dollars
-              ? formatMoneyFromNumber(value)
-              : formatPercentageChange(row.original.gainLossPercent)}
-          </p>
+          <>
+            <ReactTooltip />
+            <p className={value >= 0 ? 'text-green' : 'text-red'}>
+              {unit === Unit.Dollars
+                ? formatMoneyFromNumber(value)
+                : formatPercentageChange(row.original.gainLossPercent)}
+            </p>
+          </>
         ),
       },
       {
@@ -141,7 +144,7 @@ const CryptoTable: React.FunctionComponent<Props> = ({
         accessor: 'id',
         disableSortBy: true,
         Cell: ({ row, value }) => {
-          if (!auth.user) {
+          if (auth.user?.id !== belongsTo) {
             return null;
           }
           return (
@@ -161,7 +164,6 @@ const CryptoTable: React.FunctionComponent<Props> = ({
 
   return (
     <>
-      <ReactTooltip />
       {crypto.length >= PLAN_LIMITS.crypto.free && auth.user?.plan?.type === PlanType.FREE && (
         <UpgradeBanner type="crypto positions" />
       )}

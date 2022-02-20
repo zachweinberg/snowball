@@ -4,7 +4,12 @@ import { useEffect, useState } from 'react';
 import { SearchPositionsResult } from '~/lib/algolia';
 
 interface Props {
-  onSelect: (symbol: string | null, fullName?: string, logoURL?: string) => void;
+  onSelect: (
+    symbol: string | null,
+    objectID: string | null,
+    fullName?: string,
+    logoURL?: string
+  ) => void;
   searchResults: SearchPositionsResult[];
 }
 
@@ -37,7 +42,7 @@ const FlatSearchResults: React.FunctionComponent<Props> = ({
       {searchResults.map((result, i) => (
         <div
           onClick={() => {
-            onSelect(result.symbol, result.fullName, result.logoURL);
+            onSelect(result.symbol, result.objectID, result.fullName, result.logoURL);
           }}
           className={classNames(
             'flex items-center px-6 py-3 text-left cursor-pointer hover:bg-lightlime',

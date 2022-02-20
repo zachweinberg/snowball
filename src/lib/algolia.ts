@@ -14,6 +14,7 @@ export interface SearchPositionsResult {
   symbol: string;
   assetType: AssetType;
   providerID: string;
+  objectID: string;
   logoURL?: string;
 }
 

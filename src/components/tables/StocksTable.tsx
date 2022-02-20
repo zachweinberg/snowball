@@ -103,12 +103,16 @@ const StocksTable: React.FunctionComponent<Props> = ({
         Header: 'Cost Basis',
         accessor: 'costPerShare',
         Cell: ({ row, value }) => (
-          <div
-            className="underline"
-            data-tip={`Cost per share: ${formatMoneyFromNumber(value)}`}
-          >
-            {formatMoneyFromNumber(value * row.original.quantity)}
-          </div>
+          <>
+            <ReactTooltip />
+
+            <div
+              className="underline"
+              data-tip={`Cost per share: ${formatMoneyFromNumber(value)}`}
+            >
+              {formatMoneyFromNumber(value * row.original.quantity)}
+            </div>
+          </>
         ),
         sortType,
       },
@@ -132,8 +136,12 @@ const StocksTable: React.FunctionComponent<Props> = ({
         Header: '',
         accessor: 'id',
         disableSortBy: true,
-        Cell: ({ value, row }) =>
-          !auth.user ? null : (
+        Cell: ({ value, row }) => {
+          if (auth.user?.id !== belongsTo) {
+            return null;
+          }
+
+          return (
             <Menu
               options={[
                 { label: 'Edit Stock', onClick: () => onEdit(row.original) },
@@ -141,7 +149,8 @@ const StocksTable: React.FunctionComponent<Props> = ({
               ]}
               button={() => <VerticalDots />}
             />
-          ),
+          );
+        },
       },
     ],
     [unit]
@@ -149,7 +158,6 @@ const StocksTable: React.FunctionComponent<Props> = ({
 
   return (
     <>
-      <ReactTooltip />
       {stocks.length >= PLAN_LIMITS.stocks.free && auth.user?.plan?.type === PlanType.FREE && (
         <UpgradeBanner type="stock positions" />
       )}
@@ -159,20 +167,3 @@ const StocksTable: React.FunctionComponent<Props> = ({
 };
 
 export default StocksTable;
-
-const twoSum = (numbers, target) => {
-  const checked = {};
-  let result = [];
-
-  numbers.forEach((num, i) => {
-    const goal = target - num;
-
-    if (typeof checked[goal] !== 'undefined') {
-      result = [checked[goal], i];
-    }
-
-    checked[goal] = i;
-  });
-
-  return result;
-};

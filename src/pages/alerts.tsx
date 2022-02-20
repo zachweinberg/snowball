@@ -11,14 +11,12 @@ import AlertsTable from '~/components/tables/AlertsTable';
 import Button from '~/components/ui/Button';
 import Spinner from '~/components/ui/Spinner';
 import { useConfirm } from '~/hooks/useConfirm';
-import { useModal } from '~/hooks/useModal';
 import { API } from '~/lib/api';
 
 const AlertsContent: React.FunctionComponent = () => {
   const [loadingAlerts, setLoadingAlerts] = useState(true);
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [addingAlert, setAddingAlert] = useState(false);
-  const { modalOpen, hideModal, openModal } = useModal();
   const { confirmModalProps, openConfirm } = useConfirm();
 
   const loadAlerts = async () => {
@@ -61,6 +59,7 @@ const AlertsContent: React.FunctionComponent = () => {
     <Layout title="Alerts | Obsidian Tracker">
       <ConfirmModal {...confirmModalProps} />
       <AddAlertModal open={addingAlert} onClose={onSave} />
+
       <div className="flex items-center justify-between mb-7">
         <h1 className="font-bold text-dark text-[1.75rem]">Alerts</h1>
       </div>
@@ -91,7 +90,7 @@ const AlertsContent: React.FunctionComponent = () => {
             </div>
           ) : alerts.length === 0 ? (
             <div className="flex flex-col items-center justify-center my-24 text-center">
-              <BellIcon width={93} />
+              <BellIcon width={95} />
               <p className="font-bold text-[1.25rem] my-3">Get notified.</p>
               <p className="font-medium text-[1rem] text-darkgray leading-tight mb-8">
                 Alerts will notify you when an asset hits a certain price.

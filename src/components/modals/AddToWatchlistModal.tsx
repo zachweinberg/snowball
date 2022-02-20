@@ -1,12 +1,12 @@
-import { EyeIcon } from '@heroicons/react/outline';
+import { EyeIcon, XIcon } from '@heroicons/react/outline';
 import { AssetType } from '@zachweinberg/obsidian-schema';
 import { trackGoal } from 'fathom-client';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import Modal from '~/components/ui/Modal';
 import TextInputWithResults from '~/components/ui/TextInputWithResults';
 import { API } from '~/lib/api';
 import Button from '../ui/Button';
+import BaseModal from './BaseModal';
 
 interface Props {
   open: boolean;
@@ -22,15 +22,24 @@ const AddToWatchlistModal: React.FunctionComponent<Props> = ({ open, onClose }: 
     }
   }, [open]);
 
-  const addToWatchList = async (symbol: string, fullName: string, assetType: AssetType) => {
-    await API.addAssetToWatchList(symbol, fullName, assetType);
+  const addToWatchList = async (
+    symbol: string,
+    objectID: string,
+    fullName: string,
+    assetType: AssetType
+  ) => {
+    await API.addAssetToWatchList(symbol, objectID, fullName, assetType);
     trackGoal('A75R6CGA', 0);
     onClose(true);
   };
 
   return (
-    <Modal isOpen={open} onClose={() => onClose(false)}>
-      <div className="relative" style={{ width: '430px' }}>
+    <BaseModal open={open} onOpenChange={() => onClose(false)}>
+      <div className="relative">
+        <div onClick={() => onClose(false)} className="absolute top-0 right-0 pt-3 pr-3">
+          <XIcon className="w-5 cursor-pointer hover:opacity-70" />
+        </div>
+
         {assetType === null && (
           <div className="w-full p-6">
             <div className="flex justify-center mb-4">
@@ -82,14 +91,16 @@ const AddToWatchlistModal: React.FunctionComponent<Props> = ({ open, onClose }: 
                 autofocus
                 placeholder={`Enter ${assetType === AssetType.Stock ? 'ticker' : 'symbol'}`}
                 type={assetType}
-                onResult={(stock, fullName) => addToWatchList(stock, fullName, assetType)}
+                onResult={(stock, objectID, fullName) =>
+                  addToWatchList(stock, objectID, fullName, assetType)
+                }
                 onError={(e) => toast(e)}
               />
             </form>
           </div>
         )}
       </div>
-    </Modal>
+    </BaseModal>
   );
 };
 

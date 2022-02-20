@@ -273,9 +273,9 @@ export const API = {
   },
 
   // QUOTES
-  getQuote: (symbol: string, type: AssetType) => {
-    return request<{ symbol: string; type: AssetType }, GetQuoteResponse>(
-      `/api/quotes?symbol=${symbol}&type=${type}`,
+  getQuote: (objectID: string, symbol: string, type: AssetType) => {
+    return request<{ objectID: string; symbol: string; type: AssetType }, GetQuoteResponse>(
+      `/api/quotes?symbol=${symbol}&type=${type}&objectID=${objectID ?? 'null'}`,
       'get'
     );
   },
@@ -285,10 +285,16 @@ export const API = {
     return request<undefined, GetWatchListResponse>('/api/watchlist', 'get');
   },
 
-  addAssetToWatchList: (symbol: string, fullName: string, assetType: AssetType) => {
+  addAssetToWatchList: (
+    symbol: string,
+    objectID: string,
+    fullName: string,
+    assetType: AssetType
+  ) => {
     return request<AddWatchListItemRequest, undefined>('/api/watchlist', 'post', {
       symbol,
       fullName,
+      objectID,
       assetType,
     });
   },

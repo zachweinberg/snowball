@@ -12,7 +12,7 @@ import TextInputWithResults from '../ui/TextInputWithResults';
 
 const addCryptoSchema = yup.object().shape({
   symbol: Yup.string()
-    .max(8, 'That coin symbol is too long.')
+    .max(20, 'That coin symbol is too long.')
     .required('Coin symbol is required.'),
   quantity: Yup.number()
     .typeError('Please enter a valid quantity.')
@@ -40,6 +40,7 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
   const [error, setError] = useState<string>('');
   const [symbol, setSymbol] = useState('');
   const [coinName, setCoinName] = useState('');
+  const [objectID, setObjectID] = useState<string | null>(null);
   const [quantity, setQuantity] = useState<number | null>(null);
   const [costPerCoin, setCostPerCoin] = useState<number | null>(null);
   const [currPrice, setCurrPrice] = useState<number | null>(null);
@@ -54,12 +55,18 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
     let isValid = false;
 
     try {
+      if (!objectID) {
+        setError("We can't add that crypto right now.");
+        return;
+      }
+
       await addCryptoSchema.validate({
         costPerCoin,
         symbol,
         coinName,
         quantity,
       });
+
       isValid = true;
     } catch (err) {
       setError(err.errors?.[0] ?? '');
@@ -72,6 +79,7 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
         await API.addCryptoToPortfolio({
           portfolioID,
           symbol,
+          objectID: objectID as string,
           costPerCoin: costPerCoin as number,
           coinName,
           quantity: quantity as number,
@@ -135,7 +143,7 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
           floatingResults
           autofocus
           onError={(e) => setError(e)}
-          onResult={(symbol, fullName, logoURL) => {
+          onResult={(symbol, objectID, fullName, logoURL) => {
             setCurrPrice(null);
 
             if (logoURL) {
@@ -144,12 +152,13 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
               setLogoURL('');
             }
 
-            API.getQuote(symbol, AssetType.Crypto).then((data) => {
+            API.getQuote(objectID, symbol, AssetType.Crypto).then((data) => {
               if (data.latestPrice && typeof data.latestPrice === 'number') {
                 setCurrPrice(data.latestPrice);
               }
             });
 
+            setObjectID(objectID);
             setSymbol(symbol.toUpperCase());
             setCoinName(fullName);
           }}
@@ -189,7 +198,7 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
       <Button type="submit" disabled={loading}>
         {canAdd
           ? `Add ${quantity} ${symbol} for ${formatMoneyFromNumber(costPerCoin * quantity)}`
-          : 'Add crypto'}
+          : 'Add Crypto'}
       </Button>
     </form>
   );

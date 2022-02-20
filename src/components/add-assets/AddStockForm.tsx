@@ -14,7 +14,7 @@ import TextInputWithResults from '../ui/TextInputWithResults';
 
 const addStockSchema = yup.object().shape({
   symbol: Yup.string()
-    .max(6, 'That stock symbol is too long.')
+    .max(20, 'That stock symbol is too long.')
     .required('Stock symbol is required.'),
   quantity: Yup.number()
     .typeError('Please enter a valid quantity.')
@@ -41,6 +41,7 @@ const AddStockForm: React.FunctionComponent<Props> = ({
 }: Props) => {
   const [error, setError] = useState<string>('');
   const [symbol, setSymbol] = useState('');
+  const [objectID, setObjectID] = useState('');
   const [companyName, setCompanyName] = useState('');
   const [quantity, setQuantity] = useState<number | null>(null);
   const [costPerShare, setCostPerShare] = useState<number | null>(null);
@@ -118,6 +119,7 @@ const AddStockForm: React.FunctionComponent<Props> = ({
         await API.addStockToPortfolio({
           portfolioID,
           symbol,
+          objectID,
           costPerShare: costPerShare as number,
           companyName,
           quantity: quantity as number,
@@ -195,15 +197,16 @@ const AddStockForm: React.FunctionComponent<Props> = ({
               autofocus
               floatingResults
               onError={(e) => setError(e)}
-              onResult={(symbol, fullName) => {
+              onResult={(symbol, objectID, fullName) => {
                 setCurrPrice(null);
 
-                API.getQuote(symbol, AssetType.Stock).then((data) => {
+                API.getQuote(objectID, symbol, AssetType.Stock).then((data) => {
                   if (data.latestPrice && typeof data.latestPrice === 'number') {
                     setCurrPrice(data.latestPrice);
                   }
                 });
 
+                setObjectID(objectID);
                 setSymbol(symbol.toUpperCase());
                 setCompanyName(fullName);
               }}
@@ -243,7 +246,7 @@ const AddStockForm: React.FunctionComponent<Props> = ({
           ? `Add ${quantity} shares of ${symbol} for ${formatMoneyFromNumber(
               costPerShare * quantity
             )}`
-          : 'Add stock'}
+          : 'Add Stock'}
       </Button>
     </form>
   );

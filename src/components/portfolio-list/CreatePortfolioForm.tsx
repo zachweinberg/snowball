@@ -51,7 +51,7 @@ const CreatePortfolioForm: React.FunctionComponent<Props> = ({ afterCreate }: Pr
         if (err.response?.data?.error) {
           setError(err.response.data.error);
         } else {
-          setError('Could not create portfolio.');
+          setError('Could not create portfolio right now.');
         }
         setLoading(false);
       }
@@ -91,7 +91,7 @@ const CreatePortfolioForm: React.FunctionComponent<Props> = ({ afterCreate }: Pr
       {error && <p className="mb-4 leading-5 text-left text-red">{error}</p>}
 
       <Button type="submit" disabled={loading}>
-        Create portfolio
+        Create Portfolio
       </Button>
     </form>
   );

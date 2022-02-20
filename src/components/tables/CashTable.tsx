@@ -53,15 +53,19 @@ const CashTable: React.FunctionComponent<Props> = ({
         Header: 'Account',
         accessor: 'accountName',
         Cell: ({ value, row }) => (
-          <div className="flex items-center">
-            {value}{' '}
-            {auth.user && row.original.isPlaid && (
-              <LinkIcon
-                data-tip={`This account is linked to your bank via Plaid.<br/>We will update the cash amount six times per day.`}
-                className="w-4 h-4 ml-4"
-              />
-            )}
-          </div>
+          <>
+            <ReactTooltip multiline />
+
+            <div className="flex items-center">
+              {value}{' '}
+              {auth.user?.id === belongsTo && row.original.isPlaid && (
+                <LinkIcon
+                  data-tip={`This account is linked to your bank via Plaid.<br/>We will update the cash amount six times per day.`}
+                  className="w-4 h-4 ml-4"
+                />
+              )}
+            </div>
+          </>
         ),
       },
       {
@@ -104,7 +108,6 @@ const CashTable: React.FunctionComponent<Props> = ({
 
   return (
     <>
-      <ReactTooltip multiline />
       {cash.length >= PLAN_LIMITS.cash.free && auth.user?.plan?.type === PlanType.FREE && (
         <UpgradeBanner type="cash holdings" />
       )}
