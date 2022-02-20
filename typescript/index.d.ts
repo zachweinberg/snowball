@@ -164,6 +164,7 @@ export interface MeResponse extends BaseResponse {
 export interface AddStockRequest {
     portfolioID: string;
     symbol: string;
+    objectID: string;
     costPerShare: number;
     companyName: string;
     quantity: number;
@@ -173,6 +174,7 @@ export interface AddCryptoRequest {
     symbol: string;
     costPerCoin: number;
     coinName: string;
+    objectID: string;
     quantity: number;
     logoURL?: string;
 }
@@ -280,6 +282,7 @@ export interface AddAlertRequest {
 }
 export interface AddWatchListItemRequest {
     symbol: string;
+    objectID: string;
     fullName: string;
     assetType: AssetType;
 }
