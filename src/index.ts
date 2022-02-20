@@ -80,7 +80,7 @@ export interface CryptoPosition extends Position {
   coinName: string;
   quantity: number;
   costPerCoin: number;
-  coinID: string;
+  objectID: string;
   logoURL?: string;
 }
 
@@ -289,6 +289,7 @@ export interface WatchListItem {
   assetType: AssetType;
   symbol: string;
   marketCap: number;
+  objectID: string;
   latestPrice: number;
   changePercent: number;
   changeDollars: number;
@@ -354,6 +355,7 @@ export interface Alert {
   symbol: string;
   fullName: string;
   userID: string;
+  objectID: string;
   condition: AlertCondition;
   price: number;
   destination: AlertDestination;
