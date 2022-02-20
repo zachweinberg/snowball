@@ -277,6 +277,7 @@ export interface AddAlertRequest {
     condition: AlertCondition;
     price: number;
     symbol: string;
+    objectID: string;
     destination: AlertDestination;
     destinationValue: string;
 }
