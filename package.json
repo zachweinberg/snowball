@@ -1,6 +1,6 @@
 {
   "name": "@zachweinberg/obsidian-schema",
-  "version": "1.14.16",
+  "version": "1.15.0",
   "description": "Obsidian Tracker model schema",
   "types": "typescript/index.d.ts",
   "main": "typescript/index.js",
