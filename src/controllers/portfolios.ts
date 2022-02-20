@@ -209,7 +209,7 @@ portfoliosRouter.post(
 
     await deleteRedisKey(redisKey);
 
-    await trackPortfolioLogItem(portfolioDataToSet.id, 'Portfolio created');
+    await trackPortfolioLogItem(portfolioDataToSet.id, 'Portfolio created.');
 
     res.status(200).json(response);
   })
