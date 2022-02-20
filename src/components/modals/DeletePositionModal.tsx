@@ -3,7 +3,7 @@ import Modal from '../ui/Modal';
 
 interface Props {
   open: boolean;
-  onClose: () => void;
+  onClose: (reload: boolean) => void;
   onDelete: () => void;
   assetName: string;
 }
@@ -15,13 +15,13 @@ export const DeletePositionModal: React.FunctionComponent<Props> = ({
   assetName,
 }: Props) => {
   return (
-    <Modal isOpen={open} onClose={onClose}>
+    <Modal isOpen={open} onClose={() => onClose(false)}>
       <div className="p-7">
         {assetName && (
-          <p className="mb-4 text-lg font-bold">Remove {assetName} from this portfolio?</p>
+          <p className="mb-5 font-semibold text-md">Remove {assetName} from this portfolio?</p>
         )}
         <div className="flex items-center">
-          <Button type="button" className="mr-2" onClick={onClose}>
+          <Button type="button" className="mr-2" onClick={() => onClose(false)}>
             Cancel
           </Button>
           <Button type="button" variant="danger" onClick={onDelete}>

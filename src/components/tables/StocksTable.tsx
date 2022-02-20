@@ -103,7 +103,10 @@ const StocksTable: React.FunctionComponent<Props> = ({
         Header: 'Cost Basis',
         accessor: 'costPerShare',
         Cell: ({ row, value }) => (
-          <div data-tip={`Cost per share: ${formatMoneyFromNumber(value)}`}>
+          <div
+            className="underline"
+            data-tip={`Cost per share: ${formatMoneyFromNumber(value)}`}
+          >
             {formatMoneyFromNumber(value * row.original.quantity)}
           </div>
         ),
@@ -112,13 +115,18 @@ const StocksTable: React.FunctionComponent<Props> = ({
       {
         Header: 'Gain / Loss',
         accessor: 'gainLoss',
-        Cell: ({ row, value }) => (
-          <p className={value >= 0 ? 'text-green' : 'text-red'}>
-            {unit === Unit.Dollars
-              ? formatMoneyFromNumber(value)
-              : formatPercentageChange(row.original.gainLossPercent)}
-          </p>
-        ),
+        Cell: ({ row, value }) => {
+          if (!auth.user) {
+            return null;
+          }
+          return (
+            <p className={value >= 0 ? 'text-green' : 'text-red'}>
+              {unit === Unit.Dollars
+                ? formatMoneyFromNumber(value)
+                : formatPercentageChange(row.original.gainLossPercent)}
+            </p>
+          );
+        },
       },
       {
         Header: '',
@@ -151,3 +159,20 @@ const StocksTable: React.FunctionComponent<Props> = ({
 };
 
 export default StocksTable;
+
+const twoSum = (numbers, target) => {
+  const checked = {};
+  let result = [];
+
+  numbers.forEach((num, i) => {
+    const goal = target - num;
+
+    if (typeof checked[goal] !== 'undefined') {
+      result = [checked[goal], i];
+    }
+
+    checked[goal] = i;
+  });
+
+  return result;
+};

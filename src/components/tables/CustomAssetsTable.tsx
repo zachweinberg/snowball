@@ -65,15 +65,20 @@ const CustomAssetTable: React.FunctionComponent<Props> = ({
         Header: '',
         accessor: 'id',
         disableSortBy: true,
-        Cell: ({ value, row }) => (
-          <Menu
-            options={[
-              { label: 'Edit Custom Asset', onClick: () => onEdit(row.original) },
-              { label: 'Delete', onClick: () => onDelete(value) },
-            ]}
-            button={() => <VerticalDots />}
-          />
-        ),
+        Cell: ({ value, row }) => {
+          if (!auth.user) {
+            return null;
+          }
+          return (
+            <Menu
+              options={[
+                { label: 'Edit Custom Asset', onClick: () => onEdit(row.original) },
+                { label: 'Delete', onClick: () => onDelete(value) },
+              ]}
+              button={() => <VerticalDots />}
+            />
+          );
+        },
       },
     ],
     []

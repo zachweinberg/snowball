@@ -79,6 +79,10 @@ const CashTable: React.FunctionComponent<Props> = ({
         accessor: 'id',
         disableSortBy: true,
         Cell: ({ value, row }) => {
+          if (!auth.user) {
+            return null;
+          }
+
           const isPlaid = row.original.isPlaid;
 
           const options = [

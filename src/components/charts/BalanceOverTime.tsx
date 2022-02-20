@@ -88,7 +88,7 @@ const SVGChart: React.FunctionComponent<SVGChartProps> = (props: SVGChartProps) 
           x={(d) => dateScale(getDate(d)) ?? 0}
           y={(d) => stockValueScale(getBalance(d)) ?? 0}
           stroke="#CEF33C"
-          strokeWidth={2}
+          strokeWidth={3}
         />
         <Bar
           width={width}

@@ -84,12 +84,16 @@ const NewsPageContent: React.FunctionComponent = () => {
     }
   };
 
+  // initial fetch
   useEffect(() => {
     loadNews(true).then(() => setFirstLoad(false));
   }, []);
 
+  // fetch again if page changes, but not on first load
   useEffect(() => {
-    loadNews();
+    if (!firstLoad) {
+      loadNews();
+    }
   }, [page]);
 
   return (

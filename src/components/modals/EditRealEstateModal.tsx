@@ -208,7 +208,7 @@ const EditRealEstateModal: React.FunctionComponent<Props> = ({
 
         {error && <p className="mb-6 leading-5 text-left text-red">{error}</p>}
 
-        <Button type="button" disabled={loading} className="mb-48" variant="primary">
+        <Button type="button" disabled={loading} variant="primary">
           Edit Real Estate
         </Button>
       </form>

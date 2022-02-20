@@ -116,7 +116,10 @@ const CryptoTable: React.FunctionComponent<Props> = ({
         Header: 'Cost Basis',
         accessor: 'costPerCoin',
         Cell: ({ row, value }) => (
-          <div data-tip={`Cost per coin: ${formatMoneyFromNumber(value)}`}>
+          <div
+            className="underline"
+            data-tip={`Cost per coin: ${formatMoneyFromNumber(value)}`}
+          >
             {formatMoneyFromNumber(value * row.original.quantity)}
           </div>
         ),
@@ -137,15 +140,20 @@ const CryptoTable: React.FunctionComponent<Props> = ({
         Header: '',
         accessor: 'id',
         disableSortBy: true,
-        Cell: ({ row, value }) => (
-          <Menu
-            options={[
-              { label: 'Edit Crypto', onClick: () => onEdit(row.original) },
-              { label: 'Delete', onClick: () => onDelete(value, row.original.symbol) },
-            ]}
-            button={() => <VerticalDots />}
-          />
-        ),
+        Cell: ({ row, value }) => {
+          if (!auth.user) {
+            return null;
+          }
+          return (
+            <Menu
+              options={[
+                { label: 'Edit Crypto', onClick: () => onEdit(row.original) },
+                { label: 'Delete', onClick: () => onDelete(value, row.original.symbol) },
+              ]}
+              button={() => <VerticalDots />}
+            />
+          );
+        },
       },
     ],
     [unit]

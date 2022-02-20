@@ -39,6 +39,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
             pauseOnHover
             theme="dark"
           />
+
           <Component {...pageProps} />
         </WaitForAuth>
       </AuthProvider>

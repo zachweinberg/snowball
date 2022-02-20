@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
 import Layout from '~/components/layout/Layout';
-import AddAlertModal from '~/components/modals/AddAlertModal';
+import ConfirmModal from '~/components/modals/ConfirmModal';
 import AlertsTable from '~/components/tables/AlertsTable';
 import Button from '~/components/ui/Button';
 import Spinner from '~/components/ui/Spinner';
+import { useConfirm } from '~/hooks/useConfirm';
+import { useModal } from '~/hooks/useModal';
 import { API } from '~/lib/api';
 
 const BellIcon = () => (
@@ -40,10 +42,12 @@ const BellIcon = () => (
   </svg>
 );
 
-const WatchListContent: React.FunctionComponent = () => {
+const AlertsContent: React.FunctionComponent = () => {
   const [loadingAlerts, setLoadingAlerts] = useState(true);
   const [addingAlert, setAddingAlert] = useState(false);
   const [alerts, setAlerts] = useState<Alert[]>([]);
+  const { modalOpen, hideModal, openModal } = useModal();
+  const { confirmProps, openConfirm } = useConfirm();
 
   const loadAlerts = async () => {
     setLoadingAlerts(true);
@@ -58,6 +62,8 @@ const WatchListContent: React.FunctionComponent = () => {
   };
 
   const onDeleteFromAlerts = async (alertID: string) => {
+    await openConfirm({ description: 'Are you sure you want to delete this alert?' });
+
     if (window.confirm('Are you sure you want to remove this alert?')) {
       await API.removeAlert(alertID);
       loadAlerts();
@@ -70,16 +76,7 @@ const WatchListContent: React.FunctionComponent = () => {
 
   return (
     <Layout title="Alerts | Obsidian Tracker">
-      <AddAlertModal
-        open={addingAlert}
-        onClose={(reload) => {
-          setAddingAlert(false);
-          if (reload) {
-            loadAlerts();
-          }
-        }}
-      />
-
+      <ConfirmModal {...confirmProps} />
       <div className="flex items-center justify-between mb-7">
         <h1 className="font-bold text-dark text-[1.75rem]">Alerts</h1>
       </div>
@@ -93,11 +90,7 @@ const WatchListContent: React.FunctionComponent = () => {
             <p className="font-semibold text-[1rem]">Alerts</p>
             {alerts.length > 0 && (
               <div className="w-24">
-                <Button
-                  type="button"
-                  onClick={() => setAddingAlert(true)}
-                  className="w-24 py-3"
-                >
+                <Button type="button" onClick={null} className="w-24 py-3">
                   + Add
                 </Button>
               </div>
@@ -115,7 +108,7 @@ const WatchListContent: React.FunctionComponent = () => {
                 Alerts will notify you when an asset hits a certain price.
               </p>
               <div className="w-56">
-                <Button type="button" onClick={() => setAddingAlert(true)}>
+                <Button type="button" onClick={null}>
                   + Add alert
                 </Button>
               </div>
@@ -131,12 +124,12 @@ const WatchListContent: React.FunctionComponent = () => {
   );
 };
 
-const WatchlistPage: NextPage = () => {
+const AlertsPage: NextPage = () => {
   return (
     <RequiredLoggedIn>
-      <WatchListContent />
+      <AlertsContent />
     </RequiredLoggedIn>
   );
 };
 
-export default WatchlistPage;
+export default AlertsPage;

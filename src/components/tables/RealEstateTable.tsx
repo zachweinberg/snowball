@@ -24,6 +24,15 @@ interface Props {
   belongsTo: string;
 }
 
+const calculateCurrentMortgageBalance = (
+  monthlyPmt: number,
+  monthsLeft: number,
+  yearlyRate: number
+): number => {
+  const monthlyRate = yearlyRate / 100 / 12;
+  return (monthlyPmt / monthlyRate) * (1 - Math.pow(1 / (1 + monthlyRate), monthsLeft));
+};
+
 const RealEstateTable: React.FunctionComponent<Props> = ({
   realEstate,
   onAddAsset,
@@ -51,15 +60,6 @@ const RealEstateTable: React.FunctionComponent<Props> = ({
       </div>
     );
   }
-
-  const calculateCurrentMortgageBalance = (
-    monthlyPmt: number,
-    monthsLeft: number,
-    yearlyRate: number
-  ): number => {
-    const monthlyRate = yearlyRate / 100 / 12;
-    return (monthlyPmt / monthlyRate) * (1 - Math.pow(1 / (1 + monthlyRate), monthsLeft));
-  };
 
   const data = useMemo<RealEstateTableData[]>(() => buildRealEstateData(realEstate), []);
 
@@ -111,15 +111,20 @@ const RealEstateTable: React.FunctionComponent<Props> = ({
         Header: '',
         accessor: 'id',
         disableSortBy: true,
-        Cell: ({ value, row }) => (
-          <Menu
-            options={[
-              { label: 'Edit Real Estate', onClick: () => onEdit(row.original) },
-              { label: 'Delete', onClick: () => onDelete(value) },
-            ]}
-            button={() => <VerticalDots />}
-          />
-        ),
+        Cell: ({ value, row }) => {
+          if (!auth.user) {
+            return null;
+          }
+          return (
+            <Menu
+              options={[
+                // { label: 'Edit Real Estate', onClick: () => onEdit(row.original) },
+                { label: 'Delete', onClick: () => onDelete(value) },
+              ]}
+              button={() => <VerticalDots />}
+            />
+          );
+        },
       },
     ],
     []

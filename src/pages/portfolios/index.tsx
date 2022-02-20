@@ -3,6 +3,7 @@ import { PlanType, PLAN_LIMITS, PortfolioWithBalances } from '@zachweinberg/obsi
 import { DateTime } from 'luxon';
 import type { NextPage } from 'next';
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
 import Layout from '~/components/layout/Layout';
 import CreatePortfolioForm from '~/components/portfolio-list/CreatePortfolioForm';
@@ -136,6 +137,7 @@ const PortfolioListPage: NextPage = () => {
             ) : (
               <CreatePortfolioForm
                 afterCreate={() => {
+                  toast('Portfolio created!');
                   loadPortfolios();
                   setCreatingPortfolio(false);
                 }}

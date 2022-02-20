@@ -56,13 +56,12 @@ const PortfolioView: NextPage = () => {
   const [unit, setUnit] = useState<Unit>(Unit.Dollars);
   const [error, setError] = useState('');
 
+  const [editPosition, setEditPosition] = useState<PositionType | null>(null);
   const [deleteAsset, setDeleteAsset] = useState<{
     type: AssetType;
     id: string;
     name: string;
   } | null>(null);
-
-  const [editPosition, setEditPosition] = useState<PositionType | null>(null);
 
   const portfolioTotal = useMemo(
     () =>
@@ -254,13 +253,35 @@ const PortfolioView: NextPage = () => {
     }
   }, [editPosition, portfolio]);
 
-  const onDeleteAsset = async () => {
-    if (deleteAsset && portfolio) {
-      await API.deleteAssetFromPortfolio(deleteAsset.id, deleteAsset.type, portfolio.id);
-      setDeleteAsset(null);
-      loadPortfolioData();
+  const renderDeleteModal = useMemo(() => {
+    if (!deleteAsset || !portfolio) {
+      return null;
     }
-  };
+    const onClose = (reload: boolean) => {
+      setDeleteAsset(null);
+      if (reload) {
+        loadPortfolioData();
+      }
+    };
+
+    const onDeleteAsset = async () => {
+      if (deleteAsset && portfolio) {
+        setLoading(true);
+        setDeleteAsset(null);
+        await API.deleteAssetFromPortfolio(deleteAsset.id, deleteAsset.type, portfolio.id);
+        loadPortfolioData();
+      }
+    };
+
+    return (
+      <DeletePositionModal
+        open={deleteAsset !== null}
+        onClose={onClose}
+        onDelete={onDeleteAsset}
+        assetName={deleteAsset?.name ?? ''}
+      />
+    );
+  }, [deleteAsset, portfolio]);
 
   const renderContent = () => {
     if (error) {
@@ -285,12 +306,7 @@ const PortfolioView: NextPage = () => {
     if (portfolio) {
       return (
         <>
-          <DeletePositionModal
-            open={deleteAsset !== null}
-            onClose={() => setDeleteAsset(null)}
-            onDelete={onDeleteAsset}
-            assetName={deleteAsset?.name ?? ''}
-          />
+          {renderDeleteModal}
 
           {renderEditModal}
 
@@ -402,7 +418,7 @@ const PortfolioView: NextPage = () => {
               className="px-5 py-4 mb-32 bg-white border rounded-3xl border-bordergray"
             >
               <div className="flex mb-7">
-                <div className="mr-5 w-44">
+                <div className="w-48 mr-5">
                   <Select
                     onChange={(selected) => setActiveTab(selected as any)}
                     options={[

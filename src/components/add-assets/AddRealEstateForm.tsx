@@ -119,8 +119,6 @@ const AddRealEstateForm: React.FunctionComponent<Props> = ({
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col max-w-lg mx-auto" autoComplete="off">
-      {JSON.stringify(state)}
-
       <div
         className="flex items-center justify-center mb-10 cursor-pointer text-darkgray text-[.95rem] font-semibold"
         onClick={goBack}
@@ -279,7 +277,7 @@ const AddRealEstateForm: React.FunctionComponent<Props> = ({
 
             <div className="mt-4">
               <div className="mb-4">
-                <label htmlFor="startDate">Start Date</label>
+                <label htmlFor="startDate">Mortgage Start Date</label>
               </div>
               <input
                 className="w-full p-3 border-2 rounded-xl border-gray placeholder-darkgray focus:outline-none focus:ring-evergreen focus:border-evergreen"

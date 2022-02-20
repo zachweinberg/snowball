@@ -55,19 +55,21 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
         return;
       }
     }
+    try {
+      await API.addAlert({
+        assetType,
+        price,
+        symbol,
+        condition,
+        destination,
+        destinationValue,
+      });
 
-    await API.addAlert({
-      assetType,
-      price,
-      symbol,
-      condition,
-      destination,
-      destinationValue,
-    });
-
-    trackGoal(assetType === AssetType.Crypto ? 'VMARZXKT' : 'PG4GL82T', 0);
-
-    onClose(true);
+      trackGoal(assetType === AssetType.Crypto ? 'VMARZXKT' : 'PG4GL82T', 0);
+      onClose(true);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   useEffect(() => {
