@@ -56,7 +56,7 @@ const processAssetAlerts = async (job: Bull.Job) => {
     if (type === AssetType.Stock) {
       prices = await getStockPrices(alerts.map((alert) => alert.symbol));
     } else if (type === AssetType.Crypto) {
-      prices = await getCryptoPrices(alerts.map((alert) => alert.symbol));
+      prices = await getCryptoPrices(alerts.map((alert) => alert.objectID));
     }
 
     for (const alert of alerts) {

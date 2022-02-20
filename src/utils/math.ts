@@ -29,8 +29,8 @@ export const calculateCryptoTotal = async (cryptoPositions: CryptoPosition[]): P
     return 0;
   }
 
-  const symbols = cryptoPositions.map((position) => position.symbol);
-  const priceMap = await getCryptoPrices(symbols);
+  const objectIDs = cryptoPositions.map((position) => position.objectID);
+  const priceMap = await getCryptoPrices(objectIDs);
 
   let total = currency(0);
 

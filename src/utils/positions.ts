@@ -112,7 +112,7 @@ export const calculatePortfolioQuotes = async (
 
   const [stockPriceMap, cryptoPriceMap] = await Promise.all([
     getStockPrices(stockPositions.map((s) => s.symbol)),
-    getCryptoPrices(cryptoPositions.map((s) => s.symbol)),
+    getCryptoPrices(cryptoPositions.map((c) => c.objectID)),
   ]);
 
   let stockPositionsWithQuotes: StockPositionWithQuote[] = [];
