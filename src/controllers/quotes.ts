@@ -10,7 +10,7 @@ quotesRouter.get(
   '/',
   requireSignedIn,
   catchErrors(async (req, res) => {
-    const { type, symbol } = req.query as { type: AssetType; symbol: string };
+    const { type, symbol, objectID } = req.query as { type: AssetType; symbol: string; objectID: string };
 
     let latestPrice = 0;
     let changePercent = 0;
@@ -22,7 +22,7 @@ quotesRouter.get(
         changePercent = response[symbol].changePercent;
       }
     } else if (type === AssetType.Crypto) {
-      const response = await getCryptoPrices([symbol]);
+      const response = await getCryptoPrices([objectID]);
       if (response[symbol]) {
         latestPrice = response[symbol].latestPrice;
         changePercent = response[symbol].changePercent;

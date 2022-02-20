@@ -101,7 +101,7 @@ positionsRouter.post(
   requireSignedIn,
   catchErrors(async (req, res) => {
     const userID = req.user!.id;
-    const { portfolioID, symbol, coinName, quantity, costPerCoin, logoURL } = req.body as AddCryptoRequest;
+    const { portfolioID, symbol, coinName, objectID, quantity, costPerCoin, logoURL } = req.body as AddCryptoRequest;
     const redisKey = `portfolio-${portfolioID}`;
 
     if (!(await userOwnsPortfolio(req, res, portfolioID))) {
@@ -142,6 +142,7 @@ positionsRouter.post(
       assetType: AssetType.Crypto,
       coinName,
       costPerCoin,
+      objectID,
       logoURL,
       quantity,
       symbol: symbol.toUpperCase(),

@@ -25,15 +25,14 @@ interface CMCAllCoinsResponse {
 
 const COINMARKETCAP_BASE_URL = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency';
 
-const requestCoinMarketCap = async <T>(path: string) => {
+const requestCoinMarketCap = async <T>(url: string) => {
   const apiKey = process.env.COINMARKETCAP_API_KEY;
-  const url = `${COINMARKETCAP_BASE_URL}${path}`;
   const response = await axios.get(url, { headers: { 'X-CMC_PRO_API_KEY': apiKey } });
   return response.data as T;
 };
 
 export const getCryptoPrices = async (
-  coinSymbols: string[]
+  coinIDs: string[]
 ): Promise<{
   [symbol: string]: {
     latestPrice: number;
@@ -41,30 +40,31 @@ export const getCryptoPrices = async (
     marketCap: number;
   };
 }> => {
-  const dedupedSymbols = [...new Set(coinSymbols)];
+  const dedupedIDs = [...new Set(coinIDs)];
 
-  if (dedupedSymbols.length === 0) {
+  if (dedupedIDs.length === 0) {
     return {};
   }
 
   const response = await requestCoinMarketCap<CMCQuotesResponse>(
-    `/quotes/latest?symbol=${dedupedSymbols.join(',')}&aux=is_active`
+    `https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?id=${dedupedIDs.join(',')}&aux=is_active`
   );
 
-  return Object.keys(response.data).reduce(
-    (accum, curr) => ({
+  return Object.keys(response.data).reduce((accum, curr) => {
+    const symbol = response.data[curr].symbol;
+
+    return {
       ...accum,
-      [curr.toUpperCase()]: {
+      [symbol.toUpperCase()]: {
         latestPrice: response.data[curr]?.quote?.USD?.price ?? 0,
         changePercent: (response.data[curr]?.quote?.USD?.percent_change_24h ?? 0) / 100,
         marketCap: response.data[curr]?.quote?.USD?.market_cap ?? 0,
       },
-    }),
-    {}
-  );
+    };
+  }, {});
 };
 
 export const getAllActiveCoins = async () => {
-  const data = await requestCoinMarketCap<CMCAllCoinsResponse>(`/map`);
+  const data = await requestCoinMarketCap<CMCAllCoinsResponse>(`https://pro-api.coinmarketcap.com/v1/cryptocurrency/map`);
   return data.data;
 };

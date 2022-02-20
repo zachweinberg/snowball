@@ -46,7 +46,7 @@ alertsRouter.post(
       return res.status(400).json({
         status: 'error',
         error:
-          'Your account is currently on the free plan. If you would like to enable more than three price alerts at a time, please upgrade to the premium plan.',
+          'Your account is currently on the free plan. If you would like to enable more price alerts at a time, please upgrade to the premium plan.',
         code: 'PLAN',
       });
     }

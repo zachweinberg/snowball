@@ -27,7 +27,7 @@ watchListRouter.get(
     const _crypto = watchListItems.filter((item) => item.assetType === AssetType.Crypto);
 
     const stockPriceMap = await getStockPrices(_stocks.map((s) => s.symbol));
-    const cryptoPriceMap = await getCryptoPrices(_crypto.map((s) => s.symbol));
+    const cryptoPriceMap = await getCryptoPrices(_crypto.map((c) => c.objectID));
 
     let stocks: WatchListItem[] = [];
     let crypto: WatchListItem[] = [];
@@ -41,6 +41,7 @@ watchListRouter.get(
         changePercent: stockPriceMap[stock.symbol]?.changePercent ?? 0,
         changeDollars: stockPriceMap[stock.symbol]?.change ?? 0,
         createdAt: stock.createdAt,
+        objectID: stock.objectID,
         fullName: stock.fullName,
         marketCap: stockPriceMap[stock.symbol]?.marketCap,
       });
@@ -54,6 +55,7 @@ watchListRouter.get(
         latestPrice: cryptoPriceMap[coin.symbol]?.latestPrice ?? 0,
         changePercent: cryptoPriceMap[coin.symbol]?.changePercent ?? 0,
         createdAt: coin.createdAt,
+        objectID: coin.objectID,
         fullName: coin.fullName,
         marketCap: cryptoPriceMap[coin.symbol]?.marketCap ?? 0,
         changeDollars:
@@ -84,7 +86,7 @@ watchListRouter.post(
       return res.status(400).json({
         status: 'error',
         error:
-          'Your account is currently on the free plan. If you would like to add more than six watchlist assets, please upgrade to the premium plan.',
+          'Your account is currently on the free plan. If you would like to add more watchlist items, please upgrade to the premium plan.',
         code: 'PLAN',
       });
     }
