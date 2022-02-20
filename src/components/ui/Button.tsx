@@ -19,24 +19,45 @@ const Button: React.FunctionComponent<Props> = ({
   onClick,
   variant = 'primary',
 }: Props) => {
+  let classes = 'w-full rounded-md font-semibold p-5 transition-colors ';
+
+  switch (variant) {
+    case 'primary':
+      classes += 'bg-dark text-white ';
+      classes += disabled
+        ? 'cursor-not-allowed opacity-50 '
+        : 'cursor-pointer hover:opacity-90 ';
+      break;
+    case 'secondary':
+      classes += 'bg-background text-dark border-2 border-dark ';
+      classes += disabled
+        ? 'cursor-not-allowed opacity-50 '
+        : 'cursor-pointer hover:opacity-90 hover:bg-dark hover:text-white ';
+      break;
+    case 'danger':
+      classes += 'bg-red text-white ';
+      classes += disabled
+        ? 'cursor-not-allowed opacity-50 '
+        : 'cursor-pointer hover:opacity-90 ';
+      break;
+    case 'white':
+      classes += 'bg-white text-dark hover:bg-lime ';
+      classes += disabled
+        ? 'cursor-not-allowed opacity-50 '
+        : 'cursor-pointer hover:opacity-90 ';
+      break;
+    case 'upgrade':
+      classes += 'bg-gradient-to-r from-evergreen to-lightlime text-dark shadow-md ';
+      classes += disabled
+        ? 'cursor-not-allowed opacity-50 '
+        : 'cursor-pointer hover:opacity-90 ';
+      break;
+  }
+
   return (
     <button
       type={type}
-      className={classNames(
-        'w-full rounded-xl hover:opacity-90 font-semibold px-4 py-5 transition-colors',
-        { 'opacity-70 cursor-not-allowed': disabled },
-        variant === 'secondary'
-          ? 'bg-background text-dark border-2 hover:opacity-100 border-dark hover:bg-dark hover:text-white'
-          : variant === 'danger'
-          ? 'bg-red text-white'
-          : variant === 'white'
-          ? 'bg-white text-dark hover:bg-lime'
-          : variant === 'upgrade'
-          ? 'bg-gradient-to-r from-evergreen to-lightlime text-dark shadow-md'
-          : 'bg-dark text-white',
-
-        className
-      )}
+      className={classNames(classes, className)}
       disabled={disabled}
       onClick={onClick}
     >

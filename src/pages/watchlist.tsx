@@ -78,7 +78,7 @@ const WatchListContent: React.FunctionComponent = () => {
         className="flex flex-col mb-12 xl:grid xl:flex-row xl:justify-between"
         style={{ minWidth: '1000px' }}
       >
-        <div className="flex-1 col-span-2 px-4 pt-4 mb-4 bg-white border shadow-sm rounded-2xl border-bordergray xl:mb-0">
+        <div className="flex-1 col-span-2 px-4 pt-4 mb-4 bg-white border rounded-md shadow-sm border-bordergray xl:mb-0">
           <div className="flex items-center justify-between">
             <p className="font-semibold text-[1rem]">Your Watchlist</p>
             {watchListItems.length > 0 && (

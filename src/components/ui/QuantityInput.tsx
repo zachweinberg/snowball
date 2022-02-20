@@ -27,7 +27,7 @@ const QuantityInput: React.FunctionComponent<Props> = ({
   return (
     <ReactNumeric
       className={classNames(
-        'p-3 border-2 rounded-xl bg-light border-gray placeholder-darkgray w-full focus:outline-none focus:ring-evergreen focus:border-evergreen',
+        'p-3 border-2 rounded-md bg-light border-gray placeholder-darkgray w-full focus:outline-none focus:ring-evergreen focus:border-evergreen',
         className
       )}
       name={name}

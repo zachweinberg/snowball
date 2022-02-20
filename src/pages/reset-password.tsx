@@ -56,7 +56,7 @@ const TriggerResetPasswordEmail: React.FunctionComponent = () => {
     <form
       onSubmit={onSubmitEmail}
       className={classNames(
-        'max-w-lg border relative border-bordergray p-8 mx-auto mt-20 bg-white shadow-md rounded-2xl',
+        'max-w-lg border relative border-bordergray p-8 mx-auto mt-20 bg-white shadow-md rounded-md',
         {
           'bg-opacity-50': loading,
         }
@@ -164,7 +164,7 @@ const EnterNewPassword: React.FunctionComponent = () => {
     <form
       onSubmit={checkAndResetPassword}
       className={classNames(
-        'relative max-w-lg border border-bordergray p-8 mx-auto mt-20 bg-white shadow-md rounded-2xl',
+        'relative max-w-lg border border-bordergray p-8 mx-auto mt-20 bg-white shadow-md rounded-md',
         {
           'bg-opacity-50': loading,
         }

@@ -19,7 +19,7 @@ const Select: React.FunctionComponent<Props> = ({
   return (
     <Menu>
       <div className={classNames('relative w-full cursor-pointer', className)}>
-        <Menu.Button className="relative w-full py-3 pl-3 pr-10 leading-normal text-left bg-white border-2 shadow-sm cursor-pointer rounded-xl border-bordergray focus:outline-none hover:bg-light">
+        <Menu.Button className="relative w-full py-3 pl-3 pr-10 leading-normal text-left bg-white border-2 shadow-sm cursor-pointer rounded-md border-bordergray focus:outline-none hover:bg-light">
           <span className="block font-medium truncate">
             {options.find((opt) => opt.value === selected)?.label ?? ''}
           </span>
@@ -37,7 +37,7 @@ const Select: React.FunctionComponent<Props> = ({
           leaveFrom="opacity-100"
           leaveTo="-translate-y-2 opacity-0"
         >
-          <Menu.Items className="absolute z-10 w-full mt-1 overflow-auto bg-white border shadow-lg rounded-xl text-md border-bordergray max-h-60 ring-1 ring-bordergray ring-opacity-5 focus:outline-none">
+          <Menu.Items className="absolute z-10 w-full mt-1 overflow-auto bg-white border shadow-lg rounded-md text-md border-bordergray max-h-60 ring-1 ring-bordergray ring-opacity-5 focus:outline-none">
             {options.map((opt, i) => (
               <Menu.Item key={i}>
                 {({ active }) => (

@@ -52,7 +52,7 @@ const FlatSearchResults: React.FunctionComponent<Props> = ({
                 height={25}
                 src={result.logoURL}
                 alt={result.fullName}
-                className="rounded-lg"
+                className="rounded-md"
               />
             </div>
           )}

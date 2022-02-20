@@ -55,7 +55,7 @@ const FloatingSearchResults: React.FunctionComponent<Props> = ({
   return searchResults.length === 0 ? null : (
     <div
       ref={containerRef}
-      className="absolute z-50 w-full mt-4 overflow-y-auto bg-white shadow-2xl rounded-xl no-scrollbar"
+      className="absolute z-50 w-full mt-4 overflow-y-auto bg-white shadow-2xl rounded-md no-scrollbar"
     >
       {searchResults.map((result, i) => (
         <div
@@ -74,7 +74,7 @@ const FloatingSearchResults: React.FunctionComponent<Props> = ({
               height={25}
               src={result.logoURL}
               alt={result.fullName}
-              className="rounded-lg"
+              className="rounded-md"
             />
           )}
           <div className="w-full px-4 leading-tight">

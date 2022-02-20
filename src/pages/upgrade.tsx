@@ -66,7 +66,7 @@ const Upgrade: NextPage = () => {
     <RequiredLoggedIn>
       <Layout title="Upgrade | Obsidian Tracker">
         {success && (
-          <div className="flex justify-center w-1/2 p-3 mx-auto mb-8 text-white rounded-lg bg-evergreen">
+          <div className="flex justify-center w-1/2 p-3 mx-auto mb-8 text-white rounded-md bg-evergreen">
             🎉 Thank you! We hope you enjoy Premium!
           </div>
         )}

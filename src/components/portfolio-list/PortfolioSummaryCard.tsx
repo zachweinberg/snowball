@@ -11,7 +11,7 @@ interface Props {
 
 const PortfolioSummaryCard: React.FunctionComponent<Props> = ({ portfolio }: Props) => {
   return (
-    <div className="transition-colors bg-white border shadow-sm hover:border-darkgray rounded-3xl p-7 border-bordergray">
+    <div className="transition-colors bg-white border shadow-sm hover:border-darkgray rounded-md p-7 border-bordergray">
       <div className="flex justify-between pb-8 border-b border-bordergray">
         <div className="flex flex-col justify-between">
           <div className="flex items-center mb-3">

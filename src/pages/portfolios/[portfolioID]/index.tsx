@@ -415,7 +415,7 @@ const PortfolioView: NextPage = () => {
 
             <div
               style={{ minWidth: MIN_WIDTH }}
-              className="px-5 py-4 mb-32 bg-white border rounded-3xl border-bordergray"
+              className="px-5 py-4 mb-32 bg-white border rounded-md border-bordergray"
             >
               <div className="flex mb-7">
                 <div className="w-48 mr-5">

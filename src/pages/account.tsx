@@ -172,7 +172,7 @@ const Account: NextPage = () => {
 
             <div className="relative flex p-4 pr-0 -m-4 overflow-auto lg:col-span-2 sm:overflow-visible sm:block sm:m-0 sm:p-0">
               <div className="pr-4 sm:pr-0">
-                <table className="w-full bg-white rounded-lg shadow min-w-screen-sm sm:min-w-0">
+                <table className="w-full bg-white rounded-md shadow min-w-screen-sm sm:min-w-0">
                   <caption className="sr-only">Subscription</caption>
                   <thead className="text-left border-b text-darkgray border-gray">
                     <tr>

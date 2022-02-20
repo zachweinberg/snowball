@@ -280,7 +280,7 @@ const AddRealEstateForm: React.FunctionComponent<Props> = ({
                 <label htmlFor="startDate">Mortgage Start Date</label>
               </div>
               <input
-                className="w-full p-3 border-2 rounded-xl border-gray placeholder-darkgray focus:outline-none focus:ring-evergreen focus:border-evergreen"
+                className="w-full p-3 border-2 rounded-md border-gray placeholder-darkgray focus:outline-none focus:ring-evergreen focus:border-evergreen"
                 type="date"
                 name="mortgage.startDate"
                 value={DateTime.fromMillis(state.mortgage!.startDateMs).toFormat('yyyy-MM-dd')}

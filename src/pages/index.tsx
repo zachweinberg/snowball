@@ -52,7 +52,7 @@ const Landing: React.FunctionComponent = () => {
             </div>
 
             <div className="flex justify-center">
-              <img src="/img/landing/ui.png" className="rounded-xl" />
+              <img src="/img/landing/ui.png" className="rounded-md" />
             </div>
           </Container>
         </div>
@@ -95,7 +95,7 @@ const Landing: React.FunctionComponent = () => {
         <div className="pt-40 pb-16 text-center text-white bg-dark">
           <Container>
             <div className="grid grid-cols-2 gap-16 text-left mb-44">
-              <img src="/img/landing/alerts.png" className="rounded-xl" />
+              <img src="/img/landing/alerts.png" className="rounded-md" />
 
               <div className="flex flex-col justify-center">
                 <H2 dark>Set custom price alerts for stocks and crypto</H2>
@@ -113,7 +113,7 @@ const Landing: React.FunctionComponent = () => {
                   Use our news portal to filter news by ticker or coin
                 </p>
               </div>
-              <img src="/img/landing/alerts.png" className="rounded-xl" />
+              <img src="/img/landing/alerts.png" className="rounded-md" />
             </div>
           </Container>
         </div>

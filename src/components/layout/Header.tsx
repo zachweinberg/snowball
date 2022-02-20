@@ -112,7 +112,7 @@ const Header: React.FunctionComponent<Props> = ({ noBorder }: Props) => {
                     <Link href="/signup">
                       <button
                         type="button"
-                        className="p-3 text-xs font-semibold text-white md:text-[.95rem] rounded-lg bg-dark hover:text-gray"
+                        className="p-3 text-xs font-semibold text-white md:text-[.95rem] rounded-md bg-dark hover:text-gray"
                       >
                         Get Started
                       </button>

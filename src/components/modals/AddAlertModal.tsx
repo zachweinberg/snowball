@@ -1,4 +1,4 @@
-import { BellIcon, ExclamationCircleIcon } from '@heroicons/react/outline';
+import { BellIcon, ExclamationCircleIcon, XIcon } from '@heroicons/react/outline';
 import { AlertCondition, AlertDestination, AssetType } from '@zachweinberg/obsidian-schema';
 import classNames from 'classnames';
 import { trackGoal } from 'fathom-client';
@@ -6,15 +6,16 @@ import IsEmail from 'isemail';
 import parsePhoneNumber from 'libphonenumber-js';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import Modal from '~/components/ui/Modal';
 import Select from '~/components/ui/Select';
 import TextInputWithResults from '~/components/ui/TextInputWithResults';
 import { useAuth } from '~/hooks/useAuth';
 import { API } from '~/lib/api';
+import BackArrowIcon from '../icons/BackArrowIcon';
 import Button from '../ui/Button';
 import MoneyInput from '../ui/MoneyInput';
 import PhoneInput from '../ui/PhoneInput';
 import TextInput from '../ui/TextInput';
+import BaseModal from './BaseModal';
 
 interface Props {
   open: boolean;
@@ -37,7 +38,7 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
       return;
     }
 
-    if (price < 0) {
+    if (price <= 0) {
       toast('Please input a valid price.');
       return;
     }
@@ -55,6 +56,7 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
         return;
       }
     }
+
     try {
       await API.addAlert({
         assetType,
@@ -89,10 +91,13 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
   }, [destination]);
 
   return (
-    <Modal isOpen={open} onClose={() => onClose(false)}>
-      <div className="relative" style={{ width: '480px' }}>
+    <BaseModal open={open} onOpenChange={() => onClose(false)}>
+      <div className="relative">
+        <div onClick={() => onClose(false)} className="absolute top-0 right-0 pt-3 pr-3">
+          <XIcon className="w-5 cursor-pointer hover:opacity-70" />
+        </div>
         {STEP === 1 && (
-          <div className="w-full p-6">
+          <div className="p-6">
             <div className="flex justify-center mb-4">
               <BellIcon className="w-10 h-10 text-evergreen" />
             </div>
@@ -119,16 +124,7 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
                 className="cursor-pointer text-gray text-[.95rem] font-semibold w-1/3"
                 onClick={() => setAssetType(null)}
               >
-                <svg
-                  className="fill-current w-7 h-7"
-                  viewBox="0 0 25 12"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M0.283852 5.31499C0.284142 5.3147 0.284384 5.31436 0.284724 5.31407L5.34137 0.281805C5.72019 -0.095179 6.33292 -0.0937761 6.71 0.285095C7.08703 0.663918 7.08558 1.27664 6.70676 1.65368L3.31172 5.03226L23.8065 5.03226C24.341 5.03226 24.7742 5.46552 24.7742 6C24.7742 6.53448 24.341 6.96774 23.8065 6.96774L3.31177 6.96774L6.70671 10.3463C7.08554 10.7234 7.08699 11.3361 6.70995 11.7149C6.33287 12.0938 5.7201 12.0951 5.34132 11.7182L0.284674 6.68594C0.284384 6.68565 0.284142 6.68531 0.283805 6.68502C-0.0952124 6.30673 -0.0940032 5.69202 0.283852 5.31499Z"
-                    fill="#757784"
-                  />
-                </svg>
+                <BackArrowIcon width={27} />
               </div>
               <p className="text-[1.1rem] font-bold text-center text-dark w-1/3">
                 Select {assetType}
@@ -163,7 +159,7 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
                   key={_condition}
                   onClick={() => setCondition(_condition)}
                   className={classNames(
-                    'p-4 border-2 cursor-pointer rounded-2xl font-medium focus:ring-evergreen focus:outline-none',
+                    'p-4 border-2 cursor-pointer rounded-md font-medium focus:ring-evergreen focus:outline-none',
                     condition === _condition
                       ? 'text-evergreen border-evergreen'
                       : 'text-darkgray border-gray hover:text-darkgray hover:border-darkgray transition-colors'
@@ -180,6 +176,7 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
                 className="w-full mb-5"
                 placeholder="Price"
                 value={price}
+                backgroundColor="#fff"
                 onChange={(num) => setPrice(num)}
                 numDecimals={assetType === AssetType.Crypto ? 8 : 2}
               />
@@ -187,8 +184,8 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
                 <div className="col-span-1">
                   <Select
                     options={[
-                      { label: 'Email me', value: AlertDestination.Email },
-                      { label: 'Text me', value: AlertDestination.SMS },
+                      { label: 'Email', value: AlertDestination.Email },
+                      { label: 'Text', value: AlertDestination.SMS },
                     ]}
                     selected={destination}
                     onChange={(dest) => setDestination(dest as AlertDestination)}
@@ -221,12 +218,12 @@ const AddAlertModal: React.FunctionComponent<Props> = ({ open, onClose }: Props)
             </form>
 
             <Button type="button" onClick={addAlert}>
-              Create Alert
+              Save Alert
             </Button>
           </div>
         )}
       </div>
-    </Modal>
+    </BaseModal>
   );
 };
 

@@ -21,7 +21,7 @@ const Menu: React.FunctionComponent<Props> = ({ options, button }: Props) => {
         leaveFrom="transform opacity-100"
         leaveTo="transform opacity-0"
       >
-        <MenuHUI.Items className="absolute right-0 z-50 w-48 py-2 mt-2 space-y-1 origin-top-right bg-white border rounded-lg shadow-lg border-lightgray">
+        <MenuHUI.Items className="absolute right-0 z-50 w-48 py-2 mt-2 space-y-1 origin-top-right bg-white border rounded-md shadow-lg border-lightgray">
           {options.map((opt) => (
             <div key={opt.label}>
               <MenuHUI.Item>

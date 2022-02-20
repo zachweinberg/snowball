@@ -51,7 +51,7 @@ const LandingHeader: React.FunctionComponent<Props> = ({ dark }: Props) => {
                   </li>
                   <li>
                     <Link href="/signup">
-                      <div className="p-3 font-medium text-[1rem] bg-white rounded-lg text-dark hover:bg-lime transition-colors">
+                      <div className="p-3 font-medium text-[1rem] bg-white rounded-md text-dark hover:bg-lime transition-colors">
                         Sign up
                       </div>
                     </Link>

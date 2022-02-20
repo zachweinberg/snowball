@@ -89,7 +89,7 @@ const SignUpPage: NextPage = () => {
         <form
           onSubmit={onSubmit}
           className={classNames(
-            'relative max-w-lg border border-bordergray p-8 mx-auto mb-16 mt-10 bg-white shadow-md rounded-2xl',
+            'relative max-w-lg border border-bordergray p-8 mx-auto mb-16 mt-10 bg-white shadow-md rounded-md',
             {
               'bg-opacity-50': loading,
             }

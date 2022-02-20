@@ -56,7 +56,7 @@ const LoginPage: NextPage = () => {
       <Layout title="Login | Obsidian Tracker">
         <form
           className={classNames(
-            'relative max-w-lg border border-bordergray p-8 mx-auto mb-16 mt-10 bg-white shadow-md rounded-2xl',
+            'relative max-w-lg border border-bordergray p-8 mx-auto mb-16 mt-10 bg-white shadow-md rounded-md',
             {
               'opacity-50': loading,
             }

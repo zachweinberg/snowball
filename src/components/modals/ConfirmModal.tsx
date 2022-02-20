@@ -11,11 +11,19 @@ export interface ConfirmProps {
 const ConfirmModal: React.FunctionComponent<ConfirmProps> = (props: ConfirmProps) => {
   const { open, title, description, onCancel, onConfirm } = props;
 
+  const toggle = (open: boolean) => {
+    if (!open) {
+      onCancel();
+      return;
+    }
+  };
+
   return (
-    <BaseModal open={open} onCancel={onCancel} onConfirm={onConfirm}>
+    <BaseModal open={open} onOpenChange={toggle}>
       <p>{title}</p>
-      <p>{description}</p>
+      {description && <p>{description}</p>}
       <button onClick={onCancel}>Cancel</button>
+      <button onClick={onConfirm}>Confirm</button>
     </BaseModal>
   );
 };

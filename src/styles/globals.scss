@@ -121,6 +121,24 @@ body {
   }
 }
 
+.ReactModal__Overlay {
+  opacity: 0.5;
+  transition-property: opacity, transform;
+  transition-duration: 200ms;
+  transition-timing-function: ease-out;
+  transform: translateY(7%);
+}
+
+.ReactModal__Overlay--after-open {
+  opacity: 1;
+  transform: translateY(0%);
+}
+
+.ReactModal__Overlay--before-close {
+  opacity: 0.5;
+  transform: translateY(7%);
+}
+
 .modal-overlay {
   background-color: rgba(0, 0, 0, 0.6);
 }

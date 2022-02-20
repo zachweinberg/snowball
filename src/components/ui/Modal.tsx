@@ -40,7 +40,7 @@ const Modal: React.FunctionComponent<Props> = ({ isOpen, onClose, children }: Pr
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <div className="inline-block overflow-hidden align-middle transition-all transform bg-white rounded-lg shadow-lg">
+            <div className="inline-block overflow-hidden align-middle transition-all transform bg-white rounded-md shadow-lg">
               {children}
             </div>
           </Transition.Child>

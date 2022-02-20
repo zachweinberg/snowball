@@ -130,7 +130,7 @@ const PortfolioSettingsPageContent: React.FunctionComponent = () => {
               </div>
               <div className="max-w-2xl mb-20">
                 {success && (
-                  <div className="px-3 py-5 mb-5 font-medium text-white rounded-lg bg-evergreen">
+                  <div className="px-3 py-5 mb-5 font-medium text-white rounded-md bg-evergreen">
                     Portfolio settings successfully saved!
                   </div>
                 )}
@@ -166,7 +166,7 @@ const PortfolioSettingsPageContent: React.FunctionComponent = () => {
                   <label className="block mb-1 text-sm font-medium text-dark">
                     Portfolio Privacy Level
                   </label>
-                  <div className="mb-8 bg-white border-2 rounded-xl border-gray">
+                  <div className="mb-8 bg-white border-2 rounded-md border-gray">
                     <div className="flex items-center justify-start px-4 py-5 text-left border-b border-gray">
                       <Checkbox
                         onChange={(checked) => {

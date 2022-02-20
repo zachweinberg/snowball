@@ -1,6 +1,6 @@
 const PricingLight: React.FunctionComponent = () => {
   return (
-    <div className="relative flex flex-col items-center px-8 py-10 bg-white border shadow-md rounded-xl sm:py-5 text-dark border-gray">
+    <div className="relative flex flex-col items-center px-8 py-10 bg-white border shadow-md rounded-md sm:py-5 text-dark border-gray">
       <div className="relative mt-8 align-center sm:mt-4">
         <span className="text-6xl font-bold leading-none md:text-5xl">Free</span>
       </div>

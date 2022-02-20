@@ -20,7 +20,7 @@ const FeatureSection: React.FunctionComponent<FeatureSectionProps> = ({
           <p className="leading-6 my-7 text-md md:text-lg">{subtitle}</p>
         </div>
 
-        {imgURL && <img src={imgURL} className="w-full shadow-lg md:block rounded-xl" />}
+        {imgURL && <img src={imgURL} className="w-full shadow-lg md:block rounded-md" />}
       </Container>
     </div>
   );

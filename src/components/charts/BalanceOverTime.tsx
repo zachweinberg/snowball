@@ -165,7 +165,7 @@ const BalanceOverTime: React.FunctionComponent<{
     <ParentSize>
       {(parent) => (
         <div
-          className="flex flex-col justify-between rounded-xl bg-dark"
+          className="flex flex-col justify-between rounded-md bg-dark"
           style={{ width: `${parent.width}px`, height: `${parent.height}px` }}
         >
           <div
