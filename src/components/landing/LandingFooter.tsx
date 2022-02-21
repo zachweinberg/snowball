@@ -6,7 +6,7 @@ const LandingFooter: React.FunctionComponent = () => {
   return (
     <footer className="py-12 text-white bg-dark">
       <Container>
-        <div className="flex items-center justify-between text-sm">
+        <div className="flex flex-col items-start justify-between space-y-2 text-sm md:flex-row">
           <div className="flex items-center">
             <div className="flex flex-col space-y-2">
               <Logo />
