@@ -588,7 +588,6 @@ positionsRouter.delete(
             plaidClient.itemRemove({
               access_token: decrypt(plaidItem.plaidAccessToken),
             }),
-            deleteDocument(`portfolios/${portfolioID}/positions/${positionID}`),
             deleteDocument(`plaid-items/${position.plaidItemID}`),
             deleteDocument(`plaid-accounts/${position.plaidAccountID}`),
           ]);
@@ -597,6 +596,8 @@ positionsRouter.delete(
           throw err;
         }
       }
+
+      await deleteDocument(`portfolios/${portfolioID}/positions/${positionID}`);
 
       log = `Deleted ${position.accountName} with ${formatMoneyFromNumber(position.amount)} from portfolio.`;
     }
