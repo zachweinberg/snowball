@@ -94,8 +94,8 @@ const Landing: React.FunctionComponent = () => {
 
         <div className="pt-40 pb-16 text-center text-white bg-dark">
           <Container>
-            <div className="grid grid-cols-2 gap-16 text-left mb-44">
-              <img src="/img/landing/alerts.png" className="rounded-md" />
+            <div className="grid grid-cols-1 gap-10 text-center md:text-left md:grid-cols-2 md:gap-16 mb-44">
+              <img src="/img/landing/alerts.png" className="w-11/12 mx-auto rounded-md" />
 
               <div className="flex flex-col justify-center">
                 <H2 dark>Set custom price alerts for stocks and crypto</H2>
@@ -106,14 +106,15 @@ const Landing: React.FunctionComponent = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-16 text-left mb-44">
+            <div className="grid grid-cols-1 gap-10 text-center md:text-left md:grid-cols-2 mb-44">
               <div className="flex flex-col justify-center">
-                <H2 dark>Keep a pulse on market news</H2>
+                <H2 dark>Import cash and stocks automatically</H2>
                 <p className="mt-5 leading-7 text-darkgray text-[1.2rem]">
-                  Use our news portal to filter news by ticker or coin
+                  We'll do our best to keep your assets up to date. Or you can manually add
+                  your assets.
                 </p>
               </div>
-              <img src="/img/landing/alerts.png" className="rounded-md" />
+              <img src="/img/landing/cash.png" className="w-11/12 mx-auto rounded-md" />
             </div>
           </Container>
         </div>
@@ -139,7 +140,7 @@ const Landing: React.FunctionComponent = () => {
         </div>
 
         <div className="w-56 mx-auto mb-20">
-          <p className="mb-2 text-lg text-center">Ready to get started?</p>
+          <p className="mb-2 text-xl font-semibold text-center">Ready to get started?</p>
           <Link href="/signup">
             <Button type="button" className="mt-6" onClick={() => trackGoal('ISXTDA9H', 0)}>
               Create Account
