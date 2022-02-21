@@ -1,4 +1,4 @@
-import { PLAN_LIMITS, WatchListItem } from '@zachweinberg/obsidian-schema';
+import { PlanType, PLAN_LIMITS, WatchListItem } from '@zachweinberg/obsidian-schema';
 import type { NextPage } from 'next';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -10,6 +10,7 @@ import ConfirmModal from '~/components/modals/ConfirmModal';
 import WatchListTable from '~/components/tables/WatchListTable';
 import Button from '~/components/ui/Button';
 import Spinner from '~/components/ui/Spinner';
+import { useAuth } from '~/hooks/useAuth';
 import { useConfirm } from '~/hooks/useConfirm';
 import { API } from '~/lib/api';
 
@@ -18,6 +19,7 @@ const WatchListContent: React.FunctionComponent = () => {
   const [addingToWatchList, setAddingToWatchlist] = useState(false);
   const [watchListItems, setWatchListItems] = useState<WatchListItem[]>([]);
   const { confirmModalProps, openConfirm } = useConfirm();
+  const auth = useAuth();
 
   const loadWatchlist = async () => {
     setLoadingWatchlist(true);
@@ -54,7 +56,9 @@ const WatchListContent: React.FunctionComponent = () => {
   }, []);
 
   const limitReached = useMemo(
-    () => watchListItems.length >= PLAN_LIMITS.watchlist.free,
+    () =>
+      auth.user?.plan?.type === PlanType.FREE &&
+      watchListItems.length >= PLAN_LIMITS.watchlist.free,
     [watchListItems]
   );
 

@@ -1,4 +1,4 @@
-import { Alert, PLAN_LIMITS } from '@zachweinberg/obsidian-schema';
+import { Alert, PlanType, PLAN_LIMITS } from '@zachweinberg/obsidian-schema';
 import type { NextPage } from 'next';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -10,6 +10,7 @@ import ConfirmModal from '~/components/modals/ConfirmModal';
 import AlertsTable from '~/components/tables/AlertsTable';
 import Button from '~/components/ui/Button';
 import Spinner from '~/components/ui/Spinner';
+import { useAuth } from '~/hooks/useAuth';
 import { useConfirm } from '~/hooks/useConfirm';
 import { API } from '~/lib/api';
 
@@ -18,6 +19,7 @@ const AlertsContent: React.FunctionComponent = () => {
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [addingAlert, setAddingAlert] = useState(false);
   const { confirmModalProps, openConfirm } = useConfirm();
+  const auth = useAuth();
 
   const loadAlerts = async () => {
     setLoadingAlerts(true);
@@ -53,7 +55,10 @@ const AlertsContent: React.FunctionComponent = () => {
     loadAlerts();
   }, []);
 
-  const limitReached = useMemo(() => alerts.length >= PLAN_LIMITS.alerts.free, [alerts]);
+  const limitReached = useMemo(
+    () => auth.user?.plan?.type === PlanType.FREE && alerts.length >= PLAN_LIMITS.alerts.free,
+    [alerts]
+  );
 
   return (
     <Layout title="Alerts | Obsidian Tracker">
