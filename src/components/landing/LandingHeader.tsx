@@ -44,7 +44,7 @@ const LandingHeader: React.FunctionComponent<Props> = ({ dark }: Props) => {
                 <ul className="flex items-center space-x-9">
                   <li>
                     <Link href="/login">
-                      <div className="py-5 font-medium text-[1rem] hover:text-darkgray">
+                      <div className="py-5 font-medium text-[1rem] hover:opacity-80">
                         Login
                       </div>
                     </Link>

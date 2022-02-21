@@ -2,9 +2,9 @@ import { CashPosition } from '@zachweinberg/obsidian-schema';
 import { useState } from 'react';
 import { API } from '~/lib/api';
 import Button from '../ui/Button';
-import Modal from '../ui/Modal';
 import MoneyInput from '../ui/MoneyInput';
 import TextInput from '../ui/TextInput';
+import BaseModal from './BaseModal';
 
 interface Props {
   position: CashPosition;
@@ -37,9 +37,11 @@ const EditCashModal = ({ position, portfolioID, onClose, open }: Props) => {
   };
 
   return (
-    <Modal isOpen={open} onClose={() => onClose(false)}>
-      <form className="mb-6 p-7 w-96">
-        <p className="text-lg font-semibold mb-7">Edit cash position</p>
+    <BaseModal open={open} onOpenChange={() => onClose(false)}>
+      <form className="mb-6 p-7">
+        <p className="text-lg font-semibold text-center mb-7">
+          Edit cash position
+        </p>
 
         <div className="flex flex-col justify-start mb-6">
           <label className="mb-2 font-medium text-left text-dark" htmlFor="costPerShare">
@@ -85,7 +87,7 @@ const EditCashModal = ({ position, portfolioID, onClose, open }: Props) => {
           </Button>
         </div>
       </form>
-    </Modal>
+    </BaseModal>
   );
 };
 

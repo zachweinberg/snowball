@@ -12,7 +12,7 @@ import UpgradeBanner from './UpgradeBanner';
 interface Props {
   customs: CustomPosition[];
   onAddAsset: () => void;
-  onDelete: (customAssetID: string) => void;
+  onDelete: (customAssetID: string, name: string) => void;
   belongsTo: string;
   onEdit: (position: CustomPosition) => void;
 }
@@ -73,7 +73,11 @@ const CustomAssetTable: React.FunctionComponent<Props> = ({
             <Menu
               options={[
                 { label: 'Edit Custom Asset', onClick: () => onEdit(row.original) },
-                { label: 'Delete', onClick: () => onDelete(value) },
+                {
+                  label: 'Delete',
+                  onClick: () =>
+                    onDelete(value, row.original?.assetName ?? 'this custom asset'),
+                },
               ]}
               button={() => <VerticalDots />}
             />

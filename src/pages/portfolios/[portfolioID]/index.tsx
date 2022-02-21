@@ -17,7 +17,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import AddAssetForm from '~/components/add-assets/AddAssetForm';
 import BalanceOverTime from '~/components/charts/BalanceOverTime';
 import Layout from '~/components/layout/Layout';
-import { DeletePositionModal } from '~/components/modals/DeletePositionModal';
+import ConfirmModal from '~/components/modals/ConfirmModal';
 import EditCashModal from '~/components/modals/EditCashModal';
 import EditCryptoModal from '~/components/modals/EditCryptoModal';
 import EditCustomModal from '~/components/modals/EditCustomModal';
@@ -35,6 +35,7 @@ import Link from '~/components/ui/Link';
 import Select from '~/components/ui/Select';
 import Spinner from '~/components/ui/Spinner';
 import { useAuth } from '~/hooks/useAuth';
+import { useConfirm } from '~/hooks/useConfirm';
 import { API } from '~/lib/api';
 
 type PositionType =
@@ -45,6 +46,7 @@ type PositionType =
   | CustomPosition;
 
 const MIN_WIDTH = '1100px';
+
 const PortfolioView: NextPage = () => {
   const auth = useAuth();
   const router = useRouter();
@@ -55,23 +57,9 @@ const PortfolioView: NextPage = () => {
   const [activeTab, setActiveTab] = useState<AssetType>(AssetType.Stock);
   const [unit, setUnit] = useState<Unit>(Unit.Dollars);
   const [error, setError] = useState('');
+  const { confirmModalProps, openConfirm } = useConfirm();
 
   const [editPosition, setEditPosition] = useState<PositionType | null>(null);
-  const [deleteAsset, setDeleteAsset] = useState<{
-    type: AssetType;
-    id: string;
-    name: string;
-  } | null>(null);
-
-  const portfolioTotal = useMemo(
-    () =>
-      (portfolio?.cashTotal ?? 0) +
-      (portfolio?.cryptoTotal ?? 0) +
-      (portfolio?.stocksTotal ?? 0) +
-      (portfolio?.customsTotal ?? 0) +
-      (portfolio?.realEstateTotal ?? 0),
-    [portfolio]
-  );
 
   const loadPortfolioData = async (firstMount?: boolean) => {
     setLoading(true);
@@ -101,88 +89,98 @@ const PortfolioView: NextPage = () => {
     loadPortfolioData(true);
   }, []);
 
+  const portfolioTotal = useMemo(
+    () =>
+      (portfolio?.cashTotal ?? 0) +
+      (portfolio?.cryptoTotal ?? 0) +
+      (portfolio?.stocksTotal ?? 0) +
+      (portfolio?.customsTotal ?? 0) +
+      (portfolio?.realEstateTotal ?? 0),
+    [portfolio]
+  );
+
+  const onDeletePosition = async (positionID: string, name: string, assetType: AssetType) => {
+    const confirm = await openConfirm({
+      description: `Are you sure you want to delete ${name} from this portfolio?`,
+    });
+
+    if (confirm && portfolio) {
+      setLoading(true);
+      await API.deleteAssetFromPortfolio(positionID, assetType, portfolio.id);
+      loadPortfolioData();
+    }
+  };
+
   const renderTable = useMemo(() => {
-    if (portfolio) {
-      switch (activeTab) {
-        case AssetType.Stock:
-          return (
-            <StocksTable
-              belongsTo={portfolio.userID}
-              stocks={portfolio.stocks}
-              unit={unit}
-              onAddAsset={() => setDefaultAssetTypeToAdd(AssetType.Stock)}
-              onEdit={(position) => setEditPosition(position)}
-              onDelete={(stockID, name) => {
-                setDeleteAsset({ id: stockID, type: AssetType.Stock, name });
-              }}
-            />
-          );
-        case AssetType.Crypto:
-          return (
-            <CryptoTable
-              belongsTo={portfolio.userID}
-              crypto={portfolio.crypto}
-              unit={unit}
-              onAddAsset={() => setDefaultAssetTypeToAdd(AssetType.Crypto)}
-              onEdit={(position) => setEditPosition(position)}
-              onDelete={(cryptoID, name) => {
-                setDeleteAsset({ id: cryptoID, type: AssetType.Crypto, name });
-              }}
-            />
-          );
-        case AssetType.Cash:
-          return (
-            <CashTable
-              belongsTo={portfolio.userID}
-              cash={portfolio.cash}
-              onAddAsset={() => setDefaultAssetTypeToAdd(AssetType.Cash)}
-              onEdit={(position) => setEditPosition(position)}
-              onDelete={(cashID) => {
-                setDeleteAsset({
-                  id: cashID,
-                  type: AssetType.Cash,
-                  name: 'this cash account',
-                });
-              }}
-            />
-          );
-        case AssetType.RealEstate:
-          return (
-            <RealEstateTable
-              belongsTo={portfolio.userID}
-              onAddAsset={() => setDefaultAssetTypeToAdd(AssetType.RealEstate)}
-              realEstate={portfolio.realEstate}
-              onEdit={(position) => setEditPosition(position)}
-              onDelete={(realEstateID) => {
-                setDeleteAsset({
-                  id: realEstateID,
-                  type: AssetType.RealEstate,
-                  name: 'this property',
-                });
-              }}
-            />
-          );
-        case AssetType.Custom:
-          return (
-            <CustomAssetsTable
-              belongsTo={portfolio.userID}
-              onAddAsset={() => setDefaultAssetTypeToAdd(AssetType.Custom)}
-              onEdit={(position) => setEditPosition(position)}
-              customs={portfolio.customs}
-              onDelete={(customID) => {
-                setDeleteAsset({
-                  id: customID,
-                  type: AssetType.Custom,
-                  name: 'this custom asset',
-                });
-              }}
-            />
-          );
-        default:
-          return null;
-      }
-    } else {
+    if (!portfolio) {
       return null;
+    }
+
+    switch (activeTab) {
+      case AssetType.Stock:
+        return (
+          <StocksTable
+            belongsTo={portfolio.userID}
+            stocks={portfolio.stocks}
+            unit={unit}
+            onAddAsset={() => setDefaultAssetTypeToAdd(AssetType.Stock)}
+            onEdit={(position) => setEditPosition(position)}
+            onDelete={(stockID, name) => {
+              onDeletePosition(stockID, name, AssetType.Stock);
+            }}
+          />
+        );
+      case AssetType.Crypto:
+        return (
+          <CryptoTable
+            belongsTo={portfolio.userID}
+            crypto={portfolio.crypto}
+            unit={unit}
+            onAddAsset={() => setDefaultAssetTypeToAdd(AssetType.Crypto)}
+            onEdit={(position) => setEditPosition(position)}
+            onDelete={(cryptoID, name) => {
+              onDeletePosition(cryptoID, name, AssetType.Crypto);
+            }}
+          />
+        );
+      case AssetType.Cash:
+        return (
+          <CashTable
+            belongsTo={portfolio.userID}
+            cash={portfolio.cash}
+            onAddAsset={() => setDefaultAssetTypeToAdd(AssetType.Cash)}
+            onEdit={(position) => setEditPosition(position)}
+            onDelete={(cashID, accountName) => {
+              onDeletePosition(cashID, accountName, AssetType.Cash);
+            }}
+          />
+        );
+      case AssetType.RealEstate:
+        return (
+          <RealEstateTable
+            belongsTo={portfolio.userID}
+            onAddAsset={() => setDefaultAssetTypeToAdd(AssetType.RealEstate)}
+            realEstate={portfolio.realEstate}
+            onEdit={(position) => setEditPosition(position)}
+            onDelete={(realEstateID, name) => {
+              onDeletePosition(realEstateID, name, AssetType.RealEstate);
+            }}
+          />
+        );
+      case AssetType.Custom:
+        return (
+          <CustomAssetsTable
+            belongsTo={portfolio.userID}
+            onAddAsset={() => setDefaultAssetTypeToAdd(AssetType.Custom)}
+            onEdit={(position) => setEditPosition(position)}
+            customs={portfolio.customs}
+            onDelete={(customID, name) => {
+              onDeletePosition(customID, name, AssetType.Custom);
+            }}
+          />
+        );
+      default:
+        return null;
     }
   }, [portfolio, activeTab, unit]);
 
@@ -190,7 +188,8 @@ const PortfolioView: NextPage = () => {
     if (!editPosition || !portfolio) {
       return null;
     }
-    const onClose = (reload: boolean) => {
+
+    const stopEditing = (reload: boolean) => {
       setEditPosition(null);
       if (reload) {
         loadPortfolioData();
@@ -203,7 +202,7 @@ const PortfolioView: NextPage = () => {
           open={editPosition !== null}
           position={editPosition as StockPosition}
           portfolioID={portfolio.id}
-          onClose={onClose}
+          onClose={stopEditing}
         />
       );
     }
@@ -214,7 +213,7 @@ const PortfolioView: NextPage = () => {
           open={editPosition !== null}
           position={editPosition as CryptoPosition}
           portfolioID={portfolio.id}
-          onClose={onClose}
+          onClose={stopEditing}
         />
       );
     }
@@ -225,7 +224,7 @@ const PortfolioView: NextPage = () => {
           open={editPosition !== null}
           position={editPosition as RealEstatePosition}
           portfolioID={portfolio.id}
-          onClose={onClose}
+          onClose={stopEditing}
         />
       );
     }
@@ -236,7 +235,7 @@ const PortfolioView: NextPage = () => {
           open={editPosition !== null}
           position={editPosition as CashPosition}
           portfolioID={portfolio.id}
-          onClose={onClose}
+          onClose={stopEditing}
         />
       );
     }
@@ -247,43 +246,13 @@ const PortfolioView: NextPage = () => {
           open={editPosition !== null}
           position={editPosition as CustomPosition}
           portfolioID={portfolio.id}
-          onClose={onClose}
+          onClose={stopEditing}
         />
       );
     }
   }, [editPosition, portfolio]);
 
-  const renderDeleteModal = useMemo(() => {
-    if (!deleteAsset || !portfolio) {
-      return null;
-    }
-    const onClose = (reload: boolean) => {
-      setDeleteAsset(null);
-      if (reload) {
-        loadPortfolioData();
-      }
-    };
-
-    const onDeleteAsset = async () => {
-      if (deleteAsset && portfolio) {
-        setLoading(true);
-        setDeleteAsset(null);
-        await API.deleteAssetFromPortfolio(deleteAsset.id, deleteAsset.type, portfolio.id);
-        loadPortfolioData();
-      }
-    };
-
-    return (
-      <DeletePositionModal
-        open={deleteAsset !== null}
-        onClose={onClose}
-        onDelete={onDeleteAsset}
-        assetName={deleteAsset?.name ?? ''}
-      />
-    );
-  }, [deleteAsset, portfolio]);
-
-  const renderContent = () => {
+  const renderMainContent = () => {
     if (error) {
       return (
         <div className="max-w-md p-8 mx-auto bg-white rounded-md">
@@ -306,7 +275,7 @@ const PortfolioView: NextPage = () => {
     if (portfolio) {
       return (
         <>
-          {renderDeleteModal}
+          <ConfirmModal {...confirmModalProps} />
 
           {renderEditModal}
 
@@ -480,7 +449,7 @@ const PortfolioView: NextPage = () => {
         </FullScreenModal>
       )}
 
-      {renderContent()}
+      {renderMainContent()}
     </Layout>
   );
 };

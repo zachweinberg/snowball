@@ -33,7 +33,7 @@ const WatchListContent: React.FunctionComponent = () => {
 
   const onDeleteFromWatchlist = async (itemID: string) => {
     const confirm = await openConfirm({
-      title: 'Remove this item from your watchlist?',
+      description: 'Remove this item from your watchlist?',
     });
 
     if (confirm) {

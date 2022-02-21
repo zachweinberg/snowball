@@ -19,7 +19,7 @@ import UpgradeBanner from './UpgradeBanner';
 interface Props {
   realEstate: RealEstatePosition[];
   onAddAsset: () => void;
-  onDelete: (realEstateID: string) => void;
+  onDelete: (realEstateID: string, name: string) => void;
   onEdit: (position: RealEstatePosition) => void;
   belongsTo: string;
 }
@@ -115,11 +115,18 @@ const RealEstateTable: React.FunctionComponent<Props> = ({
           if (auth.user?.id !== belongsTo) {
             return null;
           }
+
+          const name = row.original.name
+            ? row.original.name
+            : row.original.address
+            ? formatAddresstoString(row.original.address)
+            : 'this property';
+
           return (
             <Menu
               options={[
                 // { label: 'Edit Real Estate', onClick: () => onEdit(row.original) },
-                { label: 'Delete', onClick: () => onDelete(value) },
+                { label: 'Delete', onClick: () => onDelete(value, name) },
               ]}
               button={() => <VerticalDots />}
             />

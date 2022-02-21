@@ -116,7 +116,7 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
             fill="#757784"
           />
         </svg>
-        Back
+        Add different asset type
       </div>
 
       <h2 className="mb-3 text-center text-[1.75rem] font-bold">Add Crypto</h2>

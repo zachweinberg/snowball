@@ -12,12 +12,14 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
 import Layout from '~/components/layout/Layout';
+import ConfirmModal from '~/components/modals/ConfirmModal';
 import Button from '~/components/ui/Button';
 import Checkbox from '~/components/ui/Checkbox';
 import Link from '~/components/ui/Link';
 import Select from '~/components/ui/Select';
 import Spinner from '~/components/ui/Spinner';
 import TextInput from '~/components/ui/TextInput';
+import { useConfirm } from '~/hooks/useConfirm';
 import { API } from '~/lib/api';
 
 const PRIVACY_LEVELS = [
@@ -40,6 +42,7 @@ const PortfolioSettingsPageContent: React.FunctionComponent = () => {
   const [portfolio, setPortfolio] = useState<Portfolio | null>(null);
   const [newName, setNewName] = useState('');
   const [success, setSuccess] = useState(false);
+  const { openConfirm, confirmModalProps } = useConfirm();
 
   const loadPortfolioSettings = async (showSpinner: boolean = true) => {
     if (showSpinner) {
@@ -65,11 +68,12 @@ const PortfolioSettingsPageContent: React.FunctionComponent = () => {
   };
 
   const deletePortfolio = async () => {
-    if (
-      window.confirm(
-        'Are you sure you want to delete this portfolio? All assets and history will be permanently deleted.'
-      )
-    ) {
+    const confirm = await openConfirm({
+      description:
+        'Are you sure you want to delete this portfolio? All history and positions will be permanently erased.',
+    });
+
+    if (confirm) {
       setLoading(true);
       await API.deletePortfolio(router.query.portfolioID as string);
       router.push('/portfolios');
@@ -115,6 +119,8 @@ const PortfolioSettingsPageContent: React.FunctionComponent = () => {
 
     return (
       <Layout title={`${portfolio?.name ?? 'Portfolio'} Settings | Obsidian Tracker`}>
+        <ConfirmModal {...confirmModalProps} />
+
         {loading ? (
           <div className="flex items-center justify-center mt-32">
             <Spinner />
@@ -236,8 +242,8 @@ const PortfolioSettingsPageContent: React.FunctionComponent = () => {
                       Summary Emails
                     </label>
                     <p className="mb-1 text-sm font-medium text-darkgray">
-                      How often would you like us to send you an email summarizing your current
-                      portfolio net worth?
+                      How often would you like us to send you an email summarizing this
+                      portfolio's net worth?
                     </p>
 
                     <div className="w-64">

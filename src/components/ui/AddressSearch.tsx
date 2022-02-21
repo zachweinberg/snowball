@@ -120,11 +120,11 @@ const AddressSearch: React.FunctionComponent<Props> = ({ onSubmit }: Props) => {
     <div className="relative w-full">
       <TextInput
         type="text"
-        placeholder="Address (optional)"
+        placeholder="Search for address"
         value={address}
         onChange={onTypeAddress}
-        name="address"
         className="mb-4"
+        name="newaddress"
       />
 
       {results && results.length > 0 && (

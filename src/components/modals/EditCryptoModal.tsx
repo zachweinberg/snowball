@@ -2,9 +2,9 @@ import { CryptoPosition } from '@zachweinberg/obsidian-schema';
 import { useState } from 'react';
 import { API } from '~/lib/api';
 import Button from '../ui/Button';
-import Modal from '../ui/Modal';
 import MoneyInput from '../ui/MoneyInput';
 import QuantityInput from '../ui/QuantityInput';
+import BaseModal from './BaseModal';
 
 interface Props {
   position: CryptoPosition;
@@ -37,9 +37,9 @@ const EditCryptoModal = ({ position, portfolioID, onClose, open }: Props) => {
   };
 
   return (
-    <Modal isOpen={open} onClose={() => onClose(false)}>
-      <form className="mb-6 p-7 w-96">
-        <p className="text-lg font-semibold mb-7">Edit {position.symbol}</p>
+    <BaseModal open={open} onOpenChange={() => onClose(false)}>
+      <form className="mb-6 p-7">
+        <p className="text-lg font-semibold text-center mb-7">Edit {position.symbol}</p>
         <div className="flex flex-col justify-start mb-6">
           <label className="mb-2 font-medium text-left text-dark" htmlFor="quantity">
             Quantity
@@ -83,7 +83,7 @@ const EditCryptoModal = ({ position, portfolioID, onClose, open }: Props) => {
           </Button>
         </div>
       </form>
-    </Modal>
+    </BaseModal>
   );
 };
 

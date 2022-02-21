@@ -9,11 +9,11 @@ import { useEffect, useState } from 'react';
 import { formatAddresstoString } from '~/lib/addresses';
 import { API } from '~/lib/api';
 import Button from '../ui/Button';
-import Modal from '../ui/Modal';
 import MoneyInput from '../ui/MoneyInput';
 import QuantityInput from '../ui/QuantityInput';
 import Select from '../ui/Select';
 import TextInput from '../ui/TextInput';
+import BaseModal from './BaseModal';
 
 interface Props {
   position: RealEstatePosition;
@@ -87,8 +87,8 @@ const EditRealEstateModal: React.FunctionComponent<Props> = ({
   }, [state.automaticValuation]);
 
   return (
-    <Modal isOpen={open} onClose={() => onClose(false)}>
-      <form onSubmit={onEditRealEstate} className="mb-6 p-7 w-96" autoComplete="off">
+    <BaseModal open={open} onOpenChange={() => onClose(false)}>
+      <form onSubmit={onEditRealEstate} className="mb-6 p-7" autoComplete="off">
         <h2 className="text-lg font-bold text-center mb-7">
           Edit {position.address ? formatAddresstoString(position.address) : position.name}
         </h2>
@@ -212,7 +212,7 @@ const EditRealEstateModal: React.FunctionComponent<Props> = ({
           Edit Real Estate
         </Button>
       </form>
-    </Modal>
+    </BaseModal>
   );
 };
 export default EditRealEstateModal;

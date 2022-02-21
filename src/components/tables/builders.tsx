@@ -79,7 +79,7 @@ export const buildCryptoData = (crypto: CryptoPositionWithQuote[]): CryptoTableD
 // Cash
 export interface CashTableData {
   accountName: string;
-  value: number;
+  amount: number;
   assetType: AssetType;
   id: string;
 }
@@ -89,8 +89,8 @@ export const buildCashData = (cash: CashPosition[]): CashTableData[] => {
     id: cash.id,
     assetType: AssetType.Cash,
     accountName: cash.accountName ?? 'Cash account',
-    value: cash.amount,
-    isPlaid: cash.isPlaid,
+    amount: cash.amount,
+    isPlaid: cash.isPlaid ?? false,
     createdAt: cash.createdAt,
   }));
 };

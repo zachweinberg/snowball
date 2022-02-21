@@ -151,7 +151,10 @@ const PortfolioListPage: NextPage = () => {
             <h1 className="font-bold text-dark text-[1.75rem] mb-4">My Portfolios</h1>
 
             <h2 className="font-normal text-dark text-[1rem] leading-5">
-              Good {timeOfDay()} {auth.user?.name}, view your portfolios below:
+              Good {timeOfDay()} {auth.user?.name},{' '}
+              {portfolios.length === 0
+                ? 'create a portfolio below:'
+                : 'click a portfolio below to view it:'}
             </h2>
           </div>
           <div className="w-56">

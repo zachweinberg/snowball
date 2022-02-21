@@ -14,7 +14,7 @@ import UpgradeBanner from './UpgradeBanner';
 interface Props {
   cash: CashPosition[];
   onAddAsset: () => void;
-  onDelete: (cashID: string) => void;
+  onDelete: (cashID: string, accountName: string) => void;
   onEdit: (position: CashPosition) => void;
   belongsTo: string;
 }
@@ -70,7 +70,7 @@ const CashTable: React.FunctionComponent<Props> = ({
       },
       {
         Header: 'Cash Amount',
-        accessor: 'value',
+        accessor: 'amount',
         Cell: ({ value }) => formatMoneyFromNumber(value),
       },
       {
@@ -92,7 +92,7 @@ const CashTable: React.FunctionComponent<Props> = ({
           const options = [
             {
               label: `${isPlaid ? 'Unlink Account' : 'Delete'}`,
-              onClick: () => onDelete(value),
+              onClick: () => onDelete(value, row.original?.accountName ?? 'this cash account'),
             },
           ];
 

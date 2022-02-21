@@ -33,7 +33,7 @@ const AlertsContent: React.FunctionComponent = () => {
 
   const onDeleteFromAlerts = async (alertID: string) => {
     const confirm = await openConfirm({
-      title: 'Are you sure you want to delete this alert?',
+      description: 'Are you sure you want to delete this alert?',
     });
 
     if (confirm) {

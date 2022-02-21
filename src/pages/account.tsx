@@ -7,8 +7,10 @@ import { useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
 import Layout from '~/components/layout/Layout';
+import ConfirmModal from '~/components/modals/ConfirmModal';
 import TextInput from '~/components/ui/TextInput';
 import { useAuth } from '~/hooks/useAuth';
+import { useConfirm } from '~/hooks/useConfirm';
 import { API } from '~/lib/api';
 
 const Btn = (props) => {
@@ -16,7 +18,7 @@ const Btn = (props) => {
     <button
       type="submit"
       className={classNames(
-        'px-4 py-2 font-semibold text-white transition-colors duration-150 rounded-md hover:bg-opacity-90 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-evergreen focus:outline-none',
+        'px-4 py-3 font-semibold text-white transition-colors duration-150 rounded-md hover:bg-opacity-90 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-evergreen focus:outline-none',
         props.red ? 'bg-red' : 'bg-evergreen'
       )}
     >
@@ -32,6 +34,7 @@ const Account: NextPage = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const isPremium = useMemo(() => auth.user?.plan?.type === PlanType.PREMIUM, [auth.user]);
+  const { confirmModalProps, openConfirm } = useConfirm();
 
   const handleFirebaseError = (errorCode: string) => {
     if (errorCode === 'auth/weak-password') {
@@ -103,11 +106,12 @@ const Account: NextPage = () => {
   const deleteAccount = async (e) => {
     e.preventDefault();
 
-    if (
-      window.confirm(
-        'Are you sure you want to delete your account. All data will be removed and you will not be able to recover your account.'
-      )
-    ) {
+    const confirm = await openConfirm({
+      description:
+        'Are you sure you want to delete your account? Your data will be permanently erased.',
+    });
+
+    if (confirm) {
       try {
         await API.deleteAccount();
         alert("Your account has been deleted. We're sorry to see you go!");
@@ -124,6 +128,8 @@ const Account: NextPage = () => {
 
   return (
     <RequiredLoggedIn>
+      <ConfirmModal {...confirmModalProps} />
+
       <Layout title="Account | Obsidian Tracker">
         <div className="flex items-center mb-7">
           <h1 className="font-bold text-[1.75rem]">Your Account</h1>

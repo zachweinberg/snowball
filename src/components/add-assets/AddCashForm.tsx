@@ -142,7 +142,7 @@ const AddCashForm: React.FunctionComponent<Props> = ({
             fill="#757784"
           />
         </svg>
-        Back
+        Add different asset type
       </div>
 
       <h2 className="mb-7 text-center text-[1.75rem] font-bold">Add Cash</h2>
