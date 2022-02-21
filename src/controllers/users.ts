@@ -11,7 +11,7 @@ import {
   User,
 } from '@zachweinberg/obsidian-schema';
 import { Router } from 'express';
-import { sendAccountDeletedEmail, sendContactRequestEmail, sendWelcomeEmail } from '~/lib/email';
+import { newUserEmail, sendAccountDeletedEmail, sendContactRequestEmail, sendWelcomeEmail } from '~/lib/email';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { deleteRedisKey } from '~/lib/redis';
 import { logSentryError } from '~/lib/sentry';
@@ -97,6 +97,7 @@ usersRouter.post(
 
       try {
         await sendWelcomeEmail(email, userName);
+        await newUserEmail(userEmail, userName);
       } catch (err) {
         console.error(err);
         logSentryError(err);

@@ -155,3 +155,13 @@ export const sendPortfolioDeletedEmail = async (toEmail: string, portfolioName: 
     }),
   });
 };
+
+export const newUserEmail = async (email: string, name: string) => {
+  await emailClient.sendEmail({
+    From: FROM_EMAIL,
+    To: 'zach@obsidiantracker.com',
+    Subject: `new user`,
+    HtmlBody: `<h1>new user</h1><p>${email} - ${name}</p>`,
+    TextBody: `New user - ${email} - ${name}`,
+  });
+};
