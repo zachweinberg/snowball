@@ -195,7 +195,7 @@ const BalanceOverTime: React.FunctionComponent<{
             <div className="mx-auto">
               <Spinner color="#CEF33C" />
             </div>
-          ) : data.length > 0 ? (
+          ) : data.length > 1 ? (
             <SVGChart
               onReset={() =>
                 setPoint({
