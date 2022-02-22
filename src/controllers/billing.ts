@@ -8,7 +8,7 @@ import stripeClient from '~/utils/stripe';
 
 const billingRouter = Router();
 
-const PRODUCT_PRICE_ID = 'price_1KSSprFTpxe1okE1qtpqo6Z1'; // from stripe dashboard
+const PRODUCT_PRICE_ID = 'price_1KW6ZQFTpxe1okE1fV0YwQ8N'; // from stripe dashboard
 
 billingRouter.get(
   '/create-checkout-session',
