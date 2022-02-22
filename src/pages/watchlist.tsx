@@ -59,7 +59,7 @@ const WatchListContent: React.FunctionComponent = () => {
     () =>
       auth.user?.plan?.type === PlanType.FREE &&
       watchListItems.length >= PLAN_LIMITS.watchlist.free,
-    [watchListItems]
+    [watchListItems, auth.user]
   );
 
   return (

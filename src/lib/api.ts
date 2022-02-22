@@ -32,7 +32,7 @@ import { PlaidAccount } from 'react-plaid-link';
 import firebase from '~/lib/firebase';
 
 // Convert object timestamps from Firestore to Dates
-const normalizeTimestamps = <T>(value: T): T =>
+export const normalizeTimestamps = <T>(value: T): T =>
   Object.keys(value).reduce((final, key) => {
     let finalValue;
 

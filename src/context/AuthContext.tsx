@@ -1,7 +1,7 @@
 import { CreateUserRequest, User } from '@zachweinberg/obsidian-schema';
 import { useRouter } from 'next/router';
 import { createContext, useEffect, useState } from 'react';
-import { API } from '~/lib/api';
+import { API, normalizeTimestamps } from '~/lib/api';
 import firebase from '~/lib/firebase';
 
 interface AuthContext {
@@ -57,6 +57,22 @@ const useFirebaseAuth = (): AuthContext => {
     });
     return unsubscribe;
   }, []);
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+
+    const unsubscribe = firebase
+      .firestore()
+      .collection('users')
+      .doc(user.id)
+      .onSnapshot((doc) => {
+        setUser(normalizeTimestamps(doc.data() as User));
+      });
+
+    return unsubscribe;
+  }, [user]);
 
   const signup = async (userData: CreateUserRequest) => {
     const response = await API.createUser(userData);

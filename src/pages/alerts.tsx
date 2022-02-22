@@ -57,7 +57,7 @@ const AlertsContent: React.FunctionComponent = () => {
 
   const limitReached = useMemo(
     () => auth.user?.plan?.type === PlanType.FREE && alerts.length >= PLAN_LIMITS.alerts.free,
-    [alerts]
+    [alerts, auth.user]
   );
 
   return (
