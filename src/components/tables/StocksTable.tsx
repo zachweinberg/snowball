@@ -67,10 +67,19 @@ const StocksTable: React.FunctionComponent<Props> = ({
         Header: 'Name',
         accessor: 'companyName',
         Cell: ({ row, value }) => (
-          <div style={{ maxWidth: '240px' }}>
-            <p className="text-evergreen">{row.original.symbol}</p>
-            <p className="text-darkgray text-[0.875rem] truncate leading-tight">{value}</p>
-          </div>
+          <>
+            <ReactTooltip />
+
+            <div style={{ maxWidth: '240px' }}>
+              <p className="text-evergreen">{row.original.symbol}</p>
+              <p
+                data-tip={value}
+                className="text-darkgray text-[0.875rem] truncate leading-tight"
+              >
+                {value}
+              </p>
+            </div>
+          </>
         ),
       },
       {

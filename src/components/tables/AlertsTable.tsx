@@ -27,7 +27,7 @@ const AlertsTable: React.FunctionComponent<Props> = ({ alerts, onDelete }: Props
         Header: 'Symbol',
         accessor: 'symbol',
         Cell: ({ value, row }) => (
-          <div className="flex items-center">
+          <div className="flex items-center" data-tip={row.original.name}>
             <p className="ml-2 text-evergreen">{value}</p>
           </div>
         ),

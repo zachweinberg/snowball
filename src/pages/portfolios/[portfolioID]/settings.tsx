@@ -22,18 +22,6 @@ import TextInput from '~/components/ui/TextInput';
 import { useConfirm } from '~/hooks/useConfirm';
 import { API } from '~/lib/api';
 
-const PRIVACY_LEVELS = [
-  {
-    value: 'Public Portfolio',
-    description:
-      'Anyone with the link to this portfolio can view it. Only you can modify the portfolio.',
-  },
-  {
-    name: 'Private Portfolio',
-    description: 'Only you can view this portfolio. Only you can modify the portfolio.',
-  },
-];
-
 const PortfolioSettingsPageContent: React.FunctionComponent = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -173,16 +161,12 @@ const PortfolioSettingsPageContent: React.FunctionComponent = () => {
                     Portfolio Privacy Level
                   </label>
                   <div className="mb-8 bg-white border-2 rounded-md border-gray">
-                    <div className="flex items-center justify-start px-4 py-5 text-left border-b border-gray">
+                    <div
+                      className="flex items-center justify-start px-4 py-5 text-left border-b cursor-pointer border-gray"
+                      onClick={() => setSettings({ ...settings, private: true })}
+                    >
                       <Checkbox
-                        onChange={(checked) => {
-                          if (checked) {
-                            setSettings({
-                              ...settings,
-                              private: true,
-                            });
-                          }
-                        }}
+                        onChange={(checked) => {}}
                         name="private"
                         title="Private Portfolio"
                         description="Only you will be able to view this portfolio. Even if someone has the link, they will not be able to view the portfolio.  Nobody except you will be able to modify assets or edit the portfolio."
@@ -190,16 +174,12 @@ const PortfolioSettingsPageContent: React.FunctionComponent = () => {
                       />
                     </div>
 
-                    <div className="flex items-center justify-start px-4 py-5 text-left">
+                    <div
+                      className="flex items-center justify-start px-4 py-5 text-left cursor-pointer"
+                      onClick={() => setSettings({ ...settings, private: false })}
+                    >
                       <Checkbox
-                        onChange={(checked) => {
-                          if (checked) {
-                            setSettings({
-                              ...settings,
-                              private: false,
-                            });
-                          }
-                        }}
+                        onChange={(checked) => {}}
                         name="public"
                         title="Public Portfolio"
                         description="Anyone with the link will be able to view this portfolio and assets. Nobody except you will be able to modify assets or edit the portfolio."

@@ -1,5 +1,6 @@
 import { PlanType, PLAN_LIMITS, WatchListItem } from '@zachweinberg/obsidian-schema';
 import { useMemo } from 'react';
+import ReactTooltip from 'react-tooltip';
 import Menu from '~/components/ui/Menu';
 import { useAuth } from '~/hooks/useAuth';
 import { formatMoneyFromNumber, formatPercentageChange } from '~/lib/money';
@@ -28,20 +29,29 @@ const WatchListTable: React.FunctionComponent<Props> = ({ items, onDelete }: Pro
         accessor: 'fullName',
         Cell: ({ row, value }) => {
           return (
-            <div style={{ maxWidth: '200px' }} className="flex items-center">
-              {row.original.logoURL && (
-                <img
-                  src={row.original.logoURL}
-                  alt={value}
-                  className="w-8 h-8 mr-3 rounded-md"
-                />
-              )}
+            <>
+              <ReactTooltip />
 
-              <div className="w-full">
-                <p className="mb-1 text-evergreen">{row.original.symbol}</p>
-                <p className="text-darkgray text-[0.875rem] truncate leading-tight">{value}</p>
+              <div style={{ maxWidth: '200px' }} className="flex items-center">
+                {row.original.logoURL && (
+                  <img
+                    src={row.original.logoURL}
+                    alt={value}
+                    className="w-8 h-8 mr-3 rounded-md"
+                  />
+                )}
+
+                <div className="w-full">
+                  <p className="mb-1 text-evergreen">{row.original.symbol}</p>
+                  <p
+                    data-tip={row.original.fullName}
+                    className="text-darkgray text-[0.875rem] truncate leading-tight"
+                  >
+                    {value}
+                  </p>
+                </div>
               </div>
-            </div>
+            </>
           );
         },
       },
