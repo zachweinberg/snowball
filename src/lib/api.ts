@@ -32,8 +32,12 @@ import { PlaidAccount } from 'react-plaid-link';
 import firebase from '~/lib/firebase';
 
 // Convert object timestamps from Firestore to Dates
-export const normalizeTimestamps = <T>(value: T): T =>
-  Object.keys(value).reduce((final, key) => {
+export const normalizeTimestamps = <T>(value: T): T => {
+  if (!value) {
+    return value;
+  }
+
+  return Object.keys(value).reduce((final, key) => {
     let finalValue;
 
     if (value[key] !== null && typeof value[key] === 'object' && value[key]._seconds) {
@@ -54,6 +58,7 @@ export const normalizeTimestamps = <T>(value: T): T =>
       [key]: finalValue,
     };
   }, {} as T);
+};
 
 const axiosInstance = axios.create();
 
