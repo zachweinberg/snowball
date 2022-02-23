@@ -38,7 +38,7 @@ const EditCustomModal = ({ position, portfolioID, onClose, open }: Props) => {
 
   return (
     <BaseModal open={open} onOpenChange={() => onClose(false)}>
-      <form className="mb-6 p-7">
+      <form className="mb-6 p-7" autoComplete="off">
         <p className="text-lg font-semibold text-center mb-7">Edit custom asset</p>
 
         <div className="flex flex-col justify-start mb-6">

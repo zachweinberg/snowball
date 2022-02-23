@@ -130,6 +130,7 @@ const PortfolioSettingsPageContent: React.FunctionComponent = () => {
                 )}
 
                 <form
+                  autoComplete="off"
                   className="pb-16 border-b border-gray"
                   onSubmit={updatePortfolioSettings}
                 >

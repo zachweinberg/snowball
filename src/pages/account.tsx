@@ -145,7 +145,7 @@ const Account: NextPage = () => {
               </p>
             </div>
 
-            <form onSubmit={updateEmail} className="lg:col-span-2">
+            <form onSubmit={updateEmail} className="lg:col-span-2" autoComplete="off">
               <div className="mb-6">
                 <label htmlFor="email" className="block mb-2 font-medium text-darkgray">
                   Email address
@@ -221,7 +221,7 @@ const Account: NextPage = () => {
               </p>
             </div>
 
-            <form onSubmit={updatePassword} className="lg:col-span-2">
+            <form onSubmit={updatePassword} className="lg:col-span-2" autoComplete="off">
               <div className="mb-6">
                 <label htmlFor="email" className="block mb-2 font-medium text-darkgray">
                   New password
@@ -265,7 +265,7 @@ const Account: NextPage = () => {
               <p className="mb-4 text-darkgray">Manage your account</p>
             </div>
 
-            <form onSubmit={deleteAccount} className="lg:col-span-2">
+            <form onSubmit={deleteAccount} className="lg:col-span-2" autoComplete="off">
               <div className="sm:flex sm:items-center sm:space-x-4 sm:space-x-reverse">
                 <Btn red>Delete Account</Btn>
               </div>

@@ -55,6 +55,7 @@ const LoginPage: NextPage = () => {
     <RequiredLoggedOut>
       <Layout title="Login | Obsidian Tracker">
         <form
+          autoComplete="off"
           className={classNames(
             'relative max-w-lg border border-bordergray p-8 mx-auto mb-16 mt-10 bg-white shadow-md rounded-md',
             {

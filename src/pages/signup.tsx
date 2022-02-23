@@ -88,6 +88,7 @@ const SignUpPage: NextPage = () => {
       <Layout title="Signup | Obsidian Tracker">
         <form
           onSubmit={onSubmit}
+          autoComplete="off"
           className={classNames(
             'relative max-w-lg border border-bordergray p-8 mx-auto mb-16 mt-10 bg-white shadow-md rounded-md',
             {
