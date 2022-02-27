@@ -16,7 +16,7 @@ const Header: React.FunctionComponent<Props> = ({ noBorder }: Props) => {
   const auth = useAuth();
   const router = useRouter();
 
-  const isPremium = useMemo(() => auth.user?.plan?.type === PlanType.PREMIUM, [auth.user]);
+  const isPremium = useMemo(() => auth.user?.plan?.type === PlanType.PREMIUM, [auth]);
 
   return (
     <header className={classNames('bg-white', { 'border-b border-bordergray': !noBorder })}>

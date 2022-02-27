@@ -32,17 +32,6 @@ const useFirebaseAuth = (): AuthContext => {
   const [user, setUser] = useState<Partial<User> | null>(null);
   const router = useRouter();
 
-  const handleUser = (user: firebase.User | null) => {
-    if (user) {
-      setUser({
-        id: user.uid,
-        email: user.email!,
-      });
-    } else {
-      setUser(null);
-    }
-  };
-
   useEffect(() => {
     const unsubscribe = firebase.auth().onIdTokenChanged((user) => {
       if (user) {
@@ -51,7 +40,7 @@ const useFirebaseAuth = (): AuthContext => {
           setLoading(false);
         });
       } else {
-        handleUser(null);
+        setUser(null);
         setLoading(false);
       }
     });
@@ -72,7 +61,7 @@ const useFirebaseAuth = (): AuthContext => {
       });
 
     return unsubscribe;
-  }, [user]);
+  }, []);
 
   const signup = async (userData: CreateUserRequest) => {
     const response = await API.createUser(userData);
