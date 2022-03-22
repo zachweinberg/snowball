@@ -33,6 +33,22 @@ const calculateCurrentMortgageBalance = (
   return (monthlyPmt / monthlyRate) * (1 - Math.pow(1 / (1 + monthlyRate), monthsLeft));
 };
 
+const calculateEquity = (mortgage: Mortgage) => {
+  const endOfMortgage = DateTime.fromMillis(mortgage.startDateMs).plus({
+    years: mortgage.termYears,
+  });
+
+  const monthsLeft = Math.abs(DateTime.local().diff(endOfMortgage, 'months').months);
+
+  const remaining = calculateCurrentMortgageBalance(
+    mortgage.monthlyPayment,
+    monthsLeft,
+    mortgage.rate
+  );
+
+  return remaining;
+};
+
 const RealEstateTable: React.FunctionComponent<Props> = ({
   realEstate,
   onAddAsset,
@@ -81,26 +97,24 @@ const RealEstateTable: React.FunctionComponent<Props> = ({
       {
         Header: 'Mortgage',
         accessor: 'mortgage',
-        Cell: ({ value, row }) => {
+        Cell: ({ row }) => {
           if (row.original.mortgage) {
-            const mortgage = row.original.mortgage as Mortgage;
-
-            const endOfMortgage = DateTime.fromMillis(mortgage.startDateMs).plus({
-              years: mortgage.termYears,
-            });
-
-            const monthsLeft = Math.abs(DateTime.local().diff(endOfMortgage, 'months').months);
-
-            const remaining = calculateCurrentMortgageBalance(
-              mortgage.monthlyPayment,
-              monthsLeft,
-              mortgage.rate
-            );
-
-            return formatMoneyFromNumber(remaining);
+            return formatMoneyFromNumber(calculateEquity(row.original.mortgage));
           }
 
           return '-';
+        },
+      },
+      {
+        Header: 'Equity',
+        accessor: 'equity',
+        Cell: ({ value, row }) => {
+          if (row.original.mortgage) {
+            const mortgage = calculateEquity(row.original.mortgage);
+            return formatMoneyFromNumber(row.original.propertyValue - mortgage);
+          }
+
+          return formatMoneyFromNumber(row.original.propertyValue);
         },
       },
       {
