@@ -2,7 +2,7 @@ import { localPoint } from '@visx/event';
 import { ParentSize } from '@visx/responsive';
 import { scaleLinear, scaleTime } from '@visx/scale';
 import { Bar, Line, LinePath } from '@visx/shape';
-import { useTooltip } from '@visx/tooltip';
+import { TooltipWithBounds, useTooltip } from '@visx/tooltip';
 import { DailyBalance, DailyBalancesPeriod } from '@zachweinberg/obsidian-schema';
 import classNames from 'classnames';
 import { bisector, extent, max, min } from 'd3-array';
@@ -31,7 +31,8 @@ const bisectDate = bisector<ChartData, Date>((d) => new Date(d.date)).left;
 
 const SVGChart: React.FunctionComponent<SVGChartProps> = (props: SVGChartProps) => {
   const { width, height, data, onHoverPoint, onReset } = props;
-  const { showTooltip, hideTooltip, tooltipData, tooltipLeft } = useTooltip();
+  const { showTooltip, hideTooltip, tooltipData, tooltipTop, tooltipLeft } =
+    useTooltip<{ balance: number; date: Date }>();
 
   const dateScale = useMemo(
     () =>
@@ -109,7 +110,7 @@ const SVGChart: React.FunctionComponent<SVGChartProps> = (props: SVGChartProps) 
             <Line
               from={{ x: tooltipLeft, y: 0 }}
               to={{ x: tooltipLeft, y: height }}
-              stroke={'#F9FAFF'}
+              stroke={'white'}
               strokeWidth={2}
               opacity={0.6}
               pointerEvents="none"
@@ -118,6 +119,17 @@ const SVGChart: React.FunctionComponent<SVGChartProps> = (props: SVGChartProps) 
           </g>
         )}
       </svg>
+      {tooltipData && (
+        <div>
+          <TooltipWithBounds
+            key={Math.random()}
+            top={(tooltipTop ?? 0) - 12}
+            left={(tooltipLeft ?? 0) + 12}
+          >
+            {formatMoneyFromNumber(tooltipData.balance ?? 0)}
+          </TooltipWithBounds>
+        </div>
+      )}
     </div>
   );
 };
