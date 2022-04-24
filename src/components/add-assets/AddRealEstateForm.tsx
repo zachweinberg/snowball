@@ -139,7 +139,7 @@ const AddRealEstateForm: React.FunctionComponent<Props> = ({
       <h2 className="mb-3 text-center text-[1.75rem] font-bold">Add Real Estate</h2>
 
       <p className="text-center mb-10 text-darkgray text-[1rem] font-medium">
-        Add a property to your portfolio.
+        Add a property to your portfolio:
       </p>
 
       <TextInput

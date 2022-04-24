@@ -100,7 +100,7 @@ const AddCustomAssetForm: React.FunctionComponent<Props> = ({
       <h2 className="mb-3 text-center text-[1.75rem] font-bold">Add Custom Asset</h2>
 
       <p className="text-center mb-7 text-darkgray text-[1rem] font-medium">
-        Add a custom asset to your portfolio.
+        Add a custom asset to your portfolio:
       </p>
 
       <TextInput

@@ -145,10 +145,10 @@ const AddCashForm: React.FunctionComponent<Props> = ({
         Add different asset type
       </div>
 
-      <h2 className="mb-7 text-center text-[1.75rem] font-bold">Add Cash</h2>
+      <h2 className="mb-3 text-center text-[1.75rem] font-bold">Add Cash</h2>
 
-      <p className="text-sm font-medium text-center mb-7 text-darkgray">
-        Link a bank account to automatically update your cash holdings:
+      <p className="text-center mb-7 text-darkgray text-[1rem] font-medium">
+        Add cash and update it whenever you want:
       </p>
 
       {loading ? (
@@ -157,7 +157,7 @@ const AddCashForm: React.FunctionComponent<Props> = ({
         </div>
       ) : (
         <>
-          <div className="flex justify-center pb-10 border-b border-gray">
+          {/* <div className="flex justify-center pb-10 border-b border-gray">
             <Button type="button" className="w-1/2" onClick={openLink} disabled={!ready}>
               Link Bank
             </Button>
@@ -165,7 +165,7 @@ const AddCashForm: React.FunctionComponent<Props> = ({
 
           <p className="pt-10 text-sm font-medium text-center mb-7 text-darkgray">
             Or, manually add cash and update it when you want:
-          </p>
+          </p> */}
 
           <TextInput
             placeholder="Account name"

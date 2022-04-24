@@ -122,7 +122,7 @@ const AddCryptoForm: React.FunctionComponent<Props> = ({
       <h2 className="mb-3 text-center text-[1.75rem] font-bold">Add Crypto</h2>
 
       <p className="text-center mb-7 text-darkgray text-[1rem] font-medium">
-        Add a specific cryptocurrency to your portfolio.
+        Add a specific cryptocurrency to your portfolio:
       </p>
 
       <div>

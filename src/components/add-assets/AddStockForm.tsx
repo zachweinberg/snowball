@@ -161,7 +161,7 @@ const AddStockForm: React.FunctionComponent<Props> = ({
       <h2 className="mb-3 text-center text-[1.75rem] font-bold">Add a Stock</h2>
 
       <p className="text-center mb-7 text-darkgray text-[1rem] font-medium">
-        Add a specific equity to your portfolio.
+        Add some equity to your portfolio:
       </p>
 
       {loading ? (
@@ -170,15 +170,11 @@ const AddStockForm: React.FunctionComponent<Props> = ({
         </div>
       ) : (
         <>
-          <div className="flex justify-center pb-10 border-b border-gray">
+          {/* <div className="flex justify-center pb-10 border-b border-gray">
             <Button type="button" className="w-1/2" onClick={openLink} disabled={!ready}>
               Import From Brokerage
             </Button>
-          </div>
-
-          <p className="pt-10 text-sm font-medium text-center mb-7 text-darkgray">
-            Or, manually add a stock:
-          </p>
+          </div> */}
 
           <div>
             <div className="flex items-center justify-between mb-1">
