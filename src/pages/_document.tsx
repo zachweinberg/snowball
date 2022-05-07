@@ -63,6 +63,19 @@ export default class MyDocument extends Document {
           />
 
           <meta name="theme-color" content="#000" />
+
+          <script async src={`https://www.googletagmanager.com/gtag/js?id=AW-10853293292`} />
+
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-10853293292');
+          `,
+            }}
+          />
         </Head>
         <body className="antialiased font-poppins bg-background">
           <Main />
