@@ -9,7 +9,7 @@ import { AuthProvider } from '~/context/AuthContext';
 import { useAnalytics } from '~/hooks/useAnalytics';
 import '~/styles/globals.scss';
 
-const HJID = 2659232;
+const HJID = 2659319;
 const HSJV = 6;
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
