@@ -104,7 +104,7 @@ const Header: React.FunctionComponent<Props> = ({ noBorder }: Props) => {
                             : 'text-darkgray hover:text-dark transition-colors border-transparent'
                         )}
                       >
-                        Login
+                        Log in
                       </div>
                     </Link>
                   </li>

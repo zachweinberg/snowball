@@ -45,7 +45,7 @@ const LandingHeader: React.FunctionComponent<Props> = ({ dark }: Props) => {
                   <li>
                     <Link href="/login">
                       <div className="py-5 font-medium text-[1rem] hover:opacity-80">
-                        Login
+                        Log in
                       </div>
                     </Link>
                   </li>
