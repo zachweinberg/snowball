@@ -28,13 +28,16 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 let server: http.Server | null = null;
 
+const redisClient = new Redis(process.env.REDIS_URL!, { tls: { rejectUnauthorized: false } });
+
 // Rate limiting
 const limiter = RateLimit({
   windowMs: 15000,
   store: new RedisStore({
     expiry: 15,
     prefix: 'ratelimiter',
-    client: new Redis(process.env.REDIS_URL!, { tls: { rejectUnauthorized: false } }),
+    // @ts-expect-error - Known issue: the `call` function is not present in @types/ioredis
+    sendCommand: (...args: string[]) => redisClient.call(...args),
   }),
   max: 20,
 });

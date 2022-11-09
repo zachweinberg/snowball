@@ -25,7 +25,7 @@ const getAsync = (key: string): Promise<string | null> => {
         return reject(err);
       }
 
-      return resolve(result);
+      return resolve(result ?? null);
     });
   });
 };
