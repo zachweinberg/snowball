@@ -4,10 +4,11 @@
   "exclude": ["node_modules"],
   "compilerOptions": {
     "noImplicitAny": false,
-    "useUnknownInCatchVariables": false,
+    "useUnknownInCatchVariables": true,
     "baseUrl": "./",
     "paths": {
       "~/*": ["./src/*"]
-    }
+    },
+    "strict": false
   }
 }
