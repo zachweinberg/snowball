@@ -1,0 +1,154 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 400;
+  font-style: normal;
+  src: url('/fonts/poppins_400.woff2') format('woff2'),
+    url('/fonts/poppins_400.woff') format('woff');
+}
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 500;
+  font-style: normal;
+  src: url('/fonts/poppins_500.woff2') format('woff2'),
+    url('/fonts/poppins_500.woff') format('woff');
+}
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 600;
+  font-style: normal;
+  src: url('/fonts/poppins_600.woff2') format('woff2'),
+    url('/fonts/poppins_600.woff') format('woff');
+}
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 700;
+  font-style: normal;
+  src: url('/fonts/poppins_700.woff2') format('woff2'),
+    url('/fonts/poppins_700.woff') format('woff');
+}
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: optional;
+  src: url(/fonts/manrope.ttf) format('ttf');
+}
+
+:root {
+  --toastify-color-progress-dark: #cef33c;
+}
+
+html {
+  height: 100vh;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #f9faff;
+  height: 100%;
+  color: #141414;
+  -webkit-overflow-scrolling: touch;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-style: normal;
+  font-family: 'Poppins', sans-serif;
+  line-height: 1;
+}
+
+@layer utilities {
+  @variants responsive {
+    /* Chrome, Safari and Opera */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+    }
+  }
+
+  .spinner {
+    -webkit-animation: spinner 0.65s linear infinite;
+    animation: spinner 0.65s linear infinite;
+  }
+
+  @-webkit-keyframes spinner {
+    0% {
+      -webkit-transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+    }
+  }
+
+  @keyframes spinner {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+.truncate-news-card {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.ReactModal__Overlay {
+  opacity: 0.5;
+  transition-property: opacity, transform;
+  transition-duration: 200ms;
+  transition-timing-function: ease-out;
+  transform: translateY(7%);
+}
+
+.ReactModal__Overlay--after-open {
+  opacity: 1;
+  transform: translateY(0%);
+}
+
+.ReactModal__Overlay--before-close {
+  opacity: 0.5;
+  transform: translateY(7%);
+}
+
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal-overlay[data-state='open'],
+.modal-contentWrapper[data-state='open'] {
+  animation: fadeIn 120ms ease-out;
+}
+
+.modal-overlay[data-state='closed'],
+.modal-contentWrapper[data-state='closed'] {
+  animation: fadeOut 120ms ease-in;
+}
