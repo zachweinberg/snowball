@@ -1,0 +1,27 @@
+{
+  "name": "schema",
+  "version": "1.16.3",
+  "description": "Obsidian Tracker model schema",
+  "types": "typescript/index.d.ts",
+  "main": "typescript/index.js",
+  "scripts": {
+    "build": "rimraf typescript/ && tsc"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@zachweinberg"
+  },
+  "files": [
+    "typescript/*",
+    "json/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zachweinberg/obsidian-schema.git"
+  },
+  "author": "Zach Weinberg",
+  "license": "ISC",
+  "devDependencies": {
+    "rimraf": "^3.0.2",
+    "typescript": "^4.2.4"
+  }
+}
