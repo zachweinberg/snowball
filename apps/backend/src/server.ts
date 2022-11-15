@@ -22,7 +22,6 @@ import usersRouter from '~/controllers/users';
 import watchListRouter from '~/controllers/watchlist';
 import { jobQueue } from '~/queue';
 import { handleErrors, ignoreFavicon } from '~/utils/api';
-import billingRouter from './controllers/billing';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -79,7 +78,6 @@ const Server = {
       app.use('/api/watchlist', express.json({ limit: '5mb' }), watchListRouter);
       app.use('/api/alerts', express.json({ limit: '5mb' }), alertsRouter);
       app.use('/api/plaid', express.json({ limit: '5mb' }), plaidRouter);
-      app.use('/api/billing', billingRouter);
 
       app.use(handleErrors);
 

@@ -1,10 +1,10 @@
-import { PlanType } from 'schema';
 import classNames from 'classnames';
 import { trackGoal } from 'fathom-client';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
+import { PlanType } from 'schema';
 import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
 import Layout from '~/components/layout/Layout';
 import ConfirmModal from '~/components/modals/ConfirmModal';
@@ -130,7 +130,7 @@ const Account: NextPage = () => {
     <RequiredLoggedIn>
       <ConfirmModal {...confirmModalProps} />
 
-      <Layout title="Account | Obsidian Tracker">
+      <Layout title="Account | Snowball">
         <div className="flex items-center mb-7">
           <h1 className="font-bold text-[1.75rem]">Your Account</h1>
         </div>
@@ -171,8 +171,8 @@ const Account: NextPage = () => {
             <div>
               <h2 className="mb-2 text-base font-semibold text-dark">Subscription</h2>
               <p>
-                Obsidian Tracker Premium is a monthly subscription that gives you access to
-                more alerts, more portfolios and more assets.
+                Snowball Premium is a monthly subscription that gives you access to more
+                alerts, more portfolios and more assets.
               </p>
             </div>
 

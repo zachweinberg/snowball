@@ -18,7 +18,7 @@ const Landing: React.FunctionComponent = () => {
   return (
     <RequiredLoggedOut>
       <Head>
-        <title>Obsidian Tracker - Track all of your financial assets in one place</title>
+        <title>Snowball - Track all of your financial assets in one place</title>
       </Head>
 
       <LandingHeader dark />
@@ -32,9 +32,9 @@ const Landing: React.FunctionComponent = () => {
               </h1>
 
               <p className="text-[1rem] lg:text-[1.18rem] text-darkgray mb-7 leading-7">
-                Say goodbye to those spreadsheets. Obsidian Tracker is a net worth tracker that
-                allows you to view all of your financial assets in one place. Track your
-                portfolio, get price alerts and keep a pulse on the market.
+                Say goodbye to those spreadsheets. Snowball is a net worth tracker that allows
+                you to view all of your financial assets in one place. Track your portfolio,
+                get price alerts and keep a pulse on the market.
               </p>
 
               <div className="w-56 mx-auto mb-20">
@@ -59,7 +59,7 @@ const Landing: React.FunctionComponent = () => {
 
         <div className="py-20 text-center border-b border-gray">
           <Container>
-            <H2>Obsidian Tracker lets you tracks everything in one place.</H2>
+            <H2>Snowball lets you tracks everything in one place.</H2>
 
             <p className="mt-12 leading-6 text-md md:text-lg">
               Add a variety of asset classes to your portfolios and track them over time.

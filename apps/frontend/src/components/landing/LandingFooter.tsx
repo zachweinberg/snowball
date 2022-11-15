@@ -10,9 +10,6 @@ const LandingFooter: React.FunctionComponent = () => {
           <div className="flex items-center">
             <div className="flex flex-col space-y-2">
               <Logo />
-              <div className="text-darkgray">
-                &copy; {new Date().getFullYear()} Obsidian Tracker LLC.
-              </div>
             </div>
           </div>
           <div className="flex items-center space-x-5">

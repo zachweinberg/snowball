@@ -1,3 +1,5 @@
+import Bull from 'bull';
+import { DateTime } from 'luxon';
 import {
   Alert,
   AlertCondition,
@@ -11,8 +13,6 @@ import {
   RealEstatePosition,
   User,
 } from 'schema';
-import Bull from 'bull';
-import { DateTime } from 'luxon';
 import { getCryptoPrices } from '~/lib/cmc';
 import { sendAssetAlertEmail, sendPortfolioSummaryEmail } from '~/lib/email';
 import { getStockPrices } from '~/lib/iex';
@@ -93,11 +93,11 @@ const sendAlertNotification = async (alert: Alert) => {
     console.log(`> [Consumer] Sending SMS...`);
     await sendText(
       alert.destinationValue,
-      `Obsidian Tracker alert:\n\nYour asset alert for ${
+      `Snowball alert:\n\nYour asset alert for ${
         alert.symbol
       } is ${alert.condition.toLowerCase()} your price target of ${formatMoneyFromNumber(
         alert.price
-      )}.\n\nThis alert has been removed from your alerts on obsidiantracker.com`
+      )}.\n\nThis alert has been removed from your alerts on snowballtracker.io`
     );
     await deleteDocument(`alerts/${alert.id}`);
   }

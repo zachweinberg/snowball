@@ -1,4 +1,8 @@
 import { ArrowCircleLeftIcon } from '@heroicons/react/outline';
+import { trackGoal } from 'fathom-client';
+import type { NextPage } from 'next';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 import {
   AssetType,
   EditPortfolioSettingsRequest,
@@ -6,10 +10,6 @@ import {
   Portfolio,
   PortfolioSettings,
 } from 'schema';
-import { trackGoal } from 'fathom-client';
-import type { NextPage } from 'next';
-import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
 import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
 import Layout from '~/components/layout/Layout';
 import ConfirmModal from '~/components/modals/ConfirmModal';
@@ -106,7 +106,7 @@ const PortfolioSettingsPageContent: React.FunctionComponent = () => {
     }
 
     return (
-      <Layout title={`${portfolio?.name ?? 'Portfolio'} Settings | Obsidian Tracker`}>
+      <Layout title={`${portfolio?.name ?? 'Portfolio'} Settings | Snowball`}>
         <ConfirmModal {...confirmModalProps} />
 
         {loading ? (

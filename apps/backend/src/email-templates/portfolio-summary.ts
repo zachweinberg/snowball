@@ -2,7 +2,7 @@ import layout from './layout';
 
 const html = layout(`
         <mj-text font-size="15px" line-height="1.4">
-         Hey {{fullName}}, here is your {{period}} Portfolio Summary for your portfolio <a href="https://obsidiantracker.com/portfolios/{{portfolioID}}">{{portfolioName}}</a>:
+         Hey {{fullName}}, here is your {{period}} Portfolio Summary for your portfolio <a href="https://snowballtracker.io/portfolios/{{portfolioID}}">{{portfolioName}}</a>:
         </mj-text>
 
         <mj-divider border-color="#ccc"></mj-divider>
@@ -23,7 +23,7 @@ const html = layout(`
 
         <mj-divider border-color="#ccc"></mj-divider>
 
-        <mj-text align="center" font-size="13px">You can disable or edit these emails in your <a href="https://obsidiantracker.com/portfolios/{{portfolioID}}/settings">portfolio settings</a>.</mj-text>
+        <mj-text align="center" font-size="13px">You can disable or edit these emails in your <a href="https://snowballtracker.io/portfolios/{{portfolioID}}/settings">portfolio settings</a>.</mj-text>
      `);
 
 const text = `Hi {{fullName}}, this is your {{period}} Portfolio Summary for your portfolio {{portfolioName}}.
@@ -40,7 +40,7 @@ const text = `Hi {{fullName}}, this is your {{period}} Portfolio Summary for you
     \n
     Total: {{totalValue}}
     \n\n
-    You can disable or edit these emails in your portfolio settings at https://obsidiantracker.com/portfolios/{{portfolioID}}/settings.
+    You can disable or edit these emails in your portfolio settings at https://snowballtracker.io/portfolios/{{portfolioID}}/settings.
     `;
 
 export default {

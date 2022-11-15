@@ -1,7 +1,7 @@
-import { PlanType, PLAN_LIMITS, WatchListItem } from 'schema';
 import type { NextPage } from 'next';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
+import { PlanType, PLAN_LIMITS, WatchListItem } from 'schema';
 import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
 import WatchlistIcon from '~/components/icons/WatchlistIcon';
 import Layout from '~/components/layout/Layout';
@@ -63,7 +63,7 @@ const WatchListContent: React.FunctionComponent = () => {
   );
 
   return (
-    <Layout title="Watchlist | Obsidian Tracker">
+    <Layout title="Watchlist | Snowball">
       <ConfirmModal {...confirmModalProps} />
       <AddToWatchlistModal open={addingToWatchList} onClose={onSave} />
 

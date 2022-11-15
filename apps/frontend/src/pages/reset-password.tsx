@@ -251,7 +251,7 @@ const PasswordResetPage: NextPage = () => {
   const router = useRouter();
 
   return (
-    <Layout title="Reset Password | Obsidian Tracker">
+    <Layout title="Reset Password | Snowball">
       {router.query && router.query.mode === 'resetPassword' ? (
         <EnterNewPassword />
       ) : (

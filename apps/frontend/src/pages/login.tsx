@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { trackGoal } from 'fathom-client';
 import type { NextPage } from 'next';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import * as yup from 'yup';
 import RequiredLoggedOut from '~/components/auth/RequireLoggedOut';
 import Layout from '~/components/layout/Layout';
@@ -53,7 +53,7 @@ const LoginPage: NextPage = () => {
 
   return (
     <RequiredLoggedOut>
-      <Layout title="Login | Obsidian Tracker">
+      <Layout title="Login | Snowball">
         <form
           autoComplete="off"
           className={classNames(

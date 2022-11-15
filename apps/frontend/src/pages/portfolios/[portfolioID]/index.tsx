@@ -1,4 +1,8 @@
 import { ArrowCircleLeftIcon } from '@heroicons/react/outline';
+import classNames from 'classnames';
+import type { NextPage } from 'next';
+import { useRouter } from 'next/router';
+import { useEffect, useMemo, useState } from 'react';
 import {
   AssetColor,
   AssetType,
@@ -10,10 +14,6 @@ import {
   StockPosition,
   Unit,
 } from 'schema';
-import classNames from 'classnames';
-import type { NextPage } from 'next';
-import { useRouter } from 'next/router';
-import React, { useEffect, useMemo, useState } from 'react';
 import AddAssetForm from '~/components/add-assets/AddAssetForm';
 import BalanceOverTime from '~/components/charts/BalanceOverTime';
 import Layout from '~/components/layout/Layout';
@@ -426,7 +426,7 @@ const PortfolioView: NextPage = () => {
   };
 
   return (
-    <Layout title={`${portfolio?.name ?? 'Portfolio'} | Obsidian Tracker`}>
+    <Layout title={`${portfolio?.name ?? 'Portfolio'} | Snowball`}>
       {portfolio && (
         <FullScreenModal
           isOpen={addingAsset || !!defaultAssetTypeToAdd}

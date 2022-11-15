@@ -1,5 +1,4 @@
 import Document, { Head, Html, Main, NextScript } from 'next/document';
-import React from 'react';
 
 export default class MyDocument extends Document {
   render() {
@@ -15,7 +14,7 @@ export default class MyDocument extends Document {
 
           <meta charSet="utf-8" />
 
-          <meta name="title" content="Obsidian Tracker - watch your net worth grow." />
+          <meta name="title" content="Snowball - Track all of your assets in one place." />
 
           <meta
             name="description"
@@ -26,7 +25,7 @@ export default class MyDocument extends Document {
 
           <meta
             property="og:title"
-            content="Obsidian Tracker - Track all of your assets in one place."
+            content="Snowball - Track all of your assets in one place."
           />
 
           <meta property="og:type" content="website" />
@@ -36,7 +35,7 @@ export default class MyDocument extends Document {
             content="https://firebasestorage.googleapis.com/v0/b/lyra-ae77c.appspot.com/o/img%2Fobsidian.jpeg?alt=media"
           />
 
-          <meta property="og:url" content="https://obsidiantracker.com" />
+          <meta property="og:url" content="https://snowballtracker.io" />
 
           <meta
             property="og:description"
@@ -45,7 +44,7 @@ export default class MyDocument extends Document {
 
           <meta
             name="twitter:title"
-            content="Obsidian Tracker - Track all of your assets in one place."
+            content="Snowball - Track all of your assets in one place."
           />
 
           <meta
@@ -55,7 +54,7 @@ export default class MyDocument extends Document {
 
           <meta name="twitter:card" content="summary_large_image" />
 
-          <meta property="twitter:url" content="https://obsidiantracker.com" />
+          <meta property="twitter:url" content="https://snowballtracker.io" />
 
           <meta
             property="twitter:image"

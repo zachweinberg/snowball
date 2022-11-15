@@ -4,6 +4,7 @@
   "exclude": ["node_modules"],
   "compilerOptions": {
     "strictNullChecks": false,
+    "useUnknownInCatchVariables": false,
     "noImplicitAny": false,
     "baseUrl": "./",
     "typeRoots": ["./src/types", "./node_modules/@types"],

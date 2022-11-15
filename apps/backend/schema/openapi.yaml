@@ -1,7 +1,7 @@
 openapi: '3.0.0'
 info:
   version: 1.0.0
-  title: Obsidian Tracker API
+  title: Snowball Net Worth Tracker API
 servers:
   - url: /api
 paths:
@@ -878,72 +878,6 @@ paths:
   /plaid/exchange-public-token-and-fetch-holdings:
     post:
       summary: Exchange public token for item info
-      responses:
-        '200':
-          description: Valid request
-          content:
-            application/json:
-              schema:
-                type: object
-  /subscriptions/create-checkout-session:
-    post:
-      summary: Create session for Stripe and redirect user
-      requestBody:
-        content:
-          application/json:
-            schema:
-              additionalProperties: false
-              required:
-                - lookupKey
-              properties:
-                lookupKey:
-                  type: string
-      responses:
-        '200':
-          description: Valid request
-          content:
-            application/json:
-              schema:
-                type: object
-  /billing/create-checkout-session:
-    get:
-      summary: Create session for Stripe and get url
-      responses:
-        '200':
-          description: Valid request
-          content:
-            application/json:
-              schema:
-                type: object
-  /billing/create-portal-session:
-    get:
-      summary: Create portal session for Stripe and get url
-      responses:
-        '200':
-          description: Valid request
-          content:
-            application/json:
-              schema:
-                type: object
-  /billing/session:
-    get:
-      summary: Get Stripe session
-      parameters:
-        - name: sessionID
-          in: query
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Valid request
-          content:
-            application/json:
-              schema:
-                type: object
-  /billing/webhook:
-    post:
-      summary: Stripe webhooks
       responses:
         '200':
           description: Valid request

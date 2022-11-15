@@ -1,5 +1,4 @@
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/outline';
-import { NewsItem } from 'schema';
 import classNames from 'classnames';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { trackGoal } from 'fathom-client';
@@ -7,6 +6,7 @@ import { DateTime } from 'luxon';
 import type { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { NewsItem } from 'schema';
 import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
 import Layout from '~/components/layout/Layout';
 import Button from '~/components/ui/Button';
@@ -97,7 +97,7 @@ const NewsPageContent: React.FunctionComponent = () => {
   }, [page]);
 
   return (
-    <Layout title="News | Obsidian Tracker">
+    <Layout title="News | Snowball">
       <div className="flex items-center mb-7">
         <h1 className="font-bold text-[1.75rem]">News</h1>
       </div>

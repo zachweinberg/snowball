@@ -1,6 +1,6 @@
-import { AssetType, GetPlaidTokenResponse, PlaidAccount, PlaidItem, PlanType } from 'schema';
 import { Router } from 'express';
 import { CountryCode, LinkTokenCreateRequest, Products } from 'plaid';
+import { AssetType, GetPlaidTokenResponse, PlaidAccount, PlaidItem, PlanType } from 'schema';
 import { firebaseAdmin } from '~/lib/firebaseAdmin';
 import { plaidClient } from '~/lib/plaid';
 import { deleteRedisKey } from '~/lib/redis';
@@ -33,11 +33,10 @@ const createPlaidLinkToken = async (userID: string, assetType: AssetType) => {
     user: {
       client_user_id: userID,
     },
-    redirect_uri: 'https://obsidiantracker.com/plaid/oauth-redirect',
-    client_name: 'Obsidian Tracker',
+    redirect_uri: `${process.env.BASE_HOSTNAME}/plaid/oauth-redirect`,
+    client_name: 'Snowball',
     products,
     language: 'en',
-    webhook: 'https://api.obsidiantracker.com/plaid/webhooks',
     country_codes: [CountryCode.Us],
   };
 

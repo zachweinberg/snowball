@@ -9,7 +9,6 @@
     "worker": "dotenv node dist/worker.js"
   },
   "dependencies": {
-    "schema": "*",
     "@bull-board/express": "^3.9.0",
     "@sentry/node": "^6.16.1",
     "algoliasearch": "^4.10.4",
@@ -39,7 +38,7 @@
     "plaid": "^9.7.0",
     "postmark": "^2.7.8",
     "rate-limit-redis": "^3.0.1",
-    "stripe": "^8.202.0",
+    "schema": "*",
     "twilio": "^3.70.0"
   },
   "devDependencies": {

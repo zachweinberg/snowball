@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { trackGoal } from 'fathom-client';
 import type { NextPage } from 'next';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import * as yup from 'yup';
 import RequiredLoggedOut from '~/components/auth/RequireLoggedOut';
 import Layout from '~/components/layout/Layout';
@@ -85,7 +85,7 @@ const SignUpPage: NextPage = () => {
 
   return (
     <RequiredLoggedOut>
-      <Layout title="Signup | Obsidian Tracker">
+      <Layout title="Signup | Snowball">
         <form
           onSubmit={onSubmit}
           autoComplete="off"

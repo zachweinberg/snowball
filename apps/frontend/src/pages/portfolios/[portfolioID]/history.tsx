@@ -1,9 +1,9 @@
 import { ArrowCircleLeftIcon } from '@heroicons/react/outline';
-import { PortfolioLogItem } from 'schema';
 import { DateTime } from 'luxon';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { PortfolioLogItem } from 'schema';
 import Layout from '~/components/layout/Layout';
 import Button from '~/components/ui/Button';
 import Link from '~/components/ui/Link';
@@ -87,7 +87,7 @@ const PortfolioLogsPage: NextPage = () => {
     );
   };
 
-  return <Layout title={`History | Obsidian Tracker`}>{renderContent()}</Layout>;
+  return <Layout title={`History | Snowball`}>{renderContent()}</Layout>;
 };
 
 export default PortfolioLogsPage;

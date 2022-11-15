@@ -1,7 +1,7 @@
-import { Alert, AlertDestination, Period } from 'schema';
 import mjml from 'mjml';
 import mustache from 'mustache';
 import * as postmark from 'postmark';
+import { Alert, AlertDestination, Period } from 'schema';
 import accountDeletedTemplates from '~/email-templates/account-deleted';
 import assetAlertTemplates from '~/email-templates/asset-alert';
 import contactRequestTemplates from '~/email-templates/contact-request';
@@ -39,7 +39,7 @@ const Emails = {
   },
 };
 
-const FROM_EMAIL = 'support@obsidiantracker.com';
+const FROM_EMAIL = 'support@snowballtracker.io';
 
 const renderEmailHtmlAndText = (templateFile: { html: string; text: string }, templateVars: object) => {
   const renderedMJML = mustache.render(templateFile.html, templateVars);
@@ -91,7 +91,7 @@ export const sendWelcomeEmail = async (toEmail: string, name) => {
     From: FROM_EMAIL,
     To: toEmail,
     MessageStream: Emails.welcome.messageStreamID,
-    Subject: `Welcome to Obsidian Tracker!`,
+    Subject: `Welcome to Snowball!`,
     ...renderEmailHtmlAndText(Emails.welcome.templates, {
       name,
     }),
@@ -101,7 +101,7 @@ export const sendWelcomeEmail = async (toEmail: string, name) => {
 export const sendContactRequestEmail = async (name: string, message: string, email?: string) => {
   await emailClient.sendEmail({
     From: FROM_EMAIL,
-    To: 'zach@obsidiantracker.com',
+    To: 'zach@snowballtracker.io',
     Subject: 'New Contact Request',
     MessageStream: Emails.contactRequest.messageStreamID,
     ...renderEmailHtmlAndText(Emails.contactRequest.templates, {
@@ -159,7 +159,7 @@ export const sendPortfolioDeletedEmail = async (toEmail: string, portfolioName: 
 export const newUserEmail = async (email: string, name: string) => {
   await emailClient.sendEmail({
     From: FROM_EMAIL,
-    To: 'zach@obsidiantracker.com',
+    To: 'zach@snowballtracker.io',
     Subject: `new user`,
     HtmlBody: `<h1>new user</h1><p>${email} - ${name}</p>`,
     TextBody: `New user - ${email} - ${name}`,

@@ -1,7 +1,7 @@
-import { Alert, PlanType, PLAN_LIMITS } from 'schema';
 import type { NextPage } from 'next';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
+import { Alert, PlanType, PLAN_LIMITS } from 'schema';
 import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
 import BellIcon from '~/components/icons/BellIcon';
 import Layout from '~/components/layout/Layout';
@@ -61,7 +61,7 @@ const AlertsContent: React.FunctionComponent = () => {
   );
 
   return (
-    <Layout title="Alerts | Obsidian Tracker">
+    <Layout title="Alerts | Snowball">
       <ConfirmModal {...confirmModalProps} />
       <AddAlertModal open={addingAlert} onClose={onSave} />
 

@@ -1,9 +1,9 @@
 import { ArrowCircleUpIcon } from '@heroicons/react/outline';
-import { PlanType, PLAN_LIMITS, PortfolioWithBalances } from 'schema';
 import { DateTime } from 'luxon';
 import type { NextPage } from 'next';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { PlanType, PLAN_LIMITS, PortfolioWithBalances } from 'schema';
 import RequiredLoggedIn from '~/components/auth/RequireLoggedIn';
 import Layout from '~/components/layout/Layout';
 import CreatePortfolioForm from '~/components/portfolio-list/CreatePortfolioForm';
@@ -75,9 +75,7 @@ const PortfolioListPage: NextPage = () => {
     if (portfolios && portfolios.length === 0) {
       return (
         <div className="flex flex-col items-center justify-center max-w-md mx-auto mt-32">
-          <p className="mb-5 text-[1.5rem] font-bold text-dark">
-            Welcome to Obsidian Tracker!
-          </p>
+          <p className="mb-5 text-[1.5rem] font-bold text-dark">Welcome to Snowball!</p>
           <p className="mb-5 font-medium text-center text-darkgray text-[.9rem] leading-5">
             You do not have any portfolios yet.
             <br />
@@ -111,7 +109,7 @@ const PortfolioListPage: NextPage = () => {
 
   return (
     <RequiredLoggedIn>
-      <Layout title="My Portfolios | Obsidian Tracker">
+      <Layout title="My Portfolios | Snowball">
         <FullScreenModal
           isOpen={creatingPortfolio}
           onClose={() => setCreatingPortfolio(false)}
