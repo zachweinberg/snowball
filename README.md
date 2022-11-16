@@ -2,8 +2,8 @@
 
 Snowball is a portfolio tracker that allows you to view your financial assets on one dashboard.
 
-![Alt text](img/demo1.jpg "Snowball")
-![Alt text](img/demo2.jpg "Snowball")
+![Snowball Demo](/img/demo1.jpg "Snowball")
+![Snowball Demo](/img/demo2.jpg "Snowball")
 
 ## Demo
 
