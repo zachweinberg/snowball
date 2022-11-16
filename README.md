@@ -4,10 +4,7 @@ Snowball is a portfolio tracker that allows you to view your financial assets on
 
 ## Demo
 
-View the [functional demo](https://snowballtracker.io) with test data ⛄️
-
-Email: `demo@demo.com`
-Password: `Demo123!`
+Coming soon
 
 ## Features:
 

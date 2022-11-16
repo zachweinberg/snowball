@@ -1,6 +1,6 @@
 import { Transition } from '@headlessui/react';
-import { AssetType } from 'schema';
 import React, { useMemo, useState } from 'react';
+import { AssetType } from 'schema';
 import AddCashForm from './AddCashForm';
 import AddCryptoForm from './AddCryptoForm';
 import AddCustomAssetForm from './AddCustomAssetForm';
@@ -203,8 +203,10 @@ const AssetTypeCard: React.FunctionComponent<AssetTypeCardProps> = React.memo(
         onClick={onSelect}
         className="flex flex-col items-center justify-center p-4 border-2 border-transparent shadow cursor-pointer bg-background rounded-md hover:border-darkgray"
       >
-        {svg}
-        <span className="mt-5 font-bold text-dark">{label}</span>
+        <>
+          {svg}
+          <span className="mt-5 font-bold text-dark">{label}</span>
+        </>
       </div>
     );
   }
