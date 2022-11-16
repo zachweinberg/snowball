@@ -6,6 +6,9 @@ Snowball is a portfolio tracker that allows you to view your financial assets on
 
 View the [functional demo](https://snowballtracker.io) with test data ⛄️
 
+Email: `demo@demo.com`
+Password: `Demo123!`
+
 ## Features:
 
 - Add stocks, cash, crypto, real estate, or custom assets
@@ -13,4 +16,6 @@ View the [functional demo](https://snowballtracker.io) with test data ⛄️
 - Keep a watchlist
 - Financial news portal
 
-This repo uses the [Turbo monorepo](https://turbo.build/) package to manage shared dependencies between the frontend and backend.
+## Project Structure
+
+This repo uses [Turbo](https://turbo.build/) to manage shared dependencies between the frontend and backend.
